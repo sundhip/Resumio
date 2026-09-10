@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"tsx server/index.ts\" \"vite\"",
+    "kill:ports": "node -e \"const {execSync}=require('child_process');[3001,5173].forEach(p=>{try{const pid=execSync('netstat -ano | findstr :'+p+' | findstr LISTENING',{encoding:'utf8'}).trim().split(/\\s+/).pop();if(pid&&/^\\d+$/.test(pid))execSync('taskkill /PID '+pid+' /F /T')}catch(e){}})\"",
+    "dev": "npm run kill:ports && concurrently \"tsx server/index.ts\" \"vite\"",
     "dev:frontend": "vite",
+    "dev:backend": "tsx server/index.ts",
     "server": "tsx server/index.ts",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
