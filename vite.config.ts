@@ -9,9 +9,11 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    port: 5173,        // Frontend always on 5173
+    strictPort: false, // Fall back to next free port if 5173 is taken
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3001', // Backend always on 3001
         changeOrigin: true,
       },
     },
