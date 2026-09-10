@@ -48,7 +48,7 @@ applicationsRouter.post('/candidate/applications', authenticateToken, async (req
     }
 
     // 3. Validate resume belongs to candidate
-    const resume = db.prepare('SELECT id, original_filename FROM candidate_resumes WHERE id = ? AND candidate_profile_id = ?').get(resumeId.trim(), candidateProfile.id) as any;
+    const resume = db.prepare('SELECT id, original_filename, stored_filename FROM candidate_resumes WHERE id = ? AND candidate_profile_id = ?').get(resumeId.trim(), candidateProfile.id) as any;
     if (!resume) {
       return res.status(400).json({ success: false, message: 'Selected resume not found or does not belong to your account.' });
     }
