@@ -20,16 +20,26 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Install native build tools (required by better-sqlite3)
+        run: sudo apt-get update && sudo apt-get install -y python3 make g++ build-essential
+
       - name: Install dependencies
         run: npm ci
 
+      - name: Create server/data directory
+        run: mkdir -p server/data
+
       - name: Create .env for CI
         run: |
-          echo 'PORT=3001' >> .env
+          echo 'PORT=3001' > .env
           echo 'NODE_ENV=test' >> .env
-          echo 'JWT_SECRET=ci_test_secret_key_at_least_32_chars' >> .env
+          echo 'JWT_SECRET=ci_test_secret_key_at_least_32_chars_long' >> .env
           echo 'DATABASE_PATH=./server/data/resumio-test.db' >> .env
           echo 'MAX_RESUME_SIZE_MB=10' >> .env
+          echo 'AUTH_RATE_LIMIT_WINDOW_MINUTES=15' >> .env
+          echo 'AUTH_RATE_LIMIT_MAX_REQUESTS=100' >> .env
+          echo 'AI_RATE_LIMIT_WINDOW_MINUTES=60' >> .env
+          echo 'AI_RATE_LIMIT_MAX_REQUESTS=100' >> .env
 
       - name: Run all tests
         run: npx tsx server/test-all.ts
