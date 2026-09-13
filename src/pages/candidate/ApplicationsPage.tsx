@@ -81,8 +81,8 @@ export const ApplicationsPage: React.FC<ApplicationsPageProps> = ({ onNavigate }
     const query = searchQuery.trim().toLowerCase();
     const matchesSearch =
       !query ||
-      app.jobTitle.toLowerCase().includes(query) ||
-      app.company.toLowerCase().includes(query) ||
+      (app.jobTitle || '').toLowerCase().includes(query) ||
+      (app.company || '').toLowerCase().includes(query) ||
       (app.location || '').toLowerCase().includes(query);
 
     return matchesTab && matchesSearch;
@@ -278,7 +278,7 @@ export const ApplicationsPage: React.FC<ApplicationsPageProps> = ({ onNavigate }
                 <div className="flex items-start gap-4 min-w-0 flex-1">
                   {/* Company Initial */}
                   <div className="w-12 h-12 rounded-control bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 border border-slate-200/80 dark:border-surface-dark-border flex items-center justify-center text-slate-800 dark:text-slate-200 font-bold text-base shrink-0">
-                    {app.company.charAt(0)}
+                    {(app.company || 'C').charAt(0)}
                   </div>
 
                   <div className="min-w-0 space-y-1.5 flex-1">

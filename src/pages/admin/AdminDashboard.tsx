@@ -143,52 +143,58 @@ export const AdminDashboard: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                usersList.map((u) => (
-                  <tr
-                    key={u.id}
-                    className="hover:bg-slate-50/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
-                  >
-                    <td className="py-3 px-5 font-semibold text-slate-900 dark:text-white">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 flex items-center justify-center font-bold text-xs shrink-0">
-                          {u.name.charAt(0).toUpperCase()}
+                usersList.map((u) => {
+                  const displayName = u.name || u.email || 'User';
+                  const initial = displayName.charAt(0).toUpperCase();
+                  const roleName = (u.role || 'user').toUpperCase();
+
+                  return (
+                    <tr
+                      key={u.id}
+                      className="hover:bg-slate-50/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
+                    >
+                      <td className="py-3 px-5 font-semibold text-slate-900 dark:text-white">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 flex items-center justify-center font-bold text-xs shrink-0">
+                            {initial}
+                          </div>
+                          <div>
+                            <span>{displayName}</span>
+                            {u.company && (
+                              <span className="text-[10px] text-slate-400 block -mt-0.5">
+                                {u.company}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <span>{u.name}</span>
-                          {u.company && (
-                            <span className="text-[10px] text-slate-400 block -mt-0.5">
-                              {u.company}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-3 px-4 font-mono text-xs text-slate-600 dark:text-slate-400">
-                      {u.email}
-                    </td>
+                      <td className="py-3 px-4 font-mono text-xs text-slate-600 dark:text-slate-400">
+                        {u.email || '-'}
+                      </td>
 
-                    <td className="py-3 px-4">
-                      <Badge
-                        variant={u.role === 'admin' ? 'purple' : u.role === 'recruiter' ? 'brand' : 'neutral'}
-                        size="sm"
-                      >
-                        {u.role.toUpperCase()}
-                      </Badge>
-                    </td>
+                      <td className="py-3 px-4">
+                        <Badge
+                          variant={u.role === 'admin' ? 'purple' : u.role === 'recruiter' ? 'brand' : 'neutral'}
+                          size="sm"
+                        >
+                          {roleName}
+                        </Badge>
+                      </td>
 
-                    <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        {u.status}
-                      </span>
-                    </td>
+                      <td className="py-3 px-4">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          {u.status || 'Active'}
+                        </span>
+                      </td>
 
-                    <td className="py-3 px-5 text-right text-xs text-slate-500 dark:text-slate-400">
-                      {u.createdAt}
-                    </td>
-                  </tr>
-                ))
+                      <td className="py-3 px-5 text-right text-xs text-slate-500 dark:text-slate-400">
+                        {u.createdAt || '-'}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

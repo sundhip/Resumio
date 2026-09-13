@@ -48,10 +48,11 @@ export const JobListingsPage: React.FC = () => {
   };
 
   const filteredJobs = MOCK_JOBS.filter((job) => {
+    const q = searchQuery.toLowerCase();
     const matchesSearch =
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      (job.title || '').toLowerCase().includes(q) ||
+      (job.company || '').toLowerCase().includes(q) ||
+      (job.tags || []).some((t) => (t || '').toLowerCase().includes(q));
 
     if (activeTab === 'saved') return matchesSearch && savedJobs.includes(job.id);
     if (activeTab === 'recommended') return matchesSearch && (job.matchScoreForUser || 0) >= 90;
@@ -112,7 +113,7 @@ export const JobListingsPage: React.FC = () => {
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-control bg-gradient-to-br from-brand-50 to-indigo-50 dark:from-brand-950/60 dark:to-surface-dark-card border border-brand-200/60 dark:border-brand-800/40 flex items-center justify-center text-brand-700 dark:text-brand-300 font-bold text-sm shrink-0">
-                      {job.company.charAt(0)}
+                      {(job.company || 'C').charAt(0)}
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">

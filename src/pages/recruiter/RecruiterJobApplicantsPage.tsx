@@ -256,11 +256,11 @@ export const RecruiterJobApplicantsPage: React.FC<RecruiterJobApplicantsPageProp
     const query = searchQuery.trim().toLowerCase();
     const matchesSearch =
       !query ||
-      app.candidateName.toLowerCase().includes(query) ||
-      app.candidateEmail.toLowerCase().includes(query) ||
+      (app.candidateName || '').toLowerCase().includes(query) ||
+      (app.candidateEmail || '').toLowerCase().includes(query) ||
       (app.candidateHeadline || '').toLowerCase().includes(query) ||
       (app.jobTitle || '').toLowerCase().includes(query) ||
-      app.skills.some((s) => s.name.toLowerCase().includes(query));
+      (app.skills || []).some((s) => (s?.name || '').toLowerCase().includes(query));
 
     return matchesStatus && matchesSearch;
   });
@@ -521,7 +521,7 @@ export const RecruiterJobApplicantsPage: React.FC<RecruiterJobApplicantsPageProp
                     />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-500 text-white font-bold text-base flex items-center justify-center shadow-xs">
-                      {applicant.candidateName.charAt(0)}
+                      {((applicant.candidateName || applicant.candidateEmail || 'C').charAt(0)).toUpperCase()}
                     </div>
                   )}
                 </div>
@@ -761,7 +761,7 @@ export const RecruiterJobApplicantsPage: React.FC<RecruiterJobApplicantsPageProp
                 />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-500 text-white font-bold text-sm flex items-center justify-center">
-                  {selectedApplicantDetail.candidate.name.charAt(0)}
+                  {((selectedApplicantDetail.candidate?.name || selectedApplicantDetail.candidate?.email || 'C').charAt(0)).toUpperCase()}
                 </div>
               )}
               <div className="min-w-0">
