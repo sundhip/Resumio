@@ -47,11 +47,11 @@ export const Modal: React.FC<ModalProps> = ({
     md: 'max-w-lg',
     lg: 'max-w-2xl',
     xl: 'max-w-4xl',
-    full: 'max-w-[92vw] max-h-[92vh]',
+    full: 'max-w-[95vw]',
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm transition-opacity animate-fade-in"
@@ -62,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({
       <div
         className={twMerge(
           clsx(
-            'relative w-full rounded-modal bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-dropdown-dark z-10 flex flex-col overflow-hidden animate-fade-in my-auto',
+            'relative w-full max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)] md:max-h-[88vh] rounded-modal bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-dropdown-dark z-10 flex flex-col overflow-hidden animate-fade-in',
             sizeStyles[size],
             className
           )
@@ -70,7 +70,7 @@ export const Modal: React.FC<ModalProps> = ({
       >
         {/* Header */}
         {(title || description) && (
-          <div className="flex items-start justify-between p-5 sm:p-6 border-b border-slate-100 dark:border-surface-dark-border">
+          <div className="flex items-start justify-between p-4 sm:p-6 border-b border-slate-100 dark:border-surface-dark-border shrink-0">
             <div className="space-y-1 pr-6">
               {typeof title === 'string' ? (
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
@@ -87,7 +87,7 @@ export const Modal: React.FC<ModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-control hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-control hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors shrink-0"
             >
               <X className="w-5 h-5" />
             </button>
@@ -95,11 +95,11 @@ export const Modal: React.FC<ModalProps> = ({
         )}
 
         {/* Content Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto max-h-[70vh]">{children}</div>
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0">{children}</div>
 
         {/* Footer Actions */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-bg/40">
+          <div className="flex items-center justify-end gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-bg/40 shrink-0">
             {footer}
           </div>
         )}
