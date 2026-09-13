@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3';
+import { DatabaseAdapter as Database } from './sqliteAdapter.js';
 import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcryptjs';
