@@ -192,7 +192,7 @@ export const CreateJobPage: React.FC<CreateJobPageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto space-y-6 pb-16">
+    <div className="w-full space-y-6 pb-16">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

@@ -50,7 +50,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
 
         {/* Fluid Content Area */}
-        <main className="flex-1 w-full max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8 animate-fade-in">
+        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 animate-fade-in">
           {children}
         </main>
       </div>

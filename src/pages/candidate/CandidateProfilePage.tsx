@@ -357,7 +357,7 @@ export const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ onNa
 
   if (isLoading || !data) {
     return (
-      <div className="space-y-6 w-full max-w-[1600px] mx-auto animate-pulse">
+      <div className="space-y-6 w-full animate-pulse">
         <div className="h-40 bg-slate-200 dark:bg-surface-dark-card rounded-modal" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
@@ -377,7 +377,7 @@ export const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ onNa
   const completionScore = data.completion || data.profile.profile_completion || 0;
 
   return (
-    <div className="space-y-6 w-full max-w-[1600px] mx-auto">
+    <div className="space-y-6 w-full">
       {/* Top Profile Header Hero */}
       <ProfileHeader
         profile={data.profile}

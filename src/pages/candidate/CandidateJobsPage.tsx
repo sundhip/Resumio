@@ -172,7 +172,7 @@ export const CandidateJobsPage: React.FC<CandidateJobsPageProps> = ({ onNavigate
   };
 
   return (
-    <div className="space-y-6 w-full max-w-[1600px] mx-auto pb-16">
+    <div className="space-y-6 w-full pb-16">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

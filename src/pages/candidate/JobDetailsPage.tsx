@@ -149,7 +149,7 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-[1600px] mx-auto space-y-6 pb-16 animate-pulse">
+      <div className="w-full space-y-6 pb-16 animate-pulse">
         <div className="h-6 w-32 bg-slate-200 dark:bg-surface-dark-border rounded mb-4" />
         <Card className="p-8 space-y-4">
           <div className="h-8 bg-slate-200 dark:bg-surface-dark-border rounded w-1/2" />
@@ -175,7 +175,7 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
   }
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto space-y-6 pb-16">
+    <div className="w-full space-y-6 pb-16">
       {/* Back Button */}
       <div>
         <button
