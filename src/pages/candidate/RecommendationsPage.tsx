@@ -61,7 +61,7 @@ export const RecommendationsPage: React.FC<RecommendationsPageProps> = ({ onNavi
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-16">
+    <div className="w-full max-w-[1600px] mx-auto space-y-6 pb-16">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

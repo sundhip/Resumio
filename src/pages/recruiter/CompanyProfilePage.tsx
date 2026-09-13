@@ -120,7 +120,7 @@ export const CompanyProfilePage: React.FC = () => {
   const completion = currentProfile?.profile_completion || user?.profileCompletion || 40;
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 w-full max-w-[1600px] mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
