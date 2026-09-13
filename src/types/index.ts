@@ -156,6 +156,9 @@ export interface AdminStats {
   candidatesCount: number;
   recruitersCount: number;
   activeUsersCount: number;
+  jobsCount?: number;
+  applicationsCount?: number;
+  interviewsCount?: number;
 }
 
 export interface AdminUserItem {
@@ -166,6 +169,44 @@ export interface AdminUserItem {
   createdAt: string;
   name: string;
   company: string | null;
+}
+
+export interface AdminJobItem {
+  id: string;
+  title: string;
+  company: string;
+  recruiterName: string;
+  location: string;
+  workMode: string;
+  employmentType: string;
+  status: string;
+  applicantsCount: number;
+  createdAt: string;
+}
+
+export interface AdminApplicationItem {
+  id: string;
+  candidateName: string;
+  candidateEmail: string;
+  jobTitle: string;
+  company: string;
+  status: string;
+  matchScore: number;
+  createdAt: string;
+}
+
+export interface AdminSystemHealth {
+  status: string;
+  databaseEngine: string;
+  tables: {
+    users: number;
+    candidate_profiles: number;
+    recruiter_profiles: number;
+    jobs: number;
+    applications: number;
+    interviews: number;
+    match_scores: number;
+  };
 }
 
 export interface AuthResponse {

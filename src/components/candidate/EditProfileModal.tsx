@@ -162,7 +162,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               />
             ) : (
               <div className="w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold text-lg flex items-center justify-center">
-                {fullName.slice(0, 2).toUpperCase() || 'RK'}
+                {(fullName || 'Candidate').slice(0, 2).toUpperCase()}
               </div>
             )}
             <div>

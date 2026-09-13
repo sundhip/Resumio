@@ -4,6 +4,9 @@ import type {
   RecruiterProfile,
   AdminStats,
   AdminUserItem,
+  AdminJobItem,
+  AdminApplicationItem,
+  AdminSystemHealth,
   JobPosting,
   JobFormData,
   JobStats,
@@ -411,6 +414,48 @@ export const api = {
 
   async getAdminUsers(): Promise<{ success: boolean; users: AdminUserItem[] }> {
     const res = await fetch(`${API_BASE_URL}/admin/users`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async toggleAdminUserStatus(userId: string, status: 'active' | 'suspended'): Promise<{ success: boolean; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/admin/users/${userId}/status`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status }),
+    });
+    return handleResponse(res);
+  },
+
+  async getAdminJobs(): Promise<{ success: boolean; jobs: AdminJobItem[] }> {
+    const res = await fetch(`${API_BASE_URL}/admin/jobs`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async toggleAdminJobStatus(jobId: string, status: 'Active' | 'Closed'): Promise<{ success: boolean; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/admin/jobs/${jobId}/status`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status }),
+    });
+    return handleResponse(res);
+  },
+
+  async getAdminApplications(): Promise<{ success: boolean; applications: AdminApplicationItem[] }> {
+    const res = await fetch(`${API_BASE_URL}/admin/applications`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async getAdminSystemHealth(): Promise<{ success: boolean; health: AdminSystemHealth }> {
+    const res = await fetch(`${API_BASE_URL}/admin/system`, {
       method: 'GET',
       headers: getAuthHeaders(),
     });
