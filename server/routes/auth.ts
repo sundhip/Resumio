@@ -66,7 +66,7 @@ router.post('/register/candidate', async (req, res: Response): Promise<void> => 
 
     const userId = crypto.randomUUID();
     const profileId = crypto.randomUUID();
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = bcrypt.hashSync(password, 10);
 
     const insertTransaction = db.transaction(() => {
       db.prepare(`
@@ -126,7 +126,7 @@ router.post('/register/recruiter', async (req, res: Response): Promise<void> => 
 
     const userId = crypto.randomUUID();
     const profileId = crypto.randomUUID();
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = bcrypt.hashSync(password, 10);
 
     const insertTransaction = db.transaction(() => {
       db.prepare(`
@@ -162,6 +162,129 @@ router.post('/register/recruiter', async (req, res: Response): Promise<void> => 
   } catch (err: any) {
     console.error('Recruiter registration error:', err);
     res.status(500).json({ success: false, message: 'Unable to complete registration. Please try again.' });
+  }
+});
+
+// 2b. Google OAuth Authentication (Candidate & Recruiter)
+router.post('/google', async (req, res: Response): Promise<void> => {
+  try {
+    let googleId = '';
+    let email = '';
+    let name = '';
+    let picture = '';
+
+    if (req.body.credential && typeof req.body.credential === 'string') {
+      try {
+        const parts = req.body.credential.split('.');
+        if (parts.length === 3) {
+          const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf8'));
+          googleId = payload.sub || payload.id || '';
+          email = payload.email || '';
+          name = payload.name || payload.given_name || '';
+          picture = payload.picture || '';
+        }
+      } catch (e) {
+        // Fallthrough if parsing failed
+      }
+    }
+
+    if (!email && req.body.userInfo) {
+      googleId = req.body.userInfo.sub || req.body.userInfo.id || googleId || `google_${Date.now()}`;
+      email = req.body.userInfo.email || email;
+      name = req.body.userInfo.name || name;
+      picture = req.body.userInfo.picture || picture;
+    }
+
+    if (!email) {
+      res.status(400).json({ success: false, message: 'Google authentication failed: Email address not provided.' });
+      return;
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const targetRole = req.body.role === 'recruiter' ? 'recruiter' : 'candidate';
+    const companyName = req.body.companyName || 'Company';
+
+    let user = (googleId ? db.prepare('SELECT * FROM users WHERE google_id = ?').get(googleId) : null) as any;
+    if (!user) {
+      user = db.prepare('SELECT * FROM users WHERE lower(email) = ?').get(normalizedEmail) as any;
+      if (user) {
+        if (googleId && !user.google_id) {
+          db.prepare('UPDATE users SET google_id = ? WHERE id = ?').run(googleId, user.id);
+          user.google_id = googleId;
+        }
+      } else {
+        // Create new persistent user account via Google
+        const userId = crypto.randomUUID();
+        const profileId = crypto.randomUUID();
+
+        const insertTransaction = db.transaction(() => {
+          db.prepare(`
+            INSERT INTO users (id, email, password_hash, google_id, role, status)
+            VALUES (?, ?, '', ?, ?, 'active')
+          `).run(userId, normalizedEmail, googleId || `google_${userId}`, targetRole);
+
+          if (targetRole === 'candidate') {
+            db.prepare(`
+              INSERT INTO candidate_profiles (id, user_id, full_name, photo_url, profile_completion)
+              VALUES (?, ?, ?, ?, 30)
+            `).run(profileId, userId, name.trim() || normalizedEmail.split('@')[0], picture);
+          } else {
+            db.prepare(`
+              INSERT INTO recruiter_profiles (id, user_id, full_name, company_name, company_logo, profile_completion)
+              VALUES (?, ?, ?, ?, ?, 40)
+            `).run(profileId, userId, name.trim() || normalizedEmail.split('@')[0], companyName.trim(), picture);
+          }
+        });
+
+        insertTransaction();
+        user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId) as any;
+      }
+    }
+
+    if (user.status !== 'active') {
+      res.status(403).json({ success: false, message: 'Your account is inactive. Please contact administrator.' });
+      return;
+    }
+
+    let profile: any = null;
+    let displayName = user.email.split('@')[0];
+    let company: string | undefined = undefined;
+    let profileCompletion = 100;
+
+    if (user.role === 'candidate') {
+      profile = db.prepare('SELECT * FROM candidate_profiles WHERE user_id = ?').get(user.id);
+      if (profile) {
+        displayName = profile.full_name;
+        profileCompletion = profile.profile_completion;
+      }
+    } else if (user.role === 'recruiter') {
+      profile = db.prepare('SELECT * FROM recruiter_profiles WHERE user_id = ?').get(user.id);
+      if (profile) {
+        displayName = profile.full_name;
+        company = profile.company_name;
+        profileCompletion = profile.profile_completion;
+      }
+    }
+
+    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+
+    res.json({
+      success: true,
+      message: 'Google authentication successful!',
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: displayName,
+        company,
+        profileCompletion,
+      },
+      profile,
+    });
+  } catch (err: any) {
+    console.error('Google Auth error:', err);
+    res.status(500).json({ success: false, message: 'Google authentication failed. Please try again.' });
   }
 });
 

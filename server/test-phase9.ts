@@ -1,4 +1,4 @@
-import { db, verifyDatabaseIntegrity } from './database/db';
+import { db, verifyDatabaseIntegrity, initDatabase } from './database/db';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
@@ -32,6 +32,8 @@ async function runPhase9Tests() {
   console.log('====================================================');
   console.log('🧪 RESUMIO PHASE 9: FINAL INTEGRATION, SECURITY & READINESS');
   console.log('====================================================\n');
+
+  await initDatabase();
 
   // ----------------------------------------------------
   // 1. DATABASE & RELATIONSHIP INTEGRITY AUDIT

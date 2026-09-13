@@ -25,7 +25,7 @@ async function runPhase7Tests() {
   console.log('🧪 RESUMIO PHASE 7: INTERVIEWS, NOTIFICATIONS & ANALYTICS');
   console.log('====================================================\n');
 
-  initDatabase();
+  await initDatabase();
 
   // Setup Test Fixtures: 2 Recruiters, 2 Candidates, 2 Jobs, 2 Applications
   const recAUserId = crypto.randomUUID();

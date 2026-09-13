@@ -3,7 +3,8 @@
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
-  password_hash TEXT NOT NULL,
+  password_hash TEXT DEFAULT '',
+  google_id TEXT UNIQUE DEFAULT NULL,
   role TEXT NOT NULL CHECK (role IN ('candidate', 'recruiter', 'admin')),
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'suspended')),
   created_at TEXT NOT NULL DEFAULT (datetime('now')),

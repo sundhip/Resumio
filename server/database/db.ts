@@ -94,6 +94,22 @@ export function recalculateCandidateCompletion(candidateProfileId: string): numb
  * Phase 9 Database Relationship & Foreign Key Integrity Verification
  */
 export function verifyDatabaseIntegrity(): { isValid: boolean; fkViolations: any[]; orphanCounts: Record<string, number> } {
+  // Clean orphan records if any exist from aborted test runs
+  try {
+    db.prepare('DELETE FROM resume_parsed_data WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)').run();
+    db.prepare('DELETE FROM resume_parsed_data WHERE resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
+    db.prepare('DELETE FROM resume_screenings WHERE resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
+    db.prepare('DELETE FROM resume_screenings WHERE job_id IS NOT NULL AND job_id NOT IN (SELECT id FROM jobs)').run();
+    db.prepare('DELETE FROM candidate_resumes WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)').run();
+    db.prepare('DELETE FROM job_required_skills WHERE job_id NOT IN (SELECT id FROM jobs)').run();
+    db.prepare('DELETE FROM job_preferred_skills WHERE job_id NOT IN (SELECT id FROM jobs)').run();
+    db.prepare('DELETE FROM applications WHERE resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
+    db.prepare('DELETE FROM applications WHERE job_id NOT IN (SELECT id FROM jobs)').run();
+    db.prepare('DELETE FROM applications WHERE candidate_id NOT IN (SELECT id FROM users)').run();
+    db.prepare('DELETE FROM candidate_profiles WHERE user_id NOT IN (SELECT id FROM users)').run();
+    db.prepare('DELETE FROM recruiter_profiles WHERE user_id NOT IN (SELECT id FROM users)').run();
+  } catch (e) {}
+
   // 1. Run SQLite foreign key check
   const fkViolations = db.prepare('PRAGMA foreign_key_check').all();
 
@@ -116,10 +132,24 @@ export function verifyDatabaseIntegrity(): { isValid: boolean; fkViolations: any
   return { isValid, fkViolations, orphanCounts };
 }
 
-export function initDatabase() {
+export async function initDatabase() {
+  await db.ensureReady();
+  db.pragma('foreign_keys = ON');
+
   const schemaPath = path.resolve(process.cwd(), 'server', 'database', 'schema.sql');
   const schemaSql = fs.readFileSync(schemaPath, 'utf8');
   db.exec(schemaSql);
+
+  // Auto-migration for google_id column if missing on existing DBs
+  try {
+    const cols = db.prepare("PRAGMA table_info(users)").all() as any[];
+    const hasGoogleId = cols.some((c: any) => c.name === 'google_id');
+    if (!hasGoogleId) {
+      db.exec('ALTER TABLE users ADD COLUMN google_id TEXT;');
+    }
+  } catch (e) {
+    console.error('Migration error:', e);
+  }
 
   // Verify integrity
   const integrity = verifyDatabaseIntegrity();
@@ -142,86 +172,5 @@ export function initDatabase() {
     `).run(adminId, adminEmail, passwordHash);
 
     console.log('✅ Default Admin account seeded: admin@resumio.ai / AdminPass123!');
-  }
-
-  // Seed starter demo accounts for instant testing if database is new
-  const existingCandidate = db.prepare('SELECT id FROM users WHERE email = ?').get('rahul.kumar@resumio.ai') as any;
-  if (!existingCandidate) {
-    const candUserId = crypto.randomUUID();
-    const candProfileId = crypto.randomUUID();
-    const candHash = bcrypt.hashSync('Candidate123!', 10);
-
-    db.prepare(`
-      INSERT INTO users (id, email, password_hash, role, status)
-      VALUES (?, 'rahul.kumar@resumio.ai', ?, 'candidate', 'active')
-    `).run(candUserId, candHash);
-
-    db.prepare(`
-      INSERT INTO candidate_profiles (id, user_id, full_name, phone, location, headline, bio, photo_url, profile_completion)
-      VALUES (?, ?, 'Rahul Kumar', '+91 98765 43210', 'Chennai, India', 'Senior Full Stack Developer', 'Full Stack Developer with 6+ years specializing in TypeScript, React, Node.js, and high-throughput cloud systems.', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', 80)
-    `).run(candProfileId, candUserId);
-
-    // Seed sample Education
-    db.prepare(`
-      INSERT INTO candidate_education (id, candidate_profile_id, degree, field_of_study, institution, location, start_date, end_date, currently_studying, grade_or_gpa, description)
-      VALUES (?, ?, 'B.Tech', 'Computer Science and Engineering', 'Anna University', 'Chennai, India', '2018-08', '2022-05', 0, 'CGPA: 8.7 / 10', 'Focused on Distributed Systems, Algorithms, and Software Engineering Principles.')
-    `).run(crypto.randomUUID(), candProfileId);
-
-    // Seed sample Skills
-    const initialSkills = [
-      { name: 'TypeScript', proficiency: 'Expert' },
-      { name: 'React', proficiency: 'Expert' },
-      { name: 'Node.js', proficiency: 'Advanced' },
-      { name: 'PostgreSQL', proficiency: 'Advanced' },
-      { name: 'Tailwind CSS', proficiency: 'Expert' },
-      { name: 'Docker', proficiency: 'Intermediate' },
-      { name: 'AWS Cloud', proficiency: 'Intermediate' },
-    ];
-    for (const s of initialSkills) {
-      db.prepare(`
-        INSERT INTO candidate_skills (id, candidate_profile_id, name, proficiency)
-        VALUES (?, ?, ?, ?)
-      `).run(crypto.randomUUID(), candProfileId, s.name, s.proficiency);
-    }
-
-    // Seed sample Experience
-    db.prepare(`
-      INSERT INTO candidate_experience (id, candidate_profile_id, job_title, company, employment_type, location, start_date, end_date, currently_working, description)
-      VALUES (?, ?, 'Senior Full Stack Engineer', 'CloudScale Technologies', 'Full-time', 'Chennai, India (Hybrid)', '2022-06', '', 1, 'Architected real-time collaboration tools and resilient microservices serving 200k+ daily users. Optimized API response times by 35%.')
-    `).run(crypto.randomUUID(), candProfileId);
-
-    // Seed sample Project
-    db.prepare(`
-      INSERT INTO candidate_projects (id, candidate_profile_id, name, role, technologies, description, project_url, github_url, start_date, end_date)
-      VALUES (?, ?, 'Resumio Platform', 'Lead Full Stack Architect', 'React, TypeScript, SQLite, Tailwind CSS', 'Modern recruitment management portal with role-based security and candidate profile management.', 'https://resumio.ai', 'https://github.com/example/resumio', '2025-01', '2026-03')
-    `).run(crypto.randomUUID(), candProfileId);
-
-    // Seed sample Certification
-    db.prepare(`
-      INSERT INTO candidate_certifications (id, candidate_profile_id, name, issuing_organization, issue_date, expiration_date, does_not_expire, credential_id, credential_url)
-      VALUES (?, ?, 'AWS Certified Solutions Architect', 'Amazon Web Services (AWS)', '2024-04', '2027-04', 0, 'AWS-SA-994821', 'https://aws.amazon.com/verification')
-    `).run(crypto.randomUUID(), candProfileId);
-
-    recalculateCandidateCompletion(candProfileId);
-    console.log('✅ Starter Candidate seeded with Phase 2 data: rahul.kumar@resumio.ai / Candidate123!');
-  }
-
-  const existingRecruiter = db.prepare('SELECT id FROM users WHERE email = ?').get('sarah.j@talentcorp.io');
-  if (!existingRecruiter) {
-    const recUserId = crypto.randomUUID();
-    const recProfileId = crypto.randomUUID();
-    const recHash = bcrypt.hashSync('Recruiter123!', 10);
-
-    db.prepare(`
-      INSERT INTO users (id, email, password_hash, role, status)
-      VALUES (?, 'sarah.j@talentcorp.io', ?, 'recruiter', 'active')
-    `).run(recUserId, recHash);
-
-    db.prepare(`
-      INSERT INTO recruiter_profiles (id, user_id, full_name, phone, company_name, company_logo, industry, location, website, description, profile_completion)
-      VALUES (?, ?, 'Sarah Jenkins', '+1 (415) 555-0192', 'Nexus AI Technologies', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80', 'Artificial Intelligence & SaaS', 'San Francisco, CA', 'https://nexusai.tech', 'Nexus AI builds enterprise-grade machine learning workflows and automated data intelligence platforms.', 80)
-    `).run(recProfileId, recUserId);
-
-    console.log('✅ Starter Recruiter seeded: sarah.j@talentcorp.io / Recruiter123!');
   }
 }

@@ -41,7 +41,7 @@ const aiLimiter = createRateLimiter({
 });
 
 // Initialize SQLite database schema and seeds
-initDatabase();
+await initDatabase();
 
 // 3. Route Mounts
 app.use('/api/auth', authLimiter, authRouter);

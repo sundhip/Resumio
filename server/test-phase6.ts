@@ -23,7 +23,7 @@ async function runPhase6TestSuite() {
   console.log('🧪 RESUMIO PHASE 6: AI MATCHING, RANKING & SKILL GAP');
   console.log('====================================================\n');
 
-  initDatabase();
+  await initDatabase();
 
   // ========================================================
   // TEST SUITE 1: SKILL NORMALIZATION & CONSERVATIVE MATCHING
@@ -272,6 +272,11 @@ async function runPhase6TestSuite() {
   const candBGap = db.prepare('SELECT candidate_id FROM skill_gap_analyses WHERE id = ?').get(gapB.id) as any;
   assert(candBGap.candidate_id === candBUserId, 'Candidate B skill gap record is strictly keyed to Candidate B user ID');
   assert(candBGap.candidate_id !== candAUserId, 'Candidate A is barred from Candidate B skill gap data');
+
+  // Clean up mock test fixtures
+  try {
+    db.prepare('DELETE FROM users WHERE id IN (?, ?, ?, ?)').run(recUserId, recBUserId, candAUserId, candBUserId);
+  } catch {}
 
   // ========================================================
   // SUMMARY

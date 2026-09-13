@@ -26,7 +26,7 @@ async function runPhase8Tests() {
   console.log('🧪 RESUMIO PHASE 8: ADVANCED AI RECRUITMENT INTELLIGENCE');
   console.log('====================================================\n');
 
-  initDatabase();
+  await initDatabase();
 
   const testRunId = crypto.randomUUID().slice(0, 8);
   const passwordHash = bcrypt.hashSync('TestPass123!', 10);

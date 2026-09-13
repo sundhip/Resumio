@@ -57,6 +57,15 @@ export const api = {
     return handleResponse<AuthResponse>(res);
   },
 
+  async googleAuth(data: { credential?: string; userInfo?: any; role: 'candidate' | 'recruiter'; companyName?: string }): Promise<AuthResponse> {
+    const res = await fetch(`${API_BASE_URL}/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return handleResponse<AuthResponse>(res);
+  },
+
   async login(data: { email: string; password: string }): Promise<AuthResponse> {
     const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',

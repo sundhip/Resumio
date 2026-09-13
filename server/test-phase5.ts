@@ -25,7 +25,7 @@ async function runPhase5TestSuite() {
   console.log('🧪 RESUMIO PHASE 5: RESUME PARSING & AI SCREENING SUITE');
   console.log('====================================================\n');
 
-  initDatabase();
+  await initDatabase();
 
   // Ensure test upload directory exists
   if (!fs.existsSync(resumeUploadDir)) {
@@ -293,9 +293,14 @@ MIT (2020 - 2024)
   assert(oldResume.is_active === 0, 'Previous resume is marked inactive (is_active = 0) rather than deleted');
   assert(newResume.is_active === 1, 'Newly uploaded resume is marked active (is_active = 1)');
 
-  // Clean up mock test file
+  // Clean up mock test file and test database fixtures
   try {
     if (fs.existsSync(testPdfPath)) fs.unlinkSync(testPdfPath);
+    db.prepare('DELETE FROM resume_parsed_data WHERE candidate_profile_id = ?').run(testProfileId);
+    db.prepare('DELETE FROM resume_screenings WHERE resume_id = ?').run(testResumeId);
+    db.prepare('DELETE FROM candidate_resumes WHERE candidate_profile_id = ?').run(testProfileId);
+    db.prepare('DELETE FROM candidate_profiles WHERE id = ?').run(testProfileId);
+    db.prepare('DELETE FROM users WHERE id = ?').run(testUserId);
   } catch {}
 
   console.log('\n====================================================');

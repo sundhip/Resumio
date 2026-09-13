@@ -12,6 +12,7 @@ interface AuthContextType {
   adminLogin: (email: string, password: string) => Promise<void>;
   registerCandidate: (data: { fullName: string; email: string; password: string; confirmPassword: string }) => Promise<void>;
   registerRecruiter: (data: { fullName: string; email: string; companyName: string; password: string; confirmPassword: string }) => Promise<void>;
+  googleAuth: (data: { credential?: string; userInfo?: any; role: 'candidate' | 'recruiter'; companyName?: string }) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
   updateUserContext: (updates: Partial<User>) => void;
@@ -113,6 +114,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const googleAuth = async (data: { credential?: string; userInfo?: any; role: 'candidate' | 'recruiter'; companyName?: string }) => {
+    setIsLoading(true);
+    try {
+      const res = await api.googleAuth(data);
+      if (res.token && res.user) {
+        localStorage.setItem('resumio_token', res.token);
+        setUser(res.user);
+        setProfile(res.profile || null);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('resumio_token');
     setUser(null);
@@ -142,6 +157,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         adminLogin,
         registerCandidate,
         registerRecruiter,
+        googleAuth,
         logout,
         refreshUser,
         updateUserContext,
