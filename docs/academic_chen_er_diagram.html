@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumio — Classical Academic Chen's ER Diagram & Relational Model</title>
+<style>
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #1e293b;
+    --border-color: #cbd5e1;
+    --card-bg: #f8fafc;
+    --entity-fill: #eff6ff;
+    --entity-stroke: #1d4ed8;
+    --rel-fill: #fdf4ff;
+    --rel-stroke: #a21caf;
+    --attr-fill: #f0fdf4;
+    --attr-stroke: #15803d;
+    --weak-stroke: #b91c1c;
+    --weak-fill: #fef2f2;
+    --derived-stroke: #64748b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-color: #0f172a;
+      --text-color: #f8fafc;
+      --border-color: #334155;
+      --card-bg: #1e293b;
+      --entity-fill: #172554;
+      --entity-stroke: #60a5fa;
+      --rel-fill: #3b0764;
+      --rel-stroke: #c084fc;
+      --attr-fill: #052e16;
+      --attr-stroke: #4ade80;
+      --weak-stroke: #f87171;
+      --weak-fill: #450a0a;
+      --derived-stroke: #94a3b8;
+    }
+  }
+  @media print {
+    body { background: white !important; color: black !important; padding: 0 !important; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+  }
+  body {
+    margin: 0;
+    padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 24px;
+  }
+  h1 { margin: 0 0 6px 0; font-size: 26px; font-weight: 800; }
+  .subtitle { color: #64748b; font-size: 14px; margin: 0; }
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-color);
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: #6366f1; background: #e0e7ff; color: #1e1b4b; }
+  .btn-primary { background: #4f46e5; color: #ffffff; border-color: #4338ca; }
+  .btn-primary:hover { background: #4338ca; color: #ffffff; }
+  
+  .legend-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: var(--card-bg);
+    padding: 12px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 12px;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .box-sample { width: 22px; height: 14px; border: 1.5px solid var(--entity-stroke); background: var(--entity-fill); border-radius: 2px; }
+  .weak-box-sample { width: 22px; height: 14px; border: 1.5px solid var(--weak-stroke); background: var(--weak-fill); outline: 1px solid var(--weak-stroke); outline-offset: 1.5px; border-radius: 1px; }
+  .diamond-sample { width: 14px; height: 14px; border: 1.5px solid var(--rel-stroke); background: var(--rel-fill); transform: rotate(45deg); }
+  .oval-sample { width: 22px; height: 12px; border: 1.5px solid var(--attr-stroke); background: var(--attr-fill); border-radius: 50%; }
+  .double-oval-sample { width: 22px; height: 12px; border: 1.5px solid var(--attr-stroke); background: var(--attr-fill); border-radius: 50%; outline: 1px solid var(--attr-stroke); outline-offset: 1px; }
+  .dashed-oval-sample { width: 22px; height: 12px; border: 1.5px dashed var(--derived-stroke); border-radius: 50%; }
+
+  .diagram-frame {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 28px 0 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: #4f46e5;
+    border-radius: 2px;
+  }
+
+  /* Relational Schema Card */
+  .schema-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 13px;
+  }
+  .schema-card .t-name { font-weight: 800; color: #6366f1; font-size: 14px; }
+  .schema-card .pk { text-decoration: underline; font-weight: 700; color: #d97706; }
+  .schema-card .fk { color: #0284c7; font-weight: 600; }
+  .schema-card .comment { color: #64748b; font-family: sans-serif; font-size: 12px; margin-top: 6px; }
+
+  svg text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>Resumio — Classical Chen's ER Diagram & Relational Model</h1>
+      <p class="subtitle">Academic DBMS Standard (Peter Chen Notation) · Entities, Weak Entities, Relationships & Attributes</p>
+    </div>
+    <div class="btn-group no-print">
+      <button class="btn btn-primary" onclick="downloadMainSVG()">Download Full ER Diagram (SVG)</button>
+      <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend-bar no-print">
+    <span style="font-weight:700;">Chen's Notation Symbols:</span>
+    <div class="legend-item"><div class="box-sample"></div> <span>Strong Entity Set (Rectangle)</span></div>
+    <div class="legend-item"><div class="weak-box-sample"></div> <span>Weak Entity Set (Double Rectangle)</span></div>
+    <div class="legend-item"><div class="diamond-sample"></div> <span>Relationship Set (Diamond)</span></div>
+    <div class="legend-item"><div class="oval-sample"></div> <span>Attribute (Ellipse)</span></div>
+    <div class="legend-item"><span style="text-decoration:underline; font-weight:bold;">Key</span> <span>Primary Key (Underlined)</span></div>
+    <div class="legend-item"><div class="double-oval-sample"></div> <span>Multivalued Attribute (Double Ellipse)</span></div>
+    <div class="legend-item"><div class="dashed-oval-sample"></div> <span>Derived Attribute (Dashed Ellipse)</span></div>
+  </div>
+
+  <div class="section-title">1. Classical Chen's Entity-Relationship (ER) Diagram</div>
+
+  <!-- SVG Diagram Canvas -->
+  <div class="diagram-frame">
+    <svg id="chen-svg" viewBox="0 0 1350 950" width="100%" height="950" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .line { stroke: #64748b; stroke-width: 1.5; fill: none; }
+          .bold-line { stroke: #334155; stroke-width: 2.2; fill: none; }
+          .entity-rect { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
+          .weak-rect-outer { fill: #fef2f2; stroke: #dc2626; stroke-width: 1.5; }
+          .weak-rect-inner { fill: none; stroke: #dc2626; stroke-width: 1.5; }
+          .rel-diamond { fill: #fdf4ff; stroke: #9333ea; stroke-width: 2; }
+          .ident-rel-outer { fill: #fff1f2; stroke: #e11d48; stroke-width: 1.5; }
+          .ident-rel-inner { fill: none; stroke: #e11d48; stroke-width: 1.5; }
+          .attr-ellipse { fill: #f0fdf4; stroke: #16a34a; stroke-width: 1.5; }
+          .multi-attr-outer { fill: #f0fdf4; stroke: #16a34a; stroke-width: 1.2; }
+          .multi-attr-inner { fill: none; stroke: #16a34a; stroke-width: 1.2; }
+          .derived-attr { fill: #f8fafc; stroke: #64748b; stroke-width: 1.5; stroke-dasharray: 4,3; }
+          .text-entity { font-size: 13px; font-weight: 700; fill: #1e3a8a; text-anchor: middle; dominant-baseline: central; }
+          .text-weak { font-size: 12px; font-weight: 700; fill: #991b1b; text-anchor: middle; dominant-baseline: central; }
+          .text-rel { font-size: 11px; font-weight: 700; fill: #581c87; text-anchor: middle; dominant-baseline: central; }
+          .text-attr { font-size: 10px; font-weight: 500; fill: #14532d; text-anchor: middle; dominant-baseline: central; }
+          .text-card { font-size: 11px; font-weight: 800; fill: #0f172a; }
+          .pk-text { text-decoration: underline; font-weight: 700; }
+        </style>
+      </defs>
+
+      <!-- ================= CONNECTING LINES ================= -->
+
+      <!-- USER Attributes -->
+      <line x1="200" y1="120" x2="110" y2="70" class="line" />
+      <line x1="200" y1="120" x2="200" y2="50" class="line" />
+      <line x1="200" y1="120" x2="290" y2="70" class="line" />
+      <line x1="200" y1="120" x2="90" y2="120" class="line" />
+
+      <!-- USER to CANDIDATE_PROFILE (HAS_CANDIDATE_PROFILE) -->
+      <line x1="200" y1="145" x2="200" y2="230" class="bold-line" />
+      <line x1="200" y1="230" x2="200" y2="310" class="bold-line" />
+
+      <!-- USER to RECRUITER_PROFILE (HAS_RECRUITER_PROFILE) -->
+      <line x1="270" y1="120" x2="680" y2="120" class="bold-line" />
+      <line x1="680" y1="120" x2="1080" y2="120" class="bold-line" />
+
+      <!-- CANDIDATE_PROFILE Attributes -->
+      <line x1="200" y1="335" x2="90" y2="270" class="line" />
+      <line x1="200" y1="335" x2="70" y2="335" class="line" />
+      <line x1="200" y1="335" x2="90" y2="390" class="line" />
+      <line x1="200" y1="335" x2="200" y2="405" class="line" /> <!-- Derived completion -->
+
+      <!-- CANDIDATE_PROFILE to WEAK ENTITIES (Skills, Education, Resumes) -->
+      <line x1="130" y1="335" x2="50" y2="480" class="line" />
+      <line x1="160" y1="355" x2="160" y2="480" class="line" />
+      <line x1="240" y1="355" x2="280" y2="480" class="line" />
+
+      <!-- RECRUITER to JOB (POSTS) -->
+      <line x1="1150" y1="145" x2="1150" y2="240" class="bold-line" />
+      <line x1="1150" y1="240" x2="1150" y2="335" class="bold-line" />
+
+      <!-- RECRUITER Attributes -->
+      <line x1="1150" y1="120" x2="1260" y2="70" class="line" />
+      <line x1="1150" y1="120" x2="1280" y2="120" class="line" />
+      <line x1="1150" y1="120" x2="1260" y2="170" class="line" />
+
+      <!-- JOB Attributes -->
+      <line x1="1150" y1="355" x2="1270" y2="310" class="line" />
+      <line x1="1150" y1="355" x2="1290" y2="355" class="line" />
+      <line x1="1150" y1="355" x2="1270" y2="400" class="line" />
+      <line x1="1150" y1="355" x2="1250" y2="450" class="line" /> <!-- Multivalued skills -->
+
+      <!-- APPLICATION (Relationship between Candidate, Job, and Resume) -->
+      <line x1="265" y1="335" x2="680" y2="335" class="bold-line" />
+      <line x1="680" y1="335" x2="1080" y2="335" class="bold-line" />
+      <!-- Application with Resume -->
+      <line x1="680" y1="335" x2="350" y2="500" class="line" />
+
+      <!-- Application Attributes -->
+      <line x1="680" y1="335" x2="600" y2="260" class="line" />
+      <line x1="680" y1="335" x2="680" y2="240" class="line" />
+      <line x1="680" y1="335" x2="760" y2="260" class="line" />
+
+      <!-- APPLICATION to INTERVIEW (SCHEDULES_INTERVIEW) -->
+      <line x1="680" y1="375" x2="680" y2="480" class="bold-line" />
+      <line x1="680" y1="480" x2="680" y2="580" class="bold-line" />
+
+      <!-- INTERVIEW Attributes -->
+      <line x1="680" y1="600" x2="560" y2="600" class="line" />
+      <line x1="680" y1="600" x2="580" y2="660" class="line" />
+      <line x1="680" y1="600" x2="680" y2="680" class="line" />
+      <line x1="680" y1="600" x2="780" y2="660" class="line" />
+
+      <!-- RESUME to MATCH (MATCHED_AGAINST) with JOB -->
+      <line x1="280" y1="520" x2="680" y2="780" class="line" />
+      <line x1="1150" y1="375" x2="680" y2="780" class="line" />
+      <line x1="680" y1="780" x2="680" y2="860" class="bold-line" />
+
+      <!-- RESUME_JOB_MATCH Attributes -->
+      <line x1="680" y1="880" x2="540" y2="880" class="line" />
+      <line x1="680" y1="880" x2="570" y2="930" class="line" />
+      <line x1="680" y1="880" x2="790" y2="930" class="line" />
+      <line x1="680" y1="880" x2="820" y2="880" class="line" />
+
+      <!-- USER to NOTIFICATIONS (RECEIVES) -->
+      <line x1="200" y1="120" x2="480" y2="80" class="line" />
+      <line x1="480" y1="80" x2="560" y2="80" class="line" />
+
+
+      <!-- ================= ENTITY SETS (RECTANGLES) ================= -->
+
+      <!-- USER Entity -->
+      <rect x="135" y="100" width="130" height="48" rx="4" class="entity-rect" />
+      <text x="200" y="124" class="text-entity">USER</text>
+
+      <!-- CANDIDATE_PROFILE Entity -->
+      <rect x="125" y="315" width="150" height="50" rx="4" class="entity-rect" />
+      <text x="200" y="340" class="text-entity">CANDIDATE_PROFILE</text>
+
+      <!-- RECRUITER_PROFILE Entity -->
+      <rect x="1075" y="100" width="150" height="50" rx="4" class="entity-rect" />
+      <text x="1150" y="125" class="text-entity">RECRUITER_PROFILE</text>
+
+      <!-- JOB Entity -->
+      <rect x="1085" y="335" width="130" height="50" rx="4" class="entity-rect" />
+      <text x="1150" y="360" class="text-entity">JOB</text>
+
+      <!-- INTERVIEW Entity -->
+      <rect x="615" y="580" width="130" height="50" rx="4" class="entity-rect" />
+      <text x="680" y="605" class="text-entity">INTERVIEW</text>
+
+      <!-- RESUME Weak Entity (Double Rectangle) -->
+      <rect x="215" y="480" width="130" height="46" rx="4" class="weak-rect-outer" />
+      <rect x="219" y="484" width="122" height="38" rx="3" class="weak-rect-inner" />
+      <text x="280" y="503" class="text-weak">RESUME</text>
+
+      <!-- SKILL Weak Entity -->
+      <rect x="5" y="480" width="90" height="46" rx="4" class="weak-rect-outer" />
+      <rect x="9" y="484" width="82" height="38" rx="3" class="weak-rect-inner" />
+      <text x="50" y="503" class="text-weak">SKILL</text>
+
+      <!-- EDUCATION Weak Entity -->
+      <rect x="110" y="480" width="95" height="46" rx="4" class="weak-rect-outer" />
+      <rect x="114" y="484" width="87" height="38" rx="3" class="weak-rect-inner" />
+      <text x="157" y="503" class="text-weak">EDUCATION</text>
+
+      <!-- NOTIFICATION Entity -->
+      <rect x="560" y="60" width="120" height="44" rx="4" class="entity-rect" />
+      <text x="620" y="82" class="text-entity">NOTIFICATION</text>
+
+      <!-- RESUME_JOB_MATCH Entity (Evaluation Result) -->
+      <rect x="605" y="860" width="150" height="50" rx="4" class="entity-rect" />
+      <text x="680" y="885" class="text-entity">RESUME_JOB_MATCH</text>
+
+
+      <!-- ================= RELATIONSHIP SETS (DIAMONDS) ================= -->
+
+      <!-- HAS (User to Candidate Profile) -->
+      <polygon points="200,205 235,230 200,255 165,230" class="rel-diamond" />
+      <text x="200" y="230" class="text-rel">HAS_CAND</text>
+
+      <!-- HAS (User to Recruiter Profile) -->
+      <polygon points="680,95 725,120 680,145 635,120" class="rel-diamond" />
+      <text x="680" y="120" class="text-rel">HAS_REC</text>
+
+      <!-- POSTS (Recruiter to Job) -->
+      <polygon points="1150,215 1190,240 1150,265 1110,240" class="rel-diamond" />
+      <text x="1150" y="240" class="text-rel">POSTS</text>
+
+      <!-- APPLICATION (Ternary Relationship: Candidate + Job + Resume) -->
+      <polygon points="680,305 735,335 680,365 625,335" class="rel-diamond" />
+      <text x="680" y="335" class="text-rel">APPLIES</text>
+
+      <!-- SCHEDULES_FOR (Application to Interview) -->
+      <polygon points="680,455 730,480 680,505 630,480" class="rel-diamond" />
+      <text x="680" y="480" class="text-rel">SCHEDULES</text>
+
+      <!-- EVALUATES (Resume & Job to Match) -->
+      <polygon points="680,755 730,780 680,805 630,780" class="rel-diamond" />
+      <text x="680" y="780" class="text-rel">EVALUATES</text>
+
+      <!-- RECEIVES (User to Notification) -->
+      <polygon points="480,60 515,80 480,100 445,80" class="rel-diamond" />
+      <text x="480" y="80" class="text-rel">RECEIVES</text>
+
+
+      <!-- ================= CARDINALITY LABELS ================= -->
+      <text x="210" y="170" class="text-card">1</text>
+      <text x="210" y="295" class="text-card">1</text>
+
+      <text x="290" y="112" class="text-card">1</text>
+      <text x="1050" y="112" class="text-card">1</text>
+
+      <text x="1160" y="170" class="text-card">1</text>
+      <text x="1160" y="315" class="text-card">N</text>
+
+      <text x="290" y="325" class="text-card">M</text>
+      <text x="1060" y="325" class="text-card">N</text>
+      <text x="350" y="480" class="text-card">1 (snapshot)</text>
+
+      <text x="690" y="390" class="text-card">1</text>
+      <text x="690" y="560" class="text-card">N</text>
+
+      <text x="230" y="100" class="text-card">1</text>
+      <text x="540" y="70" class="text-card">N</text>
+
+
+      <!-- ================= ATTRIBUTES (ELLIPSES) ================= -->
+
+      <!-- USER Attributes -->
+      <ellipse cx="110" cy="65" rx="35" ry="16" class="attr-ellipse" />
+      <text x="110" y="65" class="text-attr pk-text">user_id</text>
+
+      <ellipse cx="200" cy="45" rx="35" ry="16" class="attr-ellipse" />
+      <text x="200" y="45" class="text-attr">email</text>
+
+      <ellipse cx="290" cy="65" rx="35" ry="16" class="attr-ellipse" />
+      <text x="290" y="65" class="text-attr">password</text>
+
+      <ellipse cx="75" cy="120" rx="28" ry="15" class="attr-ellipse" />
+      <text x="75" y="120" class="text-attr">role</text>
+
+      <!-- CANDIDATE_PROFILE Attributes -->
+      <ellipse cx="75" cy="270" rx="38" ry="16" class="attr-ellipse" />
+      <text x="75" y="270" class="text-attr pk-text">profile_id</text>
+
+      <ellipse cx="55" cy="335" rx="35" ry="16" class="attr-ellipse" />
+      <text x="55" y="335" class="text-attr">full_name</text>
+
+      <ellipse cx="75" cy="390" rx="32" ry="16" class="attr-ellipse" />
+      <text x="75" y="390" class="text-attr">headline</text>
+
+      <!-- Derived Profile Completion (Dashed Ellipse) -->
+      <ellipse cx="200" cy="425" rx="55" ry="18" class="derived-attr" />
+      <text x="200" y="425" class="text-attr">completion %</text>
+
+      <!-- RECRUITER_PROFILE Attributes -->
+      <ellipse cx="1270" cy="65" rx="40" ry="16" class="attr-ellipse" />
+      <text x="1270" y="65" class="text-attr pk-text">rec_id</text>
+
+      <ellipse cx="1300" cy="120" rx="45" ry="16" class="attr-ellipse" />
+      <text x="1300" y="120" class="text-attr">company</text>
+
+      <ellipse cx="1270" cy="175" rx="38" ry="16" class="attr-ellipse" />
+      <text x="1270" y="175" class="text-attr">industry</text>
+
+      <!-- JOB Attributes -->
+      <ellipse cx="1285" cy="300" rx="35" ry="16" class="attr-ellipse" />
+      <text x="1285" y="300" class="text-attr pk-text">job_id</text>
+
+      <ellipse cx="1305" cy="355" rx="35" ry="16" class="attr-ellipse" />
+      <text x="1305" y="355" class="text-attr">title</text>
+
+      <ellipse cx="1285" cy="410" rx="42" ry="16" class="attr-ellipse" />
+      <text x="1285" y="410" class="text-attr">work_mode</text>
+
+      <!-- Multivalued Required Skills (Double Ellipse) -->
+      <ellipse cx="1265" cy="470" rx="55" ry="18" class="multi-attr-outer" />
+      <ellipse cx="1265" cy="470" rx="50" ry="14" class="multi-attr-inner" />
+      <text x="1265" y="470" class="text-attr">{req_skills}</text>
+
+      <!-- APPLICATION Attributes (on relationship) -->
+      <ellipse cx="585" cy="245" rx="40" ry="16" class="attr-ellipse" />
+      <text x="585" y="245" class="text-attr pk-text">app_id</text>
+
+      <ellipse cx="680" cy="220" rx="38" ry="16" class="attr-ellipse" />
+      <text x="680" y="220" class="text-attr">status</text>
+
+      <ellipse cx="775" cy="245" rx="42" ry="16" class="attr-ellipse" />
+      <text x="775" y="245" class="text-attr">applied_at</text>
+
+      <!-- INTERVIEW Attributes -->
+      <ellipse cx="545" cy="590" rx="38" ry="16" class="attr-ellipse" />
+      <text x="545" y="590" class="text-attr pk-text">int_id</text>
+
+      <ellipse cx="565" cy="670" rx="48" ry="16" class="attr-ellipse" />
+      <text x="565" y="670" class="text-attr">scheduled_at</text>
+
+      <ellipse cx="680" cy="700" rx="38" ry="16" class="attr-ellipse" />
+      <text x="680" y="700" class="text-attr">type</text>
+
+      <ellipse cx="795" cy="670" rx="38" ry="16" class="attr-ellipse" />
+      <text x="795" y="670" class="text-attr">status</text>
+
+      <!-- RESUME_JOB_MATCH Attributes -->
+      <ellipse cx="525" cy="875" rx="40" ry="16" class="attr-ellipse" />
+      <text x="525" y="875" class="text-attr pk-text">match_id</text>
+
+      <!-- Derived Match Score (Dashed Ellipse) -->
+      <ellipse cx="560" cy="940" rx="52" ry="17" class="derived-attr" />
+      <text x="560" y="940" class="text-attr">match_score %</text>
+
+      <ellipse cx="800" cy="940" rx="58" ry="17" class="attr-ellipse" />
+      <text x="800" y="940" class="text-attr">skill_gap_json</text>
+
+      <ellipse cx="830" cy="875" rx="50" ry="16" class="attr-ellipse" />
+      <text x="830" y="875" class="text-attr">ai_summary</text>
+
+    </svg>
+  </div>
+
+  <!-- ================= RELATIONAL SCHEMA SECTION ================= -->
+  <div class="section-title page-break">2. Formal Relational Model (Relational Schema)</div>
+  <p style="color:#64748b; font-size:13px; margin-top:-8px; margin-bottom:18px;">
+    <strong>Notation Standard:</strong> <code>TABLE_NAME (<span style="text-decoration:underline; font-weight:bold; color:#d97706;">Primary_Key</span>, Attribute_1, Attribute_2, <span style="color:#0284c7; font-weight:600;">Foreign_Key*</span>)</code>
+  </p>
+
+  <div class="schema-card">
+    <span class="t-name">USERS</span> (
+      <span class="pk">id</span>, email, password_hash, role, status, created_at, updated_at
+    )
+    <div class="comment">/* Core account entity with role domain: ('candidate', 'recruiter', 'admin') */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">CANDIDATE_PROFILES</span> (
+      <span class="pk">id</span>, <span class="fk">user_id*</span>, full_name, phone, location, headline, bio, photo_url, profile_completion, created_at, updated_at
+    )
+    <div class="comment">/* FK: user_id &rarr; USERS(id) [ON DELETE CASCADE], 1:1 relationship with Users */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">RECRUITER_PROFILES</span> (
+      <span class="pk">id</span>, <span class="fk">user_id*</span>, full_name, phone, company_name, company_logo, industry, location, website, description, profile_completion, created_at, updated_at
+    )
+    <div class="comment">/* FK: user_id &rarr; USERS(id) [ON DELETE CASCADE], 1:1 relationship with Users */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">CANDIDATE_SKILLS</span> (
+      <span class="pk">id</span>, <span class="fk">candidate_profile_id*</span>, name, proficiency, created_at, updated_at
+    )
+    <div class="comment">/* FK: candidate_profile_id &rarr; CANDIDATE_PROFILES(id) [ON DELETE CASCADE], Weak Entity Set */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">CANDIDATE_EDUCATION</span> (
+      <span class="pk">id</span>, <span class="fk">candidate_profile_id*</span>, degree, field_of_study, institution, location, start_date, end_date, currently_studying, grade_or_gpa, description, created_at, updated_at
+    )
+    <div class="comment">/* FK: candidate_profile_id &rarr; CANDIDATE_PROFILES(id) [ON DELETE CASCADE], Weak Entity Set */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">CANDIDATE_RESUMES</span> (
+      <span class="pk">id</span>, <span class="fk">candidate_profile_id*</span>, original_filename, stored_filename, file_type, file_size, is_active, created_at, updated_at
+    )
+    <div class="comment">/* FK: candidate_profile_id &rarr; CANDIDATE_PROFILES(id) [ON DELETE CASCADE] */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">JOBS</span> (
+      <span class="pk">id</span>, <span class="fk">recruiter_id*</span>, <span class="fk">recruiter_profile_id*</span>, title, description, responsibilities, company_name, location, employment_type, work_mode, salary_min, salary_max, currency, salary_period, salary_disclosed, min_experience, max_experience, qualification, deadline, status, created_at, updated_at, published_at, closed_at
+    )
+    <div class="comment">/* FK: recruiter_id &rarr; USERS(id), recruiter_profile_id &rarr; RECRUITER_PROFILES(id) [ON DELETE CASCADE] */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">JOB_REQUIRED_SKILLS</span> (
+      <span class="pk">id</span>, <span class="fk">job_id*</span>, name, created_at
+    )
+    <div class="comment">/* FK: job_id &rarr; JOBS(id) [ON DELETE CASCADE], Decomposed multivalued attribute */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">APPLICATIONS</span> (
+      <span class="pk">id</span>, <span class="fk">candidate_id*</span>, <span class="fk">candidate_profile_id*</span>, <span class="fk">job_id*</span>, <span class="fk">resume_id*</span>, cover_letter, status, rejection_reason, applied_at, updated_at
+    )
+    <div class="comment">/* Ternary Relationship: candidate_id &rarr; USERS(id), job_id &rarr; JOBS(id), resume_id &rarr; CANDIDATE_RESUMES(id) */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">APPLICATION_STATUS_HISTORY</span> (
+      <span class="pk">id</span>, <span class="fk">application_id*</span>, old_status, new_status, <span class="fk">changed_by*</span>, changed_by_role, note, changed_at
+    )
+    <div class="comment">/* FK: application_id &rarr; APPLICATIONS(id) [ON DELETE CASCADE], changed_by &rarr; USERS(id) */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">INTERVIEWS</span> (
+      <span class="pk">id</span>, <span class="fk">application_id*</span>, <span class="fk">candidate_id*</span>, <span class="fk">recruiter_id*</span>, <span class="fk">job_id*</span>, title, interview_type, scheduled_at, duration_minutes, location, meeting_url, description, status, cancellation_reason, reschedule_reason, created_at, updated_at
+    )
+    <div class="comment">/* FK: application_id &rarr; APPLICATIONS(id), candidate_id &rarr; USERS(id), recruiter_id &rarr; USERS(id), job_id &rarr; JOBS(id) */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">RESUME_JOB_MATCHES</span> (
+      <span class="pk">id</span>, <span class="fk">resume_id*</span>, <span class="fk">job_id*</span>, <span class="fk">application_id*</span>, <span class="fk">candidate_id*</span>, <span class="fk">candidate_profile_id*</span>, algorithm_version, status, error_message, match_score, required_skills_matched_json, required_skills_missing_json, preferred_skills_matched_json, preferred_skills_missing_json, required_skills_score, preferred_skills_score, experience_score, qualification_score, relevance_score, started_at, completed_at, created_at, updated_at
+    )
+    <div class="comment">/* AI deterministic score evaluation matching snapshot resume against job requirements */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">NOTIFICATIONS</span> (
+      <span class="pk">id</span>, <span class="fk">user_id*</span>, type, title, message, related_entity_type, related_entity_id, is_read, created_at
+    )
+    <div class="comment">/* FK: user_id &rarr; USERS(id) [ON DELETE CASCADE] */</div>
+  </div>
+
+  <div class="schema-card">
+    <span class="t-name">RESUME_PARSED_DATA</span> (
+      <span class="pk">id</span>, <span class="fk">resume_id*</span>, <span class="fk">candidate_id*</span>, <span class="fk">candidate_profile_id*</span>, file_hash, parser_version, status, raw_text, candidate_name, email, phone, location, headline, summary, skills_json, education_json, experience_json, projects_json, certifications_json, started_at, completed_at, created_at, updated_at
+    )
+    <div class="comment">/* 1:1 structured extraction of uploaded resume document */</div>
+  </div>
+
+</div>
+
+<script>
+function downloadMainSVG() {
+  const svg = document.getElementById('chen-svg');
+  const svgData = new XMLSerializer().serializeToString(svg);
+  const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'resumio_chen_er_diagram.svg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+</script>
+
+</body>
+</html>
