@@ -110,7 +110,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
       onClose={onClose}
       title={educationToEdit ? 'Edit Education Record' : 'Add Education Record'}
       description="Add your degree, university, study period, and academic credentials."
-      size="md"
+      size="lg"
       footer={
         <>
           <Button variant="secondary" onClick={onClose} disabled={isSaving}>
@@ -127,20 +127,20 @@ export const EducationModal: React.FC<EducationModalProps> = ({
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-3.5">
+      <form onSubmit={handleSubmit} className="space-y-4 text-left">
         {errorMessage && (
-          <div className="p-3 rounded-control bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300">
+          <div className="p-3 rounded-lg bg-rose-950/40 border border-rose-900/60 text-xs text-rose-300">
             {errorMessage}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <Input
             label="Degree *"
             placeholder="e.g. B.Tech, M.S., B.Sc."
             value={degree}
             onChange={(e) => setDegree(e.target.value)}
-            leftIcon={<GraduationCap className="w-4 h-4" />}
+            leftIcon={<GraduationCap className="w-4 h-4 text-slate-400" />}
             required
           />
 
@@ -149,37 +149,33 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             placeholder="e.g. Computer Science & Engineering"
             value={fieldOfStudy}
             onChange={(e) => setFieldOfStudy(e.target.value)}
-            leftIcon={<Award className="w-4 h-4" />}
+            leftIcon={<Award className="w-4 h-4 text-slate-400" />}
             required
           />
 
-          <div className="sm:col-span-2">
-            <Input
-              label="Institution / University *"
-              placeholder="e.g. Anna University, IIT Madras"
-              value={institution}
-              onChange={(e) => setInstitution(e.target.value)}
-              leftIcon={<Building className="w-4 h-4" />}
-              required
-            />
-          </div>
+          <Input
+            label="Institution / University *"
+            placeholder="e.g. Anna University, IIT Madras"
+            value={institution}
+            onChange={(e) => setInstitution(e.target.value)}
+            leftIcon={<Building className="w-4 h-4 text-slate-400" />}
+            required
+          />
 
-          <div className="sm:col-span-2">
-            <Input
-              label="Location (City, Country)"
-              placeholder="e.g. Chennai, India"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              leftIcon={<MapPin className="w-4 h-4" />}
-            />
-          </div>
+          <Input
+            label="Location (City, Country)"
+            placeholder="e.g. Chennai, India"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            leftIcon={<MapPin className="w-4 h-4 text-slate-400" />}
+          />
 
           <Input
             label="Start Date *"
             placeholder="YYYY-MM (e.g. 2020-08)"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
             required
           />
 
@@ -189,11 +185,11 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             disabled={currentlyStudying}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
             helperText={currentlyStudying ? 'Disabled while studying' : ''}
           />
 
-          <div className="sm:col-span-2 flex items-center gap-2">
+          <div className="sm:col-span-2 flex items-center gap-2 pt-1">
             <input
               type="checkbox"
               id="currently-studying-chk"
@@ -202,11 +198,11 @@ export const EducationModal: React.FC<EducationModalProps> = ({
                 setCurrentlyStudying(e.target.checked);
                 if (e.target.checked) setEndDate('');
               }}
-              className="rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+              className="rounded border-slate-700 bg-[#0d101d] text-brand-600 focus:ring-brand-500/40 w-4 h-4 cursor-pointer"
             />
             <label
               htmlFor="currently-studying-chk"
-              className="text-xs text-slate-700 dark:text-slate-300 select-none font-medium cursor-pointer"
+              className="text-xs text-slate-300 select-none font-medium cursor-pointer"
             >
               I currently study here
             </label>
@@ -218,12 +214,12 @@ export const EducationModal: React.FC<EducationModalProps> = ({
               placeholder="e.g. CGPA: 8.7 / 10 or 3.8 GPA"
               value={gradeOrGpa}
               onChange={(e) => setGradeOrGpa(e.target.value)}
-              leftIcon={<Award className="w-4 h-4" />}
+              leftIcon={<Award className="w-4 h-4 text-slate-400" />}
             />
           </div>
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+            <label className="text-[13px] font-semibold text-slate-300 block">
               Description & Highlights (Optional)
             </label>
             <textarea
@@ -231,7 +227,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Major focus areas, coursework, honors, or thesis topics..."
-              className="w-full p-2.5 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all resize-y min-h-[100px]"
             />
           </div>
         </div>

@@ -8,12 +8,14 @@
     "dev": "npm run kill:ports && concurrently \"tsx server/index.ts\" \"vite\"",
     "dev:frontend": "vite",
     "dev:backend": "tsx server/index.ts",
+    "seed": "tsx server/scripts/seed-db.ts",
     "server": "tsx server/index.ts",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rolldown/binding-win32-x64-msvc": "^1.2.9",
     "bcryptjs": "^3.0.2",
     "better-sqlite3": "^11.8.1",
     "clsx": "^2.1.1",

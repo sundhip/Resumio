@@ -87,7 +87,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
       onClose={onClose}
       title={certificationToEdit ? 'Edit Certification' : 'Add Certification'}
       description="List professional certificates, licenses, cloud credentials, or industry qualifications."
-      size="md"
+      size="lg"
       footer={
         <>
           <Button variant="secondary" onClick={onClose} disabled={isSaving}>
@@ -104,42 +104,38 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-3.5">
+      <form onSubmit={handleSubmit} className="space-y-4 text-left">
         {errorMessage && (
-          <div className="p-3 rounded-control bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300">
+          <div className="p-3 rounded-lg bg-rose-950/40 border border-rose-900/60 text-xs text-rose-300">
             {errorMessage}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div className="sm:col-span-2">
-            <Input
-              label="Certification Name *"
-              placeholder="e.g. AWS Certified Solutions Architect - Associate"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              leftIcon={<Award className="w-4 h-4" />}
-              required
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          <Input
+            label="Certification Name *"
+            placeholder="e.g. AWS Certified Solutions Architect - Associate"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            leftIcon={<Award className="w-4 h-4 text-slate-400" />}
+            required
+          />
 
-          <div className="sm:col-span-2">
-            <Input
-              label="Issuing Organization *"
-              placeholder="e.g. Amazon Web Services (AWS), Google Cloud, Microsoft"
-              value={issuingOrganization}
-              onChange={(e) => setIssuingOrganization(e.target.value)}
-              leftIcon={<Building className="w-4 h-4" />}
-              required
-            />
-          </div>
+          <Input
+            label="Issuing Organization *"
+            placeholder="e.g. Amazon Web Services (AWS), Google Cloud, Microsoft"
+            value={issuingOrganization}
+            onChange={(e) => setIssuingOrganization(e.target.value)}
+            leftIcon={<Building className="w-4 h-4 text-slate-400" />}
+            required
+          />
 
           <Input
             label="Issue Date"
             placeholder="YYYY-MM (e.g. 2023-08)"
             value={issueDate}
             onChange={(e) => setIssueDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -147,7 +143,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="YYYY-MM (e.g. 2026-08, or leave blank if does not expire)"
             value={expirationDate}
             onChange={(e) => setExpirationDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -155,7 +151,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="e.g. AWS-PSA-1082947"
             value={credentialId}
             onChange={(e) => setCredentialId(e.target.value)}
-            leftIcon={<Hash className="w-4 h-4" />}
+            leftIcon={<Hash className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -163,7 +159,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="https://www.credly.com/badges/..."
             value={credentialUrl}
             onChange={(e) => setCredentialUrl(e.target.value)}
-            leftIcon={<ExternalLink className="w-4 h-4" />}
+            leftIcon={<ExternalLink className="w-4 h-4 text-slate-400" />}
           />
         </div>
       </form>

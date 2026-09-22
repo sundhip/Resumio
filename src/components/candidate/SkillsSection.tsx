@@ -115,14 +115,14 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
       {quickInputOpen && (
         <form
           onSubmit={handleAddSubmit}
-          className="p-3.5 rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 animate-fade-in"
+          className="p-3.5 rounded-xl bg-[#0d101d] border border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 animate-fade-in"
         >
           <input
             type="text"
             placeholder="Type skill name (e.g. TypeScript, React, Python)..."
             value={skillName}
             onChange={(e) => setSkillName(e.target.value)}
-            className="flex-1 px-3 py-2 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-card text-slate-900 dark:text-white border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-[#121624] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
             autoFocus
             required
           />
@@ -130,12 +130,12 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
           <select
             value={proficiency}
             onChange={(e) => setProficiency(e.target.value as SkillProficiency)}
-            className="px-3 py-2 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-card text-slate-900 dark:text-white border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            className="px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-[#121624] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
           >
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-            <option value="Expert">Expert</option>
+            <option value="Beginner" className="bg-[#121624] text-slate-100">Beginner</option>
+            <option value="Intermediate" className="bg-[#121624] text-slate-100">Intermediate</option>
+            <option value="Advanced" className="bg-[#121624] text-slate-100">Advanced</option>
+            <option value="Expert" className="bg-[#121624] text-slate-100">Expert</option>
           </select>
 
           <Button variant="primary" size="sm" type="submit" isLoading={isAdding}>
@@ -209,7 +209,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
         onClose={() => setEditingSkill(null)}
         title={`Edit Skill: ${editingSkill?.name}`}
         description="Update your verified proficiency tier for this skill."
-        size="sm"
+        size="md"
         footer={
           <>
             <Button variant="secondary" onClick={() => setEditingSkill(null)} disabled={isUpdating}>
@@ -221,20 +221,20 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
           </>
         }
       >
-        <div className="space-y-3 py-1">
-          <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+        <div className="space-y-3 py-1 text-left">
+          <label className="text-[13px] font-semibold text-slate-300 block">
             Proficiency Level
           </label>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             {(['Beginner', 'Intermediate', 'Advanced', 'Expert'] as SkillProficiency[]).map((level) => (
               <button
                 key={level}
                 type="button"
                 onClick={() => setEditProficiency(level)}
-                className={`p-2.5 rounded-control text-left border text-xs font-semibold transition-all ${
+                className={`p-3 rounded-xl text-left border text-xs font-semibold transition-all ${
                   editProficiency === level
-                    ? 'border-brand-600 bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 shadow-2xs'
-                    : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-slate-50'
+                    ? 'border-brand-500 bg-brand-950/40 text-brand-300 shadow-sm ring-1 ring-brand-500/50'
+                    : 'border-slate-800 bg-[#0d101d] text-slate-300 hover:bg-[#121624]'
                 }`}
               >
                 {level}

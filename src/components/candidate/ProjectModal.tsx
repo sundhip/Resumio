@@ -90,7 +90,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
       onClose={onClose}
       title={projectToEdit ? 'Edit Project' : 'Add Project'}
       description="Showcase applications, systems, open-source repositories, or client work you've built."
-      size="md"
+      size="lg"
       footer={
         <>
           <Button variant="secondary" onClick={onClose} disabled={isSaving}>
@@ -107,31 +107,29 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-3.5">
+      <form onSubmit={handleSubmit} className="space-y-4 text-left">
         {errorMessage && (
-          <div className="p-3 rounded-control bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300">
+          <div className="p-3 rounded-lg bg-rose-950/40 border border-rose-900/60 text-xs text-rose-300">
             {errorMessage}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div className="sm:col-span-2">
-            <Input
-              label="Project Name *"
-              placeholder="e.g. AI Resume Screening Platform"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              leftIcon={<Layers className="w-4 h-4" />}
-              required
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          <Input
+            label="Project Name *"
+            placeholder="e.g. AI Resume Screening Platform"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            leftIcon={<Layers className="w-4 h-4 text-slate-400" />}
+            required
+          />
 
           <Input
             label="Your Role / Contribution"
             placeholder="e.g. Lead Full Stack Architect"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            leftIcon={<User className="w-4 h-4" />}
+            leftIcon={<User className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -139,7 +137,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="e.g. React, TypeScript, Node.js, SQLite"
             value={technologies}
             onChange={(e) => setTechnologies(e.target.value)}
-            leftIcon={<Code2 className="w-4 h-4" />}
+            leftIcon={<Code2 className="w-4 h-4 text-slate-400" />}
             helperText="Comma separated list"
           />
 
@@ -148,7 +146,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="https://myproject.com"
             value={projectUrl}
             onChange={(e) => setProjectUrl(e.target.value)}
-            leftIcon={<Globe className="w-4 h-4" />}
+            leftIcon={<Globe className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -156,7 +154,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="https://github.com/username/repo"
             value={githubUrl}
             onChange={(e) => setGithubUrl(e.target.value)}
-            leftIcon={<GitBranch className="w-4 h-4" />}
+            leftIcon={<GitBranch className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -164,7 +162,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="YYYY-MM (e.g. 2024-01)"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -172,11 +170,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="YYYY-MM (e.g. 2024-06)"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
           />
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+            <label className="text-[13px] font-semibold text-slate-300 block">
               Project Description & Architectural Details
             </label>
             <textarea
@@ -184,7 +182,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe the problem solved, architectural choices, scale, performance improvements, and outcomes..."
-              className="w-full p-2.5 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all resize-y min-h-[100px]"
             />
           </div>
         </div>

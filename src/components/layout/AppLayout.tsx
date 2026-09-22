@@ -30,7 +30,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   }, []);
 
   return (
-    <div className="min-h-screen bg-surface-light-bg dark:bg-surface-dark-bg text-slate-900 dark:text-slate-100 flex transition-colors">
+    <div className="w-screen min-h-screen bg-surface-light-bg dark:bg-surface-dark-bg text-slate-900 dark:text-slate-100 flex transition-colors overflow-x-hidden relative box-border">
       {/* 240px Fixed Sidebar */}
       <Sidebar
         activePath={currentPath}
@@ -40,7 +40,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       />
 
       {/* Main Column */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-60">
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-60 w-full min-h-screen">
         {/* Topbar */}
         <Topbar
           currentSection={currentPath}
@@ -49,8 +49,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           onNavigate={onNavigate}
         />
 
-        {/* Fluid Content Area */}
-        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 animate-fade-in">
+        {/* Fluid Content Area - Spans 100% of remaining width */}
+        <main className="flex-1 w-full max-w-full p-4 sm:p-6 lg:p-8 animate-fade-in box-border">
           {children}
         </main>
       </div>

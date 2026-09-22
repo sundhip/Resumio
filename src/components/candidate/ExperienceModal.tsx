@@ -102,7 +102,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
       onClose={onClose}
       title={experienceToEdit ? 'Edit Work Experience' : 'Add Work Experience'}
       description="Add your previous and current professional roles, milestones, and contributions."
-      size="md"
+      size="lg"
       footer={
         <>
           <Button variant="secondary" onClick={onClose} disabled={isSaving}>
@@ -119,20 +119,20 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-3.5">
+      <form onSubmit={handleSubmit} className="space-y-4 text-left">
         {errorMessage && (
-          <div className="p-3 rounded-control bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300">
+          <div className="p-3 rounded-lg bg-rose-950/40 border border-rose-900/60 text-xs text-rose-300">
             {errorMessage}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <Input
             label="Job Title *"
             placeholder="e.g. Senior Software Engineer"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
-            leftIcon={<Briefcase className="w-4 h-4" />}
+            leftIcon={<Briefcase className="w-4 h-4 text-slate-400" />}
             required
           />
 
@@ -141,25 +141,25 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             placeholder="e.g. Acme Technologies"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            leftIcon={<Building2 className="w-4 h-4" />}
+            leftIcon={<Building2 className="w-4 h-4 text-slate-400" />}
             required
           />
 
-          <div>
-            <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300 block mb-1">
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-semibold text-slate-300 block">
               Employment Type
             </label>
             <select
               value={employmentType}
               onChange={(e) => setEmploymentType(e.target.value as EmploymentType)}
-              className="w-full px-3 py-2 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
             >
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Internship">Internship</option>
-              <option value="Contract">Contract</option>
-              <option value="Freelance">Freelance</option>
-              <option value="Other">Other</option>
+              <option value="Full-time" className="bg-[#121624] text-slate-100">Full-time</option>
+              <option value="Part-time" className="bg-[#121624] text-slate-100">Part-time</option>
+              <option value="Internship" className="bg-[#121624] text-slate-100">Internship</option>
+              <option value="Contract" className="bg-[#121624] text-slate-100">Contract</option>
+              <option value="Freelance" className="bg-[#121624] text-slate-100">Freelance</option>
+              <option value="Other" className="bg-[#121624] text-slate-100">Other</option>
             </select>
           </div>
 
@@ -168,7 +168,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             placeholder="e.g. Chennai, India (Hybrid)"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            leftIcon={<MapPin className="w-4 h-4" />}
+            leftIcon={<MapPin className="w-4 h-4 text-slate-400" />}
           />
 
           <Input
@@ -176,7 +176,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             placeholder="YYYY-MM (e.g. 2022-06)"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
             required
           />
 
@@ -186,11 +186,11 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             disabled={currentlyWorking}
-            leftIcon={<Calendar className="w-4 h-4" />}
+            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
             helperText={currentlyWorking ? 'Disabled while working here' : ''}
           />
 
-          <div className="sm:col-span-2 flex items-center gap-2">
+          <div className="sm:col-span-2 flex items-center gap-2 pt-1">
             <input
               type="checkbox"
               id="currently-working-chk"
@@ -199,18 +199,18 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
                 setCurrentlyWorking(e.target.checked);
                 if (e.target.checked) setEndDate('');
               }}
-              className="rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+              className="rounded border-slate-700 bg-[#0d101d] text-brand-600 focus:ring-brand-500/40 w-4 h-4 cursor-pointer"
             />
             <label
               htmlFor="currently-working-chk"
-              className="text-xs text-slate-700 dark:text-slate-300 select-none font-medium cursor-pointer"
+              className="text-xs text-slate-300 select-none font-medium cursor-pointer"
             >
               I currently work in this role
             </label>
           </div>
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+            <label className="text-[13px] font-semibold text-slate-300 block">
               Role Description & Key Accomplishments
             </label>
             <textarea
@@ -218,7 +218,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe your responsibilities, architectural impact, systems scaled, and achievements..."
-              className="w-full p-2.5 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all resize-y min-h-[100px]"
             />
           </div>
         </div>
