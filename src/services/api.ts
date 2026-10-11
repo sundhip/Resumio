@@ -22,7 +22,7 @@ import type {
   RealApplicationStatus,
 } from '../types';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || '/api';
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem('resumio_token');

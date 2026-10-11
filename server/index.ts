@@ -21,10 +21,21 @@ import { researchRouter } from './routes/researchRoutes';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// 1. Security Headers & CORS
+// 1. Environment Variable & CORS Configuration
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+  : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'];
+
 app.use(securityHeadersMiddleware);
 app.use(cors({
-  origin: '*',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server) or development/allowed origins
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS error: Origin ${origin} not permitted.`));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -97,6 +108,25 @@ app.get(['/ready', '/api/ready'], async (_req, res) => {
 app.use(centralizedErrorHandler);
 
 // Start Server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🚀 Resumio Production-Ready Backend API running on http://localhost:${PORT}`);
 });
+
+// 6. Graceful Shutdown Handlers
+const handleShutdown = async (signal: string) => {
+  console.log(`\n🛑 Received ${signal}. Shutting down Resumio server gracefully...`);
+  server.close(async () => {
+    console.log('HTTP server closed.');
+    try {
+      const mongoose = (await import('mongoose')).default;
+      if (mongoose.connection.readyState !== 0) {
+        await mongoose.connection.close();
+        console.log('MongoDB connection closed.');
+      }
+    } catch (e) {}
+    process.exit(0);
+  });
+};
+
+process.on('SIGTERM', () => handleShutdown('SIGTERM'));
+process.on('SIGINT', () => handleShutdown('SIGINT'));

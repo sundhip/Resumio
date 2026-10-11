@@ -1220,6 +1220,35 @@ router.get('/resumes/:id/preview', (req: AuthRequest, res: Response): void => {
       return;
     }
 
+    // Role-based Access Control:
+    // Candidate can only view their own resume.
+    // Recruiter can view if the resume is attached to an application for one of their jobs.
+    // Admin can view any resume.
+    const userRole = req.user!.role;
+    const userId = req.user!.id;
+
+    if (userRole === 'candidate') {
+      const candProfile = db.prepare('SELECT id FROM candidate_profiles WHERE user_id = ?').get(userId) as any;
+      if (!candProfile || candProfile.id !== resume.candidate_profile_id) {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to view this resume.' });
+        return;
+      }
+    } else if (userRole === 'recruiter') {
+      const allowedApp = db.prepare(`
+        SELECT a.id FROM applications a
+        JOIN jobs j ON a.job_id = j.id
+        WHERE a.resume_id = ? AND j.recruiter_id = ?
+      `).get(resume.id, userId) as any;
+
+      if (!allowedApp) {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not own a job application referencing this resume.' });
+        return;
+      }
+    } else if (userRole !== 'admin') {
+      res.status(403).json({ success: false, message: 'Forbidden: Unauthorized to access resume files.' });
+      return;
+    }
+
     const filePath = path.join(resumeUploadDir, resume.stored_filename);
     if (!fs.existsSync(filePath)) {
       res.status(404).json({ success: false, message: 'Resume file not found on storage server.' });
