@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import { db } from '../database/db';
+import { mongoDb } from '../database/mongoAdapter';
 import { NotificationService } from './notificationService';
+import { AuditService } from './auditService';
 
 export type InterviewType = 'Video' | 'Phone' | 'In Person';
 export type InterviewStatus = 'Scheduled' | 'Rescheduled' | 'Completed' | 'Cancelled' | 'No Show';
@@ -169,6 +171,42 @@ export class InterviewService {
       VALUES (?, ?, NULL, 'Scheduled', NULL, ?, ?, 'recruiter', 'Initial interview scheduled', datetime('now'))
     `).run(historyId, interviewId, isoScheduledAt, recruiterUserId);
 
+    // Dual-persist to MongoDB & log audit
+    (async () => {
+      try {
+        await mongoDb.interviews.insertOne({
+          id: interviewId,
+          application_id: rawApp.application_id,
+          candidate_id: rawApp.candidate_id,
+          recruiter_id: recruiterUserId,
+          job_id: rawApp.job_id,
+          title: cleanTitle,
+          interview_type: interviewType,
+          scheduled_at: isoScheduledAt,
+          duration_minutes: durationMinutes,
+          location: cleanLocation,
+          meeting_url: cleanMeetingUrl,
+          description: cleanDescription,
+          status: 'Scheduled',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+        await AuditService.logAction({
+          actorId: recruiterUserId,
+          actorRole: 'recruiter',
+          action: 'interview_scheduled',
+          targetType: 'interview',
+          targetId: interviewId,
+          previousState: null,
+          newState: 'Scheduled',
+          reason: 'Initial interview scheduled',
+          metadata: { applicationId: rawApp.application_id, scheduledAt: isoScheduledAt },
+        });
+      } catch (e) {
+        console.warn('[InterviewService] MongoDB/Audit write notice:', e);
+      }
+    })();
+
     // 5. Trigger Candidate In-App Notification
     NotificationService.notifyInterviewScheduled(
       rawApp.candidate_id,
@@ -268,6 +306,39 @@ export class InterviewService {
       cleanReason
     );
 
+    // Dual-persist to MongoDB & log audit
+    (async () => {
+      try {
+        await mongoDb.interviews.updateOne(
+          { id: interviewId },
+          {
+            $set: {
+              scheduled_at: isoScheduledAt,
+              duration_minutes: newDuration,
+              location: newLocation,
+              meeting_url: newMeetingUrl,
+              status: 'Rescheduled',
+              reschedule_reason: cleanReason,
+              updated_at: new Date().toISOString(),
+            },
+          }
+        );
+        await AuditService.logAction({
+          actorId: recruiterUserId,
+          actorRole: 'recruiter',
+          action: 'interview_rescheduled',
+          targetType: 'interview',
+          targetId: interviewId,
+          previousState: oldStatus,
+          newState: 'Rescheduled',
+          reason: cleanReason || 'Interview rescheduled',
+          metadata: { oldScheduledAt, newScheduledAt: isoScheduledAt },
+        });
+      } catch (e) {
+        console.warn('[InterviewService] MongoDB/Audit write notice:', e);
+      }
+    })();
+
     return {
       interviewId,
       status: 'Rescheduled',
@@ -330,6 +401,35 @@ export class InterviewService {
       cleanReason
     );
 
+    // Dual-persist to MongoDB & log audit
+    (async () => {
+      try {
+        await mongoDb.interviews.updateOne(
+          { id: interviewId },
+          {
+            $set: {
+              status: 'Cancelled',
+              cancellation_reason: cleanReason,
+              updated_at: new Date().toISOString(),
+            },
+          }
+        );
+        await AuditService.logAction({
+          actorId: recruiterUserId,
+          actorRole: 'recruiter',
+          action: 'interview_cancelled',
+          targetType: 'interview',
+          targetId: interviewId,
+          previousState: oldStatus,
+          newState: 'Cancelled',
+          reason: cleanReason || 'Interview cancelled',
+          metadata: { applicationId: interview.application_id },
+        });
+      } catch (e) {
+        console.warn('[InterviewService] MongoDB/Audit write notice:', e);
+      }
+    })();
+
     return {
       interviewId,
       status: 'Cancelled',
@@ -391,6 +491,34 @@ export class InterviewService {
       interviewId,
       interview.application_id
     );
+
+    // Dual-persist to MongoDB & log audit
+    (async () => {
+      try {
+        await mongoDb.interviews.updateOne(
+          { id: interviewId },
+          {
+            $set: {
+              status,
+              updated_at: new Date().toISOString(),
+            },
+          }
+        );
+        await AuditService.logAction({
+          actorId: recruiterUserId,
+          actorRole: 'recruiter',
+          action: `interview_${status.toLowerCase().replace(/\s+/g, '_')}`,
+          targetType: 'interview',
+          targetId: interviewId,
+          previousState: oldStatus,
+          newState: status,
+          reason: cleanNote,
+          metadata: { applicationId: interview.application_id },
+        });
+      } catch (e) {
+        console.warn('[InterviewService] MongoDB/Audit write notice:', e);
+      }
+    })();
 
     return {
       interviewId,

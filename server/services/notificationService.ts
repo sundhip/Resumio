@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { db } from '../database/db';
+import { mongoDb } from '../database/mongoAdapter';
 
 export type NotificationType =
   | 'application_status'
@@ -37,6 +38,12 @@ export class NotificationService {
     relatedEntityId?: string
   ): string {
     const id = crypto.randomUUID();
+    const now = new Date().toISOString();
+    const cleanTitle = title.trim();
+    const cleanMessage = message.trim();
+    const entityType = relatedEntityType || null;
+    const entityId = relatedEntityId || null;
+
     db.prepare(`
       INSERT INTO notifications (id, user_id, type, title, message, related_entity_type, related_entity_id, is_read, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, 0, datetime('now'))
@@ -44,11 +51,30 @@ export class NotificationService {
       id,
       userId,
       type,
-      title.trim(),
-      message.trim(),
-      relatedEntityType || null,
-      relatedEntityId || null
+      cleanTitle,
+      cleanMessage,
+      entityType,
+      entityId
     );
+
+    // Dual-persist to MongoDB
+    (async () => {
+      try {
+        await mongoDb.notifications.insertOne({
+          id,
+          user_id: userId,
+          type,
+          title: cleanTitle,
+          message: cleanMessage,
+          related_entity_type: entityType,
+          related_entity_id: entityId,
+          is_read: 0,
+          created_at: now,
+        });
+      } catch (err) {
+        console.warn('[NotificationService] MongoDB notification insert notice:', err);
+      }
+    })();
 
     return id;
   }
@@ -229,6 +255,17 @@ export class NotificationService {
       WHERE id = ? AND user_id = ?
     `).run(notificationId, userId);
 
+    if (res.changes > 0) {
+      (async () => {
+        try {
+          await mongoDb.notifications.updateOne(
+            { id: notificationId, user_id: userId },
+            { $set: { is_read: 1 } }
+          );
+        } catch (e) {}
+      })();
+    }
+
     return res.changes > 0;
   }
 
@@ -241,6 +278,17 @@ export class NotificationService {
       SET is_read = 1
       WHERE user_id = ? AND is_read = 0
     `).run(userId);
+
+    if (res.changes > 0) {
+      (async () => {
+        try {
+          await mongoDb.notifications.updateMany(
+            { user_id: userId, is_read: 0 },
+            { $set: { is_read: 1 } }
+          );
+        } catch (e) {}
+      })();
+    }
 
     return res.changes;
   }

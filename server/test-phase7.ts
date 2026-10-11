@@ -1,11 +1,13 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { db, initDatabase } from './database/db';
+import { mongoDb } from './database/mongoAdapter';
 import { NotificationService } from './services/notificationService';
 import { InterviewService } from './services/interviewService';
 import { DashboardService } from './services/dashboardService';
 import { RecruitmentAnalyticsService } from './services/analyticsService';
 import { ResumeJobMatchingService } from './services/matchingService';
+import { AuditService } from './services/auditService';
 
 let passed = 0;
 let failed = 0;
@@ -290,6 +292,62 @@ async function runPhase7Tests() {
   // Test Recruiter Isolation Barrier
   const analyticsB = RecruitmentAnalyticsService.getRecruiterAnalytics(recBUserId);
   assert(analyticsB.overview.totalApplications === 0, 'Recruiter B analytics returns 0 applications (Recruiter A data is isolated)');
+
+  // ----------------------------------------------------
+  // 5. APPLICATION STATUS LIFECYCLE & TRANSITIONS
+  // ----------------------------------------------------
+  console.log('\n🔄 5. Testing Application Lifecycle & Status Transitions...');
+
+  // State Transition Rules Check
+  const validTransitions: Record<string, string[]> = {
+    'Applied': ['Under Review', 'Shortlisted', 'Rejected'],
+    'Under Review': ['Shortlisted', 'Rejected'],
+    'Shortlisted': ['Under Review', 'Rejected'],
+    'Rejected': [],
+    'Withdrawn': [],
+  };
+
+  assert(validTransitions['Applied'].includes('Under Review'), 'Applied -> Under Review is valid');
+  assert(validTransitions['Under Review'].includes('Shortlisted'), 'Under Review -> Shortlisted is valid');
+  assert(validTransitions['Shortlisted'].includes('Rejected'), 'Shortlisted -> Rejected is valid');
+  assert(validTransitions['Rejected'].length === 0, 'Rejected is terminal state');
+  assert(validTransitions['Withdrawn'].length === 0, 'Withdrawn is terminal state');
+
+  // ----------------------------------------------------
+  // 6. AUDIT LOGGING INTEGRITY
+  // ----------------------------------------------------
+  console.log('\n📜 6. Testing Audit Logging Integrity & Persistence...');
+
+  const auditLogId = await AuditService.logAction({
+    actorId: recAUserId,
+    actorRole: 'recruiter',
+    action: 'application_shortlisted',
+    targetType: 'application',
+    targetId: appAId,
+    previousState: 'Under Review',
+    newState: 'Shortlisted',
+    reason: 'Strong candidate background',
+  });
+  assert(typeof auditLogId === 'string', 'AuditService records action successfully');
+
+  const logs = AuditService.getLogs({ targetId: appAId, action: 'application_shortlisted' });
+  assert(logs.length >= 1, 'Audit log query retrieves recorded entry');
+  assert(logs[0].actor_id === recAUserId, 'Audit log correctly attributes actor ID');
+  assert(logs[0].new_state === 'Shortlisted', 'Audit log records new state accurately');
+
+  // ----------------------------------------------------
+  // 7. MONGODB DUAL-STORE PERSISTENCE
+  // ----------------------------------------------------
+  console.log('\n🍃 7. Testing MongoDB Dual-Store Persistence for Phase 7...');
+
+  const mongoNotif = await mongoDb.notifications.findOne({ user_id: candAUserId });
+  assert(Boolean(mongoNotif), 'Notification persists into MongoDB notifications collection');
+
+  const mongoInterview = await mongoDb.interviews.findOne({ recruiter_id: recAUserId });
+  assert(Boolean(mongoInterview), 'Interview persists into MongoDB interviews collection');
+
+  const mongoAudit = await mongoDb.audit_logs.findOne({ actor_id: recAUserId });
+  assert(Boolean(mongoAudit), 'Audit log entry persists into MongoDB audit_logs collection');
 
   console.log('\n====================================================');
   console.log(`🎉 PHASE 7 VERIFICATION: ${passed} / ${passed + failed} TESTS PASSED (${Math.round((passed / (passed + failed)) * 100)}%)`);

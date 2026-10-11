@@ -603,6 +603,24 @@ CREATE INDEX IF NOT EXISTS idx_rdm_resume_id ON resume_duplicate_matches(resume_
 CREATE INDEX IF NOT EXISTS idx_rdm_matched_resume_id ON resume_duplicate_matches(matched_resume_id);
 CREATE INDEX IF NOT EXISTS idx_rdm_candidate_id ON resume_duplicate_matches(candidate_id);
 
+-- ============================================================
+-- Recruitment Workflow & Security Audit Logs Table
+-- ============================================================
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id TEXT PRIMARY KEY,
+  actor_id TEXT NOT NULL,
+  actor_role TEXT NOT NULL CHECK (actor_role IN ('candidate', 'recruiter', 'admin', 'system')),
+  action TEXT NOT NULL,
+  target_type TEXT NOT NULL,
+  target_id TEXT NOT NULL,
+  previous_state TEXT DEFAULT NULL,
+  new_state TEXT DEFAULT NULL,
+  reason TEXT DEFAULT '',
+  metadata_json TEXT DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
-
-
+CREATE INDEX IF NOT EXISTS idx_audit_logs_actor ON audit_logs(actor_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_target ON audit_logs(target_type, target_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_action ON audit_logs(action, created_at DESC);

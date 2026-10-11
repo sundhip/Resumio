@@ -1,11 +1,13 @@
 import { Router, Request, Response } from 'express';
 import crypto from 'crypto';
 import { db } from '../database/db';
+import { mongoDb } from '../database/mongoAdapter';
 import { authenticateToken } from '../middleware/auth';
 import { processResumeAndScreen } from '../services/resumeProcessingPipeline';
 import { ResumeJobMatchingService } from '../services/matchingService';
 import { CandidateSummaryService } from '../services/candidateSummaryService';
 import { NotificationService } from '../services/notificationService';
+import { AuditService } from '../services/auditService';
 
 export const applicationsRouter = Router();
 
@@ -79,6 +81,37 @@ applicationsRouter.post('/candidate/applications', authenticateToken, async (req
       INSERT INTO application_status_history (id, application_id, old_status, new_status, changed_by, changed_by_role, note, changed_at)
       VALUES (?, ?, NULL, 'Applied', ?, 'candidate', 'Application submitted with resume: ' || ?, datetime('now'))
     `).run(historyId, applicationId, user.id, resume.original_filename);
+
+    // Dual-persist to MongoDB & record audit log
+    const nowIso = new Date().toISOString();
+    (async () => {
+      try {
+        await mongoDb.applications.insertOne({
+          id: applicationId,
+          candidate_id: user.id,
+          candidate_profile_id: candidateProfile.id,
+          job_id: job.id,
+          resume_id: resume.id,
+          cover_letter: sanitizedCoverLetter,
+          status: 'Applied',
+          applied_at: nowIso,
+          updated_at: nowIso,
+        });
+        await AuditService.logAction({
+          actorId: user.id,
+          actorRole: 'candidate',
+          action: 'application_submitted',
+          targetType: 'application',
+          targetId: applicationId,
+          previousState: null,
+          newState: 'Applied',
+          reason: 'Application submitted',
+          metadata: { jobId: job.id, resumeId: resume.id },
+        });
+      } catch (err) {
+        console.warn('MongoDB application/audit log notice:', err);
+      }
+    })();
 
     // 7. Background AI Matching & Parsing Pipeline
     (async () => {
@@ -357,6 +390,28 @@ applicationsRouter.patch('/candidate/applications/:id/withdraw', authenticateTok
       INSERT INTO application_status_history (id, application_id, old_status, new_status, changed_by, changed_by_role, note, changed_at)
       VALUES (?, ?, ?, 'Withdrawn', ?, 'candidate', 'Application withdrawn by candidate', datetime('now'))
     `).run(historyId, id, oldStatus, user.id);
+
+    // Dual-persist to MongoDB & record audit log
+    (async () => {
+      try {
+        await mongoDb.applications.updateOne(
+          { id },
+          { $set: { status: 'Withdrawn', updated_at: new Date().toISOString() } }
+        );
+        await AuditService.logAction({
+          actorId: user.id,
+          actorRole: 'candidate',
+          action: 'application_withdrawn',
+          targetType: 'application',
+          targetId: id,
+          previousState: oldStatus,
+          newState: 'Withdrawn',
+          reason: 'Application withdrawn by candidate',
+        });
+      } catch (err) {
+        console.warn('MongoDB application update notice:', err);
+      }
+    })();
 
     return res.json({
       success: true,
@@ -744,6 +799,24 @@ applicationsRouter.patch('/recruiter/applications/:id/status', authenticateToken
     }
 
     const oldStatus = rawApp.status;
+
+    // Define strict valid state transitions
+    const validTransitions: Record<string, string[]> = {
+      'Applied': ['Under Review', 'Shortlisted', 'Rejected'],
+      'Under Review': ['Shortlisted', 'Rejected'],
+      'Shortlisted': ['Under Review', 'Rejected'],
+      'Rejected': [], // Terminal
+      'Withdrawn': [], // Terminal
+    };
+
+    // If attempting invalid transition
+    if (oldStatus !== status && validTransitions[oldStatus] && !validTransitions[oldStatus].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status transition from "${oldStatus}" to "${status}".`,
+      });
+    }
+
     const reasonText = (rejectionReason || '').trim();
     const noteText = (note || '').trim() || (status === 'Rejected' && reasonText ? reasonText : `Status changed to ${status}`);
 
@@ -759,6 +832,35 @@ applicationsRouter.patch('/recruiter/applications/:id/status', authenticateToken
       INSERT INTO application_status_history (id, application_id, old_status, new_status, changed_by, changed_by_role, note, changed_at)
       VALUES (?, ?, ?, ?, ?, 'recruiter', ?, datetime('now'))
     `).run(historyId, id, oldStatus, status, user.id, noteText);
+
+    // Dual-persist to MongoDB & record audit log
+    (async () => {
+      try {
+        await mongoDb.applications.updateOne(
+          { id },
+          {
+            $set: {
+              status,
+              rejection_reason: status === 'Rejected' ? reasonText : '',
+              updated_at: new Date().toISOString(),
+            },
+          }
+        );
+        await AuditService.logAction({
+          actorId: user.id,
+          actorRole: 'recruiter',
+          action: `application_${status.toLowerCase().replace(/\s+/g, '_')}`,
+          targetType: 'application',
+          targetId: id,
+          previousState: oldStatus,
+          newState: status,
+          reason: noteText,
+          metadata: { jobId: rawApp.job_id, candidateId: rawApp.candidate_id },
+        });
+      } catch (err) {
+        console.warn('MongoDB application/audit log notice:', err);
+      }
+    })();
 
     // Trigger In-App Notification for Candidate
     try {
