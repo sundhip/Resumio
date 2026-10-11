@@ -130,8 +130,8 @@ export class MatchExplanationService {
     const requiredSkillsComp: ScoreComponentExplanation = {
       name: 'Required Skills Alignment',
       score: reqScore,
-      maxScore: 50,
-      weightPercentage: 50,
+      maxScore: details.weights?.requiredSkills ?? 45,
+      weightPercentage: details.weights?.requiredSkills ?? 45,
       summary: totalReqCount > 0
         ? `${reqMatched.length} of ${totalReqCount} required skills verified (${Math.round((reqMatched.length / totalReqCount) * 100)}%)`
         : 'No mandatory skills specified by employer',

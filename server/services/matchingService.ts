@@ -1,7 +1,25 @@
 import crypto from 'crypto';
 import { db } from '../database/db.js';
+import { mongoDb } from '../database/mongoAdapter.js';
 import { SkillNormalizationService } from './skillNormalizer.js';
-import { parseResumeText, ParsedResumeResult } from './resumeParser.js';
+import { MATCHING_MODEL_CONFIG, computeLexicalCosineSimilarity } from './matchingConfig.js';
+
+export interface EvidenceItem {
+  requirement: string;
+  type: 'required_skill' | 'preferred_skill' | 'experience' | 'qualification' | 'semantic_relevance';
+  status: 'matched' | 'partially_matched' | 'not_demonstrated' | 'uncertain';
+  evidenceSource: 'resume_skills' | 'candidate_profile' | 'experience_history' | 'education_history' | 'none';
+  evidenceText: string;
+}
+
+export interface MatchingScoreBreakdown {
+  requiredSkillsScore: number;  // Max 45
+  preferredSkillsScore: number; // Max 15
+  experienceScore: number;      // Max 20
+  qualificationScore: number;   // Max 10
+  relevanceScore: number;       // Max 10 (TF-IDF semantic cosine)
+  total: number;                // Max 100
+}
 
 export interface ResumeJobMatchResult {
   id: string;
@@ -20,16 +38,12 @@ export interface ResumeJobMatchResult {
   requiredSkillsMissing: string[];
   preferredSkillsMatched: string[];
   preferredSkillsMissing: string[];
-  scoreBreakdown: {
-    requiredSkillsScore: number; // Max 50
-    preferredSkillsScore: number; // Max 15
-    experienceScore: number; // Max 20
-    qualificationScore: number; // Max 10
-    relevanceScore: number; // Max 5
-    total: number; // Max 100
-  };
+  evidenceList: EvidenceItem[];
+  scoreBreakdown: MatchingScoreBreakdown;
+  weights: typeof MATCHING_MODEL_CONFIG.weights;
   experienceAssessment: string;
   qualificationAssessment: string;
+  semanticAssessment: string;
   candidateExperienceYears: number;
   jobMinExperienceYears: number;
   candidateHighestEducation: string;
@@ -59,7 +73,6 @@ function calculateCandidateExperienceYears(profileId: string, parsedData?: any, 
     return screeningData.experience_years_detected;
   }
 
-  // Check candidate_experience table
   const expRows = db.prepare('SELECT start_date, end_date, currently_working FROM candidate_experience WHERE candidate_profile_id = ?').all(profileId) as any[];
   if (expRows.length > 0) {
     let totalMonths = 0;
@@ -78,7 +91,6 @@ function calculateCandidateExperienceYears(profileId: string, parsedData?: any, 
     }
   }
 
-  // Check parsed JSON experience
   if (parsedData && Array.isArray(parsedData.experience) && parsedData.experience.length > 0) {
     return Math.min(15, Math.max(1, parsedData.experience.length * 2));
   }
@@ -113,21 +125,24 @@ function getCandidateHighestEducation(profileId: string, parsedData?: any): stri
 }
 
 /**
- * Deterministic Resume-Job Matching Engine
+ * Production-Grade Advanced Resume-Job Matching Engine (Phase 6)
  */
 export class ResumeJobMatchingService {
-  public static readonly ALGORITHM_VERSION = '1.0.0';
+  public static readonly ALGORITHM_VERSION = MATCHING_MODEL_CONFIG.version;
+  public static readonly WEIGHTS = MATCHING_MODEL_CONFIG.weights;
 
   /**
-   * Computes matching score, matched/missing skills, and breakdown factors between candidate and job.
+   * Computes matching score, evidence items, component breakdown, and persists dual-store records.
    */
   public static async computeMatch(
     resumeId: string,
     jobId: string,
     candidateId: string,
     candidateProfileId: string,
-    applicationId?: string | null
+    applicationId?: string | null,
+    options?: { weights?: typeof MATCHING_MODEL_CONFIG.weights }
   ): Promise<ResumeJobMatchResult> {
+    const activeWeights = options?.weights || this.WEIGHTS;
     // 1. Fetch Job and its required/preferred skills
     const job = db.prepare('SELECT * FROM jobs WHERE id = ?').get(jobId) as any;
     if (!job) {
@@ -160,20 +175,32 @@ export class ResumeJobMatchingService {
       try { parsedExperience = JSON.parse(parsedRecord.experience_json || '[]'); } catch {}
     }
 
-    // Combine candidate's distinct skills
     const allCandidateSkills = Array.from(new Set([...candProfileSkills, ...parsedSkills]));
+    const evidenceList: EvidenceItem[] = [];
 
-    // 3. Match Required Skills (Weight: 50%)
+    // 3. Match Required Skills (Weight: 45%)
     const { matched: reqMatched, missing: reqMissing } = SkillNormalizationService.compareSkillSets(
       jobRequiredSkills,
       allCandidateSkills,
       rawResumeText
     );
 
-    let requiredSkillsScore = 50;
+    let requiredSkillsScore = this.WEIGHTS.requiredSkills;
     if (jobRequiredSkills.length > 0) {
       const matchRatio = reqMatched.length / jobRequiredSkills.length;
-      requiredSkillsScore = Math.round(matchRatio * 50 * 10) / 10;
+      requiredSkillsScore = Math.round(matchRatio * this.WEIGHTS.requiredSkills * 10) / 10;
+    }
+
+    // Populate required skill evidence
+    for (const skill of jobRequiredSkills) {
+      const isMatched = reqMatched.includes(skill);
+      evidenceList.push({
+        requirement: skill,
+        type: 'required_skill',
+        status: isMatched ? 'matched' : 'not_demonstrated',
+        evidenceSource: isMatched ? (candProfileSkills.includes(skill) ? 'candidate_profile' : 'resume_skills') : 'none',
+        evidenceText: isMatched ? `Demonstrated proficiency in ${skill}` : `Not demonstrated in candidate profile or parsed resume`,
+      });
     }
 
     // 4. Match Preferred Skills (Weight: 15%)
@@ -183,10 +210,21 @@ export class ResumeJobMatchingService {
       rawResumeText
     );
 
-    let preferredSkillsScore = 15;
+    let preferredSkillsScore = this.WEIGHTS.preferredSkills;
     if (jobPreferredSkills.length > 0) {
       const matchRatio = prefMatched.length / jobPreferredSkills.length;
-      preferredSkillsScore = Math.round(matchRatio * 15 * 10) / 10;
+      preferredSkillsScore = Math.round(matchRatio * this.WEIGHTS.preferredSkills * 10) / 10;
+    }
+
+    for (const skill of jobPreferredSkills) {
+      const isMatched = prefMatched.includes(skill);
+      evidenceList.push({
+        requirement: skill,
+        type: 'preferred_skill',
+        status: isMatched ? 'matched' : 'not_demonstrated',
+        evidenceSource: isMatched ? 'resume_skills' : 'none',
+        evidenceText: isMatched ? `Satisfies nice-to-have capability: ${skill}` : 'Preferred skill not evidenced (non-mandatory)',
+      });
     }
 
     // 5. Experience Evaluation (Weight: 20%)
@@ -197,25 +235,33 @@ export class ResumeJobMatchingService {
     );
     const minReqExpYears = job.min_experience || 0;
 
-    let experienceScore = 20;
+    let experienceScore = this.WEIGHTS.experience;
     let experienceAssessment = 'Meets or exceeds required experience level';
 
     if (minReqExpYears > 0) {
       if (candExpYears >= minReqExpYears) {
-        experienceScore = 20;
+        experienceScore = this.WEIGHTS.experience;
         experienceAssessment = `Strong alignment: ${candExpYears} yrs experience (Min ${minReqExpYears} yrs required)`;
       } else if (candExpYears > 0) {
         const expRatio = Math.min(1, candExpYears / minReqExpYears);
-        experienceScore = Math.round(expRatio * 20 * 10) / 10;
+        experienceScore = Math.round(expRatio * this.WEIGHTS.experience * 10) / 10;
         experienceAssessment = `Partial alignment: ${candExpYears} yrs documented (Job prefers ${minReqExpYears}+ yrs)`;
       } else {
-        experienceScore = 4; // Baseline floor when unspecified
+        experienceScore = 4;
         experienceAssessment = `Limited documented experience (${minReqExpYears} yrs required)`;
       }
     } else {
-      experienceScore = 20;
+      experienceScore = this.WEIGHTS.experience;
       experienceAssessment = candExpYears > 0 ? `${candExpYears} yrs relevant experience` : 'Entry level / Open experience role';
     }
+
+    evidenceList.push({
+      requirement: `Minimum ${minReqExpYears} Years Experience`,
+      type: 'experience',
+      status: candExpYears >= minReqExpYears ? 'matched' : candExpYears > 0 ? 'partially_matched' : 'not_demonstrated',
+      evidenceSource: 'experience_history',
+      evidenceText: experienceAssessment,
+    });
 
     // 6. Qualification / Education Evaluation (Weight: 10%)
     const jobQual = (job.qualification || '').trim();
@@ -224,7 +270,7 @@ export class ResumeJobMatchingService {
       { education: parsedEducation }
     );
 
-    let qualificationScore = 10;
+    let qualificationScore = this.WEIGHTS.qualification;
     let qualificationAssessment = 'Qualification requirement satisfied';
 
     if (jobQual) {
@@ -232,7 +278,7 @@ export class ResumeJobMatchingService {
       const candLevel = getDegreeLevel(candHighestEdu);
 
       if (candLevel >= jobLevel && candLevel > 0) {
-        qualificationScore = 10;
+        qualificationScore = this.WEIGHTS.qualification;
         qualificationAssessment = `Meets degree requirement: ${candHighestEdu}`;
       } else if (candLevel > 0) {
         qualificationScore = 6;
@@ -242,25 +288,33 @@ export class ResumeJobMatchingService {
         qualificationAssessment = `Degree details pending: ${candHighestEdu}`;
       }
     } else {
-      qualificationScore = 10;
+      qualificationScore = this.WEIGHTS.qualification;
       qualificationAssessment = candHighestEdu !== 'Not Specified' ? candHighestEdu : 'Standard educational eligibility';
     }
 
-    // 7. Profile & Resume Relevance (Weight: 5%)
-    let relevanceScore = 5;
-    const profileComp = profile?.profile_completion || 50;
-    const projCount = (db.prepare('SELECT COUNT(*) as c FROM candidate_projects WHERE candidate_profile_id = ?').get(candidateProfileId) as any)?.c || 0;
-    const certCount = (db.prepare('SELECT COUNT(*) as c FROM candidate_certifications WHERE candidate_profile_id = ?').get(candidateProfileId) as any)?.c || 0;
+    evidenceList.push({
+      requirement: jobQual || 'General Educational Eligibility',
+      type: 'qualification',
+      status: qualificationScore === this.WEIGHTS.qualification ? 'matched' : 'partially_matched',
+      evidenceSource: 'education_history',
+      evidenceText: qualificationAssessment,
+    });
 
-    if (profileComp >= 70 || projCount > 0 || certCount > 0) {
-      relevanceScore = 5;
-    } else if (profileComp >= 40) {
-      relevanceScore = 3.5;
-    } else {
-      relevanceScore = 2.5;
-    }
+    // 7. Lexical Semantic Relevance via TF-IDF Cosine Similarity (Weight: 10%)
+    const jobDescriptionFull = `${job.title} ${job.description || ''} ${job.responsibilities || ''}`;
+    const cosineSim = computeLexicalCosineSimilarity(rawResumeText, jobDescriptionFull);
+    const relevanceScore = Math.round((cosineSim / 100) * this.WEIGHTS.semanticRelevance * 10) / 10;
+    const semanticAssessment = `TF-IDF text alignment score: ${cosineSim}% between resume narrative and job specifications.`;
 
-    // 8. Total Score Calculation
+    evidenceList.push({
+      requirement: 'Job Narrative Semantic Relevance',
+      type: 'semantic_relevance',
+      status: cosineSim >= 50 ? 'matched' : 'partially_matched',
+      evidenceSource: 'resume_skills',
+      evidenceText: semanticAssessment,
+    });
+
+    // 8. Total Score Calculation & Categorization
     const totalRaw = requiredSkillsScore + preferredSkillsScore + experienceScore + qualificationScore + relevanceScore;
     const finalScore = Math.min(100, Math.max(0, Math.round(totalRaw)));
 
@@ -284,7 +338,7 @@ export class ResumeJobMatchingService {
     const matchId = crypto.randomUUID();
     const now = new Date().toISOString();
 
-    const scoreBreakdown = {
+    const scoreBreakdown: MatchingScoreBreakdown = {
       requiredSkillsScore,
       preferredSkillsScore,
       experienceScore,
@@ -304,9 +358,11 @@ export class ResumeJobMatchingService {
       jobQual,
       category,
       categoryLabel,
+      weights: this.WEIGHTS,
+      evidenceList,
     };
 
-    // 9. Persist to resume_job_matches table (UPSERT)
+    // 9. Persist to SQLite (UPSERT)
     const existing = db.prepare(`
       SELECT id FROM resume_job_matches 
       WHERE resume_id = ? AND job_id = ? AND algorithm_version = ?
@@ -357,32 +413,6 @@ export class ResumeJobMatchingService {
         now,
         existing.id
       );
-
-      return {
-        id: existing.id,
-        resumeId,
-        jobId,
-        applicationId: applicationId || null,
-        candidateId,
-        candidateProfileId,
-        algorithmVersion: this.ALGORITHM_VERSION,
-        status: 'Completed',
-        matchScore: finalScore,
-        category,
-        categoryLabel,
-        requiredSkillsMatched: reqMatched,
-        requiredSkillsMissing: reqMissing,
-        preferredSkillsMatched: prefMatched,
-        preferredSkillsMissing: prefMissing,
-        scoreBreakdown,
-        experienceAssessment,
-        qualificationAssessment,
-        candidateExperienceYears: candExpYears,
-        jobMinExperienceYears: minReqExpYears,
-        candidateHighestEducation: candHighestEdu,
-        jobQualificationRequired: jobQual,
-        completedAt: now,
-      };
     } else {
       db.prepare(`
         INSERT INTO resume_job_matches (
@@ -430,32 +460,74 @@ export class ResumeJobMatchingService {
         now,
         now
       );
-
-      return {
-        id: matchId,
-        resumeId,
-        jobId,
-        applicationId: applicationId || null,
-        candidateId,
-        candidateProfileId,
-        algorithmVersion: this.ALGORITHM_VERSION,
-        status: 'Completed',
-        matchScore: finalScore,
-        category,
-        categoryLabel,
-        requiredSkillsMatched: reqMatched,
-        requiredSkillsMissing: reqMissing,
-        preferredSkillsMatched: prefMatched,
-        preferredSkillsMissing: prefMissing,
-        scoreBreakdown,
-        experienceAssessment,
-        qualificationAssessment,
-        candidateExperienceYears: candExpYears,
-        jobMinExperienceYears: minReqExpYears,
-        candidateHighestEducation: candHighestEdu,
-        jobQualificationRequired: jobQual,
-        completedAt: now,
-      };
     }
+
+    // 10. Persist to MongoDB dual-store
+    try {
+      await mongoDb.resume_job_matches.updateOne(
+        { resume_id: resumeId, job_id: jobId, algorithm_version: this.ALGORITHM_VERSION },
+        {
+          $set: {
+            id: existing ? existing.id : matchId,
+            resume_id: resumeId,
+            job_id: jobId,
+            application_id: applicationId || null,
+            candidate_id: candidateId,
+            candidate_profile_id: candidateProfileId,
+            algorithm_version: this.ALGORITHM_VERSION,
+            status: 'Completed',
+            match_score: finalScore,
+            required_skills_matched_json: JSON.stringify(reqMatched),
+            required_skills_missing_json: JSON.stringify(reqMissing),
+            preferred_skills_matched_json: JSON.stringify(prefMatched),
+            preferred_skills_missing_json: JSON.stringify(prefMissing),
+            required_skills_score: requiredSkillsScore,
+            preferred_skills_score: preferredSkillsScore,
+            experience_score: experienceScore,
+            qualification_score: qualificationScore,
+            relevance_score: relevanceScore,
+            experience_assessment: experienceAssessment,
+            qualification_assessment: qualificationAssessment,
+            matching_details_json: JSON.stringify(matchingDetails),
+            completed_at: now,
+            updated_at: now,
+          },
+        },
+        { upsert: true }
+      );
+    } catch (e) {
+      // Non-fatal if Mongo is unavailable
+    }
+
+    const savedId = existing ? existing.id : matchId;
+
+    return {
+      id: savedId,
+      resumeId,
+      jobId,
+      applicationId: applicationId || null,
+      candidateId,
+      candidateProfileId,
+      algorithmVersion: this.ALGORITHM_VERSION,
+      status: 'Completed',
+      matchScore: finalScore,
+      category,
+      categoryLabel,
+      requiredSkillsMatched: reqMatched,
+      requiredSkillsMissing: reqMissing,
+      preferredSkillsMatched: prefMatched,
+      preferredSkillsMissing: prefMissing,
+      evidenceList,
+      scoreBreakdown,
+      weights: this.WEIGHTS,
+      experienceAssessment,
+      qualificationAssessment,
+      semanticAssessment,
+      candidateExperienceYears: candExpYears,
+      jobMinExperienceYears: minReqExpYears,
+      candidateHighestEducation: candHighestEdu,
+      jobQualificationRequired: jobQual,
+      completedAt: now,
+    };
   }
 }

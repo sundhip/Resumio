@@ -140,7 +140,7 @@ async function runPhase6TestSuite() {
 
   assert(matchA.matchScore >= 85, `Candidate A receives strong match score (${matchA.matchScore}%)`);
   assert(matchA.requiredSkillsMatched.length === 4, 'Candidate A matched all 4 required skills');
-  assert(matchA.scoreBreakdown.requiredSkillsScore === 50, 'Candidate A gets full 50 pts for required skills');
+  assert(matchA.scoreBreakdown.requiredSkillsScore === 45, 'Candidate A gets full 45 pts for required skills');
   assert(matchA.scoreBreakdown.preferredSkillsScore === 7.5, `Candidate A gets 7.5 pts for 1/2 preferred skills (Actual: ${matchA.scoreBreakdown.preferredSkillsScore})`);
   assert(matchA.scoreBreakdown.experienceScore === 20, 'Candidate A gets full 20 pts for 5 yrs experience (vs 4 yrs min)');
   assert(matchA.scoreBreakdown.qualificationScore === 10, 'Candidate A gets full 10 pts for B.Tech degree');
@@ -183,7 +183,7 @@ async function runPhase6TestSuite() {
   const matchB = await ResumeJobMatchingService.computeMatch(candBResumeId, testJobId, candBUserId, candBProfId);
 
   assert(matchB.matchScore < matchA.matchScore, `Candidate B score (${matchB.matchScore}%) is lower than Candidate A (${matchA.matchScore}%)`);
-  assert(matchB.scoreBreakdown.requiredSkillsScore === 25, 'Candidate B gets 25 pts for 2/4 required skills');
+  assert(matchB.scoreBreakdown.requiredSkillsScore === 22.5, 'Candidate B gets 22.5 pts for 2/4 required skills');
   assert(matchB.scoreBreakdown.experienceScore === 10, `Candidate B gets proportional experience score (10 pts for 2/4 yrs)`);
   assert(matchB.scoreBreakdown.qualificationScore === 6, 'Candidate B gets partial 6 pts for Diploma vs B.Tech req');
   assert(matchB.requiredSkillsMissing.includes('PostgreSQL') && matchB.requiredSkillsMissing.includes('Docker'), 'Identifies missing required skills for Candidate B');

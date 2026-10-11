@@ -11,6 +11,7 @@ const testSuites = [
   { name: 'Phase 5 - LLM Data Augmentation Research Pipeline', file: 'server/test-research-pipeline.ts' },
   { name: 'Phase 5 - Resume Parsing & Screening', file: 'server/test-phase5.ts' },
   { name: 'Phase 6 - AI Matching, Ranking & Skill Gap Analysis', file: 'server/test-phase6.ts' },
+  { name: 'Phase 6 - Advanced AI Matching & Explainable Scoring Engine', file: 'server/test-advanced-matching.ts' },
   { name: 'Phase 7 - Interviews, Notifications & Analytics', file: 'server/test-phase7.ts' },
   { name: 'Phase 8 - Advanced AI Recruitment Intelligence', file: 'server/test-phase8.ts' },
   { name: 'Phase 9 - Final Integration, Security & Production Readiness', file: 'server/test-phase9.ts' },
@@ -25,9 +26,8 @@ const results: { name: string; status: 'PASSED' | 'FAILED'; durationMs: number; 
 for (const suite of testSuites) {
   process.stdout.write(`⏳ Running [${suite.name}]... `);
   const start = Date.now();
-  const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
   try {
-    execSync(`${npxCmd} tsx ${suite.file}`, { stdio: 'pipe' });
+    execSync(`node --import tsx ${suite.file}`, { stdio: 'pipe' });
     const duration = Date.now() - start;
     results.push({ name: suite.name, status: 'PASSED', durationMs: duration });
     console.log(`✅ PASSED (${duration}ms)`);

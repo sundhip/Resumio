@@ -284,7 +284,7 @@ export class MongoCollectionAdapter<T = any> {
     return new MongoQueryCursor<T>(matched);
   }
 
-  public async updateOne(query: MongoQuery, update: MongoUpdate): Promise<{ matchedCount: number; modifiedCount: number }> {
+  public async updateOne(query: MongoQuery, update: MongoUpdate, options?: { upsert?: boolean }): Promise<{ matchedCount: number; modifiedCount: number; upsertedId?: any }> {
     for (const [id, doc] of this.documents.entries()) {
       if (matchesQuery(doc, query)) {
         const updated = applyUpdate(doc, update);
@@ -292,6 +292,23 @@ export class MongoCollectionAdapter<T = any> {
         this.save();
         return { matchedCount: 1, modifiedCount: 1 };
       }
+    }
+    if (options && options.upsert) {
+      const newDoc: any = { _id: (query as any)._id || (query as any).id || crypto.randomUUID() };
+      // Copy exact query properties that are primitives
+      for (const [k, v] of Object.entries(query)) {
+        if (!k.startsWith('$') && typeof v !== 'object') {
+          newDoc[k] = v;
+        }
+      }
+      const updated = applyUpdate(newDoc, update);
+      if (!updated._id && !updated.id) {
+        updated._id = newDoc._id;
+      }
+      const docId = String(updated._id || updated.id || crypto.randomUUID());
+      this.documents.set(docId, updated);
+      this.save();
+      return { matchedCount: 0, modifiedCount: 1, upsertedId: docId };
     }
     return { matchedCount: 0, modifiedCount: 0 };
   }

@@ -178,7 +178,7 @@ async function runPhase9Tests() {
   const explanation = await MatchExplanationService.getExplanation(matchResult.id, recAId, 'recruiter');
   assert(explanation.finalScore === matchResult.matchScore, 'Explainable AI final score matches computed match score');
   assert(explanation.isConsistent, 'Score components mathematically sum to exactly 100% of the final score');
-  assert(explanation.components.requiredSkills.score === 50, 'Full 50 points awarded for 100% required skills match');
+  assert(explanation.components.requiredSkills.score === 45, 'Full 45 points awarded for 100% required skills match');
   assert(explanation.naturalLanguageExplanation.includes('Node.js') || explanation.naturalLanguageExplanation.includes('TypeScript') || explanation.factualSummary.includes('Node.js'), 'Factual natural-language explanation references matched skills');
 
   // ----------------------------------------------------
