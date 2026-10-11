@@ -32,7 +32,8 @@ dist-ssr
 *.db
 *.sqlite
 *.sqlite3
-server/data/
+server/data/*.db
+server/data/*.sqlite*
 
 # Uploaded resumes / files
 uploads/
