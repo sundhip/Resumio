@@ -296,4 +296,35 @@ router.get(
   }
 );
 
+/**
+ * 7. GET /api/research/evaluation/matching
+ * Runs and returns offline matching and ranking evaluation metrics
+ */
+router.get(
+  '/research/evaluation/matching',
+  requireAuth,
+  requireRole(['admin']),
+  async (_req: Request, res: Response) => {
+    try {
+      const { ResearchEvaluationService, BENCHMARK_MATCHING_EVAL_COLLECTION } = await import(
+        '../services/researchEvaluationService.js'
+      );
+
+      const matchingMetrics = ResearchEvaluationService.evaluateMatchingEngine(BENCHMARK_MATCHING_EVAL_COLLECTION);
+      const rankingMetrics = ResearchEvaluationService.evaluateRankingEngine(BENCHMARK_MATCHING_EVAL_COLLECTION);
+      const performance = ResearchEvaluationService.measureSystemPerformance();
+
+      res.json({
+        success: true,
+        matchingMetrics,
+        rankingMetrics,
+        performance,
+        collectionCount: BENCHMARK_MATCHING_EVAL_COLLECTION.length,
+      });
+    } catch (err: any) {
+      res.status(500).json({ error: `Matching evaluation failed: ${err.message}` });
+    }
+  }
+);
+
 export const researchRouter = router;

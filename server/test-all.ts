@@ -16,10 +16,11 @@ const testSuites = [
   { name: 'Phase 8 - Deployment & Production Readiness', file: 'server/test-deployment-readiness.ts' },
   { name: 'Phase 8 - Advanced AI Recruitment Intelligence', file: 'server/test-phase8.ts' },
   { name: 'Phase 9 - Final Integration, Security & Production Readiness', file: 'server/test-phase9.ts' },
+  { name: 'Phase 10 - Research Experimentation & Performance Analysis', file: 'server/test-phase10.ts' },
 ];
 
 console.log('====================================================');
-console.log('🚀 RESUMIO MASTER TEST SUITE (PHASES 1 - 9)');
+console.log('🚀 RESUMIO MASTER TEST SUITE (PHASES 1 - 10)');
 console.log('====================================================\n');
 
 const results: { name: string; status: 'PASSED' | 'FAILED'; durationMs: number; error?: string }[] = [];

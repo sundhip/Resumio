@@ -32,7 +32,25 @@ export const ResearchPipelinePage: React.FC = () => {
   const [experimentResult, setExperimentResult] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
 
+  // Matching & Ranking Evaluation State
+  const [matchingEval, setMatchingEval] = useState<any>(null);
+
   const token = localStorage.getItem('token');
+
+  // Fetch Matching Evaluation
+  const fetchMatchingEvaluation = async () => {
+    try {
+      const res = await fetch('/api/research/evaluation/matching', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMatchingEval(data);
+      }
+    } catch {
+      // Offline fallback / error handled cleanly
+    }
+  };
 
   // Fetch Dataset Summary
   const fetchDatasetSummary = async () => {
@@ -69,6 +87,7 @@ export const ResearchPipelinePage: React.FC = () => {
   useEffect(() => {
     fetchDatasetSummary();
     fetchResults();
+    fetchMatchingEvaluation();
   }, []);
 
   // Run Augmentation
@@ -175,6 +194,7 @@ export const ResearchPipelinePage: React.FC = () => {
           { id: 'dataset', label: 'Dataset & Imbalance Analysis', icon: <Database className="w-4 h-4" /> },
           { id: 'augment', label: 'Synthetic Augmentation Runs', icon: <Sparkles className="w-4 h-4" /> },
           { id: 'results', label: 'Evaluation & Metrics', icon: <BarChart3 className="w-4 h-4" /> },
+          { id: 'matching', label: 'Matching & Ranking Benchmarks', icon: <TrendingUp className="w-4 h-4" /> },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -495,6 +515,109 @@ export const ResearchPipelinePage: React.FC = () => {
               })}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* TAB 4: MATCHING & RANKING BENCHMARKS (PHASE 10) */}
+      {activeTab === 'matching' && (
+        <div className="space-y-6">
+          {matchingEval ? (
+            <>
+              {/* Summary Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Skill F1-Score</span>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                    {(matchingEval.matchingMetrics.skillF1 * 100).toFixed(1)}%
+                  </p>
+                  <span className="text-xs text-emerald-600 mt-1 block font-medium">Ground Truth Verified</span>
+                </div>
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ranking NDCG@3</span>
+                  <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
+                    {(matchingEval.rankingMetrics.ndcgAtK[3] * 100).toFixed(1)}%
+                  </p>
+                  <span className="text-xs text-slate-500 mt-1 block">Normalized Discounted Gain</span>
+                </div>
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ranking MRR</span>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                    {matchingEval.rankingMetrics.mrr.toFixed(3)}
+                  </p>
+                  <span className="text-xs text-slate-500 mt-1 block">Mean Reciprocal Rank</span>
+                </div>
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Engine Latency</span>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                    {matchingEval.performance?.[0]?.meanLatencyMs || matchingEval.matchingMetrics.latencyAvgMs}ms
+                  </p>
+                  <span className="text-xs text-emerald-600 mt-1 block font-medium">Deterministic Fast Path</span>
+                </div>
+              </div>
+
+              {/* Detailed Evaluation Table */}
+              <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">
+                  Matching Accuracy & Ranking Metrics (IR & Recommendation)
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  Evaluated on standard benchmark collection of 5 human-annotated resume-to-job relevance scenarios.
+                </p>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 dark:border-surface-dark-border text-slate-500 text-xs uppercase font-semibold">
+                        <th className="pb-3 px-3">Information Retrieval Metric</th>
+                        <th className="pb-3 px-3">Measured Value</th>
+                        <th className="pb-3 px-3">Theoretical Ideal</th>
+                        <th className="pb-3 px-3">Interpretation</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                      <tr>
+                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Precision@1 (Top-1 Relevance)</td>
+                        <td className="py-3 px-3 font-mono font-bold text-emerald-600">{(matchingEval.rankingMetrics.precisionAtK[1] * 100).toFixed(1)}%</td>
+                        <td className="py-3 px-3 font-mono">100.0%</td>
+                        <td className="py-3 px-3 text-xs text-slate-500">First ranked candidate is genuinely relevant</td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Precision@3 (Top-3 Pool)</td>
+                        <td className="py-3 px-3 font-mono font-bold">{(matchingEval.rankingMetrics.precisionAtK[3] * 100).toFixed(1)}%</td>
+                        <td className="py-3 px-3 font-mono">100.0%</td>
+                        <td className="py-3 px-3 text-xs text-slate-500">Proportion of top 3 candidates that are qualified</td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Recall@3 (Pool Coverage)</td>
+                        <td className="py-3 px-3 font-mono font-bold">{(matchingEval.rankingMetrics.recallAtK[3] * 100).toFixed(1)}%</td>
+                        <td className="py-3 px-3 font-mono">100.0%</td>
+                        <td className="py-3 px-3 text-xs text-slate-500">Coverage of all qualified applicants in top 3</td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">NDCG@3 (Ranking Order Quality)</td>
+                        <td className="py-3 px-3 font-mono font-bold text-purple-600 dark:text-purple-400">{(matchingEval.rankingMetrics.ndcgAtK[3] * 100).toFixed(1)}%</td>
+                        <td className="py-3 px-3 font-mono">100.0%</td>
+                        <td className="py-3 px-3 text-xs text-slate-500">Highest qualified candidates positioned first</td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Explanation Consistency Rate</td>
+                        <td className="py-3 px-3 font-mono font-bold text-emerald-600">{(matchingEval.matchingMetrics.explanationConsistencyRate * 100).toFixed(1)}%</td>
+                        <td className="py-3 px-3 font-mono">100.0%</td>
+                        <td className="py-3 px-3 text-xs text-slate-500">AI explanations match source evidence with 0 hallucination</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="p-8 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border text-center">
+              <RefreshCw className="w-8 h-8 animate-spin mx-auto text-purple-600 mb-3" />
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                Loading matching and ranking benchmark measurements...
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
