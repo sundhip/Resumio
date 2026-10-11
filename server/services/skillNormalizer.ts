@@ -258,3 +258,34 @@ export class SkillNormalizationService {
 function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+/**
+ * Extracts and normalizes an array of skills from text or an array of raw skill tokens.
+ */
+export function normalizeSkillList(rawInput: string | string[]): string[] {
+  const result = new Set<string>();
+
+  if (Array.isArray(rawInput)) {
+    for (const item of rawInput) {
+      const norm = SkillNormalizer.normalize(item);
+      if (norm) result.add(norm);
+    }
+    return Array.from(result);
+  }
+
+  if (typeof rawInput === 'string') {
+    const lower = rawInput.toLowerCase();
+    for (const def of CANONICAL_SKILL_CATALOG) {
+      for (const alias of def.aliases) {
+        const escaped = escapeRegExp(alias);
+        const regex = new RegExp(`(?:^|[^a-zA-Z0-9+#])${escaped}(?:$|[^a-zA-Z0-9+#])`, 'i');
+        if (regex.test(lower)) {
+          result.add(def.canonical);
+          break;
+        }
+      }
+    }
+  }
+
+  return Array.from(result);
+}

@@ -215,17 +215,22 @@ function formatExtractedText(raw: string): string {
 }
 
 /**
- * Main Document Extractor function
+ * Main Document Extractor function with rigorous validation,
+ * corruption checks, and scanned document detection.
  */
 export async function extractDocumentText(filePath: string): Promise<ExtractedDocument> {
   if (!fs.existsSync(filePath)) {
-    throw new Error('Unable to read this resume. Please upload a valid PDF or DOCX file.');
+    throw new Error('Unable to read this resume. File does not exist on disk.');
   }
 
   const buffer = fs.readFileSync(filePath);
   const fileSize = buffer.length;
-  const fileHash = crypto.createHash('sha256').update(buffer).digest('hex');
 
+  if (fileSize === 0) {
+    throw new Error('The uploaded file is empty (0 bytes). Please upload a valid document.');
+  }
+
+  const fileHash = crypto.createHash('sha256').update(buffer).digest('hex');
   const ext = path.extname(filePath).toLowerCase();
 
   let text = '';
@@ -237,13 +242,15 @@ export async function extractDocumentText(filePath: string): Promise<ExtractedDo
   } else if (ext === '.docx' || ext === '.doc') {
     format = 'DOCX';
     text = extractTextFromDocx(buffer);
-  } else {
+  } else if (ext === '.txt') {
     format = 'TXT';
     text = buffer.toString('utf-8');
+  } else {
+    throw new Error('Unsupported document format. Please upload a PDF, DOCX, or TXT file.');
   }
 
   if (!text || text.trim().length === 0) {
-    throw new Error('Unable to read this resume. Please upload a valid PDF or DOCX file.');
+    throw new Error('No readable text streams found. The document may be a scanned image or password-protected.');
   }
 
   return {

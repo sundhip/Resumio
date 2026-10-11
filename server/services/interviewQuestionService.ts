@@ -1,5 +1,9 @@
 import crypto from 'crypto';
 import { db } from '../database/db.js';
+import { mongoDb } from '../database/mongoAdapter.js';
+import { aiProvider } from './aiProvider.js';
+import { InterviewQuestionSetOutput, InterviewQuestionSetOutputSchema } from './aiValidation.js';
+import { wrapInUntrustedBoundary } from './promptSecurity.js';
 
 export interface QuestionItem {
   id: string;
@@ -28,6 +32,7 @@ export interface InterviewQuestionSetResult {
   questions: QuestionSetStructure;
   totalQuestions: number;
   modelVersion: string;
+  isAiGenerated?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -128,83 +133,101 @@ export class InterviewQuestionService {
     // 3. Synthesize realistic questions from actual job requirements
     const reqSkills = (db.prepare('SELECT name FROM job_required_skills WHERE job_id = ?').all(jobId) as any[]).map((r) => r.name);
     const prefSkills = (db.prepare('SELECT name FROM job_preferred_skills WHERE job_id = ?').all(jobId) as any[]).map((r) => r.name);
-    const allSkills = [...reqSkills, ...prefSkills];
 
-    const technical: QuestionItem[] = [];
-    const behavioral: QuestionItem[] = [];
-    const experience: QuestionItem[] = [];
-    const roleSpecific: QuestionItem[] = [];
+    const deterministicFallback = (): InterviewQuestionSetOutput => {
+      const technical: QuestionItem[] = [];
+      const behavioral: QuestionItem[] = [];
+      const experience: QuestionItem[] = [];
+      const roleSpecific: QuestionItem[] = [];
 
-    // Technical questions tailored to skills
-    if (reqSkills.length > 0) {
-      reqSkills.forEach((skill, i) => {
-        technical.push({
-          id: `tech-${i + 1}`,
-          question: `How have you utilized ${skill} to design or optimize scalable software architectures? Can you describe an architectural challenge you solved using it?`,
-          category: 'Technical',
-          targetSkill: skill,
-          evaluationCriteria: `Look for concrete practical experience with ${skill}, code clarity, and understanding of error handling / performance trade-offs.`,
+      if (reqSkills.length > 0) {
+        reqSkills.forEach((skill, i) => {
+          technical.push({
+            id: `tech-${i + 1}`,
+            question: `How have you utilized ${skill} to design or optimize scalable software architectures? Can you describe an architectural challenge you solved using it?`,
+            category: 'Technical',
+            targetSkill: skill,
+            evaluationCriteria: `Look for concrete practical experience with ${skill}, code clarity, and understanding of error handling / performance trade-offs.`,
+          });
         });
-      });
-    } else {
-      technical.push({
-        id: 'tech-1',
-        question: 'Walk us through your end-to-end software development lifecycle and how you approach automated testing and continuous integration.',
-        category: 'Technical',
-        targetSkill: 'Software Engineering',
-        evaluationCriteria: 'System architecture comprehension, CI/CD awareness, and code quality practices.',
-      });
-    }
-
-    // Behavioral questions
-    behavioral.push(
-      {
-        id: 'beh-1',
-        question: 'Tell us about a time when you disagreed with a product specification or engineering decision. How did you advocate for your point of view while maintaining team alignment?',
-        category: 'Behavioral',
-        evaluationCriteria: 'Constructive communication, openness to feedback, and collaborative problem solving.',
-      },
-      {
-        id: 'beh-2',
-        question: 'Describe a situation where a critical production bug occurred unexpectedly. What steps did you take to triage, resolve, and prevent a recurrence?',
-        category: 'Behavioral',
-        evaluationCriteria: 'Crisis management, root-cause analysis, post-mortem documentation, and composure under pressure.',
+      } else {
+        technical.push({
+          id: 'tech-1',
+          question: 'Walk us through your end-to-end software development lifecycle and how you approach automated testing and continuous integration.',
+          category: 'Technical',
+          targetSkill: 'Software Engineering',
+          evaluationCriteria: 'System architecture comprehension, CI/CD awareness, and code quality practices.',
+        });
       }
-    );
 
-    // Experience questions
-    const minExp = job.min_experience || 0;
-    experience.push(
-      {
-        id: 'exp-1',
-        question: minExp > 0
-          ? `With ${minExp}+ years required for this role, what is the most complex system you have contributed to from conception through production deployment?`
-          : 'What is the most rewarding technical project you have built, and what lessons did you learn from its delivery?',
-        category: 'Experience',
-        evaluationCriteria: 'Depth of hands-on responsibility, ownership of deliverable outcomes, and technical maturity.',
-      },
-      {
-        id: 'exp-2',
-        question: 'How do you prioritize technical debt versus shipping new product features when working under tight deadline constraints?',
-        category: 'Experience',
-        evaluationCriteria: 'Pragmatic balance between code maintainability and business speed-to-market.',
-      }
-    );
+      behavioral.push(
+        {
+          id: 'beh-1',
+          question: 'Tell us about a time when you disagreed with a product specification or engineering decision. How did you advocate for your point of view while maintaining team alignment?',
+          category: 'Behavioral',
+          evaluationCriteria: 'Constructive communication, openness to feedback, and collaborative problem solving.',
+        },
+        {
+          id: 'beh-2',
+          question: 'Describe a situation where a critical production bug occurred unexpectedly. What steps did you take to triage, resolve, and prevent a recurrence?',
+          category: 'Behavioral',
+          evaluationCriteria: 'Crisis management, root-cause analysis, post-mortem documentation, and composure under pressure.',
+        }
+      );
 
-    // Role-Specific questions
-    roleSpecific.push({
-      id: 'role-1',
-      question: `What excites you most about the ${job.title} role at ${job.company_name}, and how does your prior engineering background directly align with this position's goals?`,
-      category: 'Role-Specific',
-      evaluationCriteria: 'Role motivation, research about company objectives, and clarity of personal strengths.',
-    });
+      const minExp = job.min_experience || 0;
+      experience.push(
+        {
+          id: 'exp-1',
+          question: minExp > 0
+            ? `With ${minExp}+ years required for this role, what is the most complex system you have contributed to from conception through production deployment?`
+            : 'What is the most rewarding technical project you have built, and what lessons did you learn from its delivery?',
+          category: 'Experience',
+          evaluationCriteria: 'Depth of hands-on responsibility, ownership of deliverable outcomes, and technical maturity.',
+        },
+        {
+          id: 'exp-2',
+          question: 'How do you prioritize technical debt versus shipping new product features when working under tight deadline constraints?',
+          category: 'Experience',
+          evaluationCriteria: 'Pragmatic balance between code maintainability and business speed-to-market.',
+        }
+      );
 
-    const questionSet: QuestionSetStructure = {
-      technical,
-      behavioral,
-      experience,
-      roleSpecific,
+      roleSpecific.push({
+        id: 'role-1',
+        question: `What excites you most about the ${job.title} role at ${job.company_name}, and how does your prior engineering background directly align with this position's goals?`,
+        category: 'Role-Specific',
+        evaluationCriteria: 'Role motivation, research about company objectives, and clarity of personal strengths.',
+      });
+
+      return { technical, behavioral, experience, roleSpecific };
     };
+
+    const prompt = `
+Generate structured interview questions for the following job profile.
+Job Title: ${job.title}
+Company: ${job.company_name}
+Required Skills: ${reqSkills.join(', ')}
+Preferred Skills: ${prefSkills.join(', ')}
+Min Experience: ${job.min_experience || 0} years
+
+Strict JSON format:
+{
+  "technical": [{ "id": string, "question": string, "category": "Technical", "targetSkill": string, "evaluationCriteria": string }],
+  "behavioral": [{ "id": string, "question": string, "category": "Behavioral", "evaluationCriteria": string }],
+  "experience": [{ "id": string, "question": string, "category": "Experience", "evaluationCriteria": string }],
+  "roleSpecific": [{ "id": string, "question": string, "category": "Role-Specific", "evaluationCriteria": string }]
+}
+`;
+
+    const aiRes = await aiProvider.generateStructuredJson(
+      prompt,
+      InterviewQuestionSetOutputSchema,
+      'You are a senior engineering recruiter. Create thorough, professional, non-cliché interview questions.',
+      deterministicFallback
+    );
+
+    const questionSet: QuestionSetStructure = this.validateQuestionStructure(aiRes.data);
 
     // 4. Persist in database
     const setId = crypto.randomUUID();
@@ -225,7 +248,22 @@ export class InterviewQuestionService {
       now
     );
 
-    const totalQuestions = technical.length + behavioral.length + experience.length + roleSpecific.length;
+    try {
+      await mongoDb.interview_question_sets.insertOne({
+        _id: setId,
+        id: setId,
+        job_id: jobId,
+        candidate_id: null,
+        application_id: null,
+        recruiter_id: recruiterUserId,
+        questions_json: JSON.stringify(questionSet),
+        model_version: this.MODEL_VERSION,
+        created_at: now,
+        updated_at: now,
+      });
+    } catch {}
+
+    const totalQuestions = questionSet.technical.length + questionSet.behavioral.length + questionSet.experience.length + questionSet.roleSpecific.length;
 
     return {
       id: setId,
@@ -238,6 +276,7 @@ export class InterviewQuestionService {
       questions: questionSet,
       totalQuestions,
       modelVersion: this.MODEL_VERSION,
+      isAiGenerated: aiRes.isAiGenerated,
       createdAt: now,
       updatedAt: now,
     };
@@ -251,25 +290,23 @@ export class InterviewQuestionService {
     applicationId: string,
     forceRegenerate: boolean = false
   ): Promise<InterviewQuestionSetResult> {
-    // 1. Fetch application, job, and candidate profile
     const app = db.prepare(`
       SELECT a.*, j.title as job_title, j.recruiter_id, j.min_experience, j.qualification,
              rp.company_name, cp.full_name as candidate_name, cp.headline
       FROM applications a
       JOIN jobs j ON a.job_id = j.id
       JOIN recruiter_profiles rp ON j.recruiter_profile_id = rp.id
-      JOIN candidate_profiles cp ON a.candidate_profile_id = cp.id
+      JOIN candidate_profiles cp ON a.candidate_id = cp.user_id
       WHERE a.id = ?
     `).get(applicationId) as any;
 
     if (!app) {
-      throw new Error(`Application not found with ID: ${applicationId}`);
+      throw new Error(`Application not found: ${applicationId}`);
     }
     if (app.recruiter_id !== recruiterUserId) {
-      throw new Error('Forbidden: You can only generate candidate questions for applications on your own job postings.');
+      throw new Error('Forbidden: You can only generate candidate questions for applications to your jobs.');
     }
 
-    // 2. Check cached candidate-specific set
     if (!forceRegenerate) {
       const cached = db.prepare(`
         SELECT * FROM interview_question_sets
@@ -286,7 +323,7 @@ export class InterviewQuestionService {
           id: cached.id,
           jobId: cached.job_id,
           candidateId: cached.candidate_id,
-          applicationId: cached.application_id,
+          applicationId,
           recruiterId: cached.recruiter_id,
           jobTitle: app.job_title,
           companyName: app.company_name,
@@ -300,7 +337,6 @@ export class InterviewQuestionService {
       }
     }
 
-    // 3. Fetch candidate's parsed resume and matching record
     const match = db.prepare(`
       SELECT * FROM resume_job_matches WHERE application_id = ?
     `).get(applicationId) as any;
@@ -323,88 +359,104 @@ export class InterviewQuestionService {
       try { parsedExperience = JSON.parse(parsedResume.experience_json || '[]'); } catch {}
     }
 
-    const technical: QuestionItem[] = [];
-    const behavioral: QuestionItem[] = [];
-    const experience: QuestionItem[] = [];
-    const roleSpecific: QuestionItem[] = [];
+    const deterministicFallback = (): InterviewQuestionSetOutput => {
+      const technical: QuestionItem[] = [];
+      const behavioral: QuestionItem[] = [];
+      const experience: QuestionItem[] = [];
+      const roleSpecific: QuestionItem[] = [];
 
-    // Verified skills questions
-    if (reqMatched.length > 0) {
-      reqMatched.slice(0, 3).forEach((skill, idx) => {
-        technical.push({
-          id: `cand-tech-${idx + 1}`,
-          question: `Your resume highlights strong experience with ${skill}. Can you discuss an advanced implementation where you leveraged ${skill} to solve a critical bottleneck?`,
-          category: 'Technical',
-          targetSkill: skill,
-          evaluationCriteria: `Verify deep hands-on expertise with ${skill} versus surface-level familiarity.`,
+      if (reqMatched.length > 0) {
+        reqMatched.slice(0, 3).forEach((skill, idx) => {
+          technical.push({
+            id: `cand-tech-${idx + 1}`,
+            question: `Your resume highlights strong experience with ${skill}. Can you discuss an advanced implementation where you leveraged ${skill} to solve a critical bottleneck?`,
+            category: 'Technical',
+            targetSkill: skill,
+            evaluationCriteria: `Verify deep hands-on expertise with ${skill} versus surface-level familiarity.`,
+          });
         });
-      });
-    }
+      }
 
-    // Probe missing required skills gracefully
-    if (reqMissing.length > 0) {
-      reqMissing.slice(0, 2).forEach((missingSkill, idx) => {
-        technical.push({
-          id: `cand-gap-${idx + 1}`,
-          question: `Our tech stack relies on ${missingSkill}, which is not explicitly detailed on your resume. Have you worked with ${missingSkill} or analogous technologies, and how do you approach ramping up quickly?`,
-          category: 'Technical',
-          targetSkill: missingSkill,
-          evaluationCriteria: `Assess adaptability, conceptual knowledge transfer, and speed of learning new tools.`,
+      if (reqMissing.length > 0) {
+        reqMissing.slice(0, 2).forEach((missingSkill, idx) => {
+          technical.push({
+            id: `cand-gap-${idx + 1}`,
+            question: `Our tech stack relies on ${missingSkill}, which is not explicitly detailed on your resume. Have you worked with ${missingSkill} or analogous technologies, and how do you approach ramping up quickly?`,
+            category: 'Technical',
+            targetSkill: missingSkill,
+            evaluationCriteria: `Assess adaptability, conceptual knowledge transfer, and speed of learning new tools.`,
+          });
         });
-      });
-    }
+      }
 
-    // Project & Experience deep dives grounded in resume facts
-    if (parsedProjects.length > 0) {
-      const topProj = parsedProjects[0];
-      const projName = topProj.name || topProj.title || 'recent project';
-      experience.push({
-        id: 'cand-exp-proj',
-        question: `In your resume, you mention developing "${projName}". Can you detail the technical architectural decisions you made, the trade-offs considered, and the final impact?`,
-        category: 'Experience',
-        evaluationCriteria: 'Verification of genuine project contributions and engineering rationale.',
-      });
-    } else if (parsedExperience.length > 0) {
-      const topExp = parsedExperience[0];
-      const title = topExp.title || 'your recent role';
-      const company = topExp.company || 'your previous company';
-      experience.push({
-        id: 'cand-exp-work',
-        question: `During your tenure as ${title} at ${company}, what was the most complex feature or system you were directly responsible for building?`,
-        category: 'Experience',
-        evaluationCriteria: 'Ownership, scale, and clarity of technical communication.',
-      });
-    } else {
-      experience.push({
-        id: 'cand-exp-general',
-        question: `Can you walk us through a significant software project from your background, detailing how you managed requirements, code architecture, and testing?`,
-        category: 'Experience',
-        evaluationCriteria: 'End-to-end technical execution and problem-solving methodology.',
-      });
-    }
+      if (parsedProjects.length > 0) {
+        const topProj = parsedProjects[0];
+        const projName = topProj.name || topProj.title || 'recent project';
+        experience.push({
+          id: 'cand-exp-proj',
+          question: `In your resume, you mention developing "${projName}". Can you detail the technical architectural decisions you made, the trade-offs considered, and the final impact?`,
+          category: 'Experience',
+          evaluationCriteria: 'Verification of genuine project contributions and engineering rationale.',
+        });
+      } else if (parsedExperience.length > 0) {
+        const topExp = parsedExperience[0];
+        const title = topExp.title || 'your recent role';
+        const company = topExp.company || 'your previous company';
+        experience.push({
+          id: 'cand-exp-work',
+          question: `During your tenure as ${title} at ${company}, what was the most complex feature or system you were directly responsible for building?`,
+          category: 'Experience',
+          evaluationCriteria: 'Ownership, scale, and clarity of technical communication.',
+        });
+      } else {
+        experience.push({
+          id: 'cand-exp-general',
+          question: `Can you walk us through a significant software project from your background, detailing how you managed requirements, code architecture, and testing?`,
+          category: 'Experience',
+          evaluationCriteria: 'End-to-end technical execution and problem-solving methodology.',
+        });
+      }
 
-    // Behavioral
-    behavioral.push({
-      id: 'cand-beh-1',
-      question: `Describe a scenario where a project timeline shifted unexpectedly. How did you adapt your engineering deliverables and communicate progress with stakeholders?`,
-      category: 'Behavioral',
-      evaluationCriteria: 'Stakeholder communication, adaptability, and commitment to delivery.',
-    });
+      behavioral.push({
+        id: 'cand-beh-1',
+        question: `Describe a scenario where a project timeline shifted unexpectedly. How did you adapt your engineering deliverables and communicate progress with stakeholders?`,
+        category: 'Behavioral',
+        evaluationCriteria: 'Stakeholder communication, adaptability, and commitment to delivery.',
+      });
 
-    // Role-specific alignment
-    roleSpecific.push({
-      id: 'cand-role-1',
-      question: `Considering your background as ${app.headline || 'an engineer'}, what specific technical strengths do you feel will provide the fastest value to our ${app.job_title} team?`,
-      category: 'Role-Specific',
-      evaluationCriteria: 'Self-awareness, role alignment, and enthusiasm for the position.',
-    });
+      roleSpecific.push({
+        id: 'cand-role-1',
+        question: `Considering your background as ${app.headline || 'an engineer'}, what specific technical strengths do you feel will provide the fastest value to our ${app.job_title} team?`,
+        category: 'Role-Specific',
+        evaluationCriteria: 'Self-awareness, role alignment, and enthusiasm for the position.',
+      });
 
-    const questionSet: QuestionSetStructure = {
-      technical,
-      behavioral,
-      experience,
-      roleSpecific,
+      return { technical, behavioral, experience, roleSpecific };
     };
+
+    const candidateFacts = JSON.stringify({
+      candidateName: app.candidate_name,
+      jobTitle: app.job_title,
+      company: app.company_name,
+      matchedSkills: reqMatched,
+      missingSkills: reqMissing,
+      projects: parsedProjects.slice(0, 2),
+      experience: parsedExperience.slice(0, 2),
+    }, null, 2);
+
+    const prompt = `
+Generate candidate-specific interview questions grounded strictly in the candidate's factual resume and job match facts.
+${wrapInUntrustedBoundary('candidate_facts', candidateFacts)}
+`;
+
+    const aiRes = await aiProvider.generateStructuredJson(
+      prompt,
+      InterviewQuestionSetOutputSchema,
+      'You are a technical hiring manager. Tailor interview questions specifically to candidate facts and verify skill depth.',
+      deterministicFallback
+    );
+
+    const questionSet: QuestionSetStructure = this.validateQuestionStructure(aiRes.data);
 
     const setId = crypto.randomUUID();
     const now = new Date().toISOString();
@@ -426,7 +478,22 @@ export class InterviewQuestionService {
       now
     );
 
-    const totalQuestions = technical.length + behavioral.length + experience.length + roleSpecific.length;
+    try {
+      await mongoDb.interview_question_sets.insertOne({
+        _id: setId,
+        id: setId,
+        job_id: app.job_id,
+        candidate_id: app.candidate_id,
+        application_id: applicationId,
+        recruiter_id: recruiterUserId,
+        questions_json: JSON.stringify(questionSet),
+        model_version: this.MODEL_VERSION,
+        created_at: now,
+        updated_at: now,
+      });
+    } catch {}
+
+    const totalQuestions = questionSet.technical.length + questionSet.behavioral.length + questionSet.experience.length + questionSet.roleSpecific.length;
 
     return {
       id: setId,
@@ -440,6 +507,7 @@ export class InterviewQuestionService {
       questions: questionSet,
       totalQuestions,
       modelVersion: this.MODEL_VERSION,
+      isAiGenerated: aiRes.isAiGenerated,
       createdAt: now,
       updatedAt: now,
     };
@@ -477,6 +545,13 @@ export class InterviewQuestionService {
       SET questions_json = ?, updated_at = ?
       WHERE id = ?
     `).run(JSON.stringify(validated), now, questionSetId);
+
+    try {
+      mongoDb.interview_question_sets.updateOne(
+        { id: questionSetId },
+        { $set: { questions_json: JSON.stringify(validated), updated_at: now } }
+      );
+    } catch {}
 
     const total = validated.technical.length + validated.behavioral.length + validated.experience.length + validated.roleSpecific.length;
 
