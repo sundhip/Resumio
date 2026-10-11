@@ -172,7 +172,35 @@ npx tsx server/test-phase6.ts  # Phase 6: AI Matching, Ranking & Skill Gap
 npx tsx server/test-phase7.ts  # Phase 7: Interviews, Notifications & Analytics
 npx tsx server/test-phase8.ts  # Phase 8: Advanced AI Recruitment Intelligence
 npx tsx server/test-phase9.ts  # Phase 9: Integration, Security & Production Readiness
+npx tsx server/test-phase10.ts # Phase 10: Research Experimentation & Performance
+npx tsx server/test-phase11-smoke.ts # Phase 11: Full-System Integration Smoke Test
 ```
+
+### Complete Test Matrix (17 Test Suites)
+Run all 17 automated test suites synchronously:
+```bash
+npm test
+# or
+npm run test:all
+```
+
+---
+
+## 📚 Final Academic Submission Documentation (Phase 12)
+
+Comprehensive documentation for faculty review and viva defense is organized in [`docs/final-submission/`](docs/final-submission/):
+
+- 📄 [Academic Project Report](docs/final-submission/project-report.md) — Comprehensive 7-chapter capstone project report.
+- 🏗️ [System Architecture & Diagrams](docs/final-submission/architecture.md) — Three-tier architecture, Mermaid flowcharts, and ER diagrams.
+- ⚙️ [Technology Stack Justification](docs/final-submission/technology-stack.md) — Detailed rationale for React 19, TypeScript, Express, SQLite, and MongoDB.
+- 🤖 [AI Screening & Matching Methodology](docs/final-submission/ai-methodology.md) — 5-component scoring formula ($0$–$100$) and explainability breakdown.
+- 🔬 [Research Methodology & Evaluation](docs/final-submission/research-evaluation.md) — Benchmark dataset, data augmentation, and Information Retrieval ranking evaluation.
+- 🎓 [Viva Questions & Answers](docs/final-submission/viva-questions.md) — 24 in-depth university examination questions and answers.
+- 🎬 [Live Demonstration Script](docs/final-submission/demo-script.md) — 7–10 minute step-by-step walkthrough across Candidate, Recruiter, and Admin portals.
+- 📖 [User Manual](docs/final-submission/user-manual.md) — Practical guide for Candidates, Recruiters, and Administrators.
+- 🚀 [Setup & Deployment Guide](docs/final-submission/setup-and-deployment.md) — Reproducible local development and Docker deployment instructions.
+- 📊 [Feature Status Matrix](docs/final-submission/feature-status-matrix.md) — Verified implementation status across all system capabilities.
+- 📑 [References & Bibliography](docs/final-submission/references.md) — Research paper and technical citations.
 
 ---
 
