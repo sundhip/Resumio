@@ -446,6 +446,12 @@ export class MongoDatabaseManager {
   public get interview_question_sets() { return this.collection('interview_question_sets'); }
   public get resume_improvement_analyses() { return this.collection('resume_improvement_analyses'); }
   public get resume_duplicate_matches() { return this.collection('resume_duplicate_matches'); }
+
+  // Research Pipeline Collections (Isolated)
+  public get research_datasets() { return this.collection('research_datasets'); }
+  public get research_dataset_records() { return this.collection('research_dataset_records'); }
+  public get research_augmentation_runs() { return this.collection('research_augmentation_runs'); }
+  public get research_experiments() { return this.collection('research_experiments'); }
 }
 
 export const mongoDb = new MongoDatabaseManager();

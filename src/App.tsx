@@ -31,6 +31,9 @@ import { RecruitmentAnalyticsPage } from './pages/recruiter/RecruitmentAnalytics
 // Phase 8 AI Recruitment Intelligence Pages
 import { AICandidateSearchPage } from './pages/recruiter/AICandidateSearchPage';
 
+// Phase 5 LLM Data Augmentation Research Pipeline Page
+import { ResearchPipelinePage } from './pages/admin/ResearchPipelinePage';
+
 export const App: React.FC = () => {
   const { isAuthenticated, role, isLoading } = useAuth();
   const [currentPath, setCurrentPath] = useState<string>('dashboard');
@@ -155,6 +158,9 @@ export const App: React.FC = () => {
       // Admin Management
       case 'admin-users':
         return <AdminDashboard />;
+
+      case 'research-pipeline':
+        return <ResearchPipelinePage />;
 
       // Common Settings & DS
       case 'settings':

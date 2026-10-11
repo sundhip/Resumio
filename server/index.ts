@@ -16,6 +16,7 @@ import { notificationsRouter } from './routes/notifications';
 import { dashboardsRouter } from './routes/dashboards';
 import { analyticsRouter } from './routes/analytics';
 import aiIntelligenceRouter from './routes/aiIntelligence';
+import { researchRouter } from './routes/researchRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -61,6 +62,7 @@ app.use('/api', notificationsRouter);
 app.use('/api', dashboardsRouter);
 app.use('/api', analyticsRouter);
 app.use('/api', aiLimiter, aiIntelligenceRouter);
+app.use('/api', researchRouter);
 
 // 4. Health & Readiness Endpoints
 app.get(['/health', '/api/health'], (_req, res) => {

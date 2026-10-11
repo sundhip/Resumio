@@ -8,6 +8,7 @@ const testSuites = [
   { name: 'Phase 3 - MongoDB Data Persistence & Atlas Verifier', file: 'server/scripts/verify-atlas-persistence.ts' },
   { name: 'Phase 4 - Production AI Architecture & Intelligence Foundation', file: 'server/test-ai-foundation.ts' },
   { name: 'Phase 4 - Application Workflow & Tracking', file: 'server/test-phase4.ts' },
+  { name: 'Phase 5 - LLM Data Augmentation Research Pipeline', file: 'server/test-research-pipeline.ts' },
   { name: 'Phase 5 - Resume Parsing & Screening', file: 'server/test-phase5.ts' },
   { name: 'Phase 6 - AI Matching, Ranking & Skill Gap Analysis', file: 'server/test-phase6.ts' },
   { name: 'Phase 7 - Interviews, Notifications & Analytics', file: 'server/test-phase7.ts' },

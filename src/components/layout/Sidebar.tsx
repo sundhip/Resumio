@@ -16,6 +16,7 @@ import {
   Send,
   Calendar,
   TrendingUp,
+  Database,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -120,9 +121,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ],
           },
           {
-            groupTitle: 'Platform',
+            groupTitle: 'Platform & Research',
             items: [
               { id: 'admin-users', label: 'User Accounts', icon: <Users className="w-4 h-4" /> },
+              { id: 'research-pipeline', label: 'Research Pipeline (AI)', icon: <Database className="w-4 h-4 text-purple-500" /> },
             ],
           },
           {

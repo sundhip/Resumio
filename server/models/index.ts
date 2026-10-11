@@ -930,6 +930,141 @@ export const ResumeDuplicateMatchSchema = new Schema<IResumeDuplicateMatch>({
 ResumeDuplicateMatchSchema.virtual('id').get(function () { return this._id; });
 
 // ============================================================
+// 15. RESEARCH PIPELINE MODELS (ISOLATED FROM PRODUCTION RECRUITMENT)
+// ============================================================
+export interface IResearchDataset extends Document {
+  _id: string;
+  id: string;
+  name: string;
+  description: string;
+  task_type: string;
+  target_classes_json: string;
+  version: string;
+  status: 'Draft' | 'Validated' | 'Active' | 'Archived';
+  original_record_count: number;
+  class_distribution_json: string;
+  source: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export const ResearchDatasetSchema = new Schema<IResearchDataset>({
+  _id: { type: String, default: () => crypto.randomUUID() },
+  name: { type: String, required: true },
+  description: { type: String, default: '' },
+  task_type: { type: String, default: 'job_category_classification' },
+  target_classes_json: { type: String, default: '[]' },
+  version: { type: String, default: 'v1.0.0' },
+  status: { type: String, enum: ['Draft', 'Validated', 'Active', 'Archived'], default: 'Draft' },
+  original_record_count: { type: Number, default: 0 },
+  class_distribution_json: { type: String, default: '{}' },
+  source: { type: String, default: 'Academic Benchmark' },
+  created_by: { type: String, required: true },
+  created_at: { type: String, default: () => new Date().toISOString() },
+  updated_at: { type: String, default: () => new Date().toISOString() },
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+ResearchDatasetSchema.virtual('id').get(function () { return this._id; });
+
+export interface IResearchDatasetRecord extends Document {
+  _id: string;
+  id: string;
+  dataset_id: string;
+  text: string;
+  class_label: string;
+  provenance: 'original_real' | 'synthetic_llm' | 'manual_authored';
+  split: 'train' | 'val' | 'test';
+  is_augmented: boolean;
+  augmentation_run_id?: string | null;
+  quality_score?: number | null;
+  created_at: string;
+}
+
+export const ResearchDatasetRecordSchema = new Schema<IResearchDatasetRecord>({
+  _id: { type: String, default: () => crypto.randomUUID() },
+  dataset_id: { type: String, required: true, index: true },
+  text: { type: String, required: true },
+  class_label: { type: String, required: true, index: true },
+  provenance: { type: String, enum: ['original_real', 'synthetic_llm', 'manual_authored'], default: 'original_real' },
+  split: { type: String, enum: ['train', 'val', 'test'], default: 'train', index: true },
+  is_augmented: { type: Boolean, default: false },
+  augmentation_run_id: { type: String, default: null, index: true },
+  quality_score: { type: Number, default: null },
+  created_at: { type: String, default: () => new Date().toISOString() },
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+ResearchDatasetRecordSchema.virtual('id').get(function () { return this._id; });
+
+export interface IResearchAugmentationRun extends Document {
+  _id: string;
+  id: string;
+  dataset_id: string;
+  target_class: string;
+  requested_count: number;
+  generated_count: number;
+  accepted_count: number;
+  rejected_count: number;
+  model_provider: string;
+  model_name: string;
+  prompt_version: string;
+  filter_stats_json: string;
+  status: 'Pending' | 'Running' | 'Completed' | 'Failed';
+  error_message?: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export const ResearchAugmentationRunSchema = new Schema<IResearchAugmentationRun>({
+  _id: { type: String, default: () => crypto.randomUUID() },
+  dataset_id: { type: String, required: true, index: true },
+  target_class: { type: String, required: true },
+  requested_count: { type: Number, required: true },
+  generated_count: { type: Number, default: 0 },
+  accepted_count: { type: Number, default: 0 },
+  rejected_count: { type: Number, default: 0 },
+  model_provider: { type: String, default: 'gemini' },
+  model_name: { type: String, default: 'gemini-1.5-flash' },
+  prompt_version: { type: String, default: 'recruitment-aug-v1' },
+  filter_stats_json: { type: String, default: '{}' },
+  status: { type: String, enum: ['Pending', 'Running', 'Completed', 'Failed'], default: 'Pending' },
+  error_message: { type: String, default: '' },
+  created_by: { type: String, required: true },
+  created_at: { type: String, default: () => new Date().toISOString() },
+  updated_at: { type: String, default: () => new Date().toISOString() },
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+ResearchAugmentationRunSchema.virtual('id').get(function () { return this._id; });
+
+export interface IResearchExperiment extends Document {
+  _id: string;
+  id: string;
+  dataset_id: string;
+  experiment_name: string;
+  classifier_type: string;
+  baseline_metrics_json: string;
+  augmented_metrics_json: string;
+  comparison_json: string;
+  confusion_matrices_json: string;
+  status: 'Completed' | 'Failed';
+  created_by: string;
+  created_at: string;
+}
+
+export const ResearchExperimentSchema = new Schema<IResearchExperiment>({
+  _id: { type: String, default: () => crypto.randomUUID() },
+  dataset_id: { type: String, required: true, index: true },
+  experiment_name: { type: String, required: true },
+  classifier_type: { type: String, default: 'tf-idf-logistic-regression' },
+  baseline_metrics_json: { type: String, default: '{}' },
+  augmented_metrics_json: { type: String, default: '{}' },
+  comparison_json: { type: String, default: '{}' },
+  confusion_matrices_json: { type: String, default: '{}' },
+  status: { type: String, enum: ['Completed', 'Failed'], default: 'Completed' },
+  created_by: { type: String, required: true },
+  created_at: { type: String, default: () => new Date().toISOString() },
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+ResearchExperimentSchema.virtual('id').get(function () { return this._id; });
+
+// ============================================================
 // MODEL EXPORTS
 // ============================================================
 export const UserModel: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
@@ -949,3 +1084,9 @@ export const NaturalLanguageSearchModel: Model<INaturalLanguageSearch> = mongoos
 export const InterviewQuestionSetModel: Model<IInterviewQuestionSet> = mongoose.models.InterviewQuestionSet || mongoose.model<IInterviewQuestionSet>('InterviewQuestionSet', InterviewQuestionSetSchema);
 export const ResumeImprovementAnalysisModel: Model<IResumeImprovementAnalysis> = mongoose.models.ResumeImprovementAnalysis || mongoose.model<IResumeImprovementAnalysis>('ResumeImprovementAnalysis', ResumeImprovementAnalysisSchema);
 export const ResumeDuplicateMatchModel: Model<IResumeDuplicateMatch> = mongoose.models.ResumeDuplicateMatch || mongoose.model<IResumeDuplicateMatch>('ResumeDuplicateMatch', ResumeDuplicateMatchSchema);
+
+// Research Pipeline Models
+export const ResearchDatasetModel: Model<IResearchDataset> = mongoose.models.ResearchDataset || mongoose.model<IResearchDataset>('ResearchDataset', ResearchDatasetSchema);
+export const ResearchDatasetRecordModel: Model<IResearchDatasetRecord> = mongoose.models.ResearchDatasetRecord || mongoose.model<IResearchDatasetRecord>('ResearchDatasetRecord', ResearchDatasetRecordSchema);
+export const ResearchAugmentationRunModel: Model<IResearchAugmentationRun> = mongoose.models.ResearchAugmentationRun || mongoose.model<IResearchAugmentationRun>('ResearchAugmentationRun', ResearchAugmentationRunSchema);
+export const ResearchExperimentModel: Model<IResearchExperiment> = mongoose.models.ResearchExperiment || mongoose.model<IResearchExperiment>('ResearchExperiment', ResearchExperimentSchema);
