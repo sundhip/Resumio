@@ -9,18 +9,100 @@ import { authenticateToken, requireRole, AuthRequest } from '../middleware/auth'
 
 const router = Router();
 
-// Public avatar image serving for <img> tags
+// Public avatar image serving for <img> tags with strict path traversal defense
 router.get('/photo/:filename', (req, res: Response): void => {
-  const filename = path.basename(req.params.filename);
-  const filePath = path.join(avatarUploadDir, filename);
+  const sanitized = path.basename(req.params.filename).replace(/[^a-zA-Z0-9._-]/g, '');
+  const filePath = path.resolve(avatarUploadDir, sanitized);
+  
+  // Guard against directory traversal
+  if (!filePath.startsWith(path.resolve(avatarUploadDir))) {
+    res.status(403).send('Forbidden');
+    return;
+  }
+
   if (fs.existsSync(filePath)) {
+    const ext = path.extname(sanitized).toLowerCase();
+    const mimeMap: Record<string, string> = {
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.webp': 'image/webp',
+    };
+    if (mimeMap[ext]) {
+      res.setHeader('Content-Type', mimeMap[ext]);
+    }
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.sendFile(filePath);
   } else {
     res.status(404).send('Image not found');
   }
 });
 
-// Apply auth & candidate role guard to all operational routes below
+// Preview Specific Resume by ID (Multi-role endpoint: Candidate owner, Authorized Recruiter, or Admin)
+router.get('/resumes/:id/preview', authenticateToken, (req: AuthRequest, res: Response): void => {
+  try {
+    const resume = db.prepare('SELECT * FROM candidate_resumes WHERE id = ?').get(req.params.id) as any;
+    if (!resume) {
+      res.status(404).json({ success: false, message: 'Resume not found.' });
+      return;
+    }
+
+    // Role-based Access Control:
+    // Candidate can only view their own resume.
+    // Recruiter can view if the resume is attached to an application for one of their jobs.
+    // Admin can view any resume.
+    const userRole = req.user!.role;
+    const userId = req.user!.id;
+
+    if (userRole === 'candidate') {
+      const candProfile = db.prepare('SELECT id FROM candidate_profiles WHERE user_id = ?').get(userId) as any;
+      if (!candProfile || candProfile.id !== resume.candidate_profile_id) {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to view this resume.' });
+        return;
+      }
+    } else if (userRole === 'recruiter') {
+      const allowedApp = db.prepare(`
+        SELECT a.id FROM applications a
+        JOIN jobs j ON a.job_id = j.id
+        WHERE a.resume_id = ? AND j.recruiter_id = ?
+      `).get(resume.id, userId) as any;
+
+      if (!allowedApp) {
+        res.status(403).json({ success: false, message: 'Forbidden: You do not own a job application referencing this resume.' });
+        return;
+      }
+    } else if (userRole !== 'admin') {
+      res.status(403).json({ success: false, message: 'Forbidden: Unauthorized to access resume files.' });
+      return;
+    }
+
+    const safeFilename = path.basename(resume.stored_filename);
+    const filePath = path.resolve(resumeUploadDir, safeFilename);
+    if (!filePath.startsWith(path.resolve(resumeUploadDir)) || !fs.existsSync(filePath)) {
+      res.status(404).json({ success: false, message: 'Resume file not found on storage server.' });
+      return;
+    }
+
+    // Security: Sensitive personal document - prevent proxy and public browser caching
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+
+    if (resume.file_type === 'PDF') {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(resume.original_filename)}"`);
+      const stream = fs.createReadStream(filePath);
+      stream.pipe(res);
+    } else {
+      res.download(filePath, resume.original_filename);
+    }
+  } catch (err: any) {
+    console.error('Preview specific resume error:', err);
+    res.status(500).json({ success: false, message: 'Unable to load resume preview.' });
+  }
+});
+
+// Apply auth & candidate role guard to all candidate-exclusive routes below
 router.use(authenticateToken);
 router.use(requireRole(['candidate']));
 
@@ -1160,12 +1242,16 @@ router.get('/resume/download', (req: AuthRequest, res: Response): void => {
       return;
     }
 
-    const filePath = path.join(resumeUploadDir, resume.stored_filename);
-    if (!fs.existsSync(filePath)) {
+    const safeFilename = path.basename(resume.stored_filename);
+    const filePath = path.resolve(resumeUploadDir, safeFilename);
+    if (!filePath.startsWith(path.resolve(resumeUploadDir)) || !fs.existsSync(filePath)) {
       res.status(404).json({ success: false, message: 'Resume file not found on storage server.' });
       return;
     }
 
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     res.download(filePath, resume.original_filename);
   } catch (err: any) {
     console.error('Download resume error:', err);
@@ -1187,11 +1273,16 @@ router.get('/resume/preview', (req: AuthRequest, res: Response): void => {
       return;
     }
 
-    const filePath = path.join(resumeUploadDir, resume.stored_filename);
-    if (!fs.existsSync(filePath)) {
+    const safeFilename = path.basename(resume.stored_filename);
+    const filePath = path.resolve(resumeUploadDir, safeFilename);
+    if (!filePath.startsWith(path.resolve(resumeUploadDir)) || !fs.existsSync(filePath)) {
       res.status(404).json({ success: false, message: 'Resume file not found on storage server.' });
       return;
     }
+
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
 
     if (resume.file_type === 'PDF') {
       res.setHeader('Content-Type', 'application/pdf');
@@ -1208,64 +1299,6 @@ router.get('/resume/preview', (req: AuthRequest, res: Response): void => {
   } catch (err: any) {
     console.error('Preview resume error:', err);
     res.status(500).json({ success: false, message: 'Unable to stream resume preview.' });
-  }
-});
-
-// Preview Specific Resume by ID (For candidates or recruiters)
-router.get('/resumes/:id/preview', (req: AuthRequest, res: Response): void => {
-  try {
-    const resume = db.prepare('SELECT * FROM candidate_resumes WHERE id = ?').get(req.params.id) as any;
-    if (!resume) {
-      res.status(404).json({ success: false, message: 'Resume not found.' });
-      return;
-    }
-
-    // Role-based Access Control:
-    // Candidate can only view their own resume.
-    // Recruiter can view if the resume is attached to an application for one of their jobs.
-    // Admin can view any resume.
-    const userRole = req.user!.role;
-    const userId = req.user!.id;
-
-    if (userRole === 'candidate') {
-      const candProfile = db.prepare('SELECT id FROM candidate_profiles WHERE user_id = ?').get(userId) as any;
-      if (!candProfile || candProfile.id !== resume.candidate_profile_id) {
-        res.status(403).json({ success: false, message: 'Forbidden: You do not have permission to view this resume.' });
-        return;
-      }
-    } else if (userRole === 'recruiter') {
-      const allowedApp = db.prepare(`
-        SELECT a.id FROM applications a
-        JOIN jobs j ON a.job_id = j.id
-        WHERE a.resume_id = ? AND j.recruiter_id = ?
-      `).get(resume.id, userId) as any;
-
-      if (!allowedApp) {
-        res.status(403).json({ success: false, message: 'Forbidden: You do not own a job application referencing this resume.' });
-        return;
-      }
-    } else if (userRole !== 'admin') {
-      res.status(403).json({ success: false, message: 'Forbidden: Unauthorized to access resume files.' });
-      return;
-    }
-
-    const filePath = path.join(resumeUploadDir, resume.stored_filename);
-    if (!fs.existsSync(filePath)) {
-      res.status(404).json({ success: false, message: 'Resume file not found on storage server.' });
-      return;
-    }
-
-    if (resume.file_type === 'PDF') {
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(resume.original_filename)}"`);
-      const stream = fs.createReadStream(filePath);
-      stream.pipe(res);
-    } else {
-      res.download(filePath, resume.original_filename);
-    }
-  } catch (err: any) {
-    console.error('Preview specific resume error:', err);
-    res.status(500).json({ success: false, message: 'Unable to load resume preview.' });
   }
 });
 
