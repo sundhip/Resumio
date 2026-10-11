@@ -78,3 +78,5 @@ export function requireRole(allowedRoles: ('candidate' | 'recruiter' | 'admin')[
     next();
   };
 }
+
+export const requireAuth = authenticateToken;
