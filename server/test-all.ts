@@ -3,7 +3,9 @@ import { execSync } from 'child_process';
 const testSuites = [
   { name: 'Phase 1 - Database, Auth & Profiles', file: 'server/test-phase1.ts' },
   { name: 'Phase 2 - Candidate & Recruiter Profiles', file: 'server/test-phase2.ts' },
+  { name: 'Phase 2 - MongoDB Architecture & Data Models', file: 'server/test-mongodb.ts' },
   { name: 'Phase 3 - Job Management & Candidate Discovery', file: 'server/test-phase3.ts' },
+  { name: 'Phase 3 - MongoDB Data Persistence & Atlas Verifier', file: 'server/scripts/verify-atlas-persistence.ts' },
   { name: 'Phase 4 - Application Workflow & Tracking', file: 'server/test-phase4.ts' },
   { name: 'Phase 5 - Resume Parsing & Screening', file: 'server/test-phase5.ts' },
   { name: 'Phase 6 - AI Matching, Ranking & Skill Gap Analysis', file: 'server/test-phase6.ts' },
@@ -21,8 +23,9 @@ const results: { name: string; status: 'PASSED' | 'FAILED'; durationMs: number; 
 for (const suite of testSuites) {
   process.stdout.write(`⏳ Running [${suite.name}]... `);
   const start = Date.now();
+  const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
   try {
-    execSync(`npx tsx ${suite.file}`, { stdio: 'pipe' });
+    execSync(`${npxCmd} tsx ${suite.file}`, { stdio: 'pipe' });
     const duration = Date.now() - start;
     results.push({ name: suite.name, status: 'PASSED', durationMs: duration });
     console.log(`✅ PASSED (${duration}ms)`);

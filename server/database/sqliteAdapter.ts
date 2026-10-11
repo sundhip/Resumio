@@ -164,9 +164,10 @@ export class DatabaseAdapter {
         if (!self.db) return { changes: 0, lastInsertRowid: 0 };
         const flatParams = params.length === 1 && Array.isArray(params[0]) ? params[0] : params;
         self.db.run(sql, flatParams);
+        const changes = self.db.getRowsModified();
         self.save();
         return {
-          changes: self.db.getRowsModified(),
+          changes,
           lastInsertRowid: 0,
         };
       },

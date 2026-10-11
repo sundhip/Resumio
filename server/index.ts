@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { initDatabase } from './database/db';
+import { initMongoDatabase, checkMongoReadiness } from './database/mongo';
 import { securityHeadersMiddleware, createRateLimiter, centralizedErrorHandler } from './middleware/security';
 import authRouter from './routes/auth';
 import profileRouter from './routes/profile';
@@ -43,6 +44,9 @@ const aiLimiter = createRateLimiter({
 // Initialize SQLite database schema and seeds
 await initDatabase();
 
+// Initialize MongoDB database connection and models
+await initMongoDatabase();
+
 // 3. Route Mounts
 app.use('/api/auth', authLimiter, authRouter);
 app.use('/api/profile', profileRouter);
@@ -58,15 +62,33 @@ app.use('/api', dashboardsRouter);
 app.use('/api', analyticsRouter);
 app.use('/api', aiLimiter, aiIntelligenceRouter);
 
-// 4. Health Check
-app.get('/api/health', (_req, res) => {
+// 4. Health & Readiness Endpoints
+app.get(['/health', '/api/health'], (_req, res) => {
   res.json({
     status: 'ok',
     service: 'Resumio Enterprise Recruitment Platform API',
     version: '1.0.0',
     environment: process.env.NODE_ENV || 'development',
+    uptimeSeconds: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
   });
+});
+
+app.get(['/ready', '/api/ready'], async (_req, res) => {
+  try {
+    const readiness = await checkMongoReadiness();
+    if (readiness.ready) {
+      res.status(200).json(readiness);
+    } else {
+      res.status(503).json(readiness);
+    }
+  } catch {
+    res.status(503).json({
+      ready: false,
+      status: 'error',
+      message: 'Service readiness check failed',
+    });
+  }
 });
 
 // 5. Centralized Error Handling Middleware

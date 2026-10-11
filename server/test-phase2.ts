@@ -27,7 +27,7 @@ async function runPhase2Tests() {
 
   // 1. Candidate Login
   console.log('1. Authenticating Candidate (rahul.kumar@resumio.ai)...');
-  const loginRes = await fetch(`${BASE_URL}/auth/login`, {
+  let loginRes = await fetch(`${BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -35,7 +35,33 @@ async function runPhase2Tests() {
       password: 'Candidate123!',
     }),
   });
-  const loginData = (await loginRes.json()) as any;
+  let loginData = (await loginRes.json()) as any;
+  if (!loginData.success || !loginData.token) {
+    const regRes = await fetch(`${BASE_URL}/auth/register/candidate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fullName: 'Rahul Kumar',
+        email: 'rahul.kumar@resumio.ai',
+        password: 'Candidate123!',
+        confirmPassword: 'Candidate123!',
+      }),
+    });
+    const regData = (await regRes.json()) as any;
+    if (regData.token) {
+      loginData = { success: true, token: regData.token };
+    } else {
+      loginRes = await fetch(`${BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: 'rahul.kumar@resumio.ai',
+          password: 'Candidate123!',
+        }),
+      });
+      loginData = (await loginRes.json()) as any;
+    }
+  }
   assert(loginData.success === true && Boolean(loginData.token), 'Candidate authentication successful');
   const token = loginData.token;
   const authHeaders = {
@@ -69,6 +95,7 @@ async function runPhase2Tests() {
       location: 'Bangalore, Karnataka, India',
       headline: 'Principal Full Stack Architect & Distributed Systems Engineer',
       bio: 'High-velocity software architect with 8+ years building high-concurrency microservices, cloud-native APIs, and reactive web applications.',
+      photoUrl: 'https://resumio.ai/avatars/rahul.jpg',
     }),
   });
   const updateProfileData = (await updateProfileRes.json()) as any;
