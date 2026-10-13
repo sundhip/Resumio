@@ -1,3 +1,5 @@
+import { sanitizeAndInspectPromptSecurity } from './matchingConfig.js';
+
 export interface ParsedPersonal {
   candidateName: string;
   email: string;
@@ -61,6 +63,11 @@ export interface ParsedResumeResult {
   achievements: string[];
   confidence: Record<string, 'high' | 'medium' | 'low'>;
   sectionsDetectedCount: number;
+  overallQualityScore: number;
+  promptSafetyAudit?: {
+    isSafe: boolean;
+    threatsDetected: string[];
+  };
 }
 
 // Canonical skills catalog for exact normalization
@@ -188,6 +195,17 @@ export function parseResumeText(rawText: string): ParsedResumeResult {
   if (languages.length > 0) sectionsDetectedCount++;
   if (achievements.length > 0) sectionsDetectedCount++;
 
+  // Calculate overall parsing quality score (0 - 100%)
+  const sectionWeight = Math.min(60, sectionsDetectedCount * 8);
+  const confidenceWeight = 
+    (confidence.email === 'high' ? 10 : 3) +
+    (confidence.skills === 'high' ? 15 : confidence.skills === 'medium' ? 8 : 2) +
+    (confidence.experience === 'high' ? 15 : 4);
+  const overallQualityScore = Math.min(100, Math.round(sectionWeight + confidenceWeight));
+
+  // Adversarial prompt security audit
+  const securityAudit = sanitizeAndInspectPromptSecurity(text);
+
   return {
     personal,
     summary,
@@ -200,6 +218,11 @@ export function parseResumeText(rawText: string): ParsedResumeResult {
     achievements,
     confidence,
     sectionsDetectedCount,
+    overallQualityScore,
+    promptSafetyAudit: {
+      isSafe: securityAudit.isSafe,
+      threatsDetected: securityAudit.threatsDetected,
+    },
   };
 }
 
