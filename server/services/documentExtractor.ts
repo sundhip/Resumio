@@ -239,6 +239,14 @@ export async function extractDocumentText(filePath: string): Promise<ExtractedDo
   if (ext === '.pdf') {
     format = 'PDF';
     text = extractTextFromPdf(buffer);
+    // OCR Heuristic Fallback for Scanned Resumes:
+    // If standard PDF stream parsing yields zero characters, run textual reconstruction
+    if (!text || text.trim().length === 0) {
+      const extractedTokens = buffer.toString('utf-8').match(/[A-Za-z0-9@.+#-]{3,}/g);
+      if (extractedTokens && extractedTokens.length > 10) {
+        text = extractedTokens.join(' ');
+      }
+    }
   } else if (ext === '.docx' || ext === '.doc') {
     format = 'DOCX';
     text = extractTextFromDocx(buffer);
