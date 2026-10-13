@@ -30,6 +30,9 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
   const [minScoreFilter, setMinScoreFilter] = useState<number>(0);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [rejectModalCandidate, setRejectModalCandidate] = useState<Candidate | null>(null);
+  const [sortBy, setSortBy] = useState<'score_desc' | 'score_asc' | 'name_asc' | 'exp_desc'>('score_desc');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
   const { showToast } = useToast();
 
   const handleStatusChange = (candId: string, newStatus: ApplicationStatus) => {
@@ -56,7 +59,19 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
     const matchesScore = c.aiScore >= minScoreFilter;
 
     return matchesSearch && matchesStatus && matchesScore;
+  }).sort((a, b) => {
+    if (sortBy === 'score_desc') return b.aiScore - a.aiScore;
+    if (sortBy === 'score_asc') return a.aiScore - b.aiScore;
+    if (sortBy === 'name_asc') return a.name.localeCompare(b.name);
+    if (sortBy === 'exp_desc') return b.experienceYears - a.experienceYears;
+    return 0;
   });
+
+  const totalPages = Math.ceil(filteredCandidates.length / pageSize) || 1;
+  const paginatedCandidates = filteredCandidates.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   return (
     <div className="space-y-6">
@@ -131,6 +146,21 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
               <option value={70}>Score ≥ 70% (Good)</option>
             </select>
 
+            {/* Sort Selector */}
+            <select
+              value={sortBy}
+              onChange={(e) => {
+                setSortBy(e.target.value as any);
+                setCurrentPage(1);
+              }}
+              className="h-10 px-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+            >
+              <option value="score_desc">Sort: Highest Match</option>
+              <option value="score_asc">Sort: Lowest Match</option>
+              <option value="name_asc">Sort: Candidate Name</option>
+              <option value="exp_desc">Sort: Most Experience</option>
+            </select>
+
             <span className="text-xs text-slate-400 px-2 shrink-0">
               Showing {filteredCandidates.length} of {candidates.length}
             </span>
@@ -154,14 +184,14 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-surface-dark-border text-xs sm:text-sm">
-              {filteredCandidates.length === 0 ? (
+              {paginatedCandidates.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="text-center py-12 text-slate-400">
                     No candidates match the selected filters.
                   </td>
                 </tr>
               ) : (
-                filteredCandidates.map((cand) => (
+                paginatedCandidates.map((cand) => (
                   <tr
                     key={cand.id}
                     className="hover:bg-slate-50/70 dark:hover:bg-surface-dark-hover/50 transition-colors group cursor-pointer"
@@ -279,6 +309,54 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             </tbody>
           </table>
         </div>
+
+        {/* High-Capacity Pagination Footer */}
+        {filteredCandidates.length > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 bg-slate-50/75 dark:bg-surface-dark-bg/60 border-t border-slate-200 dark:border-surface-dark-border text-xs text-slate-500">
+            <div className="flex items-center gap-2">
+              <span>Rows per page:</span>
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="h-8 px-2 rounded-control bg-white dark:bg-surface-dark-input text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-surface-dark-border"
+              >
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+              <span>
+                Showing {Math.min((currentPage - 1) * pageSize + 1, filteredCandidates.length)} -{' '}
+                {Math.min(currentPage * pageSize, filteredCandidates.length)} of {filteredCandidates.length}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={currentPage <= 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              >
+                Previous
+              </Button>
+              <span className="px-2 font-medium text-slate-700 dark:text-slate-300">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
 
       {/* Candidate Deep Profile Drawer/Modal */}
