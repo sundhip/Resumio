@@ -2,7 +2,13 @@ import crypto from 'crypto';
 import { db } from '../database/db.js';
 import { mongoDb } from '../database/mongoAdapter.js';
 import { SkillNormalizationService } from './skillNormalizer.js';
-import { MATCHING_MODEL_CONFIG, computeLexicalCosineSimilarity } from './matchingConfig.js';
+import {
+  MATCHING_MODEL_CONFIG,
+  computeLexicalCosineSimilarity,
+  computeBM25Score,
+  computeReciprocalRankFusion,
+  sanitizeAndInspectPromptSecurity,
+} from './matchingConfig.js';
 
 export interface EvidenceItem {
   requirement: string;
@@ -300,16 +306,24 @@ export class ResumeJobMatchingService {
       evidenceText: qualificationAssessment,
     });
 
-    // 7. Lexical Semantic Relevance via TF-IDF Cosine Similarity (Weight: 10%)
+    // 7. Prompt Security Sanitization & Hybrid RRF Lexical/Semantic Fusion (Weight: 10%)
+    const promptSecurity = sanitizeAndInspectPromptSecurity(rawResumeText);
+    const sanitizedResumeText = promptSecurity.sanitizedText;
+
     const jobDescriptionFull = `${job.title} ${job.description || ''} ${job.responsibilities || ''}`;
-    const cosineSim = computeLexicalCosineSimilarity(rawResumeText, jobDescriptionFull);
-    const relevanceScore = Math.round((cosineSim / 100) * this.WEIGHTS.semanticRelevance * 10) / 10;
-    const semanticAssessment = `TF-IDF text alignment score: ${cosineSim}% between resume narrative and job specifications.`;
+    const cosineSim = computeLexicalCosineSimilarity(sanitizedResumeText, jobDescriptionFull);
+    const bm25Sim = computeBM25Score(sanitizedResumeText, [...jobRequiredSkills, ...jobPreferredSkills]);
+    const hybridSim = computeReciprocalRankFusion(bm25Sim, cosineSim);
+
+    const relevanceScore = Math.round((hybridSim / 100) * this.WEIGHTS.semanticRelevance * 10) / 10;
+    const semanticAssessment = promptSecurity.isSafe
+      ? `Hybrid RRF alignment: ${hybridSim}% (BM25: ${bm25Sim}%, Semantic: ${cosineSim}%) between resume narrative and job specifications.`
+      : `Adversarial instruction neutralized. Hybrid alignment: ${hybridSim}% (BM25: ${bm25Sim}%, Semantic: ${cosineSim}%).`;
 
     evidenceList.push({
       requirement: 'Job Narrative Semantic Relevance',
       type: 'semantic_relevance',
-      status: cosineSim >= 50 ? 'matched' : 'partially_matched',
+      status: hybridSim >= 50 ? 'matched' : 'partially_matched',
       evidenceSource: 'resume_skills',
       evidenceText: semanticAssessment,
     });
