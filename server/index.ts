@@ -75,6 +75,38 @@ app.use('/api', analyticsRouter);
 app.use('/api', aiLimiter, aiIntelligenceRouter);
 app.use('/api', researchRouter);
 
+// 3.1 Real-Time Server-Sent Events (SSE) Event Stream
+app.get('/api/events/stream', async (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  res.write(`data: ${JSON.stringify({ type: 'connected', timestamp: new Date().toISOString() })}\n\n`);
+
+  const { jobQueue } = await import('./services/distributedJobQueue');
+  const onProgress = (data: any) => {
+    res.write(`data: ${JSON.stringify({ type: 'job:progress', ...data })}\n\n`);
+  };
+  const onCompleted = (job: any) => {
+    res.write(`data: ${JSON.stringify({ type: 'job:completed', id: job.id, queue: job.queueName })}\n\n`);
+  };
+
+  jobQueue.on('job:progress', onProgress);
+  jobQueue.on('job:completed', onCompleted);
+
+  const keepAliveTimer = setInterval(() => {
+    res.write(': keepalive\n\n');
+  }, 25000);
+
+  req.on('close', () => {
+    clearInterval(keepAliveTimer);
+    jobQueue.off('job:progress', onProgress);
+    jobQueue.off('job:completed', onCompleted);
+    res.end();
+  });
+});
+
 // 4. Health & Readiness Endpoints
 app.get(['/health', '/api/health'], (_req, res) => {
   res.json({

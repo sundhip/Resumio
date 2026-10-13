@@ -28,7 +28,24 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
   }
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string; jti?: string };
+    
+    // Check if token was explicitly revoked
+    if (payload.jti) {
+      try {
+        const { SecurityManager } = require('../services/securitySessionService');
+        if (SecurityManager.isTokenBlacklisted(payload.jti)) {
+          res.status(401).json({
+            success: false,
+            message: 'Token has been revoked. Please sign in again.',
+          });
+          return;
+        }
+      } catch (e) {
+        // Fallback if dynamic require unavailable
+      }
+    }
+
     const user = db.prepare('SELECT id, email, role, status FROM users WHERE id = ?').get(payload.userId) as AuthenticatedUser | undefined;
 
     if (!user) {

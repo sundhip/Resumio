@@ -133,6 +133,80 @@ resumeProcessingRouter.post('/candidate/resume/parse', authenticateToken, async 
 });
 
 /**
+ * POST /api/candidate/resume/parse-async
+ * Dispatches resume parsing to the background job queue (BullMQ-style).
+ */
+resumeProcessingRouter.post('/candidate/resume/parse-async', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (user.role !== 'candidate') {
+      return res.status(403).json({ success: false, message: 'Only candidates can parse their resume.' });
+    }
+
+    const profile = db.prepare('SELECT id FROM candidate_profiles WHERE user_id = ?').get(user.id) as any;
+    if (!profile) {
+      return res.status(404).json({ success: false, message: 'Candidate profile not found.' });
+    }
+
+    const resume = db.prepare(`
+      SELECT * FROM candidate_resumes 
+      WHERE candidate_profile_id = ? AND is_active = 1
+    `).get(profile.id) as any;
+
+    if (!resume) {
+      return res.status(404).json({ success: false, message: 'No active resume found to parse.' });
+    }
+
+    const { jobQueue } = await import('../services/distributedJobQueue');
+    const job = await jobQueue.add('resume-processing', {
+      resumeId: resume.id,
+      candidateId: user.id,
+      candidateProfileId: profile.id,
+      storedFilename: resume.stored_filename,
+    });
+
+    return res.status(202).json({
+      success: true,
+      message: 'Resume parsing job queued successfully.',
+      jobId: job.id,
+      status: job.status,
+    });
+  } catch (err: any) {
+    console.error('Async parse error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to queue parsing job.', error: err.message });
+  }
+});
+
+/**
+ * GET /api/jobs/:jobId/status
+ * Check execution progress of asynchronous queue jobs.
+ */
+resumeProcessingRouter.get('/jobs/:jobId/status', authenticateToken, async (req: Request, res: Response) => {
+  const { jobId } = req.params;
+  const { jobQueue } = await import('../services/distributedJobQueue');
+  const job = jobQueue.getJob(jobId);
+
+  if (!job) {
+    return res.status(404).json({ success: false, message: 'Job not found.' });
+  }
+
+  return res.json({
+    success: true,
+    job: {
+      id: job.id,
+      queue: job.queueName,
+      status: job.status,
+      progress: job.progress,
+      result: job.result,
+      error: job.error,
+      attempts: job.attempts,
+      createdAt: job.createdAt,
+      completedAt: job.completedAt,
+    },
+  });
+});
+
+/**
  * POST /api/candidate/resume/reparse
  * Forces re-parsing and re-screening.
  */

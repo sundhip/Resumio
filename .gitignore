@@ -28,12 +28,13 @@ dist-ssr
 .env.local
 .env.production
 
-# SQLite database files (generated at runtime)
+# SQLite & Mongo local database data (generated at runtime)
 *.db
 *.sqlite
 *.sqlite3
 server/data/*.db
 server/data/*.sqlite*
+server/data/mongodb/
 
 # Uploaded resumes / files
 uploads/

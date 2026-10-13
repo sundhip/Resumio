@@ -478,4 +478,48 @@ router.post('/change-password', authenticateToken, async (req: AuthRequest, res:
   }
 });
 
+// 7. Enterprise Token Refresh Endpoint
+router.post('/refresh', async (req, res: Response): Promise<void> => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      res.status(400).json({ success: false, message: 'Refresh token is required.' });
+      return;
+    }
+
+    const { SecurityManager } = await import('../services/securitySessionService');
+    const newTokens = SecurityManager.rotateRefreshToken(refreshToken, req);
+    res.json({
+      success: true,
+      message: 'Tokens refreshed successfully.',
+      ...newTokens,
+    });
+  } catch (err: any) {
+    res.status(401).json({ success: false, message: err.message || 'Token refresh failed.' });
+  }
+});
+
+// 8. Revoke Session / Logout
+router.post('/logout', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.substring(7) : null;
+    if (token) {
+      try {
+        const decoded = jwt.decode(token) as { jti?: string };
+        if (decoded?.jti) {
+          const { SecurityManager } = await import('../services/securitySessionService');
+          SecurityManager.blacklistToken(decoded.jti);
+        }
+      } catch (e) {
+        // Ignore decode issues on logout
+      }
+    }
+    res.json({ success: true, message: 'Logged out successfully and session revoked.' });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Error terminating session.' });
+  }
+});
+
 export default router;
+
