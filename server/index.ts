@@ -75,7 +75,7 @@ app.use('/api', analyticsRouter);
 app.use('/api', aiLimiter, aiIntelligenceRouter);
 app.use('/api', researchRouter);
 
-// 3.1 Real-Time Server-Sent Events (SSE) Event Stream
+// 3.1 Real-Time Server-Sent Events (SSE) Event Stream & Presence Collaboration
 app.get('/api/events/stream', async (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
@@ -85,15 +85,21 @@ app.get('/api/events/stream', async (req, res) => {
   res.write(`data: ${JSON.stringify({ type: 'connected', timestamp: new Date().toISOString() })}\n\n`);
 
   const { jobQueue } = await import('./services/distributedJobQueue');
+  const { realtimeEventBus } = await import('./services/realtimeEventBus');
+
   const onProgress = (data: any) => {
     res.write(`data: ${JSON.stringify({ type: 'job:progress', ...data })}\n\n`);
   };
   const onCompleted = (job: any) => {
     res.write(`data: ${JSON.stringify({ type: 'job:completed', id: job.id, queue: job.queueName })}\n\n`);
   };
+  const onBroadcast = (event: any) => {
+    res.write(`data: ${JSON.stringify(event)}\n\n`);
+  };
 
   jobQueue.on('job:progress', onProgress);
   jobQueue.on('job:completed', onCompleted);
+  realtimeEventBus.on('broadcast', onBroadcast);
 
   const keepAliveTimer = setInterval(() => {
     res.write(': keepalive\n\n');
@@ -103,9 +109,39 @@ app.get('/api/events/stream', async (req, res) => {
     clearInterval(keepAliveTimer);
     jobQueue.off('job:progress', onProgress);
     jobQueue.off('job:completed', onCompleted);
+    realtimeEventBus.off('broadcast', onBroadcast);
     res.end();
   });
 });
+
+// 3.2 Recruiter Presence & Collision Detection Endpoints
+app.post('/api/presence/touch', async (req, res) => {
+  const { candidateId, user } = req.body;
+  if (!candidateId || !user?.userId) {
+    return res.status(400).json({ error: 'candidateId and user.userId are required' });
+  }
+  const { realtimeEventBus } = await import('./services/realtimeEventBus');
+  const presence = realtimeEventBus.touchPresence(candidateId, user);
+  return res.json({ success: true, presence });
+});
+
+app.post('/api/presence/leave', async (req, res) => {
+  const { candidateId, userId } = req.body;
+  if (!candidateId || !userId) {
+    return res.status(400).json({ error: 'candidateId and userId are required' });
+  }
+  const { realtimeEventBus } = await import('./services/realtimeEventBus');
+  const presence = realtimeEventBus.leavePresence(candidateId, userId);
+  return res.json({ success: true, presence });
+});
+
+app.get('/api/presence/:candidateId', async (req, res) => {
+  const { candidateId } = req.params;
+  const { realtimeEventBus } = await import('./services/realtimeEventBus');
+  const presence = realtimeEventBus.getPresence(candidateId);
+  return res.json({ success: true, presence });
+});
+
 
 // 4. Health & Readiness Endpoints
 app.get(['/health', '/api/health'], async (_req, res) => {

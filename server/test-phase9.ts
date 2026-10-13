@@ -335,6 +335,50 @@ async function runPhase9Tests() {
   const resolvedPath = pathModule.resolve(uploadBase, safeFilename);
   assert(resolvedPath.startsWith(uploadBase), 'Path traversal payload defanged by path.basename and path.resolve boundary check');
 
+  // ----------------------------------------------------
+  // 10. REAL-TIME EVENT BUS & COLLABORATION PRESENCE
+  // ----------------------------------------------------
+  console.log('\n🛰️ 10. Testing Real-Time Event Bus & Recruiter Presence Collision...');
+  const { realtimeEventBus } = await import('./services/realtimeEventBus');
+
+  // Test Presence Registration
+  const testCandId = `cand_collision_${Date.now()}`;
+  const presence1 = realtimeEventBus.touchPresence(testCandId, {
+    userId: recAId,
+    name: 'Recruiter A',
+    role: 'recruiter',
+  });
+  assert(presence1.candidateId === testCandId, 'Presence registered with target candidate ID');
+  assert(presence1.activeRecruiters.length === 1, 'Exactly 1 active recruiter initially viewing profile');
+  assert(presence1.activeRecruiters[0].userId === recAId, 'First recruiter presence accurately captured');
+
+  // Test Collision Detection (Recruiter B joins the same candidate view)
+  const presence2 = realtimeEventBus.touchPresence(testCandId, {
+    userId: recBId,
+    name: 'Recruiter B',
+    role: 'recruiter',
+  });
+  assert(presence2.activeRecruiters.length === 2, 'Collision detected: 2 recruiters concurrently viewing same profile');
+
+  // Test Real-Time Event Broadcasting
+  let receivedBroadcast = false;
+  const listener = (event: any) => {
+    if (event.type === 'notification:new' && event.payload?.title === 'Collision Alert') {
+      receivedBroadcast = true;
+    }
+  };
+  realtimeEventBus.on('broadcast', listener);
+  realtimeEventBus.broadcast('notification:new', { title: 'Collision Alert', candidateId: testCandId });
+  assert(receivedBroadcast, 'Realtime event bus successfully broadcasts platform events to listeners');
+  realtimeEventBus.off('broadcast', listener);
+
+  // Test Presence Exit
+  const presenceAfterLeave = realtimeEventBus.leavePresence(testCandId, recAId);
+  assert(presenceAfterLeave.activeRecruiters.length === 1, 'Presence cleanly decreases to 1 when Recruiter A leaves');
+  assert(presenceAfterLeave.activeRecruiters[0].userId === recBId, 'Recruiter B remains actively viewing profile');
+
+  realtimeEventBus.clearAll();
+
   console.log('\n====================================================');
   console.log(`🎉 PHASE 9 MASTER VERIFICATION: ${passedTests} / ${totalTests} TESTS PASSED (100%)`);
   console.log('====================================================\n');

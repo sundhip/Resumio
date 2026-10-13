@@ -76,6 +76,22 @@ export class NotificationService {
       }
     })();
 
+    // Real-Time SSE Event Broadcasting
+    try {
+      import('./realtimeEventBus').then(({ realtimeEventBus }) => {
+        realtimeEventBus.broadcast('notification:new', {
+          id,
+          userId,
+          type,
+          title: cleanTitle,
+          message: cleanMessage,
+          relatedEntityType: entityType,
+          relatedEntityId: entityId,
+          createdAt: now,
+        });
+      });
+    } catch {}
+
     return id;
   }
 

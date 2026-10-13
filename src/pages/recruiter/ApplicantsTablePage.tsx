@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -9,6 +9,9 @@ import { Modal } from '../../components/ui/Modal';
 import { MOCK_CANDIDATES } from '../../mockData';
 import type { Candidate, ApplicationStatus } from '../../types';
 import { useToast } from '../../context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
+import { useEventStream } from '../../hooks/useEventStream';
+import { api } from '../../services/api';
 import {
   MoreHorizontal,
   Download,
@@ -19,6 +22,8 @@ import {
   FileText,
   LayoutGrid,
   List,
+  Eye,
+  Radio,
 } from 'lucide-react';
 
 interface ApplicantsTablePageProps {
@@ -32,11 +37,66 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [minScoreFilter, setMinScoreFilter] = useState<number>(0);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+  const [activeViewers, setActiveViewers] = useState<any[]>([]);
   const [rejectModalCandidate, setRejectModalCandidate] = useState<Candidate | null>(null);
   const [sortBy, setSortBy] = useState<'score_desc' | 'score_asc' | 'name_asc' | 'exp_desc'>('score_desc');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const { showToast } = useToast();
+  const { user } = useAuth();
+
+  // Real-Time Event Stream subscription
+  const { isConnected } = useEventStream({
+    onNotification: (notif) => {
+      showToast('info', notif.title || 'Platform Notification', notif.message);
+    },
+    onPresenceUpdate: (presence) => {
+      if (selectedCandidate && presence.candidateId === selectedCandidate.id) {
+        // Exclude current recruiter from other viewers list
+        const otherRecruiters = (presence.activeRecruiters || []).filter(
+          (r: any) => r.userId !== user?.id
+        );
+        setActiveViewers(otherRecruiters);
+      }
+    },
+  });
+
+  // Track recruiter profile presence on candidate modal
+  useEffect(() => {
+    if (!selectedCandidate) {
+      setActiveViewers([]);
+      return;
+    }
+
+    const currentUserId = user?.id || 'recruiter_current';
+    const currentUserName = user?.name || 'Recruiter';
+
+    api.touchPresence(selectedCandidate.id, {
+      userId: currentUserId,
+      name: currentUserName,
+      role: 'recruiter',
+    }).then((res) => {
+      if (res?.presence?.activeRecruiters) {
+        const others = res.presence.activeRecruiters.filter((r: any) => r.userId !== currentUserId);
+        setActiveViewers(others);
+      }
+    }).catch(() => {});
+
+    // Periodic heartbeat every 20 seconds
+    const interval = setInterval(() => {
+      api.touchPresence(selectedCandidate.id, {
+        userId: currentUserId,
+        name: currentUserName,
+        role: 'recruiter',
+      }).catch(() => {});
+    }, 20000);
+
+    return () => {
+      clearInterval(interval);
+      api.leavePresence(selectedCandidate.id, currentUserId).catch(() => {});
+    };
+  }, [selectedCandidate, user]);
+
 
   const handleStatusChange = (candId: string, newStatus: ApplicationStatus) => {
     setCandidates((prev) =>
@@ -90,6 +150,12 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
         </div>
 
         <div className="flex items-center gap-2.5">
+          {/* Live SSE Bus Status */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border text-slate-600 dark:text-slate-300">
+            <Radio className={`w-3.5 h-3.5 ${isConnected ? 'text-emerald-500 animate-pulse' : 'text-slate-400'}`} />
+            <span className="hidden sm:inline font-medium">{isConnected ? 'Live Sync' : 'Connecting'}</span>
+          </div>
+
           {/* View Mode Toggle */}
           <div className="flex items-center bg-slate-100 dark:bg-surface-dark-bg p-1 rounded-control border border-slate-200 dark:border-surface-dark-border">
             <button
@@ -527,6 +593,17 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
           }
         >
           <div className="space-y-4">
+            {/* Real-Time Recruiter Collision Indicator */}
+            {activeViewers.length > 0 && (
+              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 text-amber-800 dark:text-amber-200 text-xs">
+                <Eye className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 animate-pulse" />
+                <span>
+                  <strong>Active Collision:</strong> {activeViewers.map((v) => v.name).join(', ')}{' '}
+                  {activeViewers.length === 1 ? 'is' : 'are'} currently reviewing this applicant.
+                </span>
+              </div>
+            )}
+
             <div className="p-4 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200 dark:border-surface-dark-border flex items-center justify-between">
               <MatchScore score={selectedCandidate.aiScore} variant="circle" />
               <div className="text-right">

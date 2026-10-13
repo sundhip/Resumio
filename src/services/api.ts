@@ -1384,6 +1384,42 @@ export const api = {
     });
     return handleResponse(res);
   },
+
+  // 6. Recruiter Presence & Collision Prevention
+  async touchPresence(candidateId: string, user: { userId: string; name: string; role: string; avatar?: string }): Promise<{
+    success: boolean;
+    presence: { candidateId: string; activeRecruiters: any[] };
+  }> {
+    const res = await fetch(`${API_BASE_URL}/presence/touch`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ candidateId, user }),
+    });
+    return handleResponse(res);
+  },
+
+  async leavePresence(candidateId: string, userId: string): Promise<{
+    success: boolean;
+    presence: { candidateId: string; activeRecruiters: any[] };
+  }> {
+    const res = await fetch(`${API_BASE_URL}/presence/leave`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ candidateId, userId }),
+    });
+    return handleResponse(res);
+  },
+
+  async getCandidatePresence(candidateId: string): Promise<{
+    success: boolean;
+    presence: { candidateId: string; activeRecruiters: any[] };
+  }> {
+    const res = await fetch(`${API_BASE_URL}/presence/${candidateId}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
 };
 
 
