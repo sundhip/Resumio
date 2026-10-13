@@ -26,6 +26,7 @@ import {
   Eye,
   Radio,
   Award,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface ApplicantsTablePageProps {
@@ -35,6 +36,7 @@ interface ApplicantsTablePageProps {
 export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavigate }) => {
   const [candidates, setCandidates] = useState<Candidate[]>(MOCK_CANDIDATES);
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table');
+  const [isBlindMode, setIsBlindMode] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [minScoreFilter, setMinScoreFilter] = useState<number>(0);
@@ -184,6 +186,26 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
               Kanban
             </button>
           </div>
+
+          {/* EEOC/GDPR Blind Hiring Mode Toggle */}
+          <button
+            onClick={() => {
+              setIsBlindMode((prev) => !prev);
+              showToast(
+                !isBlindMode ? 'success' : 'info',
+                !isBlindMode ? 'EEOC Blind Screening Active' : 'Standard View Restored',
+                !isBlindMode ? 'Candidate names, photos, and contact info masked to eliminate unconscious bias.' : 'Identities revealed.'
+              );
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-control border transition-colors ${
+              isBlindMode
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                : 'bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border text-slate-700 dark:text-slate-300 hover:bg-slate-50'
+            }`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>{isBlindMode ? 'Blind Mode ON' : 'Blind Mode'}</span>
+          </button>
 
           <Button
             variant="secondary"
@@ -373,16 +395,24 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                     {/* Candidate */}
                     <td className="py-3.5 px-5">
                       <div className="flex items-center gap-3 min-w-0">
-                        <img
-                          src={cand.avatar}
-                          alt={cand.name}
-                          className="w-9 h-9 rounded-full object-cover ring-1 ring-slate-200 dark:ring-surface-dark-border shrink-0"
-                        />
+                        {isBlindMode ? (
+                          <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-surface-dark-border flex items-center justify-center text-slate-500 font-bold text-xs shrink-0 ring-1 ring-slate-300">
+                            #
+                          </div>
+                        ) : (
+                          <img
+                            src={cand.avatar}
+                            alt={cand.name}
+                            className="w-9 h-9 rounded-full object-cover ring-1 ring-slate-200 dark:ring-surface-dark-border shrink-0"
+                          />
+                        )}
                         <div className="min-w-0">
                           <p className="font-semibold text-slate-900 dark:text-white truncate">
-                            {cand.name}
+                            {isBlindMode ? `Candidate #${cand.id.replace(/[^a-zA-Z0-9]/g, '').slice(-4).toUpperCase()}` : cand.name}
                           </p>
-                          <p className="text-[11px] text-slate-400 truncate">{cand.email}</p>
+                          <p className="text-[11px] text-slate-400 truncate">
+                            {isBlindMode ? 'identity protected (EEOC)' : cand.email}
+                          </p>
                         </div>
                       </div>
                     </td>

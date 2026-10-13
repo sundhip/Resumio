@@ -142,6 +142,18 @@ app.get('/api/presence/:candidateId', async (req, res) => {
   return res.json({ success: true, presence });
 });
 
+// 3.3 EEOC / GDPR Blind Hiring Anonymization Shield Endpoint
+app.post('/api/compliance/anonymize', async (req, res) => {
+  const { candidate } = req.body;
+  if (!candidate || !candidate.id) {
+    return res.status(400).json({ error: 'Candidate object with id is required' });
+  }
+  const { ComplianceAnonymizationShield } = await import('./services/complianceAnonymizationShield');
+  const anonymized = ComplianceAnonymizationShield.anonymizeCandidate(candidate);
+  return res.json({ success: true, data: anonymized });
+});
+
+
 
 // 4. Health & Readiness Endpoints
 app.get(['/health', '/api/health'], async (_req, res) => {

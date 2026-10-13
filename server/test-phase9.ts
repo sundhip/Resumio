@@ -445,6 +445,37 @@ async function runPhase9Tests() {
   assert(rewriteLead.components.accomplishedX.includes('Spearheaded cross-functional technical initiatives'), 'Leadership verbs accurately identified and elevated');
   assert(rewriteLead.components.doingZ.includes('React & TypeScript'), 'Context technical skill injected into action clause');
 
+  // ----------------------------------------------------
+  // 13. REGULATORY COMPLIANCE, DIVERSITY & EEOC/GDPR SHIELD
+  // ----------------------------------------------------
+  console.log('\n⚖️ 13. Testing Regulatory Compliance, Diversity & EEOC/GDPR Blind Masking...');
+  const { ComplianceAnonymizationShield } = await import('./services/complianceAnonymizationShield');
+
+  const testRawCandidate = {
+    id: candProfileId,
+    name: 'Alexandra Smith',
+    email: 'alex.smith@gmail.com',
+    phone: '+1 (555) 234-5678',
+    location: 'San Francisco, CA',
+    headline: 'Senior Full Stack Engineer (30 yo)',
+    summary: 'She has 8 years of experience in distributed systems. Reach her at alex.smith@gmail.com or 555-234-5678.',
+    education: [{ institution: 'Stanford University', degree: 'B.S. in Computer Science' }],
+    experience: [{ company: 'Google LLC', description: 'She engineered search microservices.' }],
+    skills: [{ name: 'TypeScript' }, { name: 'Node.js' }],
+  };
+
+  const anonymized = ComplianceAnonymizationShield.anonymizeCandidate(testRawCandidate);
+
+  // Assertions for PII Removal
+  assert(anonymized.anonymizedIdentifier.startsWith('Candidate #'), 'Candidate name masked with neutral pseudonym (e.g. Candidate #A4F9)');
+  assert(!anonymized.summary.includes('alex.smith@gmail.com'), 'Email address masked with [EMAIL REDACTED]');
+  assert(!anonymized.summary.includes('555-234-5678'), 'Phone number masked with [PHONE REDACTED]');
+  assert(!anonymized.summary.includes('She has'), 'Gendered pronouns neutralized into gender-neutral third-person phrasing');
+  assert(!anonymized.blindTitle.includes('30 yo'), 'Age markers defanged with [AGE REDACTED]');
+  assert(anonymized.education[0].institution === 'Accredited Higher Education Institution', 'Institution name neutralized to eliminate school prestige bias');
+  assert(anonymized.experience[0].company === 'Confidential Technology Organization', 'Employer name neutralized to prevent pedigree bias');
+  assert(anonymized.anonymizationAudit.gdprCompliant && anonymized.anonymizationAudit.eeocProtected, 'Audit confirms 100% GDPR and EEOC blind hiring compliance');
+
   console.log('\n====================================================');
   console.log(`🎉 MASTER VERIFICATION: ${passedTests} / ${totalTests} TESTS PASSED (100%)`);
   console.log('====================================================\n');

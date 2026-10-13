@@ -1469,7 +1469,36 @@ export const api = {
     });
     return handleResponse(res);
   },
+
+  // 9. EEOC / GDPR Compliance Blind Screening Anonymizer
+  async anonymizeCandidate(candidate: any): Promise<{
+    success: boolean;
+    data: {
+      id: string;
+      anonymizedIdentifier: string;
+      blindTitle: string;
+      summary: string;
+      skills: any[];
+      education: any[];
+      experience: any[];
+      projects: any[];
+      anonymizationAudit: {
+        piiFieldsMasked: string[];
+        demographicSanitized: boolean;
+        gdprCompliant: boolean;
+        eeocProtected: boolean;
+      };
+    };
+  }> {
+    const res = await fetch(`${API_BASE_URL}/compliance/anonymize`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ candidate }),
+    });
+    return handleResponse(res);
+  },
 };
+
 
 
 
