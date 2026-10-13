@@ -489,6 +489,78 @@ async function runPhase9Tests() {
   assert(analyticsRes.talentIntelligence!.aiScreeningHoursSaved >= 0, 'AI screening hours saved accurately modeled from candidate throughput');
   assert(analyticsRes.talentIntelligence!.qualityOfHireProjection >= 80, 'Quality of hire index exceeds high-performance benchmark threshold');
 
+  // ----------------------------------------------------
+  // 15. CLOUD-NATIVE SRE, CHAOS TESTING & BLUE-GREEN ZERO-DOWNTIME READINESS
+  // ----------------------------------------------------
+  console.log('\n🛡️ 15. Testing Cloud-Native SRE, Chaos Engineering & Blue-Green Readiness...');
+  const { resilience, CircuitBreaker } = await import('./services/resilienceService');
+
+  // 15.1 Circuit Breaker Tripping & Fast-Fail Defense
+  const testBreaker = new CircuitBreaker('test-db-service', { failureThreshold: 3, resetTimeoutMs: 200 });
+  assert(testBreaker.getState() === 'CLOSED', 'Circuit breaker starts in CLOSED state');
+
+  let callCount = 0;
+  const failingCall = async () => {
+    callCount++;
+    throw new Error('Downstream DB Timeout');
+  };
+
+  // Trigger 3 failures to trip breaker
+  for (let i = 0; i < 3; i++) {
+    try {
+      await testBreaker.execute(failingCall);
+    } catch (e) {}
+  }
+
+  assert(testBreaker.getState() === 'OPEN', 'Circuit breaker trips to OPEN state after exceeding failure threshold');
+
+  // Verify fast-fail defense (does not attempt execution)
+  const prevCalls = callCount;
+  let fastFailed = false;
+  try {
+    await testBreaker.execute(async () => {
+      callCount++;
+      return 'ok';
+    });
+  } catch (err: any) {
+    if (err.name === 'CircuitBreakerError') fastFailed = true;
+  }
+  assert(fastFailed && callCount === prevCalls, 'OPEN breaker fast-fails immediately without stressing downstream service');
+
+  // Fallback behavior
+  const fallbackResult = await testBreaker.execute(
+    async () => 'never_called',
+    () => 'degraded_cache_fallback'
+  );
+  assert(fallbackResult === 'degraded_cache_fallback', 'OPEN breaker seamlessly resolves graceful degraded fallback');
+
+  // 15.2 Chaos Fault-Injection Simulator
+  resilience.clearChaosRules();
+  resilience.injectChaosRule({
+    target: 'database',
+    type: 'error',
+    errorMessage: 'Simulated network partition fault',
+    probability: 1.0,
+  });
+
+  let chaosTriggered = false;
+  try {
+    await resilience.evaluateChaos('database');
+  } catch (err: any) {
+    if (err.message.includes('Simulated network partition fault')) chaosTriggered = true;
+  }
+  assert(chaosTriggered, 'Chaos Engineering engine injects deterministic simulated downstream failure');
+
+  resilience.clearChaosRules();
+  assert(resilience.getActiveChaosRules().length === 0, 'Chaos rules cleanly purged restoring production baseline');
+
+  // 15.3 Blue-Green Graceful Drain State
+  assert(!resilience.getIsDraining(), 'Default production node is actively accepting traffic');
+  resilience.setDraining(true);
+  assert(resilience.getIsDraining(), 'Blue-Green drain signal successfully sets node into graceful drain mode');
+  resilience.setDraining(false);
+  assert(!resilience.getIsDraining(), 'Node safely restored to active routing');
+
   console.log('\n====================================================');
   console.log(`🎉 MASTER VERIFICATION: ${passedTests} / ${totalTests} TESTS PASSED (100%)`);
   console.log('====================================================\n');

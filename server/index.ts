@@ -155,10 +155,20 @@ app.post('/api/compliance/anonymize', async (req, res) => {
 
 
 
-// 4. Health & Readiness Endpoints
-app.get(['/health', '/api/health'], async (_req, res) => {
+// 4. SRE Health, Liveness (/healthz), Readiness (/readyz), & Circuit Breakers
+app.get(['/health', '/healthz', '/api/health'], async (_req, res) => {
   const { cacheService } = await import('./services/cacheService');
   const { jobQueue } = await import('./services/distributedJobQueue');
+  const { resilience } = await import('./services/resilienceService');
+
+  // If node is currently draining for Blue-Green switch, report 503 so load balancers stop routing
+  if (resilience.getIsDraining()) {
+    return res.status(503).json({
+      status: 'draining',
+      message: 'Node is draining traffic for blue-green deployment rollover',
+      uptimeSeconds: Math.floor(process.uptime()),
+    });
+  }
 
   res.json({
     status: 'ok',
@@ -166,29 +176,86 @@ app.get(['/health', '/api/health'], async (_req, res) => {
     version: '1.0.0',
     environment: process.env.NODE_ENV || 'development',
     uptimeSeconds: Math.floor(process.uptime()),
+    memory: {
+      rssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
+      heapUsedMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+    },
     cacheStats: cacheService.getStats(),
     queueStats: {
       resumeProcessing: jobQueue.getQueueStats('resume-processing'),
     },
+    circuitBreakers: resilience.getAllBreakerStats(),
     timestamp: new Date().toISOString(),
   });
 });
 
-app.get(['/ready', '/api/ready'], async (_req, res) => {
+app.get(['/ready', '/readyz', '/api/ready'], async (_req, res) => {
+  const { resilience } = await import('./services/resilienceService');
+  if (resilience.getIsDraining()) {
+    return res.status(503).json({
+      ready: false,
+      status: 'draining',
+      message: 'Pod is undergoing graceful drainage',
+    });
+  }
+
   try {
     const readiness = await checkMongoReadiness();
-    if (readiness.ready) {
-      res.status(200).json(readiness);
+    const dbBreaker = resilience.getBreaker('database');
+    const isDbCircuitOpen = dbBreaker.getState() === 'OPEN';
+
+    if (readiness.ready && !isDbCircuitOpen) {
+      res.status(200).json({
+        ready: true,
+        status: 'healthy',
+        components: {
+          mongo: readiness,
+          circuitBreakers: resilience.getAllBreakerStats(),
+        },
+        timestamp: new Date().toISOString(),
+      });
     } else {
-      res.status(503).json(readiness);
+      res.status(503).json({
+        ready: false,
+        status: 'degraded',
+        message: isDbCircuitOpen ? 'Database circuit breaker is currently OPEN' : 'Mongo readiness failed',
+        components: {
+          mongo: readiness,
+          circuitBreakers: resilience.getAllBreakerStats(),
+        },
+      });
     }
-  } catch {
+  } catch (err: any) {
     res.status(503).json({
       ready: false,
       status: 'error',
-      message: 'Service readiness check failed',
+      message: err?.message || 'Service readiness check failed',
     });
   }
+});
+
+// 4.1 Chaos Engineering & SRE Diagnostics Controls
+app.post('/api/admin/chaos/inject', async (req, res) => {
+  const { rule } = req.body;
+  if (!rule || !rule.target || !rule.type) {
+    return res.status(400).json({ error: 'rule with target and type is required' });
+  }
+  const { resilience } = await import('./services/resilienceService');
+  resilience.injectChaosRule(rule);
+  return res.json({ success: true, activeRules: resilience.getActiveChaosRules() });
+});
+
+app.post('/api/admin/chaos/clear', async (_req, res) => {
+  const { resilience } = await import('./services/resilienceService');
+  resilience.clearChaosRules();
+  return res.json({ success: true, activeRules: [] });
+});
+
+app.post('/api/admin/sre/drain', async (req, res) => {
+  const { draining } = req.body;
+  const { resilience } = await import('./services/resilienceService');
+  resilience.setDraining(Boolean(draining));
+  return res.json({ success: true, isDraining: resilience.getIsDraining() });
 });
 
 // 5. Centralized Error Handling Middleware
