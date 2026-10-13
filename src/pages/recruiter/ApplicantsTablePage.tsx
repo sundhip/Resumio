@@ -17,6 +17,8 @@ import {
   XCircle,
   Sparkles,
   FileText,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 
 interface ApplicantsTablePageProps {
@@ -25,6 +27,7 @@ interface ApplicantsTablePageProps {
 
 export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavigate }) => {
   const [candidates, setCandidates] = useState<Candidate[]>(MOCK_CANDIDATES);
+  const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [minScoreFilter, setMinScoreFilter] = useState<number>(0);
@@ -87,6 +90,32 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
         </div>
 
         <div className="flex items-center gap-2.5">
+          {/* View Mode Toggle */}
+          <div className="flex items-center bg-slate-100 dark:bg-surface-dark-bg p-1 rounded-control border border-slate-200 dark:border-surface-dark-border">
+            <button
+              onClick={() => setViewMode('table')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                viewMode === 'table'
+                  ? 'bg-white dark:bg-surface-dark-card text-brand-600 dark:text-brand-400 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              <List className="w-3.5 h-3.5" />
+              Table
+            </button>
+            <button
+              onClick={() => setViewMode('kanban')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                viewMode === 'kanban'
+                  ? 'bg-white dark:bg-surface-dark-card text-brand-600 dark:text-brand-400 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              Kanban
+            </button>
+          </div>
+
           <Button
             variant="secondary"
             size="md"
@@ -166,10 +195,85 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             </span>
           </div>
         </div>
-      </Card>
+      {/* Main Table or Kanban Pipeline View */}
+      {viewMode === 'kanban' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto pb-4">
+          {(['Applied', 'Screening', 'Interview', 'Shortlisted'] as ApplicationStatus[]).map((colStatus) => {
+            const colCandidates = candidates.filter((c) => c.status === colStatus);
+            return (
+              <div
+                key={colStatus}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const candId = e.dataTransfer.getData('text/plain');
+                  if (candId) {
+                    handleStatusChange(candId, colStatus);
+                  }
+                }}
+                className="flex flex-col bg-slate-50/80 dark:bg-surface-dark-bg/60 rounded-xl p-3 border border-slate-200/80 dark:border-surface-dark-border min-h-[500px]"
+              >
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-200">
+                      {colStatus}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-white dark:bg-surface-dark-card text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-surface-dark-border shadow-xs">
+                      {colCandidates.length}
+                    </span>
+                  </div>
+                </div>
 
-      {/* Main Table */}
-      <Card padding="none" className="overflow-hidden">
+                <div className="space-y-2.5 flex-1 overflow-y-auto">
+                  {colCandidates.length === 0 ? (
+                    <div className="border border-dashed border-slate-200 dark:border-surface-dark-border rounded-lg p-6 text-center text-xs text-slate-400">
+                      Drop candidate here
+                    </div>
+                  ) : (
+                    colCandidates.map((cand) => (
+                      <div
+                        key={cand.id}
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData('text/plain', cand.id);
+                        }}
+                        onClick={() => setSelectedCandidate(cand)}
+                        className="p-3.5 rounded-lg bg-white dark:bg-surface-dark-card border border-slate-200/90 dark:border-surface-dark-border shadow-xs hover:shadow-md transition-all cursor-grab active:cursor-grabbing space-y-2.5"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <img
+                              src={cand.avatar}
+                              alt={cand.name}
+                              className="w-8 h-8 rounded-full object-cover shrink-0 ring-1 ring-slate-200"
+                            />
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                {cand.name}
+                              </h4>
+                              <p className="text-[10px] text-slate-400 truncate">{cand.title}</p>
+                            </div>
+                          </div>
+                          <MatchScore score={cand.aiScore} variant="pill" size="sm" />
+                        </div>
+
+                        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100 dark:border-surface-dark-border">
+                          <span>{cand.experienceYears} yrs exp</span>
+                          <span className="text-[10px] text-brand-600 dark:text-brand-400 font-medium truncate max-w-[120px]">
+                            {cand.appliedJob}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        /* Main Table */
+        <Card padding="none" className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -358,6 +462,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
           </div>
         )}
       </Card>
+      )}
 
       {/* Candidate Deep Profile Drawer/Modal */}
       {selectedCandidate && (
