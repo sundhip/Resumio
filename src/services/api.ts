@@ -33,9 +33,18 @@ function getAuthHeaders(): HeadersInit {
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
-  const data = await response.json();
+  let data: any;
+  try {
+    data = await response.json();
+  } catch {
+    if (!response.ok) {
+      throw new Error(`Server returned HTTP ${response.status} (${response.statusText}). Check your backend connection.`);
+    }
+    throw new Error('Received invalid non-JSON response from API server.');
+  }
+
   if (!response.ok) {
-    throw new Error(data.message || 'An unexpected error occurred.');
+    throw new Error(data.message || data.error || `Request failed with HTTP ${response.status}`);
   }
   return data;
 }

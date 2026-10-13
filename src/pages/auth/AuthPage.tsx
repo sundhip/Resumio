@@ -64,19 +64,40 @@ export const AuthPage: React.FC = () => {
     }
   };
 
-  const handleFillDemo = (role: 'candidate' | 'recruiter' | 'admin') => {
+  const handleFillDemo = async (role: 'candidate' | 'recruiter' | 'admin', autoSubmit: boolean = false) => {
     setRoleMode(role);
     setIsRegistering(false);
     setErrorMessage(null);
+    let demoEmail = '';
+    let demoPassword = '';
     if (role === 'admin') {
-      setEmail('admin@resumio.ai');
-      setPassword('AdminPass123!');
+      demoEmail = 'admin@resumio.ai';
+      demoPassword = 'AdminPass123!';
     } else if (role === 'recruiter') {
-      setEmail('recruiter@resumio.demo');
-      setPassword('Recruiter@123');
+      demoEmail = 'recruiter@resumio.demo';
+      demoPassword = 'Recruiter@123';
     } else {
-      setEmail('candidate@resumio.demo');
-      setPassword('Candidate@123');
+      demoEmail = 'candidate@resumio.demo';
+      demoPassword = 'Candidate@123';
+    }
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+
+    if (autoSubmit) {
+      setIsSubmitting(true);
+      try {
+        if (role === 'admin') {
+          await adminLogin(demoEmail, demoPassword);
+          showToast('success', 'Admin Portal Loaded', 'Authenticated as Platform Administrator.');
+        } else {
+          await login(demoEmail, demoPassword);
+          showToast('success', `${role === 'candidate' ? 'Candidate' : 'Recruiter'} Portal Loaded`, `Signed in as ${demoEmail}.`);
+        }
+      } catch (err: any) {
+        setErrorMessage(err.message || 'Demo login failed. Make sure server is running.');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -327,31 +348,40 @@ export const AuthPage: React.FC = () => {
           </div>
 
           {/* Quick Demo Pre-fill helper */}
-          <div className="p-2.5 rounded-card bg-slate-50 dark:bg-surface-dark-card/60 border border-slate-200/80 dark:border-surface-dark-border text-xs flex flex-wrap items-center justify-between gap-1.5">
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-brand-500" /> Quick Demo Fill:
-            </span>
-            <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="p-3 rounded-card bg-slate-50 dark:bg-surface-dark-card/60 border border-slate-200/80 dark:border-surface-dark-border text-xs flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 uppercase tracking-wide">
+                <Sparkles className="w-3.5 h-3.5 text-brand-500 animate-pulse" /> 1-Click Instant Demo Login:
+              </span>
+              <span className="text-[10px] text-slate-400">No typing needed</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
               <button
                 type="button"
-                onClick={() => handleFillDemo('candidate')}
-                className="px-2 py-0.5 rounded text-[11px] font-medium bg-brand-100 hover:bg-brand-200 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 dark:hover:bg-brand-900 transition-colors"
+                onClick={() => handleFillDemo('candidate', true)}
+                disabled={isSubmitting || isLoading}
+                className="py-1.5 px-2 rounded-control text-xs font-semibold bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 dark:bg-brand-950/60 dark:text-brand-300 dark:border-brand-800 dark:hover:bg-brand-900 transition-all flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
               >
-                Candidate Demo
+                <span>Candidate</span>
+                <ArrowRight className="w-3 h-3 shrink-0" />
               </button>
               <button
                 type="button"
-                onClick={() => handleFillDemo('recruiter')}
-                className="px-2 py-0.5 rounded text-[11px] font-medium bg-indigo-100 hover:bg-indigo-200 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-900 transition-colors"
+                onClick={() => handleFillDemo('recruiter', true)}
+                disabled={isSubmitting || isLoading}
+                className="py-1.5 px-2 rounded-control text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800 dark:hover:bg-indigo-900 transition-all flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
               >
-                Recruiter Demo
+                <span>Recruiter</span>
+                <ArrowRight className="w-3 h-3 shrink-0" />
               </button>
               <button
                 type="button"
-                onClick={() => handleFillDemo('admin')}
-                className="px-2 py-0.5 rounded text-[11px] font-medium bg-amber-100 hover:bg-amber-200 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900 transition-colors"
+                onClick={() => handleFillDemo('admin', true)}
+                disabled={isSubmitting || isLoading}
+                className="py-1.5 px-2 rounded-control text-xs font-semibold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 dark:hover:bg-amber-900 transition-all flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
               >
-                Admin Demo
+                <span>Admin</span>
+                <ArrowRight className="w-3 h-3 shrink-0" />
               </button>
             </div>
           </div>
