@@ -3,6 +3,7 @@ import { z } from 'zod';
 import crypto from 'crypto';
 import { db } from '../database/db';
 import { authenticateToken, requireRole, AuthRequest } from '../middleware/auth';
+import { cacheService } from '../services/cacheService';
 
 const router = express.Router();
 
@@ -362,6 +363,9 @@ router.post('/recruiter/jobs', authenticateToken, requireRole(['recruiter', 'adm
       prefSkills.map((s) => s.name)
     );
 
+    // Invalidate public job search cache
+    cacheService.del('jobs_search:');
+
     res.status(201).json({
       success: true,
       message: status === 'Published' ? 'Job published successfully!' : 'Job draft saved successfully.',
@@ -497,6 +501,9 @@ router.put('/recruiter/jobs/:id', authenticateToken, requireRole(['recruiter', '
         prefSkills.map((s) => s.name)
       ),
     });
+
+    // Invalidate public job search cache
+    cacheService.del('jobs_search:');
   } catch (err: any) {
     console.error('Update job error:', err);
     res.status(500).json({ success: false, message: 'Unable to update job posting.' });
@@ -631,6 +638,14 @@ router.get('/jobs', (req: Request, res: Response): void => {
     const limitNum = Math.min(50, Math.max(1, parseInt(limit, 10) || 10));
     const offset = (pageNum - 1) * limitNum;
 
+    // Cache Key Construction for High-Throughput Public Discovery
+    const cacheKey = `jobs_search:${effectiveSearch}:${effectiveWorkMode}:${effectiveEmpType}:${effectiveMinExp}:${effectiveMaxExp}:${effectiveSkills}:${sort}:${pageNum}:${limitNum}`;
+    const cachedResponse = cacheService.get<any>(cacheKey);
+    if (cachedResponse) {
+      res.json(cachedResponse);
+      return;
+    }
+
     // Base query: ONLY published jobs
     const conditions: string[] = ["j.status = 'Published'"];
     const params: any[] = [];
@@ -753,7 +768,7 @@ router.get('/jobs', (req: Request, res: Response): void => {
 
     const totalPages = Math.ceil(totalCount / limitNum) || 1;
 
-    res.json({
+    const responsePayload = {
       success: true,
       jobs,
       total: totalCount,
@@ -766,7 +781,12 @@ router.get('/jobs', (req: Request, res: Response): void => {
         limit: limitNum,
         totalPages,
       },
-    });
+    };
+
+    // Cache published search results for 60 seconds
+    cacheService.set(cacheKey, responsePayload, 60);
+
+    res.json(responsePayload);
   } catch (err: any) {
     console.error('Job search error:', err);
     res.status(500).json({ success: false, message: 'Unable to search jobs.' });

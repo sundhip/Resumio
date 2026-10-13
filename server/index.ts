@@ -108,13 +108,20 @@ app.get('/api/events/stream', async (req, res) => {
 });
 
 // 4. Health & Readiness Endpoints
-app.get(['/health', '/api/health'], (_req, res) => {
+app.get(['/health', '/api/health'], async (_req, res) => {
+  const { cacheService } = await import('./services/cacheService');
+  const { jobQueue } = await import('./services/distributedJobQueue');
+
   res.json({
     status: 'ok',
     service: 'Resumio Enterprise Recruitment Platform API',
     version: '1.0.0',
     environment: process.env.NODE_ENV || 'development',
     uptimeSeconds: Math.floor(process.uptime()),
+    cacheStats: cacheService.getStats(),
+    queueStats: {
+      resumeProcessing: jobQueue.getQueueStats('resume-processing'),
+    },
     timestamp: new Date().toISOString(),
   });
 });
