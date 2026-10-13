@@ -1119,6 +1119,18 @@ export interface JobAnalyticsSummary {
   averageScore: number | null;
 }
 
+export interface TalentIntelligenceROI {
+  timeToHireDays: number;
+  timeToHireIndustryBenchmarkDays: number;
+  timeSavedPercentage: number;
+  costPerHireUSD: number;
+  agencyCostBenchmarkUSD: number;
+  projectedAnnualSavingsUSD: number;
+  pipelineVelocityRatio: number;
+  aiScreeningHoursSaved: number;
+  qualityOfHireProjection: number;
+}
+
 export interface RecruitmentAnalyticsData {
   overview: AnalyticsOverview;
   statusDistribution: StatusDistributionItem[];
@@ -1126,7 +1138,9 @@ export interface RecruitmentAnalyticsData {
   scoreDistribution: ScoreDistributionItem[];
   interviewMetrics: InterviewMetrics;
   jobs: JobAnalyticsSummary[];
+  talentIntelligence?: TalentIntelligenceROI;
 }
+
 
 // ============================================================
 // Phase 8 Types: Advanced AI Recruitment Intelligence

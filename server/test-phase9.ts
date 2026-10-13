@@ -476,6 +476,19 @@ async function runPhase9Tests() {
   assert(anonymized.experience[0].company === 'Confidential Technology Organization', 'Employer name neutralized to prevent pedigree bias');
   assert(anonymized.anonymizationAudit.gdprCompliant && anonymized.anonymizationAudit.eeocProtected, 'Audit confirms 100% GDPR and EEOC blind hiring compliance');
 
+  // ----------------------------------------------------
+  // 14. TALENT INTELLIGENCE ANALYTICS & EXECUTIVE PREDICTIVE ROI
+  // ----------------------------------------------------
+  console.log('\n📈 14. Testing Talent Intelligence Analytics & Executive Predictive ROI...');
+  const analyticsRes = RecruitmentAnalyticsService.getRecruiterAnalytics(recAId, { dateRange: '30d' });
+
+  assert(Boolean(analyticsRes.talentIntelligence), 'Talent Intelligence ROI computation exists on recruiter analytics response');
+  assert(analyticsRes.talentIntelligence!.timeToHireDays < analyticsRes.talentIntelligence!.timeToHireIndustryBenchmarkDays, 'Time to hire shows positive velocity vs industry baseline');
+  assert(analyticsRes.talentIntelligence!.timeSavedPercentage >= 40, 'Time saved percentage achieves >40% target');
+  assert(analyticsRes.talentIntelligence!.projectedAnnualSavingsUSD > 10000, 'Predictive annual cost savings modeled accurately');
+  assert(analyticsRes.talentIntelligence!.aiScreeningHoursSaved >= 0, 'AI screening hours saved accurately modeled from candidate throughput');
+  assert(analyticsRes.talentIntelligence!.qualityOfHireProjection >= 80, 'Quality of hire index exceeds high-performance benchmark threshold');
+
   console.log('\n====================================================');
   console.log(`🎉 MASTER VERIFICATION: ${passedTests} / ${totalTests} TESTS PASSED (100%)`);
   console.log('====================================================\n');

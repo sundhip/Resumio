@@ -11,6 +11,10 @@ import {
   Layers,
   PieChart,
   Award,
+  DollarSign,
+  Clock,
+  Target,
+  Zap,
 } from 'lucide-react';
 
 interface RecruitmentAnalyticsPageProps {
@@ -168,6 +172,97 @@ export const RecruitmentAnalyticsPage: React.FC<RecruitmentAnalyticsPageProps> =
               </p>
             </Card>
           </div>
+
+          {/* Executive Talent Intelligence & Predictive ROI Showcase */}
+          {data.talentIntelligence && (
+            <Card padding="md" className="space-y-4 border-indigo-200/80 dark:border-indigo-900/60 bg-linear-to-r from-indigo-50/50 via-purple-50/30 to-brand-50/40 dark:from-indigo-950/20 dark:via-purple-950/10 dark:to-brand-950/20">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                    <Target className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      Talent Intelligence & Predictive Hiring ROI
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-600 text-white font-bold uppercase tracking-wider">
+                        Executive Suite
+                      </span>
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      AI-modeled talent velocity, agency substitution savings, and benchmark differentials.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+                {/* 1. Time to Hire Differential */}
+                <div className="p-3.5 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200/80 dark:border-surface-dark-border space-y-1 shadow-xs">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-indigo-500" /> Time to Hire Velocity
+                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl font-extrabold text-slate-900 dark:text-white">
+                      {data.talentIntelligence.timeToHireDays} Days
+                    </span>
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      -{data.talentIntelligence.timeSavedPercentage}% Faster
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    vs. {data.talentIntelligence.timeToHireIndustryBenchmarkDays} days industry avg
+                  </p>
+                </div>
+
+                {/* 2. Projected Cost Savings */}
+                <div className="p-3.5 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200/80 dark:border-surface-dark-border space-y-1 shadow-xs">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                    <DollarSign className="w-3 h-3 text-emerald-500" /> Projected Annual ROI
+                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                      ${data.talentIntelligence.projectedAnnualSavingsUSD.toLocaleString()}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Cost per hire: ${data.talentIntelligence.costPerHireUSD} vs. ${data.talentIntelligence.agencyCostBenchmarkUSD} agency
+                  </p>
+                </div>
+
+                {/* 3. AI Screening Hours Saved */}
+                <div className="p-3.5 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200/80 dark:border-surface-dark-border space-y-1 shadow-xs">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                    <Zap className="w-3 h-3 text-purple-500" /> AI Time Leverage
+                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl font-extrabold text-purple-600 dark:text-purple-400">
+                      {data.talentIntelligence.aiScreeningHoursSaved} Hours
+                    </span>
+                    <span className="text-xs text-slate-400">Automated</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Saved through instant semantic matching & extraction
+                  </p>
+                </div>
+
+                {/* 4. Quality of Hire Index */}
+                <div className="p-3.5 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200/80 dark:border-surface-dark-border space-y-1 shadow-xs">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                    <Award className="w-3 h-3 text-brand-500" /> Quality of Hire Index
+                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl font-extrabold text-brand-600 dark:text-brand-400">
+                      {data.talentIntelligence.qualityOfHireProjection}%
+                    </span>
+                    <span className="text-xs font-bold text-emerald-600">Top Tier</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    High retention and objective skills correlation
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
 
           {/* Charts Grid: Application Trend & Pipeline Funnel */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
