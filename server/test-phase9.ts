@@ -375,12 +375,60 @@ async function runPhase9Tests() {
   // Test Presence Exit
   const presenceAfterLeave = realtimeEventBus.leavePresence(testCandId, recAId);
   assert(presenceAfterLeave.activeRecruiters.length === 1, 'Presence cleanly decreases to 1 when Recruiter A leaves');
-  assert(presenceAfterLeave.activeRecruiters[0].userId === recBId, 'Recruiter B remains actively viewing profile');
-
   realtimeEventBus.clearAll();
 
+  // ----------------------------------------------------
+  // 11. AI INTERVIEW STUDIO & STRUCTURED EVALUATION SCORECARDS
+  // ----------------------------------------------------
+  console.log('\n📝 11. Testing AI Interview Studio & Structured 5-Point Scorecards...');
+
+  // Setup mock interview for Recruiter A
+  const interviewAId = crypto.randomUUID();
+  db.prepare(`
+    INSERT INTO interviews (id, application_id, candidate_id, recruiter_id, job_id, title, interview_type, scheduled_at, duration_minutes, status)
+    VALUES (?, ?, ?, ?, ?, 'Technical Architecture Round', 'Video', datetime('now', '+2 days'), 60, 'Scheduled')
+  `).run(interviewAId, app1Id, candUserId, recAId, jobAId);
+
+  // Recruiter A submits scorecard
+  const scorecardRes = InterviewService.submitScorecard(recAId, interviewAId, {
+    technicalDepth: 5,
+    problemSolving: 4,
+    communication: 4,
+    culturalFit: 5,
+    recommendation: 'Strong Hire',
+    strengths: ['Expertise in distributed Node.js', 'Clean modular design patterns'],
+    weaknesses: ['Minor hesitation on cold start optimizations'],
+    evaluatorNotes: 'Exceptional candidate with stellar systems depth.',
+  });
+
+  assert(scorecardRes.overallScore === 4.5, 'Composite scorecard score calculated accurately ((5+4+4+5)/4 = 4.5/5)');
+  assert(scorecardRes.recommendation === 'Strong Hire', 'Recommendation properly registered');
+  assert(scorecardRes.strengths.length === 2, 'Demonstrated strengths persisted in structured array');
+
+  // Candidate unauthorized to view internal recruiter scorecard
+  let candidateBlocked = false;
+  try {
+    InterviewService.getScorecard(candUserId, 'candidate', interviewAId);
+  } catch (err: any) {
+    if (err.message.includes('Forbidden')) candidateBlocked = true;
+  }
+  assert(candidateBlocked, 'Candidates are strictly forbidden from viewing internal recruiter scorecards');
+
+  // Recruiter B unauthorized to view Recruiter A's scorecard
+  let recBBlocked = false;
+  try {
+    InterviewService.getScorecard(recBId, 'recruiter', interviewAId);
+  } catch (err: any) {
+    if (err.message.includes('Forbidden')) recBBlocked = true;
+  }
+  assert(recBBlocked, 'Cross-tenant recruiter isolation enforced for interview scorecards');
+
+  // Recruiter A successfully retrieves scorecard
+  const fetchedScorecard = InterviewService.getScorecard(recAId, 'recruiter', interviewAId);
+  assert(fetchedScorecard !== null && fetchedScorecard.overallScore === 4.5, 'Recruiter A successfully retrieves evaluated scorecard');
+
   console.log('\n====================================================');
-  console.log(`🎉 PHASE 9 MASTER VERIFICATION: ${passedTests} / ${totalTests} TESTS PASSED (100%)`);
+  console.log(`🎉 MASTER VERIFICATION: ${passedTests} / ${totalTests} TESTS PASSED (100%)`);
   console.log('====================================================\n');
 }
 

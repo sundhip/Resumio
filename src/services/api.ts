@@ -1420,7 +1420,38 @@ export const api = {
     });
     return handleResponse(res);
   },
+
+  // 7. Structured Interview Scorecards & 5-Point Rubrics
+  async submitInterviewScorecard(interviewId: string, data: {
+    technicalDepth: number;
+    problemSolving: number;
+    communication: number;
+    culturalFit: number;
+    recommendation: 'Strong Hire' | 'Hire' | 'Undecided' | 'No Hire' | 'Strong No Hire';
+    strengths?: string[];
+    weaknesses?: string[];
+    evaluatorNotes?: string;
+  }): Promise<{ success: boolean; scorecard: any; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/interviews/${interviewId}/scorecard`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  async getInterviewScorecard(interviewId: string): Promise<{
+    success: boolean;
+    scorecard: any;
+  }> {
+    const res = await fetch(`${API_BASE_URL}/interviews/${interviewId}/scorecard`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
 };
+
 
 
 

@@ -624,3 +624,30 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 CREATE INDEX IF NOT EXISTS idx_audit_logs_actor ON audit_logs(actor_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_target ON audit_logs(target_type, target_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_action ON audit_logs(action, created_at DESC);
+
+-- ============================================================
+-- Phase 10 Tables: AI Interview Studio & Structured Scorecards
+-- ============================================================
+CREATE TABLE IF NOT EXISTS interview_scorecards (
+  id TEXT PRIMARY KEY,
+  interview_id TEXT NOT NULL,
+  recruiter_id TEXT NOT NULL,
+  technical_depth INTEGER NOT NULL CHECK (technical_depth BETWEEN 1 AND 5),
+  problem_solving INTEGER NOT NULL CHECK (problem_solving BETWEEN 1 AND 5),
+  communication INTEGER NOT NULL CHECK (communication BETWEEN 1 AND 5),
+  cultural_fit INTEGER NOT NULL CHECK (cultural_fit BETWEEN 1 AND 5),
+  overall_score REAL NOT NULL CHECK (overall_score BETWEEN 1.0 AND 5.0),
+  recommendation TEXT NOT NULL CHECK (recommendation IN ('Strong Hire', 'Hire', 'Undecided', 'No Hire', 'Strong No Hire')),
+  strengths_json TEXT NOT NULL DEFAULT '[]',
+  weaknesses_json TEXT NOT NULL DEFAULT '[]',
+  evaluator_notes TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (interview_id) REFERENCES interviews(id) ON DELETE CASCADE,
+  FOREIGN KEY (recruiter_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE(interview_id, recruiter_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_scorecard_interview ON interview_scorecards(interview_id);
+CREATE INDEX IF NOT EXISTS idx_scorecard_recruiter ON interview_scorecards(recruiter_id);
+

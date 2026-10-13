@@ -209,3 +209,73 @@ interviewsRouter.get('/recruiter/interviews', authenticateToken, async (req: Req
     return res.status(500).json({ success: false, message: 'Failed to fetch recruiter interviews.', error: err.message });
   }
 });
+
+/**
+ * POST /api/interviews/:id/scorecard
+ * Recruiter submits or updates structured 5-point evaluation scorecard
+ */
+interviewsRouter.post('/interviews/:id/scorecard', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (user.role !== 'recruiter') {
+      return res.status(403).json({ success: false, message: 'Only recruiters can submit interview scorecards.' });
+    }
+
+    const { id } = req.params;
+    const {
+      technicalDepth,
+      problemSolving,
+      communication,
+      culturalFit,
+      recommendation,
+      strengths,
+      weaknesses,
+      evaluatorNotes,
+    } = req.body;
+
+    const result = InterviewService.submitScorecard(user.id, id, {
+      technicalDepth,
+      problemSolving,
+      communication,
+      culturalFit,
+      recommendation,
+      strengths,
+      weaknesses,
+      evaluatorNotes,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Interview scorecard submitted successfully.',
+      scorecard: result,
+    });
+  } catch (err: any) {
+    const isForbidden = err.message?.includes('Forbidden');
+    const isNotFound = err.message?.includes('not found');
+    const status = isNotFound ? 404 : isForbidden ? 403 : 400;
+    return res.status(status).json({ success: false, message: err.message });
+  }
+});
+
+/**
+ * GET /api/interviews/:id/scorecard
+ * Recruiter retrieves evaluation scorecard
+ */
+interviewsRouter.get('/interviews/:id/scorecard', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    const { id } = req.params;
+
+    const scorecard = InterviewService.getScorecard(user.id, user.role, id);
+    return res.json({
+      success: true,
+      scorecard,
+    });
+  } catch (err: any) {
+    const isForbidden = err.message?.includes('Forbidden');
+    const isNotFound = err.message?.includes('not found');
+    const status = isNotFound ? 404 : isForbidden ? 403 : 500;
+    return res.status(status).json({ success: false, message: err.message });
+  }
+});
+

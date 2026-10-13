@@ -768,4 +768,214 @@ export class InterviewService {
       history,
     };
   }
+
+  /**
+   * Submit or update an interview scorecard with 5-point evaluation rubrics
+   */
+  static submitScorecard(
+    recruiterUserId: string,
+    interviewId: string,
+    data: {
+      technicalDepth: number;
+      problemSolving: number;
+      communication: number;
+      culturalFit: number;
+      recommendation: 'Strong Hire' | 'Hire' | 'Undecided' | 'No Hire' | 'Strong No Hire';
+      strengths?: string[];
+      weaknesses?: string[];
+      evaluatorNotes?: string;
+    }
+  ) {
+    const interview = db.prepare(`
+      SELECT i.id, i.recruiter_id, i.application_id, i.candidate_id
+      FROM interviews i
+      WHERE i.id = ?
+    `).get(interviewId) as any;
+
+    if (!interview) {
+      throw new Error('Interview not found.');
+    }
+    if (interview.recruiter_id !== recruiterUserId) {
+      throw new Error('Forbidden: You are not authorized to evaluate this interview.');
+    }
+
+    const {
+      technicalDepth,
+      problemSolving,
+      communication,
+      culturalFit,
+      recommendation,
+      strengths = [],
+      weaknesses = [],
+      evaluatorNotes = '',
+    } = data;
+
+    // Validate 1-5 rubrics
+    [technicalDepth, problemSolving, communication, culturalFit].forEach((score) => {
+      if (typeof score !== 'number' || score < 1 || score > 5 || !Number.isInteger(score)) {
+        throw new Error('Rubric scores must be integer values between 1 and 5.');
+      }
+    });
+
+    const validRecs = ['Strong Hire', 'Hire', 'Undecided', 'No Hire', 'Strong No Hire'];
+    if (!validRecs.includes(recommendation)) {
+      throw new Error(`Invalid recommendation. Must be one of: ${validRecs.join(', ')}`);
+    }
+
+    // Compute composite overall score rounded to 2 decimals
+    const overallScore = Math.round(((technicalDepth + problemSolving + communication + culturalFit) / 4) * 100) / 100;
+    const now = new Date().toISOString();
+    const strengthsJson = JSON.stringify(strengths);
+    const weaknessesJson = JSON.stringify(weaknesses);
+
+    // Upsert into SQLite
+    const existing = db.prepare(`SELECT id FROM interview_scorecards WHERE interview_id = ? AND recruiter_id = ?`).get(interviewId, recruiterUserId) as any;
+    let scorecardId = existing?.id;
+
+    if (existing) {
+      db.prepare(`
+        UPDATE interview_scorecards
+        SET technical_depth = ?, problem_solving = ?, communication = ?, cultural_fit = ?,
+            overall_score = ?, recommendation = ?, strengths_json = ?, weaknesses_json = ?,
+            evaluator_notes = ?, updated_at = ?
+        WHERE id = ?
+      `).run(
+        technicalDepth,
+        problemSolving,
+        communication,
+        culturalFit,
+        overallScore,
+        recommendation,
+        strengthsJson,
+        weaknessesJson,
+        evaluatorNotes,
+        now,
+        scorecardId
+      );
+    } else {
+      scorecardId = crypto.randomUUID();
+      db.prepare(`
+        INSERT INTO interview_scorecards (
+          id, interview_id, recruiter_id, technical_depth, problem_solving,
+          communication, cultural_fit, overall_score, recommendation,
+          strengths_json, weaknesses_json, evaluator_notes, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        scorecardId,
+        interviewId,
+        recruiterUserId,
+        technicalDepth,
+        problemSolving,
+        communication,
+        culturalFit,
+        overallScore,
+        recommendation,
+        strengthsJson,
+        weaknessesJson,
+        evaluatorNotes,
+        now,
+        now
+      );
+    }
+
+    // Dual-persist to MongoDB
+    try {
+      mongoDb.collection('interview_scorecards').updateOne(
+        { id: scorecardId },
+        {
+          $set: {
+            id: scorecardId,
+            interview_id: interviewId,
+            recruiter_id: recruiterUserId,
+            technical_depth: technicalDepth,
+            problem_solving: problemSolving,
+            communication,
+            cultural_fit: culturalFit,
+            overall_score: overallScore,
+            recommendation,
+            strengths,
+            weaknesses,
+            evaluator_notes: evaluatorNotes,
+            updated_at: now,
+          },
+          $setOnInsert: { created_at: now },
+        },
+        { upsert: true }
+      );
+    } catch {}
+
+    // Audit Log
+    AuditService.logAction({
+      actorId: recruiterUserId,
+      actorRole: 'recruiter',
+      action: 'interview:scorecard_submitted',
+      targetType: 'interview',
+      targetId: interviewId,
+      previousState: existing ? 'Updated' : 'Created',
+      newState: recommendation,
+      reason: `Submitted scorecard: overall ${overallScore}/5, ${recommendation}`,
+    });
+
+    return {
+      id: scorecardId,
+      interviewId,
+      recruiterId: recruiterUserId,
+      technicalDepth,
+      problemSolving,
+      communication,
+      culturalFit,
+      overallScore,
+      recommendation,
+      strengths,
+      weaknesses,
+      evaluatorNotes,
+      updatedAt: now,
+    };
+  }
+
+  /**
+   * Get scorecard for an interview
+   */
+  static getScorecard(userId: string, userRole: string, interviewId: string) {
+    const interview = db.prepare(`SELECT candidate_id, recruiter_id FROM interviews WHERE id = ?`).get(interviewId) as any;
+    if (!interview) {
+      throw new Error('Interview not found.');
+    }
+
+    // Candidates cannot see internal recruiter scorecards
+    if (userRole === 'candidate') {
+      throw new Error('Forbidden: Candidates are not authorized to view internal scorecards.');
+    }
+    if (userRole === 'recruiter' && interview.recruiter_id !== userId) {
+      throw new Error('Forbidden: You are not authorized to view scorecards for this interview.');
+    }
+
+    const row = db.prepare(`SELECT * FROM interview_scorecards WHERE interview_id = ?`).get(interviewId) as any;
+    if (!row) {
+      return null;
+    }
+
+    let strengths: string[] = [];
+    let weaknesses: string[] = [];
+    try { strengths = JSON.parse(row.strengths_json || '[]'); } catch {}
+    try { weaknesses = JSON.parse(row.weaknesses_json || '[]'); } catch {}
+
+    return {
+      id: row.id,
+      interviewId: row.interview_id,
+      recruiterId: row.recruiter_id,
+      technicalDepth: row.technical_depth,
+      problemSolving: row.problem_solving,
+      communication: row.communication,
+      culturalFit: row.cultural_fit,
+      overallScore: row.overall_score,
+      recommendation: row.recommendation,
+      strengths,
+      weaknesses,
+      evaluatorNotes: row.evaluator_notes,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    };
+  }
 }
+

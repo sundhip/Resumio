@@ -1299,6 +1299,27 @@ export interface ExplainableMatchScoreResult {
   naturalLanguageExplanation: string;
 }
 
+// 6. Structured Interview Scorecards & Rubrics
+export type ScorecardRecommendation = 'Strong Hire' | 'Hire' | 'Undecided' | 'No Hire' | 'Strong No Hire';
+
+export interface InterviewScorecard {
+  id: string;
+  interviewId: string;
+  recruiterId: string;
+  technicalDepth: number; // 1-5
+  problemSolving: number; // 1-5
+  communication: number; // 1-5
+  culturalFit: number; // 1-5
+  overallScore: number; // 1.0 - 5.0
+  recommendation: ScorecardRecommendation;
+  strengths: string[];
+  weaknesses: string[];
+  evaluatorNotes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
 
 
 

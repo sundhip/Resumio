@@ -12,6 +12,7 @@ import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { useEventStream } from '../../hooks/useEventStream';
 import { api } from '../../services/api';
+import { InterviewScorecardModal } from '../../components/interviews/InterviewScorecardModal';
 import {
   MoreHorizontal,
   Download,
@@ -24,6 +25,7 @@ import {
   List,
   Eye,
   Radio,
+  Award,
 } from 'lucide-react';
 
 interface ApplicantsTablePageProps {
@@ -39,6 +41,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [activeViewers, setActiveViewers] = useState<any[]>([]);
   const [rejectModalCandidate, setRejectModalCandidate] = useState<Candidate | null>(null);
+  const [scorecardModalCandidate, setScorecardModalCandidate] = useState<Candidate | null>(null);
   const [sortBy, setSortBy] = useState<'score_desc' | 'score_asc' | 'name_asc' | 'exp_desc'>('score_desc');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -459,6 +462,12 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                             onClick: () => handleStatusChange(cand.id, 'Shortlisted'),
                           },
                           {
+                            id: 'scorecard',
+                            label: 'Evaluate Scorecard',
+                            icon: <Award className="w-4 h-4 text-amber-500" />,
+                            onClick: () => setScorecardModalCandidate(cand),
+                          },
+                          {
                             id: 'div',
                             label: '',
                             divider: true,
@@ -641,6 +650,20 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             </div>
           </div>
         </Modal>
+      )}
+
+      {/* Structured Interview Scorecard Modal */}
+      {scorecardModalCandidate && (
+        <InterviewScorecardModal
+          interviewId={scorecardModalCandidate.id}
+          candidateName={scorecardModalCandidate.name}
+          jobTitle={scorecardModalCandidate.appliedJob}
+          isOpen={!!scorecardModalCandidate}
+          onClose={() => setScorecardModalCandidate(null)}
+          onScorecardSaved={(scorecard) => {
+            showToast('success', 'Scorecard Updated', `Saved evaluation ${scorecard.overallScore}/5 for ${scorecardModalCandidate.name}`);
+          }}
+        />
       )}
 
       {/* Confirmation Modal for Rejection */}
