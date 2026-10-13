@@ -427,6 +427,24 @@ async function runPhase9Tests() {
   const fetchedScorecard = InterviewService.getScorecard(recAId, 'recruiter', interviewAId);
   assert(fetchedScorecard !== null && fetchedScorecard.overallScore === 4.5, 'Recruiter A successfully retrieves evaluated scorecard');
 
+  // ----------------------------------------------------
+  // 12. CANDIDATE CAREER COPILOT & GOOGLE XYZ REWRITER
+  // ----------------------------------------------------
+  console.log('\n🚀 12. Testing Candidate Career Copilot & Google XYZ Bullet Rewriting...');
+
+  // Test 1: Action-oriented build rewrite
+  const rewriteBuild = ResumeImprovementService.rewriteBulletPointXYZ('Built search microservices for our app', 'PostgreSQL & Elasticsearch');
+  assert(rewriteBuild.impactLevel === 'Transformative', 'Impact level marked as Transformative');
+  assert(rewriteBuild.framework.includes('Google XYZ Formula'), 'Adheres to Google XYZ standard formula');
+  assert(rewriteBuild.rewritten.includes('Accomplished:'), 'Rewritten text adheres to Accomplished clause');
+  assert(rewriteBuild.rewritten.includes('as measured by'), 'Rewritten text incorporates measurable outcome');
+  assert(rewriteBuild.rewritten.includes('by doing'), 'Rewritten text specifies strategic technical action');
+
+  // Test 2: Leadership rewrite
+  const rewriteLead = ResumeImprovementService.rewriteBulletPointXYZ('Managed engineering sprints and reviewed team code', 'React & TypeScript');
+  assert(rewriteLead.components.accomplishedX.includes('Spearheaded cross-functional technical initiatives'), 'Leadership verbs accurately identified and elevated');
+  assert(rewriteLead.components.doingZ.includes('React & TypeScript'), 'Context technical skill injected into action clause');
+
   console.log('\n====================================================');
   console.log(`🎉 MASTER VERIFICATION: ${passedTests} / ${totalTests} TESTS PASSED (100%)`);
   console.log('====================================================\n');

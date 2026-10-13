@@ -1350,4 +1350,26 @@ router.delete('/resume', (req: AuthRequest, res: Response): void => {
   }
 });
 
+// Candidate Career Copilot: Google XYZ Bullet Point Rewriter
+router.post('/candidate/resume/rewrite-bullet', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { bullet, contextSkill } = req.body;
+    if (!bullet || !bullet.trim()) {
+      res.status(400).json({ success: false, message: 'Bullet point text is required.' });
+      return;
+    }
+
+    const { ResumeImprovementService } = await import('../services/resumeImprovementService');
+    const result = ResumeImprovementService.rewriteBulletPointXYZ(bullet, contextSkill);
+
+    res.json({
+      success: true,
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 export default router;
+

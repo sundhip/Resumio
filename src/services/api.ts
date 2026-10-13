@@ -1450,7 +1450,27 @@ export const api = {
     });
     return handleResponse(res);
   },
+
+  // 8. Career Copilot: Google XYZ Bullet Point Rewriter
+  async rewriteResumeBullet(bullet: string, contextSkill?: string): Promise<{
+    success: boolean;
+    data: {
+      original: string;
+      rewritten: string;
+      impactLevel: string;
+      framework: string;
+      components: { accomplishedX: string; measuredByY: string; doingZ: string };
+    };
+  }> {
+    const res = await fetch(`${API_BASE_URL}/candidate/resume/rewrite-bullet`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ bullet, contextSkill }),
+    });
+    return handleResponse(res);
+  },
 };
+
 
 
 

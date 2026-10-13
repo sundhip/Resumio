@@ -9,6 +9,10 @@ import {
   Sparkles,
   RefreshCw,
   Briefcase,
+  Zap,
+  ArrowRight,
+  Copy,
+  Check,
 } from 'lucide-react';
 
 interface ResumeImprovementModalProps {
@@ -28,6 +32,14 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
   const [selectedJobId, setSelectedJobId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [isRegenerating, setIsRegenerating] = useState(false);
+
+  // Google XYZ Rewriter Copilot States
+  const [bulletInput, setBulletInput] = useState('');
+  const [skillContext, setSkillContext] = useState('');
+  const [isRewriting, setIsRewriting] = useState(false);
+  const [rewrittenResult, setRewrittenResult] = useState<any>(null);
+  const [copiedRewrite, setCopiedRewrite] = useState(false);
+
 
   useEffect(() => {
     if (isOpen && resumeId) {
@@ -72,6 +84,34 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
       setIsLoading(false);
       setIsRegenerating(false);
     }
+  };
+
+  const handleRewriteBullet = async () => {
+    if (!bulletInput.trim()) {
+      showToast('error', 'Bullet Required', 'Please enter a bullet point to rewrite.');
+      return;
+    }
+
+    setIsRewriting(true);
+    try {
+      const res = await api.rewriteResumeBullet(bulletInput.trim(), skillContext.trim() || undefined);
+      if (res.success && res.data) {
+        setRewrittenResult(res.data);
+        showToast('success', 'Bullet Rewritten', 'Converted to Google high-impact XYZ formula!');
+      }
+    } catch (err: any) {
+      showToast('error', 'Rewrite Failed', err.message || 'Unable to optimize bullet point.');
+    } finally {
+      setIsRewriting(false);
+    }
+  };
+
+  const handleCopyRewrite = () => {
+    if (!rewrittenResult?.rewritten) return;
+    navigator.clipboard.writeText(rewrittenResult.rewritten);
+    setCopiedRewrite(true);
+    showToast('success', 'Copied to Clipboard', 'High-impact bullet point copied.');
+    setTimeout(() => setCopiedRewrite(false), 2500);
   };
 
   return (
@@ -164,6 +204,79 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
                 </div>
               </div>
             )}
+
+            {/* Career Copilot: Google XYZ Bullet Point Rewriter Studio */}
+            <div className="p-4 rounded-card bg-linear-to-r from-purple-500/10 via-brand-500/10 to-indigo-500/10 border border-purple-200 dark:border-purple-900/50 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-purple-600 text-white flex items-center justify-center">
+                    <Zap className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                      Career Copilot: Google XYZ Bullet Rewriter
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Convert passive duties into: <em>Accomplished [X] as measured by [Y] by doing [Z]</em>
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="purple" size="sm">
+                  Google Standard
+                </Badge>
+              </div>
+
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={bulletInput}
+                  onChange={(e) => setBulletInput(e.target.value)}
+                  placeholder="Paste your original bullet point, e.g. Built microservices for candidate search"
+                  className="w-full px-3 py-2 text-xs rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-purple-500"
+                />
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={skillContext}
+                    onChange={(e) => setSkillContext(e.target.value)}
+                    placeholder="Key skill/tech stack (optional, e.g. Node.js & Redis)"
+                    className="flex-1 px-3 py-1.5 text-xs rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-slate-900 dark:text-white focus:outline-none"
+                  />
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleRewriteBullet}
+                    isLoading={isRewriting}
+                    leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+                    className="text-xs shrink-0"
+                  >
+                    Rewrite Bullet
+                  </Button>
+                </div>
+              </div>
+
+              {/* Rewritten Output Preview */}
+              {rewrittenResult && (
+                <div className="p-3 rounded-lg bg-white dark:bg-surface-dark-card border border-purple-200 dark:border-purple-800/60 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1">
+                      <Check className="w-3.5 h-3.5 text-emerald-600" /> High-Impact Result:
+                    </span>
+                    <button
+                      onClick={handleCopyRewrite}
+                      className="flex items-center gap-1 text-[11px] font-semibold text-brand-600 hover:text-brand-800 dark:text-brand-400"
+                    >
+                      {copiedRewrite ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                      {copiedRewrite ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+                  <p className="font-semibold text-slate-900 dark:text-white leading-relaxed p-2 rounded bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-100 dark:border-surface-dark-border">
+                    {rewrittenResult.rewritten}
+                  </p>
+                </div>
+              )}
+            </div>
 
             {/* Section-by-Section Recommendations */}
             <div className="space-y-3 pt-1">
