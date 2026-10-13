@@ -32,6 +32,83 @@ function getAuthHeaders(): HeadersInit {
   };
 }
 
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+function subscribeTokenRefresh(cb: (token: string) => void) {
+  refreshSubscribers.push(cb);
+}
+
+function onRefreshed(token: string) {
+  refreshSubscribers.forEach((cb) => cb(token));
+  refreshSubscribers = [];
+}
+
+async function tryRefreshToken(): Promise<string | null> {
+  const refreshToken = localStorage.getItem('resumio_refresh_token');
+  if (!refreshToken) return null;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (!res.ok) throw new Error('Refresh rejected');
+    const data = await res.json();
+    if (data.accessToken) {
+      localStorage.setItem('resumio_token', data.accessToken);
+      if (data.refreshToken) {
+        localStorage.setItem('resumio_refresh_token', data.refreshToken);
+      }
+      return data.accessToken;
+    }
+  } catch {
+    localStorage.removeItem('resumio_token');
+    localStorage.removeItem('resumio_refresh_token');
+  }
+  return null;
+}
+
+export async function fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
+  let token = localStorage.getItem('resumio_token');
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(options.headers || {}),
+  };
+
+  let response = await fetch(url, { ...options, headers });
+
+  if (response.status === 401 && localStorage.getItem('resumio_refresh_token')) {
+    if (!isRefreshing) {
+      isRefreshing = true;
+      const newToken = await tryRefreshToken();
+      isRefreshing = false;
+      if (newToken) {
+        onRefreshed(newToken);
+        const retryHeaders = {
+          ...headers,
+          Authorization: `Bearer ${newToken}`,
+        };
+        return fetch(url, { ...options, headers: retryHeaders });
+      }
+    } else {
+      return new Promise((resolve) => {
+        subscribeTokenRefresh((newToken) => {
+          const retryHeaders = {
+            ...headers,
+            Authorization: `Bearer ${newToken}`,
+          };
+          resolve(fetch(url, { ...options, headers: retryHeaders }));
+        });
+      });
+    }
+  }
+
+  return response;
+}
+
 async function handleResponse<T>(response: Response): Promise<T> {
   let data: any;
   try {
@@ -97,9 +174,8 @@ export const api = {
   },
 
   async getMe(): Promise<{ success: boolean; user: any; profile: any }> {
-    const res = await fetch(`${API_BASE_URL}/auth/me`, {
+    const res = await fetchWithAuth(`${API_BASE_URL}/auth/me`, {
       method: 'GET',
-      headers: getAuthHeaders(),
     });
     return handleResponse(res);
   },

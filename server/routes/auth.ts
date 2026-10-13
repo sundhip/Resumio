@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import { z } from 'zod';
 import { db } from '../database/db';
 import { authenticateToken, AuthRequest, JWT_SECRET } from '../middleware/auth';
+import { SecurityManager } from '../services/securitySessionService';
 
 const router = Router();
 
@@ -82,13 +83,14 @@ router.post('/register/candidate', async (req, res: Response): Promise<void> => 
 
     insertTransaction();
 
-    const token = jwt.sign({ userId, role: 'candidate' }, JWT_SECRET, { expiresIn: '7d' });
+    const { accessToken, refreshToken } = SecurityManager.generateTokenPair(userId, 'candidate', req);
     const profile = db.prepare('SELECT * FROM candidate_profiles WHERE user_id = ?').get(userId);
 
     res.status(201).json({
       success: true,
       message: 'Candidate account created successfully!',
-      token,
+      token: accessToken,
+      refreshToken,
       user: {
         id: userId,
         email: normalizedEmail,
@@ -142,13 +144,14 @@ router.post('/register/recruiter', async (req, res: Response): Promise<void> => 
 
     insertTransaction();
 
-    const token = jwt.sign({ userId, role: 'recruiter' }, JWT_SECRET, { expiresIn: '7d' });
+    const { accessToken, refreshToken } = SecurityManager.generateTokenPair(userId, 'recruiter', req);
     const profile = db.prepare('SELECT * FROM recruiter_profiles WHERE user_id = ?').get(userId);
 
     res.status(201).json({
       success: true,
       message: 'Recruiter account created successfully!',
-      token,
+      token: accessToken,
+      refreshToken,
       user: {
         id: userId,
         email: normalizedEmail,
@@ -266,12 +269,13 @@ router.post('/google', async (req, res: Response): Promise<void> => {
       }
     }
 
-    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    const { accessToken, refreshToken } = SecurityManager.generateTokenPair(user.id, user.role, req);
 
     res.json({
       success: true,
       message: 'Google authentication successful!',
-      token,
+      token: accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
@@ -340,12 +344,13 @@ router.post('/login', async (req, res: Response): Promise<void> => {
       name = 'System Administrator';
     }
 
-    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    const { accessToken, refreshToken } = SecurityManager.generateTokenPair(user.id, user.role, req);
 
     res.json({
       success: true,
       message: 'Login successful!',
-      token,
+      token: accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
@@ -387,12 +392,13 @@ router.post('/admin-login', async (req, res: Response): Promise<void> => {
       return;
     }
 
-    const token = jwt.sign({ userId: user.id, role: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
+    const { accessToken, refreshToken } = SecurityManager.generateTokenPair(user.id, 'admin', req);
 
     res.json({
       success: true,
       message: 'Admin authentication successful!',
-      token,
+      token: accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,

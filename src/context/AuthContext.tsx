@@ -64,6 +64,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.login({ email, password });
       if (res.token && res.user) {
         localStorage.setItem('resumio_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('resumio_refresh_token', res.refreshToken);
+        }
         setUser(res.user);
         setProfile(res.profile || null);
       }
@@ -78,6 +81,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.adminLogin({ email, password });
       if (res.token && res.user) {
         localStorage.setItem('resumio_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('resumio_refresh_token', res.refreshToken);
+        }
         setUser(res.user);
         setProfile(null);
       }
@@ -92,6 +98,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.registerCandidate(data);
       if (res.token && res.user) {
         localStorage.setItem('resumio_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('resumio_refresh_token', res.refreshToken);
+        }
         setUser(res.user);
         setProfile(res.profile || null);
       }
@@ -106,6 +115,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.registerRecruiter(data);
       if (res.token && res.user) {
         localStorage.setItem('resumio_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('resumio_refresh_token', res.refreshToken);
+        }
         setUser(res.user);
         setProfile(res.profile || null);
       }
@@ -120,6 +132,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.googleAuth(data);
       if (res.token && res.user) {
         localStorage.setItem('resumio_token', res.token);
+        if (res.refreshToken) {
+          localStorage.setItem('resumio_refresh_token', res.refreshToken);
+        }
         setUser(res.user);
         setProfile(res.profile || null);
       }
@@ -128,8 +143,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('resumio_token')}`,
+        },
+      });
+    } catch {
+      // Ignore network errors on logout
+    }
     localStorage.removeItem('resumio_token');
+    localStorage.removeItem('resumio_refresh_token');
     setUser(null);
     setProfile(null);
   };
