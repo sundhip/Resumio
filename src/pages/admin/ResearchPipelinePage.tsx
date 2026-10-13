@@ -35,12 +35,13 @@ export const ResearchPipelinePage: React.FC = () => {
   // Matching & Ranking Evaluation State
   const [matchingEval, setMatchingEval] = useState<any>(null);
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('resumio_token') || localStorage.getItem('token');
+  const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || '/api';
 
   // Fetch Matching Evaluation
   const fetchMatchingEvaluation = async () => {
     try {
-      const res = await fetch('/api/research/evaluation/matching', {
+      const res = await fetch(`${apiBase}/research/evaluation/matching`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -57,7 +58,7 @@ export const ResearchPipelinePage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/research/dataset/summary', {
+      const res = await fetch(`${apiBase}/research/dataset/summary`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error('Failed to fetch dataset summary');
@@ -73,7 +74,7 @@ export const ResearchPipelinePage: React.FC = () => {
   // Fetch Experiment Results & History
   const fetchResults = async () => {
     try {
-      const res = await fetch('/api/research/results', {
+      const res = await fetch(`${apiBase}/research/results`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -95,7 +96,7 @@ export const ResearchPipelinePage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/research/augment', {
+      const res = await fetch(`${apiBase}/research/augment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +120,7 @@ export const ResearchPipelinePage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/research/evaluate', {
+      const res = await fetch(`${apiBase}/research/evaluate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +142,7 @@ export const ResearchPipelinePage: React.FC = () => {
 
   // Export CSV
   const handleExportCsv = () => {
-    window.open('/api/research/export?format=csv', '_blank');
+    window.open(`${apiBase}/research/export?format=csv`, '_blank');
   };
 
   return (

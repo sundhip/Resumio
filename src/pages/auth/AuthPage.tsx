@@ -64,6 +64,22 @@ export const AuthPage: React.FC = () => {
     }
   };
 
+  const handleFillDemo = (role: 'candidate' | 'recruiter' | 'admin') => {
+    setRoleMode(role);
+    setIsRegistering(false);
+    setErrorMessage(null);
+    if (role === 'admin') {
+      setEmail('admin@resumio.ai');
+      setPassword('AdminPass123!');
+    } else if (role === 'recruiter') {
+      setEmail('recruiter@resumio.demo');
+      setPassword('Recruiter@123');
+    } else {
+      setEmail('candidate@resumio.demo');
+      setPassword('Candidate@123');
+    }
+  };
+
   const handleGoogleClick = () => {
     setErrorMessage(null);
     setGoogleEmail('');
@@ -308,6 +324,36 @@ export const AuthPage: React.FC = () => {
               <p className="text-xs font-bold text-slate-900 dark:text-white">Admin</p>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Platform</p>
             </button>
+          </div>
+
+          {/* Quick Demo Pre-fill helper */}
+          <div className="p-2.5 rounded-card bg-slate-50 dark:bg-surface-dark-card/60 border border-slate-200/80 dark:border-surface-dark-border text-xs flex flex-wrap items-center justify-between gap-1.5">
+            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-brand-500" /> Quick Demo Fill:
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                onClick={() => handleFillDemo('candidate')}
+                className="px-2 py-0.5 rounded text-[11px] font-medium bg-brand-100 hover:bg-brand-200 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 dark:hover:bg-brand-900 transition-colors"
+              >
+                Candidate Demo
+              </button>
+              <button
+                type="button"
+                onClick={() => handleFillDemo('recruiter')}
+                className="px-2 py-0.5 rounded text-[11px] font-medium bg-indigo-100 hover:bg-indigo-200 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-900 transition-colors"
+              >
+                Recruiter Demo
+              </button>
+              <button
+                type="button"
+                onClick={() => handleFillDemo('admin')}
+                className="px-2 py-0.5 rounded text-[11px] font-medium bg-amber-100 hover:bg-amber-200 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900 transition-colors"
+              >
+                Admin Demo
+              </button>
+            </div>
           </div>
 
           {/* Google Authentication Button */}
