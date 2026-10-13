@@ -173,8 +173,31 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
         showToast(
           'success',
           'Resume uploaded successfully!',
-          `${file.name} is now your active application document.`
+          `${file.name} is queued for AI extraction.`
         );
+
+        // If background job ID was issued, track extraction progress
+        if (res.jobId) {
+          setParsingStatus('Processing');
+          const pollInterval = setInterval(async () => {
+            try {
+              const statusRes = await api.getJobStatus(res.jobId!);
+              if (statusRes.job?.status === 'completed') {
+                clearInterval(pollInterval);
+                loadResumeData();
+                showToast('success', 'AI Extraction Complete', 'Parsed resume sections & skills are now ready.');
+              } else if (statusRes.job?.status === 'failed') {
+                clearInterval(pollInterval);
+                setParsingStatus('Failed');
+                showToast('error', 'Extraction notice', statusRes.job.error || 'Failed to parse resume text.');
+              }
+            } catch {
+              clearInterval(pollInterval);
+            }
+          }, 1500);
+        } else {
+          loadResumeData();
+        }
       }
     } catch (err: any) {
       setErrorMessage(err.message || 'Failed to upload resume. Please try again.');

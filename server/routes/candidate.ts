@@ -1207,16 +1207,22 @@ const handleResumeUpload = (req: AuthRequest, res: Response): void => {
         FROM candidate_resumes WHERE id = ?
       `).get(resumeId);
 
-      // Trigger automatic background parsing & screening immediately
-      processResumeAndScreen(resumeId, req.user!.id, profile.id, file.filename).catch((parseErr) => {
-        console.error('Background auto-parse error on upload:', parseErr);
+      // Dispatch to Distributed Async Job Queue with BullMQ-style worker
+      const { jobQueue } = await import('../services/distributedJobQueue');
+      const backgroundJob = await jobQueue.add('resume-processing', {
+        resumeId,
+        candidateId: req.user!.id,
+        candidateProfileId: profile.id,
+        storedFilename: file.filename,
       });
 
       res.status(201).json({
         success: true,
-        message: 'Resume uploaded successfully. Automatic text parsing has started.',
+        message: 'Resume uploaded successfully. Asynchronous extraction has been queued.',
         resume: newResume,
         completion,
+        jobId: backgroundJob.id,
+        jobStatus: backgroundJob.status,
       });
     } catch (dbErr: any) {
       console.error('Save resume error:', dbErr);

@@ -374,7 +374,7 @@ export const api = {
     return handleResponse(res);
   },
 
-  uploadResumeWithProgress(file: File, onProgress?: (percent: number) => void): Promise<{ success: boolean; message: string; resume: import('../types').CandidateResume; completion: number }> {
+  uploadResumeWithProgress(file: File, onProgress?: (percent: number) => void): Promise<{ success: boolean; message: string; resume: import('../types').CandidateResume; completion: number; jobId?: string; jobStatus?: string }> {
     return new Promise((resolve, reject) => {
       const token = localStorage.getItem('resumio_token');
       const xhr = new XMLHttpRequest();
@@ -873,6 +873,44 @@ export const api = {
     const res = await fetch(`${API_BASE_URL}/candidate/resume/parse`, {
       method: 'POST',
       headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  /**
+   * Dispatches parsing to distributed BullMQ-style background queue
+   */
+  async parseCandidateResumeAsync(): Promise<{
+    success: boolean;
+    message: string;
+    jobId: string;
+    status: string;
+  }> {
+    const res = await fetchWithAuth(`${API_BASE_URL}/candidate/resume/parse-async`, {
+      method: 'POST',
+    });
+    return handleResponse(res);
+  },
+
+  /**
+   * Queries real-time progress and status of background queue jobs
+   */
+  async getJobStatus(jobId: string): Promise<{
+    success: boolean;
+    job: {
+      id: string;
+      queue: string;
+      status: 'waiting' | 'active' | 'completed' | 'failed';
+      progress: number;
+      result?: any;
+      error?: string;
+      attempts: number;
+      createdAt: string;
+      completedAt?: string;
+    };
+  }> {
+    const res = await fetchWithAuth(`${API_BASE_URL}/jobs/${jobId}/status`, {
+      method: 'GET',
     });
     return handleResponse(res);
   },
