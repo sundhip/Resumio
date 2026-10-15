@@ -286,6 +286,8 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             </span>
           </div>
         </div>
+      </Card>
+
       {/* Main Table or Kanban Pipeline View */}
       {viewMode === 'kanban' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto pb-4">

@@ -42,3 +42,12 @@ server/uploads/
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Python & ML data directories
+data/
+data/*
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+env/

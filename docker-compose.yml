@@ -1,0 +1,50 @@
+services:
+  # 1. Frontend Web Client (React 19 + Vite 8)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3001/api
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # 2. Express Backend API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run server
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+      - JWT_SECRET=resumio_dev_secret_key_super_secure_2026
+      - ML_SERVICE_URL=http://ml:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - ml
+
+  # 3. Dedicated Python FastAPI ML Microservice
+  ml:
+    build:
+      context: ./services/ml
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3

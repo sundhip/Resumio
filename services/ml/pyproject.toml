@@ -1,0 +1,14 @@
+[project]
+name = "resumio-ml-service"
+version = "1.0.0"
+description = "FastAPI Machine Learning Microservice for Resumio"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "pydantic>=2.6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

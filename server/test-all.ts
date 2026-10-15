@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execSync, spawn, ChildProcess } from 'child_process';
 
 const testSuites = [
   { name: 'Phase 1 - Database, Auth & Profiles', file: 'server/test-phase1.ts' },
@@ -20,9 +20,49 @@ const testSuites = [
   { name: 'Phase 11 - Full-System Integration & Smoke Validation', file: 'server/test-phase11-smoke.ts' },
 ];
 
-console.log('====================================================');
-console.log('🚀 RESUMIO MASTER TEST SUITE (PHASES 1 - 11)');
-console.log('====================================================\n');
+async function isServerRunning(): Promise<boolean> {
+  try {
+    const res = await fetch('http://localhost:3001/api/health', { signal: AbortSignal.timeout(1000) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function startServer(): Promise<ChildProcess | null> {
+  if (await isServerRunning()) {
+    console.log('📡 Using existing Resumio server on http://localhost:3001');
+    return null;
+  }
+
+  console.log('🚀 Spawning dedicated test backend server on port 3001...');
+  const serverProc = spawn('npx', ['tsx', 'server/index.ts'], {
+    shell: true,
+    stdio: 'ignore',
+    detached: false,
+    env: { ...process.env, PORT: '3001', NODE_ENV: 'test' },
+  });
+
+  // Poll until server is ready
+  for (let i = 0; i < 40; i++) {
+    await new Promise((r) => setTimeout(r, 500));
+    if (await isServerRunning()) {
+      console.log('✅ Dedicated test server ready.');
+      return serverProc;
+    }
+  }
+
+  console.warn('⚠️ Server failed to report ready within 20s. Proceeding with tests...');
+  return serverProc;
+}
+
+async function run() {
+  const spawnedServer = await startServer();
+
+  try {
+    console.log('====================================================');
+    console.log('🚀 RESUMIO MASTER TEST SUITE (PHASES 1 - 11)');
+    console.log('====================================================\n');
 
 const results: { name: string; status: 'PASSED' | 'FAILED'; durationMs: number; error?: string }[] = [];
 
@@ -53,11 +93,25 @@ results.forEach((r, idx) => {
   }
 });
 
-const totalPassed = results.filter((r) => r.status === 'PASSED').length;
-console.log('====================================================');
-console.log(`📊 FINAL RESULT: ${totalPassed} / ${results.length} SUITES PASSED (${Math.round((totalPassed / results.length) * 100)}%)`);
-console.log('====================================================\n');
+    const totalPassed = results.filter((r) => r.status === 'PASSED').length;
+    console.log('====================================================');
+    console.log(`📊 FINAL RESULT: ${totalPassed} / ${results.length} SUITES PASSED (${Math.round((totalPassed / results.length) * 100)}%)`);
+    console.log('====================================================\n');
 
-if (totalPassed !== results.length) {
-  process.exit(1);
+    if (totalPassed !== results.length) {
+      process.exitCode = 1;
+    }
+  } finally {
+    if (spawnedServer && spawnedServer.pid) {
+      console.log('🛑 Shutting down spawned test server...');
+      try {
+        process.kill(spawnedServer.pid);
+      } catch {}
+    }
+  }
 }
+
+run().catch((err) => {
+  console.error('Master test runner fatal error:', err);
+  process.exit(1);
+});

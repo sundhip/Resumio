@@ -1,0 +1,10 @@
+{
+  "name": "@resumio/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx index.ts",
+    "start": "tsx index.ts"
+  }
+}

@@ -108,6 +108,7 @@ export function verifyDatabaseIntegrity(): { isValid: boolean; fkViolations: any
     db.prepare('DELETE FROM applications WHERE candidate_id NOT IN (SELECT id FROM users)').run();
     db.prepare('DELETE FROM candidate_profiles WHERE user_id NOT IN (SELECT id FROM users)').run();
     db.prepare('DELETE FROM recruiter_profiles WHERE user_id NOT IN (SELECT id FROM users)').run();
+    db.prepare('DELETE FROM resume_duplicate_matches WHERE candidate_id NOT IN (SELECT id FROM users) OR matched_candidate_id NOT IN (SELECT id FROM users) OR resume_id NOT IN (SELECT id FROM candidate_resumes) OR matched_resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
   } catch (e) {}
 
   // 1. Run SQLite foreign key check
@@ -172,5 +173,45 @@ export async function initDatabase() {
     `).run(adminId, adminEmail, passwordHash);
 
     console.log('✅ Default Admin account seeded: admin@resumio.ai / AdminPass123!');
+  }
+
+  // Seed default candidate account if none exists
+  const existingCand = db.prepare("SELECT id FROM users WHERE lower(email) = 'candidate@resumio.demo'").get();
+  if (!existingCand) {
+    const candUserId = crypto.randomUUID();
+    const candProfId = crypto.randomUUID();
+    const candPasswordHash = bcrypt.hashSync('Candidate@123', 10);
+
+    db.prepare(`
+      INSERT INTO users (id, email, password_hash, role, status)
+      VALUES (?, 'candidate@resumio.demo', ?, 'candidate', 'active')
+    `).run(candUserId, candPasswordHash);
+
+    db.prepare(`
+      INSERT INTO candidate_profiles (id, user_id, full_name, phone, location, headline, bio, profile_completion)
+      VALUES (?, ?, 'Rahul Sharma', '+91 98765 43210', 'Chennai, Tamil Nadu', 'Full Stack Developer', 'Experienced Full Stack Developer with 2+ years of experience in React and Node.js.', 80)
+    `).run(candProfId, candUserId);
+
+    console.log('✅ Default Candidate account seeded: candidate@resumio.demo / Candidate@123');
+  }
+
+  // Seed default recruiter account if none exists
+  const existingRec = db.prepare("SELECT id FROM users WHERE lower(email) = 'recruiter@resumio.demo'").get();
+  if (!existingRec) {
+    const recUserId = crypto.randomUUID();
+    const recProfId = crypto.randomUUID();
+    const recPasswordHash = bcrypt.hashSync('Recruiter@123', 10);
+
+    db.prepare(`
+      INSERT INTO users (id, email, password_hash, role, status)
+      VALUES (?, 'recruiter@resumio.demo', ?, 'recruiter', 'active')
+    `).run(recUserId, recPasswordHash);
+
+    db.prepare(`
+      INSERT INTO recruiter_profiles (id, user_id, full_name, phone, company_name, industry, location, website, description, profile_completion)
+      VALUES (?, ?, 'Arjun Mehta', '+91 98765 12345', 'Nexora Technologies', 'Software & AI', 'Chennai, Tamil Nadu', 'https://nexoratech.demo', 'Leading AI and Software Technology provider.', 100)
+    `).run(recProfId, recUserId);
+
+    console.log('✅ Default Recruiter account seeded: recruiter@resumio.demo / Recruiter@123');
   }
 }
