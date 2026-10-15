@@ -36,6 +36,9 @@ import { AICandidateSearchPage } from './pages/recruiter/AICandidateSearchPage';
 // Phase 5 LLM Data Augmentation Research Pipeline Page
 import { ResearchPipelinePage } from './pages/admin/ResearchPipelinePage';
 
+// Phase 4 Skill Ontology & Knowledge Base Page
+import { SkillOntologyPage } from './pages/admin/SkillOntologyPage';
+
 export const App: React.FC = () => {
   const { isAuthenticated, role, isLoading } = useAuth();
   const [currentPath, setCurrentPath] = useState<string>('dashboard');
@@ -163,6 +166,12 @@ export const App: React.FC = () => {
 
       case 'research-pipeline':
         return <ResearchPipelinePage />;
+
+      // Skill Ontology & KB Management
+      case 'skills-ontology':
+      case 'skills-admin':
+      case 'skills':
+        return <SkillOntologyPage onNavigate={handleNavigate} />;
 
       // Common Settings & DS
       case 'settings':

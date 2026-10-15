@@ -35,6 +35,15 @@ from src.parser.ingest import (
     DecompressionBombError,
     UnsupportedFormatError,
 )
+from src.ontology import (
+    SkillOntology,
+    SkillExtractor,
+    JobDescriptionParser,
+    ExperienceAnalytics,
+    CareerInterval,
+    calculate_contextual_skill_score,
+    get_skill_ontology,
+)
 
 app = FastAPI(
     title="Resumio ML Microservice",
@@ -264,6 +273,262 @@ def explain_match(payload: ExplainRequest):
         recommendation="Proceed to Technical Interview" if payload.match_score >= 75.0 else "Review for Alternative Roles"
     )
 
+# ==========================================
+# Phase 4: Skill Ontology & Experience Endpoints
+# ==========================================
+
+class SkillExtractRequest(BaseModel):
+    text: str
+    section: Optional[str] = "general"
+    enable_fuzzy: Optional[bool] = True
+    enable_learned: Optional[bool] = True
+
+class ExtractedMentionItem(BaseModel):
+    skill_id: str
+    canonical_name: str
+    category: str
+    matched_text: str
+    start_char: int
+    end_char: int
+    stage: str
+    confidence: float
+
+class ImpliedSkillItem(BaseModel):
+    skill_id: str
+    canonical_name: str
+    category: str
+    weight: float
+
+class SkillExtractResponse(BaseModel):
+    mentions: List[ExtractedMentionItem]
+    implied_skills: List[ImpliedSkillItem]
+    unique_canonical_skills: List[str]
+
+class SkillWeightRequest(BaseModel):
+    skill_name: str
+    section: Optional[str] = "experience"
+    years_ago: Optional[float] = 0.5
+    duration_months: Optional[int] = 24
+    bullet_text: Optional[str] = ""
+    independent_roles_count: Optional[int] = 1
+    co_occurring_skills_count: Optional[int] = 2
+    has_link: Optional[bool] = False
+
+class SkillWeightResponse(BaseModel):
+    skill_name: str
+    proficiency_score: float
+    explanation: str
+    details: Dict[str, Any]
+
+class JdParseRequest(BaseModel):
+    text: str
+    title: Optional[str] = "Software Engineer"
+
+class JdRequirementItem(BaseModel):
+    skill_name: str
+    canonical_id: str
+    category: str
+    is_required: bool
+    min_years: Optional[int] = None
+    context_sentence: str
+
+class JdParseResponse(BaseModel):
+    title: str
+    seniority: str
+    work_mode: str
+    education_level: str
+    min_total_experience_years: int
+    detected_domain: str
+    required_skills: List[JdRequirementItem]
+    preferred_skills: List[JdRequirementItem]
+
+class CareerRoleItem(BaseModel):
+    title: str
+    company: str
+    start_month: int
+    end_month: int
+    is_current: Optional[bool] = False
+    skills_used: Optional[List[str]] = []
+
+class ExperienceAnalyticsRequest(BaseModel):
+    roles: List[CareerRoleItem]
+
+class CareerGapItem(BaseModel):
+    start_year_month: str
+    end_year_month: str
+    gap_months: int
+    is_informational_only: bool
+    disclaimer: str
+
+class ExperienceAnalyticsResponse(BaseModel):
+    total_experience_months: int
+    total_experience_years: float
+    per_skill_years: Dict[str, float]
+    average_tenure_months: float
+    career_gaps: List[CareerGapItem]
+    seniority_trajectory: List[str]
+    roles_count: int
+
+# Initialize persistent singletons
+ONTOLOGY = get_skill_ontology()
+EXTRACTOR = SkillExtractor(ontology=ONTOLOGY)
+JD_PARSER = JobDescriptionParser(extractor=EXTRACTOR)
+
+@app.get("/v1/taxonomy/stats")
+def get_taxonomy_stats():
+    skills_by_cat = {}
+    for s in ONTOLOGY.skills.values():
+        skills_by_cat[s.category] = skills_by_cat.get(s.category, 0) + 1
+    return {
+        "total_skills": ONTOLOGY.total_count(),
+        "categories": skills_by_cat,
+        "version": "1.0.0",
+        "sources": ["ESCO v1.1", "O*NET 28.0", "Resumio"]
+    }
+
+@app.post("/v1/skills/extract", response_model=SkillExtractResponse)
+def extract_skills_endpoint(payload: SkillExtractRequest):
+    mentions = EXTRACTOR.extract_skills_from_text(
+        text=payload.text,
+        section_name=payload.section or "general",
+        enable_fuzzy=payload.enable_fuzzy if payload.enable_fuzzy is not None else True,
+        enable_learned_classifier=payload.enable_learned if payload.enable_learned is not None else True,
+    )
+    extracted_ids = list({m.skill_id for m in mentions})
+    implied = ONTOLOGY.resolve_implied_skills(extracted_ids)
+
+    mention_items = [
+        ExtractedMentionItem(
+            skill_id=m.skill_id,
+            canonical_name=m.canonical_name,
+            category=m.category,
+            matched_text=m.matched_text,
+            start_char=m.start_char,
+            end_char=m.end_char,
+            stage=m.stage,
+            confidence=m.confidence,
+        )
+        for m in mentions
+    ]
+
+    implied_items = [
+        ImpliedSkillItem(
+            skill_id=s.id,
+            canonical_name=s.canonical_name,
+            category=s.category,
+            weight=w,
+        )
+        for s, w in implied
+    ]
+
+    unique_names = sorted(list({m.canonical_name for m in mentions}))
+
+    return SkillExtractResponse(
+        mentions=mention_items,
+        implied_skills=implied_items,
+        unique_canonical_skills=unique_names,
+    )
+
+@app.post("/v1/skills/weight", response_model=SkillWeightResponse)
+def calculate_skill_weight_endpoint(payload: SkillWeightRequest):
+    evidence = calculate_contextual_skill_score(
+        skill_name=payload.skill_name,
+        section=payload.section or "experience",
+        years_ago=payload.years_ago if payload.years_ago is not None else 0.5,
+        duration_months=payload.duration_months if payload.duration_months is not None else 24,
+        bullet_text=payload.bullet_text or "",
+        independent_roles_count=payload.independent_roles_count or 1,
+        co_occurring_skills_count=payload.co_occurring_skills_count or 2,
+        has_link=payload.has_link or False,
+    )
+    return SkillWeightResponse(
+        skill_name=evidence.skill_name,
+        proficiency_score=evidence.proficiency_score,
+        explanation=evidence.explanation,
+        details={
+            "section_weight": evidence.section_weight,
+            "recency_weight": evidence.recency_weight,
+            "duration_factor": evidence.duration_factor,
+            "has_action_verb": evidence.has_action_verb,
+            "has_quantified_result": evidence.has_quantified_result,
+            "impact_bonus": evidence.impact_bonus,
+            "multi_role_bonus": evidence.multi_role_bonus,
+            "co_occur_bonus": evidence.co_occur_bonus,
+            "link_bonus": evidence.link_bonus,
+        }
+    )
+
+@app.post("/v1/jd/parse", response_model=JdParseResponse)
+def parse_jd_endpoint(payload: JdParseRequest):
+    parsed = JD_PARSER.parse_job_description(payload.text, job_title=payload.title or "Software Engineer")
+    req_items = [
+        JdRequirementItem(
+            skill_name=r.skill_name,
+            canonical_id=r.canonical_id,
+            category=r.category,
+            is_required=r.is_required,
+            min_years=r.min_years,
+            context_sentence=r.context_sentence,
+        )
+        for r in parsed.required_skills
+    ]
+    pref_items = [
+        JdRequirementItem(
+            skill_name=r.skill_name,
+            canonical_id=r.canonical_id,
+            category=r.category,
+            is_required=r.is_required,
+            min_years=r.min_years,
+            context_sentence=r.context_sentence,
+        )
+        for r in parsed.preferred_skills
+    ]
+    return JdParseResponse(
+        title=parsed.title,
+        seniority=parsed.seniority,
+        work_mode=parsed.work_mode,
+        education_level=parsed.education_level,
+        min_total_experience_years=parsed.min_total_experience_years,
+        detected_domain=parsed.detected_domain,
+        required_skills=req_items,
+        preferred_skills=pref_items,
+    )
+
+@app.post("/v1/experience/analytics", response_model=ExperienceAnalyticsResponse)
+def experience_analytics_endpoint(payload: ExperienceAnalyticsRequest):
+    intervals = [
+        CareerInterval(
+            title=r.title,
+            company=r.company,
+            start_month=r.start_month,
+            end_month=r.end_month,
+            is_current=r.is_current or False,
+            skills_used=r.skills_used or [],
+        )
+        for r in payload.roles
+    ]
+    report = ExperienceAnalytics.analyze_career(intervals)
+    gaps = [
+        CareerGapItem(
+            start_year_month=g.start_year_month,
+            end_year_month=g.end_year_month,
+            gap_months=g.gap_months,
+            is_informational_only=g.is_informational_only,
+            disclaimer=g.disclaimer,
+        )
+        for g in report.career_gaps
+    ]
+    return ExperienceAnalyticsResponse(
+        total_experience_months=report.total_experience_months,
+        total_experience_years=report.total_experience_years,
+        per_skill_years=report.per_skill_years,
+        average_tenure_months=report.average_tenure_months,
+        career_gaps=gaps,
+        seniority_trajectory=report.seniority_trajectory,
+        roles_count=report.roles_count,
+    )
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+

@@ -17,6 +17,7 @@ import { dashboardsRouter } from './routes/dashboards';
 import { analyticsRouter } from './routes/analytics';
 import aiIntelligenceRouter from './routes/aiIntelligence';
 import { researchRouter } from './routes/researchRoutes';
+import { skillsRouter } from './routes/skills';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -74,6 +75,7 @@ app.use('/api', dashboardsRouter);
 app.use('/api', analyticsRouter);
 app.use('/api', aiLimiter, aiIntelligenceRouter);
 app.use('/api', researchRouter);
+app.use('/api/skills', skillsRouter);
 
 // 3.1 Real-Time Server-Sent Events (SSE) Event Stream & Presence Collaboration
 app.get('/api/events/stream', async (req, res) => {

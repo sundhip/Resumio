@@ -43,9 +43,10 @@ server/uploads/
 # TypeScript build cache
 *.tsbuildinfo
 
-# Python & ML data directories
-data/
-data/*
+# Python & ML data directories (root raw datasets)
+/data/
+!services/ml/data/licenses/**
+!services/ml/data/taxonomy/**
 __pycache__/
 *.pyc
 .pytest_cache/

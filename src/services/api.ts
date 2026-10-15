@@ -1531,6 +1531,100 @@ export const api = {
     });
     return handleResponse(res);
   },
+
+  // 10. Phase 4: Skill Ontology & Admin Tooling
+  async getTaxonomyStats(): Promise<{ success: boolean; stats: any }> {
+    const res = await fetch(`${API_BASE_URL}/skills/stats`);
+    return handleResponse(res);
+  },
+
+  async getSkills(params: {
+    search?: string;
+    category?: string;
+    role_family?: string;
+    status?: string;
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<{ success: boolean; skills: any[]; total: number; limit: number; offset: number }> {
+    const query = new URLSearchParams();
+    if (params.search) query.set('search', params.search);
+    if (params.category) query.set('category', params.category);
+    if (params.role_family) query.set('role_family', params.role_family);
+    if (params.status) query.set('status', params.status);
+    if (params.limit) query.set('limit', params.limit.toString());
+    if (params.offset) query.set('offset', params.offset.toString());
+
+    const res = await fetch(`${API_BASE_URL}/skills?${query.toString()}`);
+    return handleResponse(res);
+  },
+
+  async getSkillDetails(id: string): Promise<{ success: boolean; skill: any }> {
+    const res = await fetch(`${API_BASE_URL}/skills/${id}`);
+    return handleResponse(res);
+  },
+
+  async createSkill(data: {
+    canonical_name: string;
+    category: string;
+    description?: string;
+    aliases: string[];
+    role_family?: string;
+  }): Promise<{ success: boolean; skill: any }> {
+    const res = await fetch(`${API_BASE_URL}/skills`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  async updateSkill(id: string, data: any): Promise<{ success: boolean; skill: any }> {
+    const res = await fetch(`${API_BASE_URL}/skills/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  async deleteSkill(id: string): Promise<{ success: boolean; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/skills/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async mergeSkills(targetSkillId: string, sourceSkillId: string): Promise<{ success: boolean; skill: any }> {
+    const res = await fetch(`${API_BASE_URL}/skills/merge`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ targetSkillId, sourceSkillId }),
+    });
+    return handleResponse(res);
+  },
+
+  async getSkillReviewQueue(status: string = 'pending'): Promise<{ success: boolean; items: any[]; total: number }> {
+    const res = await fetch(`${API_BASE_URL}/skills/review/queue?status=${status}`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async decideSkillReviewItem(id: string, decision: 'approved' | 'rejected', mappedSkillId?: string): Promise<{ success: boolean; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/skills/review/queue/${id}/decision`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ decision, mappedSkillId }),
+    });
+    return handleResponse(res);
+  },
+
+  async getSkillAuditLogs(skillId?: string): Promise<{ success: boolean; logs: any[] }> {
+    const url = skillId ? `${API_BASE_URL}/skills/audit/logs?skillId=${skillId}` : `${API_BASE_URL}/skills/audit/logs`;
+    const res = await fetch(url, { headers: getAuthHeaders() });
+    return handleResponse(res);
+  },
 };
 
 

@@ -17,6 +17,7 @@ import {
   Calendar,
   TrendingUp,
   Database,
+  BookOpen,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -93,6 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             items: [
               { id: 'recruiter-jobs', label: 'Job Postings', icon: <Briefcase className="w-4 h-4" /> },
               { id: 'applicants', label: 'Applicant Pipeline', icon: <Users className="w-4 h-4" /> },
+              { id: 'skills-ontology', label: 'Skill Ontology & KB', icon: <BookOpen className="w-4 h-4 text-teal-400" /> },
               { id: 'match-lab', label: 'Match Lab Simulator', icon: <Sparkles className="w-4 h-4 text-teal-400" /> },
               { id: 'recruiter-ai-search', label: 'AI Candidate Search', icon: <Sparkles className="w-4 h-4 text-purple-500" /> },
               { id: 'recruiter-interviews', label: 'Interviews', icon: <Calendar className="w-4 h-4" /> },
@@ -126,6 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             groupTitle: 'Platform & Research',
             items: [
               { id: 'admin-users', label: 'User Accounts', icon: <Users className="w-4 h-4" /> },
+              { id: 'skills-ontology', label: 'Skill Ontology & KB', icon: <BookOpen className="w-4 h-4 text-teal-400" /> },
               { id: 'research-pipeline', label: 'Research Pipeline (AI)', icon: <Database className="w-4 h-4 text-purple-500" /> },
             ],
           },

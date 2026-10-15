@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import { MigrationRunner } from './migrationRunner.js';
 
 // Ensure database directory exists
 const dbDir = path.resolve(process.cwd(), 'server', 'data');
@@ -140,6 +141,13 @@ export async function initDatabase() {
   const schemaPath = path.resolve(process.cwd(), 'server', 'database', 'schema.sql');
   const schemaSql = fs.readFileSync(schemaPath, 'utf8');
   db.exec(schemaSql);
+
+  // Run versioned migrations (0001, 0002_skill_ontology, etc.)
+  try {
+    await MigrationRunner.runMigrations();
+  } catch (migErr) {
+    console.error('[Migrations] Versioned migration error:', migErr);
+  }
 
   // Auto-migration for google_id column if missing on existing DBs
   try {
