@@ -178,6 +178,96 @@ resumeProcessingRouter.post('/candidate/resume/parse-async', authenticateToken, 
 });
 
 /**
+ * PATCH /api/candidate/resume/corrections
+ * Persists user corrections to parsed fields as the user-verified version.
+ */
+resumeProcessingRouter.patch('/candidate/resume/corrections', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (user.role !== 'candidate') {
+      return res.status(403).json({ success: false, message: 'Only candidates can update their parsed resume.' });
+    }
+
+    const profile = db.prepare('SELECT id FROM candidate_profiles WHERE user_id = ?').get(user.id) as any;
+    if (!profile) {
+      return res.status(404).json({ success: false, message: 'Candidate profile not found.' });
+    }
+
+    const resume = db.prepare('SELECT id FROM candidate_resumes WHERE candidate_profile_id = ? AND is_active = 1').get(profile.id) as any;
+    if (!resume) {
+      return res.status(404).json({ success: false, message: 'No active resume found.' });
+    }
+
+    const { corrections } = req.body;
+    if (!corrections || typeof corrections !== 'object') {
+      return res.status(400).json({ success: false, message: 'Valid corrections object is required.' });
+    }
+
+    const now = new Date().toISOString();
+    db.prepare(`
+      UPDATE resume_parsed_data 
+      SET user_corrections_json = ?, updated_at = ?
+      WHERE resume_id = ?
+    `).run(JSON.stringify(corrections), now, resume.id);
+
+    return res.json({
+      success: true,
+      message: 'User corrections saved successfully.',
+      corrections,
+      updatedAt: now,
+    });
+  } catch (err: any) {
+    console.error('Save corrections error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to save corrections.', error: err.message });
+  }
+});
+
+/**
+ * POST /api/candidate/resume/consent
+ * Updates candidate explicit opt-in consent for parser training data.
+ */
+resumeProcessingRouter.post('/candidate/resume/consent', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (user.role !== 'candidate') {
+      return res.status(403).json({ success: false, message: 'Only candidates can update consent preferences.' });
+    }
+
+    const profile = db.prepare('SELECT id FROM candidate_profiles WHERE user_id = ?').get(user.id) as any;
+    if (!profile) {
+      return res.status(404).json({ success: false, message: 'Candidate profile not found.' });
+    }
+
+    const resume = db.prepare('SELECT id FROM candidate_resumes WHERE candidate_profile_id = ? AND is_active = 1').get(profile.id) as any;
+    if (!resume) {
+      return res.status(404).json({ success: false, message: 'No active resume found.' });
+    }
+
+    const { optIn } = req.body;
+    const consentVal = optIn ? 1 : 0;
+    const now = new Date().toISOString();
+
+    db.prepare(`
+      UPDATE resume_parsed_data 
+      SET training_consent_opt_in = ?, training_consent_timestamp = ?, updated_at = ?
+      WHERE resume_id = ?
+    `).run(consentVal, now, now, resume.id);
+
+    return res.json({
+      success: true,
+      message: optIn
+        ? 'Consent granted. Thank you for helping improve Resumio models.'
+        : 'Consent withdrawn. Your data will not be used for model training.',
+      optIn: Boolean(optIn),
+      timestamp: now,
+    });
+  } catch (err: any) {
+    console.error('Update training consent error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to update consent.', error: err.message });
+  }
+});
+
+/**
  * GET /api/jobs/:jobId/status
  * Check execution progress of asynchronous queue jobs.
  */
@@ -485,6 +575,11 @@ function formatParsedRecord(r: any) {
     achievements: safeJsonParse<string[]>(r.achievements_json, []),
     confidence: safeJsonParse<Record<string, string>>(r.confidence_json, {}),
     sectionsDetectedCount: r.sections_detected_count || 0,
+    document: safeJsonParse<any>(r.resume_document_json, null),
+    atsReport: safeJsonParse<any>(r.ats_report_json, null),
+    userCorrections: safeJsonParse<any>(r.user_corrections_json, {}),
+    trainingConsentOptIn: Boolean(r.training_consent_opt_in),
+    trainingConsentTimestamp: r.training_consent_timestamp,
     parsedAt: r.completed_at || r.created_at,
   };
 }

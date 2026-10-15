@@ -11,6 +11,7 @@ import { ParsedResumeViewModal } from '../../components/resume/ParsedResumeViewM
 import { ApplicationScreeningCard } from '../../components/screening/ApplicationScreeningCard';
 import { DuplicateResumeBadge } from '../../components/resume/DuplicateResumeBadge';
 import { ResumeImprovementModal } from '../../components/resume/ResumeImprovementModal';
+import { ResumeSplitViewManager } from '../../components/resume/ResumeSplitViewManager';
 import type { CandidateResume, ParsedResumeData, ResumeScreeningResult, ParsingStatus, ScreeningStatus } from '../../types';
 import {
   FileText,
@@ -45,6 +46,8 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
 
   // Phase 5 Parsed Data & Screening States
   const [parsedData, setParsedData] = useState<ParsedResumeData | null>(null);
+  const [resumeDocument, setResumeDocument] = useState<any>(null);
+  const [atsReport, setAtsReport] = useState<any>(null);
   const [screening, setScreening] = useState<ResumeScreeningResult | null>(null);
   const [parsingStatus, setParsingStatus] = useState<ParsingStatus>('Not Processed');
   const [screeningStatus, setScreeningStatus] = useState<ScreeningStatus>('Not Screened');
@@ -77,6 +80,8 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
           const parseRes = await api.getCandidateParsedResume();
           if (parseRes.success) {
             setParsedData(parseRes.parsed);
+            setResumeDocument(parseRes.parsed?.document || null);
+            setAtsReport(parseRes.parsed?.atsReport || null);
             setScreening(parseRes.screening || null);
             setParsingStatus(parseRes.status || 'Not Processed');
             setScreeningStatus(parseRes.screening ? 'Screened' : 'Not Screened');
@@ -86,6 +91,8 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
         }
       } else {
         setParsedData(null);
+        setResumeDocument(null);
+        setAtsReport(null);
         setScreening(null);
         setParsingStatus('Not Processed');
       }
@@ -102,6 +109,8 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
       const res = await api.reparseCandidateResume();
       if (res.success && res.parsed) {
         setParsedData(res.parsed);
+        setResumeDocument(res.parsed.document || null);
+        setAtsReport(res.parsed.atsReport || null);
         setScreening(res.screening || null);
         setParsingStatus('Processed');
         setScreeningStatus('Screened');
@@ -443,6 +452,22 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
               />
             </div>
           )}
+
+          {/* Phase 3 Resume Split-View Manager & ATS Parse-ability Engine */}
+          <div className="pt-4 border-t border-slate-100 dark:border-surface-dark-border">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-2">
+              <Layers className="w-3.5 h-3.5 text-primary" />
+              Resume Structure & ATS Parse-ability Inspector
+            </h4>
+            <ResumeSplitViewManager
+              document={resumeDocument}
+              atsReport={atsReport}
+              rawText={parsedData?.summary || ''}
+              isReparsing={isReparsing}
+              onReparse={handleReparse}
+              onCorrectionsSaved={() => loadResumeData()}
+            />
+          </div>
 
           {/* Replacement Dropzone */}
           <div className="pt-4 border-t border-slate-100 dark:border-surface-dark-border space-y-3">

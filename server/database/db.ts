@@ -152,6 +152,29 @@ export async function initDatabase() {
     console.error('Migration error:', e);
   }
 
+  // Phase 3 auto-migrations for resume_parsed_data
+  try {
+    const parsedCols = db.prepare("PRAGMA table_info(resume_parsed_data)").all() as any[];
+    const colNames = new Set(parsedCols.map((c: any) => c.name));
+    if (!colNames.has('resume_document_json')) {
+      db.exec("ALTER TABLE resume_parsed_data ADD COLUMN resume_document_json TEXT DEFAULT '{}';");
+    }
+    if (!colNames.has('ats_report_json')) {
+      db.exec("ALTER TABLE resume_parsed_data ADD COLUMN ats_report_json TEXT DEFAULT '{}';");
+    }
+    if (!colNames.has('user_corrections_json')) {
+      db.exec("ALTER TABLE resume_parsed_data ADD COLUMN user_corrections_json TEXT DEFAULT '{}';");
+    }
+    if (!colNames.has('training_consent_opt_in')) {
+      db.exec("ALTER TABLE resume_parsed_data ADD COLUMN training_consent_opt_in INTEGER NOT NULL DEFAULT 0;");
+    }
+    if (!colNames.has('training_consent_timestamp')) {
+      db.exec("ALTER TABLE resume_parsed_data ADD COLUMN training_consent_timestamp TEXT DEFAULT NULL;");
+    }
+  } catch (e) {
+    console.error('Phase 3 resume_parsed_data migration error:', e);
+  }
+
   // Verify integrity
   const integrity = verifyDatabaseIntegrity();
   if (integrity.isValid) {

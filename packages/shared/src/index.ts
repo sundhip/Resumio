@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export * from './resumeDocument.js';
+
 // ==========================================
 // User & Auth Schemas
 // ==========================================

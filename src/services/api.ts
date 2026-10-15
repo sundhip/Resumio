@@ -934,6 +934,40 @@ export const api = {
   },
 
   /**
+   * Saves candidate corrections to parsed resume structure
+   */
+  async saveResumeCorrections(corrections: any): Promise<{
+    success: boolean;
+    message: string;
+    corrections: any;
+    updatedAt: string;
+  }> {
+    const res = await fetch(`${API_BASE_URL}/candidate/resume/corrections`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ corrections }),
+    });
+    return handleResponse(res);
+  },
+
+  /**
+   * Updates explicit training data consent preference
+   */
+  async updateTrainingConsent(optIn: boolean): Promise<{
+    success: boolean;
+    message: string;
+    optIn: boolean;
+    timestamp: string;
+  }> {
+    const res = await fetch(`${API_BASE_URL}/candidate/resume/consent`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ optIn }),
+    });
+    return handleResponse(res);
+  },
+
+  /**
    * Recruiter fetches structured parsed resume for a specific applicant/application
    */
   async getRecruiterApplicationParsedResume(applicationId: string): Promise<{
