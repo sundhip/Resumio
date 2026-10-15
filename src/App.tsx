@@ -10,6 +10,8 @@ import { ResumePage } from './pages/candidate/ResumePage';
 import { CompanyProfilePage } from './pages/recruiter/CompanyProfilePage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { ComponentShowcase } from './pages/design-system/ComponentShowcase';
+import { MatchLabPage } from './pages/MatchLabPage';
+import { DesignSystemCatalogPage } from './pages/dev/DesignSystemCatalogPage';
 
 // Phase 3 Job Management & Discovery Pages
 import { RecruiterJobsPage } from './pages/recruiter/RecruiterJobsPage';
@@ -166,8 +168,12 @@ export const App: React.FC = () => {
       case 'settings':
         return <SettingsPage />;
 
+      case 'match-lab':
+        return <MatchLabPage />;
+
+      case 'dev-design-system':
       case 'design-system':
-        return <ComponentShowcase />;
+        return <DesignSystemCatalogPage />;
 
       default:
         if (role === 'admin') {

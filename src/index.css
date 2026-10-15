@@ -3,6 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Brand Primary Accents */
   --color-brand-50: #f5f3ff;
   --color-brand-100: #ede9fe;
   --color-brand-200: #ddd6fe;
@@ -15,110 +16,125 @@
   --color-brand-900: #4c1d95;
   --color-brand-950: #2e1065;
 
-  --color-surface-dark-bg: #0B0D14;
-  --color-surface-dark-sidebar: #0E111B;
-  --color-surface-dark-card: #141824;
-  --color-surface-dark-hover: #192032;
-  --color-surface-dark-border: #22293F;
+  /* FinGlow-inspired Neon Teals & Accents for Dark Dashboard */
+  --color-teal-glow: #06b6d4;
+  --color-teal-glow-bright: #22d3ee;
+  --color-emerald-glow: #10b981;
+  --color-amber-glow: #f59e0b;
+  --color-rose-glow: #f43f5e;
+
+  /* Dark Theme Surfaces (Near-black teal/slate tint depth) */
+  --color-surface-dark-canvas: #080B11;
+  --color-surface-dark-bg: #0B0F19;
+  --color-surface-dark-sidebar: #0D121E;
+  --color-surface-dark-card: #131A2B;
+  --color-surface-dark-raised: #1A233A;
+  --color-surface-dark-overlay: #212C48;
+  --color-surface-dark-hover: #1E273E;
+  --color-surface-dark-border: #1F2A44;
+  --color-surface-dark-border-subtle: #172137;
   --color-surface-dark-muted: #8E9BB5;
   --color-surface-dark-text: #F1F5F9;
-  --color-surface-dark-input: #101420;
+  --color-surface-dark-input: #0E1424;
 
-  --color-surface-light-bg: #F8FAFC;
+  /* Vestmark-inspired Light Theme Surfaces (Warm clean grey & hairlines) */
+  --color-surface-light-canvas: #F8F9FA;
+  --color-surface-light-bg: #F8F9FA;
   --color-surface-light-sidebar: #FFFFFF;
   --color-surface-light-card: #FFFFFF;
+  --color-surface-light-raised: #F1F3F5;
+  --color-surface-light-overlay: #E9ECEF;
   --color-surface-light-hover: #F1F5F9;
-  --color-surface-light-border: #E2E8F0;
+  --color-surface-light-border: #E5E7EB;
+  --color-surface-light-border-subtle: #F3F4F6;
   --color-surface-light-muted: #64748B;
   --color-surface-light-text: #0F172A;
   --color-surface-light-input: #FFFFFF;
 
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Border Radii */
   --radius-control: 8px;
   --radius-card: 14px;
-  --radius-modal: 18px;
-  --radius-badge: 6px;
+  --radius-bento: 18px;
+  --radius-modal: 20px;
+  --radius-pill: 9999px;
 
-  --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-card-dark: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
-  --shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-dropdown-dark: 0 12px 30px -5px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-  --shadow-glow-purple: 0 0 20px -3px rgba(124, 58, 237, 0.25);
+  /* Subtle Shadows & Soft Glows */
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-card-light: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-card-dark: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-glow-teal: 0 0 25px -4px rgba(6, 182, 212, 0.35);
+  --shadow-glow-purple: 0 0 25px -4px rgba(124, 58, 237, 0.3);
+}
+
+:root {
+  --canvas-bg: #F8F9FA;
+  --canvas-text: #0F172A;
+  --border-hairline: #E5E7EB;
+  --card-surface: #FFFFFF;
+  --card-raised: #F1F3F5;
+}
+
+html.dark {
+  --canvas-bg: #080B11;
+  --canvas-text: #F1F5F9;
+  --border-hairline: #1F2A44;
+  --card-surface: #131A2B;
+  --card-raised: #1A233A;
 }
 
 body {
-  background-color: #F8FAFC;
-  color: #0F172A;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--canvas-bg);
+  color: var(--canvas-text);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.2s ease, color 0.2s ease;
   overflow-x: hidden;
 }
 
-html.dark body {
-  background-color: #0B0D14;
-  color: #F1F5F9;
+/* Monospace Numerals for FinGlow/Vestmark KPI accuracy */
+.font-numeral {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
 }
 
-/* Custom subtle scrollbar */
+/* Custom delicate scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 9999px;
 }
-
 html.dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #1e293b;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
-
 html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #334155;
 }
 
-/* Smooth active pill transition */
-.active-pill-indicator {
-  position: relative;
+/* Hatched progress bar inspired by FinGlow reference */
+.progress-hatched {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.15) 8px,
+    transparent 8px,
+    transparent 16px
+  );
 }
 
-.active-pill-indicator::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 20px;
-  border-radius: 0 4px 4px 0;
-  background-color: #8B5CF6;
-}
-
-/* Animation utilities */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes pulseSubtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-.animate-pulse-subtle {
-  animation: pulseSubtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* Gradient Health Bar */
+.bg-gradient-health {
+  background: linear-gradient(90deg, #ef4444 0%, #f59e0b 35%, #10b981 75%, #06b6d4 100%);
 }

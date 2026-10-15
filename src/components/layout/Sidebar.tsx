@@ -89,10 +89,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ],
           },
           {
-            groupTitle: 'Recruitment',
+            groupTitle: 'Recruitment & AI Intelligence',
             items: [
               { id: 'recruiter-jobs', label: 'Job Postings', icon: <Briefcase className="w-4 h-4" /> },
               { id: 'applicants', label: 'Applicant Pipeline', icon: <Users className="w-4 h-4" /> },
+              { id: 'match-lab', label: 'Match Lab Simulator', icon: <Sparkles className="w-4 h-4 text-teal-400" /> },
               { id: 'recruiter-ai-search', label: 'AI Candidate Search', icon: <Sparkles className="w-4 h-4 text-purple-500" /> },
               { id: 'recruiter-interviews', label: 'Interviews', icon: <Calendar className="w-4 h-4" /> },
               { id: 'recruiter-analytics', label: 'Analytics & Reports', icon: <TrendingUp className="w-4 h-4" /> },
@@ -108,6 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             groupTitle: 'System',
             items: [
               { id: 'settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
+              { id: 'dev-design-system', label: 'Design System', icon: <Layers className="w-4 h-4 text-teal-500" /> },
             ],
           },
         ];

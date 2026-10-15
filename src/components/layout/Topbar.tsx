@@ -160,18 +160,42 @@ export const Topbar: React.FC<TopbarProps> = ({
           <span>UI Showcase</span>
         </button>
 
-        {/* Theme Toggle Button */}
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-control text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
-          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
-        >
-          {theme === 'dark' ? (
-            <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 transition-transform duration-200 hover:rotate-45" />
-          ) : (
-            <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 transition-transform duration-200 hover:-rotate-12" />
-          )}
-        </button>
+        {/* Theme 3-Mode Selector (Light, Dark, System) */}
+        <div className="flex items-center p-0.5 rounded-control bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <button
+            onClick={() => setTheme('light')}
+            className={`p-1.5 rounded text-xs transition-all ${
+              theme === 'light'
+                ? 'bg-white text-amber-500 shadow-sm'
+                : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+            }`}
+            title="Light Theme"
+          >
+            <Sun className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setTheme('dark')}
+            className={`p-1.5 rounded text-xs transition-all ${
+              theme === 'dark'
+                ? 'bg-slate-900 text-teal-300 shadow-sm'
+                : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+            }`}
+            title="Dark Theme"
+          >
+            <Moon className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setTheme('system')}
+            className={`p-1.5 rounded text-xs transition-all ${
+              theme === 'system'
+                ? 'bg-teal-500 text-slate-950 shadow-sm font-bold'
+                : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+            }`}
+            title="System Theme (Sync with OS)"
+          >
+            <span className="text-[10px] uppercase font-mono px-0.5">Sys</span>
+          </button>
+        </div>
 
         {/* Notifications Dropdown */}
         <NotificationsMenu onNavigate={onNavigate} />

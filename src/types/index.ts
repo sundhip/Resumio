@@ -1,6 +1,6 @@
 export type Role = 'candidate' | 'recruiter' | 'admin';
 
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'system';
 
 export type ApplicationStatus =
   | 'Applied'
