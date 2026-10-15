@@ -1,0 +1,13 @@
+{
+  "brier_score": 7.922511805389461e-07,
+  "expected_calibration_error": 0.00026759597849810413,
+  "prob_true": [
+    0.0,
+    1.0
+  ],
+  "prob_pred": [
+    0.0003344949731226301,
+    1.0
+  ],
+  "calibration_method": "isotonic"
+}

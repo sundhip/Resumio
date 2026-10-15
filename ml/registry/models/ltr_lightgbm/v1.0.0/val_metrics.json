@@ -1,0 +1,29 @@
+{
+  "val_ndcg_5": 1.0,
+  "val_ndcg_10": 1.0,
+  "val_mrr": 1.0,
+  "monotonic_verified": true,
+  "top_features": [
+    [
+      "global_tfidf_sim",
+      0.8849768769470631
+    ],
+    [
+      "domain_match",
+      0.11502312305293431
+    ],
+    [
+      "dense_semantic_sim",
+      2.5395695264372376e-15
+    ],
+    [
+      "seniority_fit",
+      3.765466654935464e-18
+    ],
+    [
+      "global_bm25_score",
+      0.0
+    ]
+  ],
+  "timestamp": "2026-10-15T18:20:26.472221+00:00"
+}

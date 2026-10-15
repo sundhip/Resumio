@@ -1,0 +1,26 @@
+# Error Analysis: 50 Worst Failure Pairs
+
+| pair_id                     | resume_id     | job_id       |   true_label |   predicted_score |   absolute_error | failure_category                      | written_diagnosis                                                          |
+|:----------------------------|:--------------|:-------------|-------------:|------------------:|-----------------:|:--------------------------------------|:---------------------------------------------------------------------------|
+| bench_res_049::bench_job_09 | bench_res_049 | bench_job_09 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_014::bench_job_09 | bench_res_014 | bench_job_09 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_038::bench_job_08 | bench_res_038 | bench_job_08 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_028::bench_job_08 | bench_res_028 | bench_job_08 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_018::bench_job_08 | bench_res_018 | bench_job_08 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_020::bench_job_05 | bench_res_020 | bench_job_05 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_007::bench_job_07 | bench_res_007 | bench_job_07 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_042::bench_job_07 | bench_res_042 | bench_job_07 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_042::bench_job_02 | bench_res_042 | bench_job_02 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_007::bench_job_02 | bench_res_007 | bench_job_02 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_020::bench_job_00 | bench_res_020 | bench_job_00 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_018::bench_job_03 | bench_res_018 | bench_job_03 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_028::bench_job_03 | bench_res_028 | bench_job_03 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_038::bench_job_03 | bench_res_038 | bench_job_03 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_014::bench_job_04 | bench_res_014 | bench_job_04 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_049::bench_job_04 | bench_res_049 | bench_job_04 |            1 |            0.9934 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_014::bench_job_07 | bench_res_014 | bench_job_07 |            0 |            0.0066 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_007::bench_job_09 | bench_res_007 | bench_job_09 |            0 |            0.0066 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_042::bench_job_04 | bench_res_042 | bench_job_04 |            0 |            0.0066 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+| bench_res_020::bench_job_04 | bench_res_020 | bench_job_04 |            0 |            0.0066 |           0.0066 | Moderate Rank Calibration Discrepancy | Minor score discrepancy due to subtle seniority or degree tier trade-offs. |
+
+Total failure cases diagnosed: 50.

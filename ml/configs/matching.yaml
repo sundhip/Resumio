@@ -1,0 +1,75 @@
+# Resumio Phase 5 Matching Models Configuration
+experiment:
+  name: "resumio_matching_v1"
+  seed: 42
+  tracking_uri: "ml/registry/experiments"
+
+data:
+  train_split: "data/splits/train.parquet"
+  val_split: "data/splits/val.parquet"
+  test_split: "data/splits/canonical_pairs_locked_test.parquet"
+  resumes_path: "data/processed/resumes.parquet"
+  jobs_path: "data/processed/jobs.parquet"
+  audit_path: "data/processed/protected_attributes_audit.parquet"
+
+baselines:
+  b0_deterministic:
+    required_skills_weight: 0.45
+    preferred_skills_weight: 0.15
+    experience_weight: 0.20
+    qualification_weight: 0.10
+    semantic_weight: 0.10
+  b1_bm25:
+    k1: 1.5
+    b: 0.75
+  b2_tfidf:
+    ngram_range: [1, 2]
+    max_features: 10000
+    norm: "l2"
+  b3_dense:
+    dimension: 384
+    pooling: "mean"
+    similarity: "cosine"
+
+dense_retriever:
+  benchmark_models:
+    - name: "all-MiniLM-L6-v2"
+      dim: 384
+    - name: "bge-small-en-v1.5"
+      dim: 384
+    - name: "paraphrase-multilingual-MiniLM-L12-v2"
+      dim: 384
+  chunk_aggregation: "weighted_mean" # max or weighted_mean
+  section_weights:
+    experience: 0.35
+    skills: 0.30
+    projects: 0.20
+    summary: 0.10
+    education: 0.05
+
+ltr_lightgbm:
+  objective: "lambdarank"
+  metric: "ndcg"
+  ndcg_eval_at: [5, 10]
+  learning_rate: 0.05
+  num_leaves: 15
+  min_child_samples: 5
+  n_estimators: 100
+  monotone_constraints: [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0]
+
+category_classifier:
+  max_features: 8000
+  C: 1.0
+  class_weight: "balanced"
+
+calibration:
+  method: "isotonic" # or platt
+  bins: 10
+  thresholds:
+    strong: 0.70
+    moderate: 0.40
+
+serving:
+  top_k: 20
+  latency_sla_ms: 300
+  cache_size: 5000

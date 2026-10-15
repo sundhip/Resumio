@@ -44,6 +44,7 @@ from src.ontology import (
     calculate_contextual_skill_score,
     get_skill_ontology,
 )
+from src.matching.service import ModelRegistryService, MatchingInferenceEngine
 
 app = FastAPI(
     title="Resumio ML Microservice",
@@ -125,10 +126,21 @@ class HealthResponse(BaseModel):
 
 class ModelInfo(BaseModel):
     model_id: str
-    task: str
+    name: Optional[str] = None
     version: str
-    last_trained: str
-    benchmark_ndcg: float
+    type: Optional[str] = "learned_ml"
+    status: Optional[str] = "active"
+    training_date: Optional[str] = None
+    metrics: Optional[Dict[str, Any]] = None
+
+class RankCandidatesRequest(BaseModel):
+    job: Dict[str, Any]
+    candidates: List[Dict[str, Any]]
+    top_k: Optional[int] = 20
+
+class ClassifyResumeRequest(BaseModel):
+    text: str
+    top_k: Optional[int] = 3
 
 START_TIME = time.time()
 
@@ -141,29 +153,27 @@ def get_health():
     return HealthResponse(
         status="healthy",
         service="Resumio ML Microservice",
-        version="1.0.0",
+        version="2.0.0",
         uptime_seconds=round(time.time() - START_TIME, 2),
-        models_loaded=["resumio-ner-v1", "all-MiniLM-L6-v2", "resumio-matching-v2"]
+        models_loaded=["resumio-ltr-v1.0.0", "all-MiniLM-L6-v2", "category-classifier-v1.0.0"]
     )
 
-@app.get("/v1/models", response_model=List[ModelInfo])
+@app.get("/v1/models")
 def get_models():
-    return [
-        ModelInfo(
-            model_id="sentence-transformers/all-MiniLM-L6-v2",
-            task="dense-text-embedding",
-            version="2.0.0",
-            last_trained="2026-10-01",
-            benchmark_ndcg=0.912
-        ),
-        ModelInfo(
-            model_id="resumio-ats-hybrid-matcher",
-            task="reciprocal-rank-fusion-matching",
-            version="2.0.0",
-            last_trained="2026-10-10",
-            benchmark_ndcg=0.948
-        )
-    ]
+    registry = ModelRegistryService()
+    return registry.get_registered_models()
+
+@app.post("/v1/match/rank")
+def rank_candidates_endpoint(payload: RankCandidatesRequest):
+    engine = MatchingInferenceEngine()
+    return engine.rank_candidates(payload.job, payload.candidates, top_k=payload.top_k or 20)
+
+@app.post("/v1/match/classify")
+def classify_resume_endpoint(payload: ClassifyResumeRequest):
+    from ml.src.matching.classifiers import ResumeCategoryClassifier
+    clf = ResumeCategoryClassifier()
+    recs = clf.recommend_roles(payload.text, top_k=payload.top_k or 3)
+    return {"recommendations": recs}
 
 @app.post("/v1/parse", response_model=ParseResponse)
 def parse_resume(payload: ParseRequest):

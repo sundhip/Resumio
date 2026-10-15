@@ -1,0 +1,19 @@
+{
+  "winner": "all-MiniLM-L6-v2",
+  "benchmark_results": {
+    "all-MiniLM-L6-v2": {
+      "val_ndcg_10": 1.0,
+      "latency_ms": 7.73
+    },
+    "bge-small-en-v1.5": {
+      "val_ndcg_10": 1.0,
+      "latency_ms": 6.98
+    },
+    "paraphrase-multilingual-MiniLM-L12-v2": {
+      "val_ndcg_10": 1.0,
+      "latency_ms": 7.75
+    }
+  },
+  "training_timestamp": "2026-10-15T18:20:26.472221+00:00",
+  "semantic_version": "v1.0.0"
+}
