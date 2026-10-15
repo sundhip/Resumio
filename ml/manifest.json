@@ -1,0 +1,51 @@
+{
+  "generated_at": "2026-10-15T16:40:48Z",
+  "manifest_version": "1.0",
+  "datasets": [
+    {
+      "dataset_id": "mdtalhask/ai-powered-resume-screening-dataset-2025",
+      "dataset_slug": "ai-powered-resume-screening-dataset-2025",
+      "source_url": "https://www.kaggle.com/datasets/mdtalhask/ai-powered-resume-screening-dataset-2025",
+      "download_date": "2026-10-15T16:40:48Z",
+      "license_text": "CC BY-SA 4.0",
+      "commercial_use_status": "Restricted (ShareAlike copyleft condition applies to derivative models)",
+      "files": []
+    },
+    {
+      "dataset_id": "rhythmghai/resume-screening-dataset-200k-candidates",
+      "dataset_slug": "resume-screening-dataset-200k-candidates",
+      "source_url": "https://www.kaggle.com/datasets/rhythmghai/resume-screening-dataset-200k-candidates",
+      "download_date": "2026-10-15T16:40:48Z",
+      "license_text": "Apache 2.0",
+      "commercial_use_status": "Permitted (Permissive open source)",
+      "files": []
+    },
+    {
+      "dataset_id": "snehaanbhawal/resume-dataset",
+      "dataset_slug": "resume-dataset",
+      "source_url": "https://www.kaggle.com/datasets/snehaanbhawal/resume-dataset",
+      "download_date": "2026-10-15T16:40:48Z",
+      "license_text": "CC0: Public Domain",
+      "commercial_use_status": "Permitted (Public domain worldwide)",
+      "files": []
+    },
+    {
+      "dataset_id": "surendra365/recruitement-dataset",
+      "dataset_slug": "recruitement-dataset",
+      "source_url": "https://www.kaggle.com/datasets/surendra365/recruitement-dataset",
+      "download_date": "2026-10-15T16:40:48Z",
+      "license_text": "ODbL / DbCL 1.0 (Open Database License)",
+      "commercial_use_status": "Restricted (Database ShareAlike/Attribution requirements)",
+      "files": []
+    },
+    {
+      "dataset_id": "pranavvenugo/resume-and-job-description",
+      "dataset_slug": "resume-and-job-description",
+      "source_url": "https://www.kaggle.com/datasets/pranavvenugo/resume-and-job-description",
+      "download_date": "2026-10-15T16:40:48Z",
+      "license_text": "Unknown / Unspecified",
+      "commercial_use_status": "Prohibited / Needs Explicit Creator Consent (Cannot ship commercially)",
+      "files": []
+    }
+  ]
+}
