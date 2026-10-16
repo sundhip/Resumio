@@ -23,6 +23,7 @@ const testSuites = [
   { name: 'Phase 9 - Candidate Experience & Evidence Verification', file: 'server/test-phase9-candidate-verification.ts' },
   { name: 'Phase 10 - Research Experimentation & Performance Analysis', file: 'server/test-phase10.ts' },
   { name: 'Phase 10 - Platform, Integrations & Differentiating Features', file: 'server/test-phase10-platform.ts' },
+  { name: 'Phase 11 - Production Hardening, Security, Privacy & Operations', file: 'server/test-phase11-production-hardening.ts' },
   { name: 'Phase 11 - Full-System Integration & Smoke Validation', file: 'server/test-phase11-smoke.ts' },
 ];
 

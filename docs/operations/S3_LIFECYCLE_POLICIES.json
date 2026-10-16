@@ -1,0 +1,30 @@
+{
+  "Rules": [
+    {
+      "ID": "ResumioProductionResumeDataLifecycle",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": "resumes/"
+      },
+      "Transitions": [
+        {
+          "Days": 90,
+          "StorageClass": "INTELLIGENT_TIERING"
+        },
+        {
+          "Days": 180,
+          "StorageClass": "GLACIER_IR"
+        }
+      ],
+      "Expiration": {
+        "Days": 365
+      },
+      "NoncurrentVersionExpiration": {
+        "NoncurrentDays": 30
+      },
+      "AbortIncompleteMultipartUpload": {
+        "DaysAfterInitiation": 7
+      }
+    }
+  ]
+}

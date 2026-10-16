@@ -1,0 +1,153 @@
+# ==============================================================================
+# RESUMIO PRODUCTION DOCKER COMPOSE TOPOLOGY
+# Phase 11: Production Hardening, Security, Privacy and Operations
+# Orchestrates API, ML Service, PostgreSQL (pgvector), Redis, MinIO S3, and Telemetry
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # 1. Primary Express Backend & Static UI Gateway
+  resumio-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: resumio-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_ENGINE=postgres
+      - DATABASE_URL=postgresql://resumio_app:SecretPg2026!@resumio-postgres:5432/resumio_prod
+      - REDIS_URL=redis://resumio-redis:6379
+      - ML_SERVICE_URL=http://resumio-ml:8000
+      - S3_ENDPOINT=http://resumio-minio:9000
+      - S3_BUCKET_NAME=resumio-production-resumes
+      - JWT_SECRET=resumio_production_jwt_secret_high_entropy_2026
+    depends_on:
+      resumio-postgres:
+        condition: service_healthy
+      resumio-redis:
+        condition: service_healthy
+      resumio-ml:
+        condition: service_started
+    networks:
+      - resumio-backend
+
+  # 2. Python Machine Learning Service (SentenceTransformers / PyTorch)
+  resumio-ml:
+    build:
+      context: .
+      dockerfile: ml/Dockerfile
+    container_name: resumio-ml
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PORT=8000
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+    networks:
+      - resumio-backend
+
+  # 3. PostgreSQL 16 with pgvector Extension
+  resumio-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: resumio-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=resumio_app
+      - POSTGRES_PASSWORD=SecretPg2026!
+      - POSTGRES_DB=resumio_prod
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/migrations/postgres/0001_initial_pgvector.sql:/docker-entrypoint-initdb.d/0001_initial.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resumio_app -d resumio_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - resumio-backend
+
+  # 4. Redis 7 for Token Bucket Rate Limiting & Queue
+  resumio-redis:
+    image: redis:7-alpine
+    container_name: resumio-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass SecretRedis2026!
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "SecretRedis2026!", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - resumio-backend
+
+  # 5. MinIO S3-Compatible Object Storage
+  resumio-minio:
+    image: minio/minio:latest
+    container_name: resumio-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadminsecret2026
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - resumio-backend
+
+  # 6. Prometheus Metrics Scraper
+  resumio-prometheus:
+    image: prom/prometheus:latest
+    container_name: resumio-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docs/observability/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - resumio-backend
+
+  # 7. Grafana Telemetry Dashboard
+  resumio-grafana:
+    image: grafana/grafana:latest
+    container_name: resumio-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=adminsecret2026
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - resumio-prometheus
+    networks:
+      - resumio-backend
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  grafana_data:
+
+networks:
+  resumio-backend:
+    driver: bridge

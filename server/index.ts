@@ -23,6 +23,7 @@ import { recruiterWorkspaceRouter } from './routes/recruiterWorkspace';
 import { candidateExperienceRouter } from './routes/candidateExperience';
 import { publicApiRouter } from './routes/publicApi';
 import { platformRouter } from './routes/platformIntegrations';
+import { telemetryService } from './observability/telemetry';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -33,6 +34,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'];
 
 app.use(securityHeadersMiddleware);
+app.use(telemetryService.getTracingMiddleware());
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (e.g. mobile apps, curl, server-to-server) or development/allowed origins
@@ -86,6 +88,12 @@ app.use('/api/recruiter-workspace', recruiterWorkspaceRouter);
 app.use('/api/candidate-experience', candidateExperienceRouter);
 app.use('/api/v1/public', publicApiRouter);
 app.use('/api/platform', platformRouter);
+
+// 3.0 Prometheus Metrics Exposition Endpoint
+app.get('/api/metrics', (_req, res) => {
+  res.setHeader('Content-Type', 'text/plain; version=0.0.4');
+  res.send(telemetryService.getPrometheusMetrics());
+});
 
 // 3.1 Real-Time Server-Sent Events (SSE) Event Stream & Presence Collaboration
 app.get('/api/events/stream', async (req, res) => {
