@@ -117,16 +117,16 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
         size="lg"
         title={
           isLoading ? (
-            <div className="h-6 w-48 bg-slate-200 dark:bg-surface-dark-border rounded animate-pulse" />
+            <div className="h-6 w-48 bg-[#DCDCD7] dark:bg-surface-dark-border rounded animate-pulse" />
           ) : application ? (
             <div className="space-y-1">
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base sm:text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">
                   {application.jobTitle}
                 </h3>
                 <ApplicationStatusBadge status={application.status} size="sm" showDot />
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-normal">
                 {application.company} • Applied on {new Date(application.appliedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
               </p>
             </div>
@@ -158,32 +158,32 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
       >
         {isLoading ? (
           <div className="space-y-4 py-4 animate-pulse">
-            <div className="h-16 rounded-card bg-slate-100 dark:bg-surface-dark-bg" />
-            <div className="h-28 rounded-card bg-slate-100 dark:bg-surface-dark-bg" />
-            <div className="h-32 rounded-card bg-slate-100 dark:bg-surface-dark-bg" />
+            <div className="h-16 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-bg" />
+            <div className="h-28 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-bg" />
+            <div className="h-32 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-bg" />
           </div>
         ) : application ? (
           <div className="space-y-5 text-xs sm:text-sm">
             {/* Top Snapshot Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border text-xs">
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Location & Mode</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1 mt-0.5">
-                  <MapPin className="w-3 h-3 text-slate-400" />
+                <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-bold">Location & Mode</span>
+                <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1 mt-0.5">
+                  <MapPin className="w-3 h-3 text-[#8A928D] dark:text-[#657378]" />
                   {application.location || 'Remote'} ({application.workMode})
                 </span>
               </div>
 
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Employment</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1 mt-0.5">
-                  <Briefcase className="w-3 h-3 text-slate-400" />
+                <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-bold">Employment</span>
+                <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1 mt-0.5">
+                  <Briefcase className="w-3 h-3 text-[#8A928D] dark:text-[#657378]" />
                   {application.employmentType}
                 </span>
               </div>
 
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Compensation</span>
+                <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-bold">Compensation</span>
                 <span className="font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1 mt-0.5">
                   <DollarSign className="w-3 h-3" />
                   {formatSalary(application)}
@@ -191,8 +191,8 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
               </div>
 
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Status</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200 block mt-0.5">
+                <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-bold">Status</span>
+                <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] block mt-0.5">
                   {application.status}
                 </span>
               </div>
@@ -200,20 +200,20 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
 
             {/* Submitted Resume Card */}
             <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-brand-600" />
                 Submitted Resume Snapshot
               </h4>
-              <div className="p-3.5 rounded-card border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card flex items-center justify-between gap-3">
+              <div className="p-3.5 rounded-card border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-control bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-xs shrink-0 border border-rose-200 dark:border-rose-900/60">
                     PDF
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+                    <p className="font-semibold text-xs sm:text-sm text-[#111312] dark:text-[#F2F6F7] truncate">
                       {application.resumeFilename}
                     </p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-[#8A928D] dark:text-[#657378]">
                       {formatFileSize(application.resumeFileSize)} • Attached snapshot at time of application
                     </p>
                   </div>
@@ -234,7 +234,7 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
                       href={application.resumeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-control bg-slate-100 hover:bg-slate-200 dark:bg-surface-dark-input dark:hover:bg-surface-dark-hover text-slate-700 dark:text-slate-300 transition-colors shrink-0"
+                      className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-control bg-[#E9E9E5] hover:bg-[#DCDCD7] dark:bg-surface-dark-input dark:hover:bg-surface-dark-hover text-[#111312] dark:text-[#F2F6F7] transition-colors shrink-0"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       Preview Resume
@@ -247,11 +247,11 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
             {/* Cover Letter (if attached) */}
             {application.coverLetter && (
               <div className="space-y-1.5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-brand-600" />
                   Your Cover Letter / Note
                 </h4>
-                <div className="p-3.5 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border text-xs text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed">
+                <div className="p-3.5 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border text-xs text-[#111312] dark:text-[#F2F6F7] whitespace-pre-line leading-relaxed">
                   {application.coverLetter}
                 </div>
               </div>
@@ -270,12 +270,12 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
             )}
 
             {/* Application Status Timeline */}
-            <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-surface-dark-border">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+            <div className="space-y-3 pt-2 border-t border-[#EFEFEA] dark:border-surface-dark-border">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-brand-600" />
                 Application Progression Timeline
               </h4>
-              <div className="p-4 rounded-card bg-slate-50 dark:bg-surface-dark-bg/50 border border-slate-200/80 dark:border-surface-dark-border">
+              <div className="p-4 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/50 border border-[#E7E7E2]/80 dark:border-surface-dark-border">
                 <ApplicationTimeline timeline={timeline} />
               </div>
             </div>
@@ -313,7 +313,7 @@ export const CandidateApplicationDetailsModal: React.FC<CandidateApplicationDeta
             </>
           }
         >
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
             Withdrawing will mark your application as <strong>Withdrawn</strong> and notify the recruiter. You cannot undo this action.
           </p>
         </Modal>

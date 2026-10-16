@@ -19,7 +19,7 @@ interface ApplicationTimelineProps {
 export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeline, className = '' }) => {
   if (!timeline || timeline.length === 0) {
     return (
-      <div className="text-center py-6 text-xs text-slate-400">
+      <div className="text-center py-6 text-xs text-[#8A928D] dark:text-[#657378]">
         No status history available.
       </div>
     );
@@ -36,9 +36,9 @@ export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeli
       case 'Rejected':
         return <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />;
       case 'Withdrawn':
-        return <RotateCcw className="w-4 h-4 text-slate-500 dark:text-slate-400" />;
+        return <RotateCcw className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />;
       default:
-        return <Clock className="w-4 h-4 text-slate-500" />;
+        return <Clock className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />;
     }
   };
 
@@ -53,9 +53,9 @@ export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeli
       case 'Rejected':
         return 'bg-rose-100 dark:bg-rose-950/80 border-rose-300 dark:border-rose-800';
       case 'Withdrawn':
-        return 'bg-slate-100 dark:bg-surface-dark-input border-slate-300 dark:border-surface-dark-border';
+        return 'bg-[#E9E9E5] dark:bg-surface-dark-input border-[#DCDCD7] dark:border-surface-dark-border';
       default:
-        return 'bg-slate-100 dark:bg-surface-dark-input border-slate-200 dark:border-surface-dark-border';
+        return 'bg-[#E9E9E5] dark:bg-surface-dark-input border-[#E7E7E2] dark:border-surface-dark-border';
     }
   };
 
@@ -63,7 +63,7 @@ export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeli
     switch (role) {
       case 'candidate':
         return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-surface-dark-bg text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-surface-dark-border">
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-bg text-[#5E6460] dark:text-[#9AA7AB] border border-[#E7E7E2] dark:border-surface-dark-border">
             <User className="w-3 h-3" /> Candidate
           </span>
         );
@@ -86,7 +86,7 @@ export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeli
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <div className="relative pl-6 space-y-6 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-surface-dark-border">
+      <div className="relative pl-6 space-y-6 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#DCDCD7] dark:before:bg-surface-dark-border">
         {timeline.map((item, idx) => {
           const isLatest = idx === timeline.length - 1;
           const statusBg = getStatusBg(item.newStatus);
@@ -106,7 +106,7 @@ export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeli
               {/* Timeline Content */}
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                  <span className="text-xs sm:text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {item.newStatus}
                   </span>
                   {getActorBadge(item.changedByRole)}
@@ -117,7 +117,7 @@ export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeli
                   )}
                 </div>
 
-                <div className="text-[11px] text-slate-400 dark:text-slate-500">
+                <div className="text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">
                   {new Date(item.changedAt).toLocaleString(undefined, {
                     month: 'short',
                     day: 'numeric',
@@ -128,7 +128,7 @@ export const ApplicationTimeline: React.FC<ApplicationTimelineProps> = ({ timeli
                 </div>
 
                 {item.note && (
-                  <p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-surface-dark-bg/60 p-2.5 rounded-control border border-slate-200/80 dark:border-surface-dark-border mt-1 leading-relaxed">
+                  <p className="text-xs text-[#5E6460] dark:text-[#F2F6F7] bg-[#F4F4F1] dark:bg-surface-dark-bg/60 p-2.5 rounded-control border border-[#E7E7E2]/80 dark:border-surface-dark-border mt-1 leading-relaxed">
                     {item.note}
                   </p>
                 )}

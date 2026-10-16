@@ -347,20 +347,20 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 md:p-8 space-y-6">
+    <div className="min-h-screen bg-[#F4F4F1] dark:bg-[#050708] text-[#111312] dark:text-[#F2F6F7] p-4 md:p-8 space-y-6">
       {/* Top Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E7E7E2] dark:border-white/8 pb-5">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <Layers className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+            <h1 className="text-2xl font-bold tracking-tight text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
+              <Layers className="w-7 h-7 text-[#1F8FA6] dark:text-[#5FD3E8]" />
               Enterprise Recruiter Workspace
             </h1>
-            <Badge variant="outline" className="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800">
+            <Badge variant="outline" className="bg-[#1F8FA6]/10 dark:bg-indigo-950/40 text-[#1F8FA6] dark:text-[#5FD3E8] border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30">
               {currentOrg.name}
             </Badge>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             High-throughput bulk ingestion, 10k virtualized leaderboard, transparent search compiler, and EEOC 4/5ths analytics.
           </p>
         </div>
@@ -402,7 +402,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       </div>
 
       {/* Primary Workspace Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 overflow-x-auto pb-1">
+      <div className="flex items-center gap-2 border-b border-[#E7E7E2] dark:border-white/8 overflow-x-auto pb-1">
         {[
           { id: 'leaderboard', label: 'Ranked Leaderboard', icon: Users, count: applicants.length },
           { id: 'bulk_upload', label: 'Bulk Ingestion (ZIP/Batch)', icon: Upload },
@@ -421,14 +421,14 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-3.5 py-2.5 text-sm font-medium rounded-t-lg transition-colors border-b-2 whitespace-nowrap ${
                 isActive
-                  ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-white dark:bg-slate-900'
-                  : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-white dark:bg-[#0C1113]'
+                  : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3]'
               }`}
             >
               <Icon className="w-4 h-4" />
               {tab.label}
               {tab.count !== undefined && (
-                <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold">
+                <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-[#E9E9E5] dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] font-semibold">
                   {tab.count}
                 </span>
               )}
@@ -443,17 +443,17 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       {activeTab === 'leaderboard' && (
         <div className="space-y-4">
           {/* Controls Bar: Filters, Score Bands, Column Chooser, Bulk Actions */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white dark:bg-[#0C1113] p-4 rounded-xl border border-[#E7E7E2] dark:border-white/8 shadow-sm">
             <div className="flex items-center gap-3 flex-wrap">
               {/* Search input */}
               <div className="relative w-64">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#8A928D] dark:text-[#657378]" />
                 <input
                   type="text"
                   placeholder="Filter applicants or skills..."
                   value={searchFilter}
                   onChange={(e) => setSearchFilter(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full pl-9 pr-3 py-1.5 text-sm rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-[#F4F4F1] dark:bg-[#111719] focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40"
                 />
               </div>
 
@@ -471,8 +471,8 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                     onClick={() => setScoreBandFilter(band.id)}
                     className={`px-2.5 py-1 text-xs font-medium rounded-full transition-all border ${
                       scoreBandFilter === band.id
-                        ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-bold ring-1 ring-indigo-500'
-                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        ? 'border-[#1F8FA6] bg-[#1F8FA6]/10 dark:bg-indigo-950/60 text-[#1F8FA6] dark:text-[#5FD3E8] font-bold ring-1 ring-indigo-500'
+                        : 'border-[#E7E7E2] dark:border-white/6 text-[#5E6460] dark:text-[#9AA7AB] hover:bg-[#E9E9E5] dark:hover:bg-white/5'
                     }`}
                   >
                     {band.label}
@@ -484,8 +484,8 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
             <div className="flex items-center gap-2">
               {/* Bulk Actions Button */}
               {selectedApplicantIds.length > 0 && (
-                <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/40 px-3 py-1 rounded-lg border border-indigo-200 dark:border-indigo-800">
-                  <span className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+                <div className="flex items-center gap-2 bg-[#1F8FA6]/10 dark:bg-indigo-950/40 px-3 py-1 rounded-lg border border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30">
+                  <span className="text-xs font-semibold text-[#1F8FA6] dark:text-[#5FD3E8]">
                     {selectedApplicantIds.length} Selected
                   </span>
                   <Button
@@ -522,9 +522,9 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
           </div>
 
           {/* Virtualized Table Container */}
-          <Card className="overflow-hidden border border-slate-200 dark:border-slate-800">
+          <Card className="overflow-hidden border border-[#E7E7E2] dark:border-white/8">
             {/* Table Header */}
-            <div className="grid grid-cols-12 gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <div className="grid grid-cols-12 gap-3 px-4 py-3 bg-[#E9E9E5] dark:bg-[#111719]/80 border-b border-[#E7E7E2] dark:border-white/6 text-xs font-semibold text-[#5E6460] dark:text-[#F2F6F7]">
               <div className="col-span-1 flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -533,7 +533,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                     if (e.target.checked) setSelectedApplicantIds(applicants.map((a) => a.id));
                     else setSelectedApplicantIds([]);
                   }}
-                  className="rounded text-indigo-600 focus:ring-indigo-500"
+                  className="rounded text-[#1F8FA6] focus:ring-[#1F8FA6]/40"
                 />
                 <span>#</span>
               </div>
@@ -551,7 +551,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               className="overflow-y-auto max-h-[600px] relative divide-y divide-slate-100 dark:divide-slate-800"
             >
               {applicants.length === 0 ? (
-                <div className="text-center py-16 text-slate-500">
+                <div className="text-center py-16 text-[#5E6460] dark:text-[#9AA7AB]">
                   <Users className="w-12 h-12 mx-auto mb-3 opacity-40" />
                   <p className="font-medium">No applicants found matching filter criteria.</p>
                 </div>
@@ -567,8 +567,8 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                           key={applicant.id}
                           className={`grid grid-cols-12 gap-3 px-4 py-3.5 items-center transition-colors text-sm ${
                             isSelected
-                              ? 'bg-indigo-50/60 dark:bg-indigo-950/30'
-                              : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                              ? 'bg-[#1F8FA6]/10/60 dark:bg-indigo-950/30'
+                              : 'hover:bg-[#F4F4F1] dark:hover:bg-white/5'
                           }`}
                           style={{ height: '64px' }}
                         >
@@ -581,17 +581,17 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                                 if (e.target.checked) setSelectedApplicantIds([...selectedApplicantIds, applicant.id]);
                                 else setSelectedApplicantIds(selectedApplicantIds.filter((id) => id !== applicant.id));
                               }}
-                              className="rounded text-indigo-600 focus:ring-indigo-500"
+                              className="rounded text-[#1F8FA6] focus:ring-[#1F8FA6]/40"
                             />
-                            <span className="text-xs text-slate-400">{absoluteIndex + 1}</span>
+                            <span className="text-xs text-[#8A928D] dark:text-[#657378]">{absoluteIndex + 1}</span>
                           </div>
 
                           {/* Candidate Identity (Respects Blind Mode) */}
                           <div className="col-span-3 flex flex-col justify-center">
-                            <span className="font-semibold text-slate-900 dark:text-white truncate">
+                            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate">
                               {isBlindMode ? applicant.redactedName : applicant.fullName}
                             </span>
-                            <span className="text-xs text-slate-500 truncate">
+                            <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] truncate">
                               {applicant.experienceYears}y exp • {isBlindMode ? 'Location Redacted' : applicant.location}
                             </span>
                           </div>
@@ -616,12 +616,12 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                           {/* Skills Coverage */}
                           <div className="col-span-2 flex flex-wrap gap-1 overflow-hidden max-h-10">
                             {applicant.matchedSkills.slice(0, 3).map((skill, sIdx) => (
-                              <span key={sIdx} className="px-1.5 py-0.5 text-[11px] rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                              <span key={sIdx} className="px-1.5 py-0.5 text-[11px] rounded bg-[#E9E9E5] dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7]">
                                 {skill}
                               </span>
                             ))}
                             {applicant.matchedSkills.length > 3 && (
-                              <span className="text-[10px] text-slate-400 self-center">+{applicant.matchedSkills.length - 3}</span>
+                              <span className="text-[10px] text-[#8A928D] dark:text-[#657378] self-center">+{applicant.matchedSkills.length - 3}</span>
                             )}
                           </div>
 
@@ -630,7 +630,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                             <select
                               value={applicant.pipelineStage}
                               onChange={(e) => handleStageMove(applicant.id, e.target.value)}
-                              className="text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2 py-1 text-slate-700 dark:text-slate-300 focus:ring-1 focus:ring-indigo-500"
+                              className="text-xs rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-[#111719] px-2 py-1 text-[#111312] dark:text-[#F2F6F7] focus:ring-1 focus:ring-[#1F8FA6]/40"
                             >
                               <option value="Applied">Applied</option>
                               <option value="Screening">Screening</option>
@@ -645,21 +645,21 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                           <div className="col-span-2 flex items-center justify-end gap-1.5">
                             <button
                               onClick={() => handleGenerateInterviewKit(applicant.id)}
-                              className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800"
+                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#1F8FA6] hover:bg-[#1F8FA6]/10 dark:hover:bg-white/5"
                               title="Generate Tailored Interview Kit"
                             >
                               <Sparkles className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleGenerateOutreach(applicant.candidateId)}
-                              className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800"
+                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#1F8FA6] hover:bg-[#1F8FA6]/10 dark:hover:bg-white/5"
                               title="Draft Grounded Outreach"
                             >
                               <Mail className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleGenerateFeedback(applicant.id)}
-                              className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-800"
+                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-white/5"
                               title="Draft Constructive Feedback"
                             >
                               <HelpCircle className="w-4 h-4" />
@@ -674,9 +674,9 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
             </div>
 
             {/* Footer Summary */}
-            <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 flex justify-between items-center">
+            <div className="px-4 py-3 bg-[#F4F4F1] dark:bg-[#0C1113] border-t border-[#E7E7E2] dark:border-white/8 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex justify-between items-center">
               <span>Showing {virtualWindow.visibleItems.length} of {applicants.length} virtualized rows</span>
-              <span className="text-[11px] text-slate-400">Press '?' for keyboard shortcuts | 'b' for blind screening</span>
+              <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">Press '?' for keyboard shortcuts | 'b' for blind screening</span>
             </div>
           </Card>
         </div>
@@ -687,7 +687,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       {/* ========================================================= */}
       {activeTab === 'bulk_upload' && (
         <div className="space-y-6 max-w-4xl mx-auto">
-          <Card className="p-8 border-dashed border-2 border-indigo-200 dark:border-indigo-900 bg-white dark:bg-slate-900 rounded-2xl text-center">
+          <Card className="p-8 border-dashed border-2 border-[#1F8FA6]/30 dark:border-indigo-900 bg-white dark:bg-[#0C1113] rounded-2xl text-center">
             <input
               type="file"
               ref={fileInputRef}
@@ -705,10 +705,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="w-14 h-14 mx-auto mb-4 text-indigo-500 animate-bounce" />
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+              <h3 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] mb-1">
                 Drop Hundreds of Resumes or a ZIP Archive
               </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 max-w-md mx-auto">
+              <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mb-4 max-w-md mx-auto">
                 Automatic ZIP decompression, background processing queue, SHA-256 deduplication, and quota validation.
               </p>
               <Button variant="primary" size="md">
@@ -717,8 +717,8 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
             </div>
 
             {bulkFiles.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
-                <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-3">
+              <div className="mt-6 pt-6 border-t border-[#EFEFEA] dark:border-white/8">
+                <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7] mb-3">
                   Selected {bulkFiles.length} file(s) for bulk processing
                 </p>
                 <Button
@@ -736,8 +736,8 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
 
           {/* Batch Progress Report */}
           {uploadProgress && (
-            <Card className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-              <h4 className="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-between">
+            <Card className="p-6 bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8">
+              <h4 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-4 flex items-center justify-between">
                 <span>Ingestion Batch Status: {uploadProgress.batchId}</span>
                 <Badge variant="outline" className="text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300">
                   Completed
@@ -745,9 +745,9 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               </h4>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-center">
-                  <div className="text-2xl font-bold text-slate-900 dark:text-white">{uploadProgress.totalFiles}</div>
-                  <div className="text-xs text-slate-500">Total Files</div>
+                <div className="p-3 rounded-xl bg-[#F4F4F1] dark:bg-[#111719] text-center">
+                  <div className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7]">{uploadProgress.totalFiles}</div>
+                  <div className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Total Files</div>
                 </div>
                 <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-center">
                   <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{uploadProgress.successfulFiles}</div>
@@ -767,7 +767,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               <div className="max-h-60 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800 text-xs">
                 {uploadProgress.results.map((item: any, idx: number) => (
                   <div key={idx} className="py-2 flex items-center justify-between">
-                    <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-xs">{item.filename}</span>
+                    <span className="font-medium text-[#111312] dark:text-[#F2F6F7] truncate max-w-xs">{item.filename}</span>
                     <Badge
                       variant="outline"
                       className={
@@ -793,12 +793,12 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       {/* ========================================================= */}
       {activeTab === 'search_compiler' && (
         <div className="space-y-6 max-w-4xl mx-auto">
-          <Card className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-              <Search className="w-5 h-5 text-indigo-600" />
+          <Card className="p-6 bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8">
+            <h3 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] mb-2 flex items-center gap-2">
+              <Search className="w-5 h-5 text-[#1F8FA6]" />
               Anti-Bias Natural-Language Search Compiler
             </h3>
-            <p className="text-sm text-slate-500 mb-4">
+            <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mb-4">
               Type natural-language criteria. Resumio compiles your intent into a <strong>visible, transparent structured query</strong> before execution.
             </p>
 
@@ -808,7 +808,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                 value={nlQueryInput}
                 onChange={(e) => setNlQueryInput(e.target.value)}
                 placeholder="e.g. senior backend engineers with Kubernetes in Chennai or remote"
-                className="flex-1 px-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="flex-1 px-4 py-2 text-sm rounded-xl border border-[#E7E7E2] dark:border-white/6 bg-[#F4F4F1] dark:bg-[#111719] focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40"
               />
               <Button variant="primary" onClick={handleCompileQuery}>
                 Compile Query
@@ -828,24 +828,24 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
 
             {/* Compiled Query AST Transparency */}
             {compiledQuery && (
-              <div className="p-5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-4">
+              <div className="p-5 rounded-xl bg-[#F4F4F1] dark:bg-[#111719] border border-[#E7E7E2] dark:border-white/6 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Transparent Interpretation</span>
+                  <span className="text-xs font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">Transparent Interpretation</span>
                   <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-300">
                     Audit Verified
                   </Badge>
                 </div>
-                <div className="text-sm text-slate-900 dark:text-white font-medium">
+                <div className="text-sm text-[#111312] dark:text-[#F2F6F7] font-medium">
                   {compiledQuery.explanation}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <span className="font-bold text-slate-500 block mb-1">Extracted Skills</span>
+                  <div className="p-3 bg-white dark:bg-[#0C1113] rounded-lg border border-[#E7E7E2] dark:border-white/6">
+                    <span className="font-bold text-[#5E6460] dark:text-[#9AA7AB] block mb-1">Extracted Skills</span>
                     <span>{compiledQuery.facets.skills?.join(', ') || 'None'}</span>
                   </div>
-                  <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <span className="font-bold text-slate-500 block mb-1">Locations & Work Modes</span>
+                  <div className="p-3 bg-white dark:bg-[#0C1113] rounded-lg border border-[#E7E7E2] dark:border-white/6">
+                    <span className="font-bold text-[#5E6460] dark:text-[#9AA7AB] block mb-1">Locations & Work Modes</span>
                     <span>
                       {[...(compiledQuery.facets.locations || []), ...(compiledQuery.facets.workModes || [])].join(', ') || 'Any'}
                     </span>
@@ -876,10 +876,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       {activeTab === 'comparison' && (
         <div className="space-y-6">
           {!comparisonMatrix ? (
-            <Card className="p-12 text-center text-slate-500">
+            <Card className="p-12 text-center text-[#5E6460] dark:text-[#9AA7AB]">
               <Columns className="w-12 h-12 mx-auto mb-3 opacity-40" />
-              <p className="font-medium text-slate-700 dark:text-slate-300">No Candidates Currently Selected for Comparison</p>
-              <p className="text-xs text-slate-400 mt-1 mb-4">Select 2 to 5 candidates from the Ranked Leaderboard and click "Compare".</p>
+              <p className="font-medium text-[#111312] dark:text-[#F2F6F7]">No Candidates Currently Selected for Comparison</p>
+              <p className="text-xs text-[#8A928D] dark:text-[#657378] mt-1 mb-4">Select 2 to 5 candidates from the Ranked Leaderboard and click "Compare".</p>
               <Button variant="primary" size="sm" onClick={() => setActiveTab('leaderboard')}>
                 Go to Leaderboard
               </Button>
@@ -888,10 +888,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">
                     Side-by-Side Comparison: {comparisonMatrix.candidates.length} Candidates
                   </h3>
-                  <span className="text-xs text-slate-500">Target Role: {comparisonMatrix.jobTitle}</span>
+                  <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Target Role: {comparisonMatrix.jobTitle}</span>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -915,13 +915,13 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               </div>
 
               {/* Comparison Table */}
-              <Card className="overflow-x-auto p-4 border border-slate-200 dark:border-slate-800">
+              <Card className="overflow-x-auto p-4 border border-[#E7E7E2] dark:border-white/8">
                 <table className="w-full text-left text-sm border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-700">
-                      <th className="p-3 font-bold text-slate-600 dark:text-slate-400 w-1/4">Evaluation Dimension</th>
+                    <tr className="border-b border-[#E7E7E2] dark:border-white/6">
+                      <th className="p-3 font-bold text-[#5E6460] dark:text-[#9AA7AB] w-1/4">Evaluation Dimension</th>
                       {comparisonMatrix.candidates.map((cand) => (
-                        <th key={cand.id} className="p-3 font-bold text-slate-900 dark:text-white">
+                        <th key={cand.id} className="p-3 font-bold text-[#111312] dark:text-[#F2F6F7]">
                           <div>{cand.fullName}</div>
                           {cand.id === comparisonMatrix.bestOverallCandidateId && (
                             <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-300 mt-1">
@@ -934,7 +934,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
                     <tr>
-                      <td className="p-3 font-semibold text-slate-700 dark:text-slate-300">Composite Fit Score</td>
+                      <td className="p-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Composite Fit Score</td>
                       {comparisonMatrix.candidates.map((c) => (
                         <td key={c.id} className="p-3">
                           <MatchScore score={c.matchScore} size="sm" />
@@ -942,25 +942,25 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-3 font-semibold text-slate-700 dark:text-slate-300">Skills Contribution</td>
+                      <td className="p-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Skills Contribution</td>
                       {comparisonMatrix.candidates.map((c) => (
                         <td key={c.id} className="p-3 font-medium">{c.components.skills} pts</td>
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-3 font-semibold text-slate-700 dark:text-slate-300">Experience Contribution</td>
+                      <td className="p-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Experience Contribution</td>
                       {comparisonMatrix.candidates.map((c) => (
                         <td key={c.id} className="p-3 font-medium">{c.components.experience} pts</td>
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-3 font-semibold text-slate-700 dark:text-slate-300">Total Experience</td>
+                      <td className="p-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Total Experience</td>
                       {comparisonMatrix.candidates.map((c) => (
                         <td key={c.id} className="p-3">{c.experienceYears} Years</td>
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-3 font-semibold text-slate-700 dark:text-slate-300">Matched Skills</td>
+                      <td className="p-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Matched Skills</td>
                       {comparisonMatrix.candidates.map((c) => (
                         <td key={c.id} className="p-3">
                           <div className="flex flex-wrap gap-1">
@@ -990,31 +990,31 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
             {['Applied', 'Screening', 'Shortlisted', 'Rejected'].map((colStage) => {
               const inStage = applicants.filter((a) => a.pipelineStage === colStage);
               return (
-                <div key={colStage} className="bg-slate-100 dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 flex flex-col min-w-[260px]">
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800">
-                    <span className="font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-300">{colStage}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 font-semibold">{inStage.length}</span>
+                <div key={colStage} className="bg-[#E9E9E5] dark:bg-[#0C1113] rounded-xl p-3 border border-[#E7E7E2] dark:border-white/8 flex flex-col min-w-[260px]">
+                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E7E7E2] dark:border-white/8">
+                    <span className="font-bold text-xs uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">{colStage}</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-[#DCDCD7] dark:bg-[#111719] font-semibold">{inStage.length}</span>
                   </div>
 
                   <div className="space-y-2 flex-1 overflow-y-auto max-h-[500px]">
                     {inStage.map((app) => (
-                      <Card key={app.id} className="p-3 bg-white dark:bg-slate-800 shadow-sm hover:shadow transition-all border border-slate-200 dark:border-slate-700">
+                      <Card key={app.id} className="p-3 bg-white dark:bg-[#111719] shadow-sm hover:shadow transition-all border border-[#E7E7E2] dark:border-white/6">
                         <div className="flex justify-between items-start mb-1">
-                          <span className="font-semibold text-xs text-slate-900 dark:text-white truncate">
+                          <span className="font-semibold text-xs text-[#111312] dark:text-[#F2F6F7] truncate">
                             {isBlindMode ? app.redactedName : app.fullName}
                           </span>
-                          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{app.matchScore}%</span>
+                          <span className="text-xs font-bold text-[#1F8FA6] dark:text-[#5FD3E8]">{app.matchScore}%</span>
                         </div>
-                        <div className="text-[11px] text-slate-500 mb-2 truncate">{app.headline}</div>
+                        <div className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mb-2 truncate">{app.headline}</div>
 
-                        <div className="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-700 text-[10px]">
+                        <div className="flex justify-between items-center pt-2 border-t border-[#EFEFEA] dark:border-white/6 text-[10px]">
                           <button
                             onClick={() => handleStageMove(app.id, colStage === 'Applied' ? 'Screening' : 'Shortlisted')}
-                            className="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-0.5"
+                            className="text-[#1F8FA6] dark:text-[#5FD3E8] hover:underline flex items-center gap-0.5"
                           >
                             Advance <ArrowRight className="w-3 h-3" />
                           </button>
-                          <span className="text-slate-400">{app.appliedAt.slice(0, 10)}</span>
+                          <span className="text-[#8A928D] dark:text-[#657378]">{app.appliedAt.slice(0, 10)}</span>
                         </div>
                       </Card>
                     ))}
@@ -1032,10 +1032,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       {activeTab === 'interview_kit' && (
         <div className="space-y-6 max-w-4xl mx-auto">
           {!interviewKit ? (
-            <Card className="p-12 text-center text-slate-500">
+            <Card className="p-12 text-center text-[#5E6460] dark:text-[#9AA7AB]">
               <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-40 text-indigo-500" />
-              <p className="font-medium text-slate-700 dark:text-slate-300">Generate Tailored Interview Questions & Scoring Rubrics</p>
-              <p className="text-xs text-slate-400 mt-1 mb-4">Combines verified candidate skills and missing gaps into structured rubrics.</p>
+              <p className="font-medium text-[#111312] dark:text-[#F2F6F7]">Generate Tailored Interview Questions & Scoring Rubrics</p>
+              <p className="text-xs text-[#8A928D] dark:text-[#657378] mt-1 mb-4">Combines verified candidate skills and missing gaps into structured rubrics.</p>
               <Button variant="primary" onClick={() => handleGenerateInterviewKit()} disabled={isGeneratingKit}>
                 {isGeneratingKit ? 'Generating Kit...' : 'Generate Sample Interview Kit'}
               </Button>
@@ -1044,10 +1044,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">
                     Tailored Interview Kit: {interviewKit.jobTitle}
                   </h3>
-                  <span className="text-xs text-slate-500">Total Time Budget: {interviewKit.totalTimeMinutes} Minutes</span>
+                  <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Total Time Budget: {interviewKit.totalTimeMinutes} Minutes</span>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => handleGenerateInterviewKit()}>
                   Regenerate
@@ -1057,9 +1057,9 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               {/* Question Rubrics */}
               <div className="space-y-4">
                 {interviewKit.questions.map((q: any) => (
-                  <Card key={q.id} className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                  <Card key={q.id} className="p-5 bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 space-y-3">
                     <div className="flex items-center justify-between">
-                      <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
+                      <Badge variant="outline" className="text-xs bg-[#1F8FA6]/10 text-[#1F8FA6] border-[#1F8FA6]/30">
                         {q.category} ({q.timeBudgetMinutes}m)
                       </Badge>
                       {q.isGapInvestigation && (
@@ -1068,7 +1068,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                         </Badge>
                       )}
                     </div>
-                    <div className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <div className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                       {q.question}
                     </div>
 
@@ -1076,15 +1076,15 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs pt-2">
                       <div className="p-2.5 rounded-lg bg-rose-50/50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40">
                         <span className="font-bold text-rose-700 dark:text-rose-300 block mb-1">1-2: Poor Response</span>
-                        <p className="text-slate-600 dark:text-slate-400">{q.scoringRubric.poor}</p>
+                        <p className="text-[#5E6460] dark:text-[#9AA7AB]">{q.scoringRubric.poor}</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40">
                         <span className="font-bold text-blue-700 dark:text-blue-300 block mb-1">3-4: Good Response</span>
-                        <p className="text-slate-600 dark:text-slate-400">{q.scoringRubric.good}</p>
+                        <p className="text-[#5E6460] dark:text-[#9AA7AB]">{q.scoringRubric.good}</p>
                       </div>
                       <div className="p-2.5 rounded-lg bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40">
                         <span className="font-bold text-emerald-700 dark:text-emerald-300 block mb-1">5: Exemplary Response</span>
-                        <p className="text-slate-600 dark:text-slate-400">{q.scoringRubric.exemplary}</p>
+                        <p className="text-[#5E6460] dark:text-[#9AA7AB]">{q.scoringRubric.exemplary}</p>
                       </div>
                     </div>
                   </Card>
@@ -1101,10 +1101,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       {activeTab === 'outreach' && (
         <div className="space-y-6 max-w-4xl mx-auto">
           {outreachDraft && (
-            <Card className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
+            <Card className="p-6 bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 space-y-4">
               <div className="flex items-center justify-between border-b pb-3">
-                <h4 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-indigo-600" />
+                <h4 className="font-bold text-base text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-[#1F8FA6]" />
                   Grounded Candidate Outreach Draft
                 </h4>
                 <Badge
@@ -1118,7 +1118,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               <div className="space-y-2 text-sm">
                 <div><strong>To:</strong> {outreachDraft.candidateName}</div>
                 <div><strong>Subject:</strong> {outreachDraft.subject}</div>
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 whitespace-pre-line text-xs font-mono">
+                <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719] border border-[#E7E7E2] dark:border-white/6 whitespace-pre-line text-xs font-mono">
                   {outreachDraft.body}
                 </div>
               </div>
@@ -1139,10 +1139,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
           )}
 
           {rejectionFeedback && (
-            <Card className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
+            <Card className="p-6 bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 space-y-4">
               <div className="flex items-center justify-between border-b pb-3">
-                <h4 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
-                  <HelpCircle className="w-5 h-5 text-indigo-600" />
+                <h4 className="font-bold text-base text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
+                  <HelpCircle className="w-5 h-5 text-[#1F8FA6]" />
                   Opt-In Constructive Rejection Feedback
                 </h4>
                 <Badge
@@ -1153,7 +1153,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                 </Badge>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs whitespace-pre-line">
+              <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719] border border-[#E7E7E2] dark:border-white/6 text-xs whitespace-pre-line">
                 {rejectionFeedback.constructiveAdvice}
               </div>
 
@@ -1173,10 +1173,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
           )}
 
           {!outreachDraft && !rejectionFeedback && (
-            <Card className="p-12 text-center text-slate-500">
+            <Card className="p-12 text-center text-[#5E6460] dark:text-[#9AA7AB]">
               <Mail className="w-12 h-12 mx-auto mb-3 opacity-40 text-indigo-500" />
-              <p className="font-medium text-slate-700 dark:text-slate-300">No Outreach Draft Currently Active</p>
-              <p className="text-xs text-slate-400 mt-1 mb-4">Click the mail icon next to any applicant in the leaderboard to draft personalized outreach.</p>
+              <p className="font-medium text-[#111312] dark:text-[#F2F6F7]">No Outreach Draft Currently Active</p>
+              <p className="text-xs text-[#8A928D] dark:text-[#657378] mt-1 mb-4">Click the mail icon next to any applicant in the leaderboard to draft personalized outreach.</p>
               <Button variant="primary" size="sm" onClick={() => setActiveTab('leaderboard')}>
                 View Leaderboard
               </Button>
@@ -1193,20 +1193,20 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
           {/* Funnel & Conversion */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {analyticsData.funnel.map((f: any, idx: number) => (
-              <Card key={idx} className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center">
-                <span className="text-xs font-bold text-slate-500 uppercase">{f.stage}</span>
-                <div className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 my-1">{f.count}</div>
-                <span className="text-xs text-slate-500">Conversion: {f.conversionRate}%</span>
+              <Card key={idx} className="p-5 bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 text-center">
+                <span className="text-xs font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase">{f.stage}</span>
+                <div className="text-3xl font-extrabold text-[#1F8FA6] dark:text-[#5FD3E8] my-1">{f.count}</div>
+                <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Conversion: {f.conversionRate}%</span>
               </Card>
             ))}
           </div>
 
           {/* Adverse Impact Monitor Card */}
-          <Card className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
+          <Card className="p-6 bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 space-y-4">
             <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-6 h-6 text-emerald-600" />
-                <h4 className="font-bold text-base text-slate-900 dark:text-white">
+                <h4 className="font-bold text-base text-[#111312] dark:text-[#F2F6F7]">
                   EEOC 4/5ths (80%) Adverse Impact Monitor
                 </h4>
               </div>
@@ -1215,7 +1215,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
               </Badge>
             </div>
 
-            <p className="text-xs text-slate-600 dark:text-slate-400">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
               {analyticsData.adverseImpact.fourFifthsRuleSummary}
             </p>
 
@@ -1235,12 +1235,12 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
         title="Recruiter Workspace Keyboard Shortcuts"
       >
         <div className="space-y-3 text-xs">
-          <p className="text-slate-500">Use these hotkeys to navigate the 10,000-applicant leaderboard smoothly without a mouse.</p>
+          <p className="text-[#5E6460] dark:text-[#9AA7AB]">Use these hotkeys to navigate the 10,000-applicant leaderboard smoothly without a mouse.</p>
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {RECRUITER_KEYBOARD_SHORTCUTS.map((sc, idx) => (
               <div key={idx} className="py-2 flex justify-between items-center">
-                <span className="font-semibold text-slate-700 dark:text-slate-300">{sc.description}</span>
-                <kbd className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-[11px]">
+                <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">{sc.description}</span>
+                <kbd className="px-2 py-1 rounded bg-[#E9E9E5] dark:bg-[#111719] border border-[#E7E7E2] dark:border-white/6 font-mono text-[11px]">
                   {sc.key}
                 </kbd>
               </div>
@@ -1256,7 +1256,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
         title="Customize Leaderboard Columns"
       >
         <div className="space-y-3 text-sm">
-          <p className="text-xs text-slate-500">Toggle column visibility to personalize your applicant review screen.</p>
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Toggle column visibility to personalize your applicant review screen.</p>
           <div className="space-y-2">
             {columns.map((col) => (
               <label key={col.id} className="flex items-center gap-3 cursor-pointer py-1">
@@ -1268,9 +1268,9 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                       columns.map((c) => (c.id === col.id ? { ...c, visible: e.target.checked } : c))
                     );
                   }}
-                  className="rounded text-indigo-600 focus:ring-indigo-500"
+                  className="rounded text-[#1F8FA6] focus:ring-[#1F8FA6]/40"
                 />
-                <span className="text-xs font-medium text-slate-800 dark:text-slate-200">{col.label}</span>
+                <span className="text-xs font-medium text-[#111312] dark:text-[#F2F6F7]">{col.label}</span>
               </label>
             ))}
           </div>

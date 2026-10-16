@@ -72,15 +72,15 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
 
       {/* List / Empty State */}
       {educationList.length === 0 ? (
-        <div className="p-8 text-center rounded-control bg-slate-50/60 dark:bg-surface-dark-bg/40 border border-dashed border-slate-200 dark:border-surface-dark-border space-y-3">
-          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-surface-dark-card text-slate-400 flex items-center justify-center mx-auto">
+        <div className="p-8 text-center rounded-control bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 border border-dashed border-[#E7E7E2] dark:border-surface-dark-border space-y-3">
+          <div className="w-10 h-10 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-card text-[#8A928D] dark:text-[#657378] flex items-center justify-center mx-auto">
             <GraduationCap className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
               No education added yet.
             </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            <p className="text-xs text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
               Add your university degrees, colleges, or diplomas to showcase your qualifications.
             </p>
           </div>
@@ -99,21 +99,21 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
             >
               <div className="space-y-1 min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {item.degree} — {item.field_of_study}
                   </h4>
                   {item.grade_or_gpa && (
-                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-surface-dark-bg text-slate-700 dark:text-slate-300">
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#E9E9E5] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]">
                       {item.grade_or_gpa}
                     </span>
                   )}
                 </div>
 
-                <p className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                <p className="text-xs font-medium text-[#111312] dark:text-[#F2F6F7]">
                   {item.institution}
                 </p>
 
-                <div className="flex items-center gap-3 text-[11px] text-slate-400 dark:text-slate-500 flex-wrap">
+                <div className="flex items-center gap-3 text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] flex-wrap">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     {item.start_date} — {item.currently_studying ? 'Present' : item.end_date || 'N/A'}
@@ -130,7 +130,7 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
                 </div>
 
                 {item.description && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed whitespace-pre-line">
+                  <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1.5 leading-relaxed whitespace-pre-line">
                     {item.description}
                   </p>
                 )}
@@ -142,7 +142,7 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
                   type="button"
                   onClick={() => handleOpenEdit(item)}
                   title="Edit education"
-                  className="p-1.5 rounded-control text-slate-400 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+                  className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-brand-600 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                 </button>
@@ -150,7 +150,7 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
                   type="button"
                   onClick={() => setDeletingId(item.id)}
                   title="Delete education"
-                  className="p-1.5 rounded-control text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+                  className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-rose-600 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -197,7 +197,7 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
           </>
         }
       >
-        <p className="text-xs text-slate-600 dark:text-slate-400">
+        <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
           This record will be permanently removed from your candidate profile and database.
         </p>
       </Modal>

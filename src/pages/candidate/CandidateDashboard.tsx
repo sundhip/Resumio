@@ -171,10 +171,10 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({ onNaviga
   }
 
   return (
-    <div className="space-y-6 w-full pb-8">
+    <div className="space-y-6 w-full pb-8 animate-page-enter">
       {/* 1. Onboarding Checklist for New Accounts (Feature 4: disappears when 3/3 complete) */}
       {!isAllComplete && !isChecklistDismissed && (
-        <Card variant="feature" padding="md" className="relative overflow-hidden">
+        <Card variant="feature" padding="md" className="relative overflow-hidden animate-stagger-1">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
@@ -266,7 +266,7 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({ onNaviga
       )}
 
       {/* 2. Key Bento Stat Tiles with colored vertical accent bar & sparklines */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-stagger-2">
         <StatTile
           label="Active Applications"
           value={totalApps}
@@ -298,7 +298,7 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({ onNaviga
       </div>
 
       {/* 3. Main Bento Row: Profile Strength Hero (Col-8) & Best Match Spotlight (Col-4) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-stagger-3">
         {/* Profile Strength Hero Card */}
         <Card variant="raised" padding="md" className="lg:col-span-8 flex flex-col justify-between">
           <div>
@@ -487,7 +487,7 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({ onNaviga
       </div>
 
       {/* 4. Second Bento Row: Skill Goals & Upskilling (Col-6) + Interview Calendar (Col-6) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-stagger-4">
         {/* Skill Goals & Upskilling Roadmap */}
         <Card variant="default" padding="md" className="lg:col-span-6 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-border-default/70">
@@ -637,7 +637,7 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({ onNaviga
       </div>
 
       {/* 5. Recommended Jobs Feed with "Why this job" & 1-Click Apply */}
-      <Card variant="raised" padding="md" className="space-y-4">
+      <Card variant="raised" padding="md" className="space-y-4 animate-stagger-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border-default/70">
           <div>
             <div className="flex items-center gap-2">

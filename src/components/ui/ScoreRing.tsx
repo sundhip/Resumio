@@ -42,7 +42,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           r={radius}
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-slate-200 dark:text-slate-800/80"
+          className="text-[#DCDCD7] dark:text-[#C5D0D3] dark:text-[#111312] dark:text-[#F2F6F7]/80"
           fill="none"
         />
         {/* Animated score arc */}
@@ -60,11 +60,11 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-numeral text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+        <span className="font-numeral text-2xl font-black text-[#111312] dark:text-[#F2F6F7] tracking-tight">
           {clamped}%
         </span>
         {label && (
-          <span className="text-[10px] font-medium uppercase tracking-wider text-slate-400 dark:text-slate-400">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-[#8A928D] dark:text-[#657378] dark:text-[#8A928D] dark:text-[#657378]">
             {label}
           </span>
         )}

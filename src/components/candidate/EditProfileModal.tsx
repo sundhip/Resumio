@@ -161,18 +161,18 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 className="w-14 h-14 rounded-full object-cover ring-2 ring-brand-500/30"
               />
             ) : (
-              <div className="w-14 h-14 rounded-full bg-[#1e273e] text-slate-200 font-bold text-base flex items-center justify-center border border-slate-700">
+              <div className="w-14 h-14 rounded-full bg-[#1e273e] text-[#DCDCD7] dark:text-[#C5D0D3] font-bold text-base flex items-center justify-center border border-slate-700">
                 {(fullName || 'Candidate').slice(0, 2).toUpperCase()}
               </div>
             )}
             <div>
               <p className="text-xs font-bold text-white">Profile Photo</p>
-              <p className="text-[11px] text-slate-400 mt-0.5">JPG, PNG or WEBP (Max 5MB)</p>
+              <p className="text-[11px] text-[#8A928D] dark:text-[#657378] mt-0.5">JPG, PNG or WEBP (Max 5MB)</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="cursor-pointer inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#1a2035] hover:bg-[#222943] border border-slate-700 text-slate-200 transition-colors shadow-xs">
+            <label className="cursor-pointer inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#1a2035] hover:bg-[#222943] border border-slate-700 text-[#DCDCD7] dark:text-[#C5D0D3] transition-colors shadow-xs">
               <Camera className="w-3.5 h-3.5 text-brand-400" />
               <span>{isUploadingPhoto ? 'Uploading...' : 'Upload Photo'}</span>
               <input
@@ -190,7 +190,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 onClick={handleRemovePhoto}
                 disabled={isUploadingPhoto}
                 title="Remove photo"
-                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
+                className="p-1.5 rounded-lg text-[#8A928D] dark:text-[#657378] hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -205,7 +205,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. Rahul Kumar"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            leftIcon={<User className="w-4 h-4 text-slate-400" />}
+            leftIcon={<User className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -214,7 +214,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. Senior Full Stack Developer"
             value={headline}
             onChange={(e) => setHeadline(e.target.value)}
-            leftIcon={<Briefcase className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Briefcase className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             helperText="Appears directly under your name"
           />
 
@@ -223,7 +223,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. +91 98765 43210"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            leftIcon={<Phone className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Phone className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -231,12 +231,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. Chennai, India"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            leftIcon={<MapPin className="w-4 h-4 text-slate-400" />}
+            leftIcon={<MapPin className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           {/* Full-width Professional Summary Textarea */}
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-semibold text-slate-300 block">
+            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
               Professional Summary
             </label>
             <textarea
@@ -246,7 +246,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               placeholder="Tell recruiters about your professional background, strengths and career goals."
               className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all resize-y min-h-[100px]"
             />
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#8A928D] dark:text-[#657378]">
               Write a comprehensive overview of your focus areas and technical domains.
             </p>
           </div>

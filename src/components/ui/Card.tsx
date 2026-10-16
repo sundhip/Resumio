@@ -19,13 +19,13 @@ export const Card: React.FC<CardProps> = ({
 
   const variantStyles = {
     default:
-      'bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border text-slate-900 dark:text-slate-100 shadow-card dark:shadow-card-dark',
+      'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border text-[#111312] dark:text-[#F2F6F7] shadow-card dark:shadow-card-dark',
     elevated:
-      'bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border/80 text-slate-900 dark:text-slate-100 shadow-dropdown dark:shadow-dropdown-dark',
+      'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border/80 text-[#111312] dark:text-[#F2F6F7] shadow-dropdown dark:shadow-dropdown-dark',
     glass:
-      'bg-white/80 dark:bg-surface-dark-card/80 backdrop-blur-md border-slate-200/80 dark:border-surface-dark-border/80 text-slate-900 dark:text-slate-100',
+      'bg-white/80 dark:bg-surface-dark-card/80 backdrop-blur-md border-[#E7E7E2]/80 dark:border-surface-dark-border/80 text-[#111312] dark:text-[#F2F6F7]',
     interactive:
-      'bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border hover:border-brand-300 dark:hover:border-brand-600/50 hover:shadow-card dark:hover:shadow-glow-purple cursor-pointer',
+      'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border hover:border-brand-300 dark:hover:border-brand-600/50 hover:shadow-card dark:hover:shadow-glow-purple cursor-pointer',
   };
 
   const paddingStyles = {
@@ -51,7 +51,7 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={twMerge(clsx('flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-surface-dark-border', className))} {...props}>
+    <div className={twMerge(clsx('flex items-center justify-between pb-4 mb-4 border-b border-[#EFEFEA] dark:border-surface-dark-border', className))} {...props}>
       {children}
     </div>
   );
@@ -63,7 +63,7 @@ export const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
   ...props
 }) => {
   return (
-    <h3 className={twMerge(clsx('text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 tracking-tight', className))} {...props}>
+    <h3 className={twMerge(clsx('text-base sm:text-lg font-semibold text-[#111312] dark:text-[#F2F6F7] tracking-tight', className))} {...props}>
       {children}
     </h3>
   );
@@ -75,7 +75,7 @@ export const CardDescription: React.FC<React.HTMLAttributes<HTMLParagraphElement
   ...props
 }) => {
   return (
-    <p className={twMerge(clsx('text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1', className))} {...props}>
+    <p className={twMerge(clsx('text-xs sm:text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1', className))} {...props}>
       {children}
     </p>
   );

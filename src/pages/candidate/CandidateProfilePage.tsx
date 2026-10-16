@@ -1247,7 +1247,7 @@ export const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ onNa
                   type="checkbox"
                   checked={consents.talentPoolInclusion}
                   onChange={(e) => handleSaveConsents({ ...consents, talentPoolInclusion: e.target.checked })}
-                  className="mt-1 rounded border-slate-300 text-[#1F8FA6] focus:ring-[#1F8FA6]"
+                  className="mt-1 rounded border-[#DCDCD7] text-[#1F8FA6] focus:ring-[#1F8FA6]"
                 />
                 <div>
                   <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block">
@@ -1264,7 +1264,7 @@ export const CandidateProfilePage: React.FC<CandidateProfilePageProps> = ({ onNa
                   type="checkbox"
                   checked={consents.trainingDataInclusion}
                   onChange={(e) => handleSaveConsents({ ...consents, trainingDataInclusion: e.target.checked })}
-                  className="mt-1 rounded border-slate-300 text-[#1F8FA6] focus:ring-[#1F8FA6]"
+                  className="mt-1 rounded border-[#DCDCD7] text-[#1F8FA6] focus:ring-[#1F8FA6]"
                 />
                 <div>
                   <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block">

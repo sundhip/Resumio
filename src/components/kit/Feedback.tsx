@@ -26,12 +26,14 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 
   return (
     <div
-      className={`animate-pulse bg-[#E7E7E2] dark:bg-white/10 ${variantStyles} ${className}`}
+      className={`relative overflow-hidden skeleton-shimmer bg-[#E7E7E2] dark:bg-white/8 ${variantStyles} ${className}`}
       style={{
         width: typeof width === 'number' ? `${width}px` : width,
         height: typeof height === 'number' ? `${height}px` : height,
       }}
-    />
+    >
+      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-black/5 dark:via-white/6 to-transparent pointer-events-none" />
+    </div>
   );
 };
 

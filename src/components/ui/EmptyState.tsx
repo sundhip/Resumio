@@ -24,7 +24,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div
       className={clsx(
-        'flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-card border border-dashed border-slate-200 dark:border-surface-dark-border bg-slate-50/40 dark:bg-surface-dark-bg/40 animate-fade-in',
+        'flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-card border border-dashed border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/40 dark:bg-surface-dark-bg/40 animate-fade-in',
         className
       )}
     >
@@ -33,10 +33,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {icon}
         </div>
       )}
-      <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-1.5">
+      <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7] mb-1.5">
         {title}
       </h3>
-      <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-6 leading-relaxed">
+      <p className="text-xs sm:text-sm text-[#5E6460] dark:text-[#9AA7AB] max-w-sm mb-6 leading-relaxed">
         {description}
       </p>
       {actionLabel && (

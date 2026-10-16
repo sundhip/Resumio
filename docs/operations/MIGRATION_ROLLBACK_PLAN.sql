@@ -1,6 +1,6 @@
 -- ============================================================
 -- RESUMIO POSTGRESQL MIGRATION ROLLBACK SCRIPT
--- Generated: 2026-10-16T17:07:39.656Z
+-- Generated: 2026-10-16T18:15:06.716Z
 -- Restores database to pre-migration clean state
 -- ============================================================
 BEGIN;

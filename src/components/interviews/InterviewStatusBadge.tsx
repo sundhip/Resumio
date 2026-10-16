@@ -20,7 +20,7 @@ export const InterviewStatusBadge: React.FC<InterviewStatusBadgeProps> = ({
         return {
           icon: <Calendar className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />,
           label: 'Scheduled',
-          styles: 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/60',
+          styles: 'bg-[#1F8FA6]/10 dark:bg-indigo-950/60 text-[#1F8FA6] dark:text-[#5FD3E8] border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30/60',
         };
       case 'Rescheduled':
         return {
@@ -38,7 +38,7 @@ export const InterviewStatusBadge: React.FC<InterviewStatusBadgeProps> = ({
         return {
           icon: <XCircle className={size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />,
           label: 'Cancelled',
-          styles: 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700',
+          styles: 'bg-[#E9E9E5] dark:bg-[#111719]/60 text-[#5E6460] dark:text-[#9AA7AB] border-[#E7E7E2] dark:border-white/6',
         };
       case 'No Show':
         return {
@@ -50,7 +50,7 @@ export const InterviewStatusBadge: React.FC<InterviewStatusBadgeProps> = ({
         return {
           icon: <Calendar className="w-3.5 h-3.5" />,
           label: status,
-          styles: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+          styles: 'bg-[#E9E9E5] dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] border-[#E7E7E2] dark:border-white/6',
         };
     }
   };

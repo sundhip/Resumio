@@ -64,7 +64,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           className={twMerge(
             clsx(
-              'pointer-events-auto relative w-full max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)] rounded-xl bg-white dark:bg-[#121624] border border-slate-200 dark:border-slate-800 shadow-2xl z-10 flex flex-col overflow-hidden animate-fade-in text-left my-auto shrink-0',
+              'pointer-events-auto relative w-full max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)] rounded-xl bg-white dark:bg-[#121624] border border-[#E7E7E2] dark:border-white/8 shadow-2xl z-10 flex flex-col overflow-hidden animate-fade-in text-left my-auto shrink-0',
               sizeStyles[size],
               className
             )
@@ -72,24 +72,24 @@ export const Modal: React.FC<ModalProps> = ({
         >
           {/* Header */}
           {(title || description) && (
-            <div className="flex items-start justify-between p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800/80 shrink-0 bg-white dark:bg-[#121624] sticky top-0 z-10">
+            <div className="flex items-start justify-between p-5 sm:p-6 border-b border-[#EFEFEA] dark:border-white/8/80 shrink-0 bg-white dark:bg-[#121624] sticky top-0 z-10">
               <div className="space-y-1 pr-6">
                 {typeof title === 'string' ? (
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  <h3 className="text-lg sm:text-xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
                     {title}
                   </h3>
                 ) : (
                   title
                 )}
                 {description && (
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
                     {description}
                   </p>
                 )}
               </div>
               <button
                 onClick={onClose}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors shrink-0"
+                className="text-[#8A928D] dark:text-[#657378] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3] p-1.5 rounded-lg hover:bg-[#E9E9E5] dark:hover:bg-white/5 transition-colors shrink-0"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -103,7 +103,7 @@ export const Modal: React.FC<ModalProps> = ({
 
           {/* Footer Actions */}
           {footer && (
-            <div className="flex items-center justify-end gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/70 dark:bg-[#0d101a]/80 shrink-0 sticky bottom-0 z-10">
+            <div className="flex items-center justify-end gap-3 p-4 sm:p-6 border-t border-[#EFEFEA] dark:border-white/8/80 bg-[#F4F4F1]/70 dark:bg-[#0d101a]/80 shrink-0 sticky bottom-0 z-10">
               {footer}
             </div>
           )}

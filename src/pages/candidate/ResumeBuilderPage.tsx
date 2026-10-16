@@ -384,7 +384,7 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
                     className={`flex items-center justify-between p-2.5 rounded-[10px] text-xs font-semibold transition-all cursor-pointer border ${
                       isActive
                         ? 'bg-[#1F8FA6]/10 text-[#1F8FA6] dark:text-[#5FD3E8] border-[#1F8FA6]/30 shadow-xs'
-                        : 'bg-[#FAF9F5] dark:bg-[#151D20] text-[#5E6460] dark:text-[#9AA7AB] border-[#E7E7E2] dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
+                        : 'bg-[#FAF9F5] dark:bg-[#151D20] text-[#5E6460] dark:text-[#9AA7AB] border-[#E7E7E2] dark:border-white/10 hover:border-[#DCDCD7] dark:hover:border-white/20'
                     }`}
                   >
                     <div className="flex items-center gap-2 min-w-0">
@@ -794,7 +794,7 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
                     className={`p-2.5 rounded-[10px] text-left border transition-all ${
                       selectedTemplate === tpl.id
                         ? 'bg-[#1F8FA6]/10 border-[#1F8FA6] ring-1 ring-[#1F8FA6]'
-                        : 'bg-[#FAF9F5] dark:bg-[#151D20] border-[#E7E7E2] dark:border-white/10 hover:border-slate-300'
+                        : 'bg-[#FAF9F5] dark:bg-[#151D20] border-[#E7E7E2] dark:border-white/10 hover:border-[#DCDCD7]'
                     }`}
                   >
                     <div className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">{tpl.label}</div>

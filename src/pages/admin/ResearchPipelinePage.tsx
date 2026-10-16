@@ -148,17 +148,17 @@ export const ResearchPipelinePage: React.FC = () => {
   return (
     <div className="w-full space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-surface-dark-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#E7E7E2] dark:border-surface-dark-border">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-1 text-xs font-bold rounded-md bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
               Faculty Research Module (Phase 5)
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+          <h1 className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
             LLM Data Augmentation Research Pipeline
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-3xl">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1 max-w-3xl">
             Controlled empirical pipeline studying whether synthetic text augmentation mitigates class imbalance in recruitment domain classification. Grounded in academic methodology with test split preservation.
           </p>
         </div>
@@ -166,7 +166,7 @@ export const ResearchPipelinePage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={handleExportCsv}
-            className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-surface-dark-card hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-surface-dark-border transition"
+            className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg bg-[#E9E9E5] dark:bg-surface-dark-card hover:bg-[#DCDCD7] dark:hover:bg-white/5 text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border transition"
           >
             <Download className="w-4 h-4" />
             Export CSV
@@ -190,7 +190,7 @@ export const ResearchPipelinePage: React.FC = () => {
       )}
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-surface-dark-border gap-6">
+      <div className="flex border-b border-[#E7E7E2] dark:border-surface-dark-border gap-6">
         {[
           { id: 'dataset', label: 'Dataset & Imbalance Analysis', icon: <Database className="w-4 h-4" /> },
           { id: 'augment', label: 'Synthetic Augmentation Runs', icon: <Sparkles className="w-4 h-4" /> },
@@ -203,7 +203,7 @@ export const ResearchPipelinePage: React.FC = () => {
             className={`flex items-center gap-2 pb-3 text-sm font-semibold border-b-2 transition ${
               activeTab === tab.id
                 ? 'border-purple-600 text-purple-600 dark:text-purple-400'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#8A928D] dark:text-[#9AA7AB]'
             }`}
           >
             {tab.icon}
@@ -217,60 +217,60 @@ export const ResearchPipelinePage: React.FC = () => {
         <div className="space-y-6">
           {/* Key Metrics Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+              <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
                 Total Benchmark Records
               </span>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+              <p className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
                 {datasetSummary.report.finalCount}
               </p>
-              <span className="text-xs text-slate-500 mt-1 block">Validated & Deduplicated</span>
+              <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 block">Validated & Deduplicated</span>
             </div>
 
-            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+              <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
                 Majority Class
               </span>
               <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
                 {datasetSummary.report.majorityClass.label} ({datasetSummary.report.majorityClass.count})
               </p>
-              <span className="text-xs text-slate-500 mt-1 block">
+              <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 block">
                 {datasetSummary.report.classPercentages[datasetSummary.report.majorityClass.label]}% of dataset
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+              <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
                 Minority Class
               </span>
               <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
                 {datasetSummary.report.minorityClass.label} ({datasetSummary.report.minorityClass.count})
               </p>
-              <span className="text-xs text-slate-500 mt-1 block">
+              <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 block">
                 {datasetSummary.report.classPercentages[datasetSummary.report.minorityClass.label]}% of dataset
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+              <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
                 Imbalance Ratio
               </span>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
                 {datasetSummary.report.imbalanceRatio} : 1
               </p>
-              <span className="text-xs text-slate-500 mt-1 block">Significant class disparity</span>
+              <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 block">Significant class disparity</span>
             </div>
           </div>
 
           {/* Distribution Breakdown Table */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3">
+          <div className="p-5 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-3">
               Class Distribution Breakdown
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-surface-dark-border text-xs uppercase text-slate-500">
+                  <tr className="border-b border-[#E7E7E2] dark:border-surface-dark-border text-xs uppercase text-[#5E6460] dark:text-[#9AA7AB]">
                     <th className="py-2.5 px-3">Role Category</th>
                     <th className="py-2.5 px-3">Count</th>
                     <th className="py-2.5 px-3">Proportion</th>
@@ -279,8 +279,8 @@ export const ResearchPipelinePage: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {Object.entries(datasetSummary.report.classDistribution).map(([cls, cnt]) => (
-                    <tr key={cls} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <td className="py-2.5 px-3 font-semibold text-slate-900 dark:text-white">{cls}</td>
+                    <tr key={cls} className="hover:bg-[#F4F4F1] dark:hover:bg-white/5">
+                      <td className="py-2.5 px-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">{cls}</td>
                       <td className="py-2.5 px-3">{cnt as any}</td>
                       <td className="py-2.5 px-3">{datasetSummary.report.classPercentages[cls]}%</td>
                       <td className="py-2.5 px-3">
@@ -302,20 +302,20 @@ export const ResearchPipelinePage: React.FC = () => {
           </div>
 
           {/* Dataset Preview */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3">
+          <div className="p-5 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-3">
               Sample Benchmark Records
             </h3>
             <div className="space-y-3">
               {datasetSummary.previewRecords.map((r: any) => (
-                <div key={r.id} className="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 text-sm">
+                <div key={r.id} className="p-3.5 rounded-lg bg-[#F4F4F1] dark:bg-[#0C1113]/60 border border-[#E7E7E2]/60 dark:border-white/8 text-sm">
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono text-xs text-slate-500">{r.id}</span>
+                    <span className="font-mono text-xs text-[#5E6460] dark:text-[#9AA7AB]">{r.id}</span>
                     <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">
                       {r.class_label}
                     </span>
                   </div>
-                  <p className="text-slate-700 dark:text-slate-300">{r.text}</p>
+                  <p className="text-[#111312] dark:text-[#F2F6F7]">{r.text}</p>
                 </div>
               ))}
             </div>
@@ -326,23 +326,23 @@ export const ResearchPipelinePage: React.FC = () => {
       {/* TAB 2: AUGMENTATION RUNS */}
       {activeTab === 'augment' && (
         <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">
+          <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-2">
               Configure Synthetic Augmentation Run
             </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+            <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mb-4">
               Select a minority class to augment using the server-side AI provider. Samples are generated and tested against 5 validation filters before entering the training split.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
               <div>
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">
+                <label className="block text-xs font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase mb-1">
                   Target Class
                 </label>
                 <select
                   value={targetClass}
                   onChange={(e) => setTargetClass(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 text-sm rounded-lg bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 text-[#111312] dark:text-[#F2F6F7] focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
                   <option value="Security">Security (Minority Class)</option>
                   <option value="DevOps">DevOps (Moderate Class)</option>
@@ -352,7 +352,7 @@ export const ResearchPipelinePage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase mb-1">
+                <label className="block text-xs font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase mb-1">
                   Requested Sample Count
                 </label>
                 <input
@@ -361,7 +361,7 @@ export const ResearchPipelinePage: React.FC = () => {
                   max="10"
                   value={requestedCount}
                   onChange={(e) => setRequestedCount(parseInt(e.target.value, 10))}
-                  className="w-full px-3 py-2 text-sm rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 text-sm rounded-lg bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 text-[#111312] dark:text-[#F2F6F7] focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
             </div>
@@ -377,18 +377,18 @@ export const ResearchPipelinePage: React.FC = () => {
           </div>
 
           {augmentationResult && (
-            <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs space-y-4">
+            <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                   Augmentation Quality Filter Results
                 </h3>
-                <span className="text-xs font-mono text-slate-500">{augmentationResult.runId}</span>
+                <span className="text-xs font-mono text-[#5E6460] dark:text-[#9AA7AB]">{augmentationResult.runId}</span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60">
-                  <span className="text-xs text-slate-500">Requested</span>
-                  <p className="text-lg font-bold text-slate-900 dark:text-white">{augmentationResult.requestedCount}</p>
+                <div className="p-3 rounded-lg bg-[#F4F4F1] dark:bg-[#0C1113]/60">
+                  <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Requested</span>
+                  <p className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">{augmentationResult.requestedCount}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300">
                   <span className="text-xs">Generated</span>
@@ -405,7 +405,7 @@ export const ResearchPipelinePage: React.FC = () => {
               </div>
 
               <div className="space-y-2 mt-4">
-                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <h4 className="text-xs font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
                   Accepted Synthetic Samples (Tagged with Provenance)
                 </h4>
                 {augmentationResult.acceptedSamples.map((s: any) => (
@@ -416,7 +416,7 @@ export const ResearchPipelinePage: React.FC = () => {
                         provenance: {s.provenance}
                       </span>
                     </div>
-                    <p className="text-slate-800 dark:text-slate-200">{s.text}</p>
+                    <p className="text-[#111312] dark:text-[#F2F6F7]">{s.text}</p>
                   </div>
                 ))}
               </div>
@@ -433,10 +433,10 @@ export const ResearchPipelinePage: React.FC = () => {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                   Hypothesis Outcome: {experimentResult.hypothesisOutcome}
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                <p className="text-sm text-[#5E6460] dark:text-[#F2F6F7] mt-1">
                   {experimentResult.summaryText}
                 </p>
               </div>
@@ -444,14 +444,14 @@ export const ResearchPipelinePage: React.FC = () => {
           </div>
 
           {/* Metric Comparison Table */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-4">
+          <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-4">
               Baseline vs. Augmented Performance (Held-Out Test Set)
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-surface-dark-border text-xs uppercase text-slate-500">
+                  <tr className="border-b border-[#E7E7E2] dark:border-surface-dark-border text-xs uppercase text-[#5E6460] dark:text-[#9AA7AB]">
                     <th className="py-2.5 px-3">Metric</th>
                     <th className="py-2.5 px-3">Baseline (Original Train)</th>
                     <th className="py-2.5 px-3">Augmented (Train + Synthetic)</th>
@@ -460,7 +460,7 @@ export const ResearchPipelinePage: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-mono">
                   <tr>
-                    <td className="py-3 px-3 font-sans font-semibold text-slate-900 dark:text-white">Overall Accuracy</td>
+                    <td className="py-3 px-3 font-sans font-semibold text-[#111312] dark:text-[#F2F6F7]">Overall Accuracy</td>
                     <td className="py-3 px-3">{(experimentResult.baseline.accuracy * 100).toFixed(1)}%</td>
                     <td className="py-3 px-3">{(experimentResult.augmented.accuracy * 100).toFixed(1)}%</td>
                     <td className={`py-3 px-3 font-bold ${experimentResult.delta.accuracy >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
@@ -468,16 +468,16 @@ export const ResearchPipelinePage: React.FC = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td className="py-3 px-3 font-sans font-semibold text-slate-900 dark:text-white">Macro Precision</td>
+                    <td className="py-3 px-3 font-sans font-semibold text-[#111312] dark:text-[#F2F6F7]">Macro Precision</td>
                     <td className="py-3 px-3">{(experimentResult.baseline.macroPrecision * 100).toFixed(1)}%</td>
                     <td className="py-3 px-3">{(experimentResult.augmented.macroPrecision * 100).toFixed(1)}%</td>
-                    <td className="py-3 px-3 text-slate-500">-</td>
+                    <td className="py-3 px-3 text-[#5E6460] dark:text-[#9AA7AB]">-</td>
                   </tr>
                   <tr>
-                    <td className="py-3 px-3 font-sans font-semibold text-slate-900 dark:text-white">Macro Recall</td>
+                    <td className="py-3 px-3 font-sans font-semibold text-[#111312] dark:text-[#F2F6F7]">Macro Recall</td>
                     <td className="py-3 px-3">{(experimentResult.baseline.macroRecall * 100).toFixed(1)}%</td>
                     <td className="py-3 px-3">{(experimentResult.augmented.macroRecall * 100).toFixed(1)}%</td>
-                    <td className="py-3 px-3 text-slate-500">-</td>
+                    <td className="py-3 px-3 text-[#5E6460] dark:text-[#9AA7AB]">-</td>
                   </tr>
                   <tr className="bg-purple-50/40 dark:bg-purple-950/20">
                     <td className="py-3 px-3 font-sans font-bold text-purple-700 dark:text-purple-300">Macro F1-Score (Primary Metric)</td>
@@ -493,8 +493,8 @@ export const ResearchPipelinePage: React.FC = () => {
           </div>
 
           {/* Per-Class F1 Breakdown */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3">
+          <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-3">
               Per-Class F1-Score Breakdown
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -502,15 +502,15 @@ export const ResearchPipelinePage: React.FC = () => {
                 const bF1 = experimentResult.baseline.perClass[cls]?.f1Score || 0;
                 const aF1 = experimentResult.augmented.perClass[cls]?.f1Score || 0;
                 return (
-                  <div key={cls} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
-                    <span className="text-xs font-semibold text-slate-500 uppercase">{cls}</span>
+                  <div key={cls} className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#0C1113]/60 border border-[#E7E7E2]/80 dark:border-white/8">
+                    <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase">{cls}</span>
                     <div className="flex items-baseline justify-between mt-1">
-                      <span className="text-lg font-bold text-slate-900 dark:text-white">{(aF1 * 100).toFixed(1)}%</span>
+                      <span className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">{(aF1 * 100).toFixed(1)}%</span>
                       <span className={`text-xs font-bold ${(del as number) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                         {(del as number) >= 0 ? '+' : ''}{((del as number) * 100).toFixed(1)}%
                       </span>
                     </div>
-                    <span className="text-xs text-slate-400 mt-1 block">Baseline: {(bF1 * 100).toFixed(1)}%</span>
+                    <span className="text-xs text-[#8A928D] dark:text-[#657378] mt-1 block">Baseline: {(bF1 * 100).toFixed(1)}%</span>
                   </div>
                 );
               })}
@@ -526,30 +526,30 @@ export const ResearchPipelinePage: React.FC = () => {
             <>
               {/* Summary Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Skill F1-Score</span>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">Skill F1-Score</span>
+                  <p className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
                     {(matchingEval.matchingMetrics.skillF1 * 100).toFixed(1)}%
                   </p>
                   <span className="text-xs text-emerald-600 mt-1 block font-medium">Ground Truth Verified</span>
                 </div>
-                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ranking NDCG@3</span>
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">Ranking NDCG@3</span>
                   <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
                     {(matchingEval.rankingMetrics.ndcgAtK[3] * 100).toFixed(1)}%
                   </p>
-                  <span className="text-xs text-slate-500 mt-1 block">Normalized Discounted Gain</span>
+                  <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 block">Normalized Discounted Gain</span>
                 </div>
-                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ranking MRR</span>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">Ranking MRR</span>
+                  <p className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
                     {matchingEval.rankingMetrics.mrr.toFixed(3)}
                   </p>
-                  <span className="text-xs text-slate-500 mt-1 block">Mean Reciprocal Rank</span>
+                  <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 block">Mean Reciprocal Rank</span>
                 </div>
-                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Engine Latency</span>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                <div className="p-4 rounded-xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+                  <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">Avg Engine Latency</span>
+                  <p className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
                     {matchingEval.performance?.[0]?.meanLatencyMs || matchingEval.matchingMetrics.latencyAvgMs}ms
                   </p>
                   <span className="text-xs text-emerald-600 mt-1 block font-medium">Deterministic Fast Path</span>
@@ -557,54 +557,54 @@ export const ResearchPipelinePage: React.FC = () => {
               </div>
 
               {/* Detailed Evaluation Table */}
-              <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-xs">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">
+              <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-2">
                   Matching Accuracy & Ranking Metrics (IR & Recommendation)
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mb-4">
                   Evaluated on standard benchmark collection of 5 human-annotated resume-to-job relevance scenarios.
                 </p>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-slate-200 dark:border-surface-dark-border text-slate-500 text-xs uppercase font-semibold">
+                      <tr className="border-b border-[#E7E7E2] dark:border-surface-dark-border text-[#5E6460] dark:text-[#9AA7AB] text-xs uppercase font-semibold">
                         <th className="pb-3 px-3">Information Retrieval Metric</th>
                         <th className="pb-3 px-3">Measured Value</th>
                         <th className="pb-3 px-3">Theoretical Ideal</th>
                         <th className="pb-3 px-3">Interpretation</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-[#111312] dark:text-[#F2F6F7]">
                       <tr>
-                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Precision@1 (Top-1 Relevance)</td>
+                        <td className="py-3 px-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Precision@1 (Top-1 Relevance)</td>
                         <td className="py-3 px-3 font-mono font-bold text-emerald-600">{(matchingEval.rankingMetrics.precisionAtK[1] * 100).toFixed(1)}%</td>
                         <td className="py-3 px-3 font-mono">100.0%</td>
-                        <td className="py-3 px-3 text-xs text-slate-500">First ranked candidate is genuinely relevant</td>
+                        <td className="py-3 px-3 text-xs text-[#5E6460] dark:text-[#9AA7AB]">First ranked candidate is genuinely relevant</td>
                       </tr>
                       <tr>
-                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Precision@3 (Top-3 Pool)</td>
+                        <td className="py-3 px-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Precision@3 (Top-3 Pool)</td>
                         <td className="py-3 px-3 font-mono font-bold">{(matchingEval.rankingMetrics.precisionAtK[3] * 100).toFixed(1)}%</td>
                         <td className="py-3 px-3 font-mono">100.0%</td>
-                        <td className="py-3 px-3 text-xs text-slate-500">Proportion of top 3 candidates that are qualified</td>
+                        <td className="py-3 px-3 text-xs text-[#5E6460] dark:text-[#9AA7AB]">Proportion of top 3 candidates that are qualified</td>
                       </tr>
                       <tr>
-                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Recall@3 (Pool Coverage)</td>
+                        <td className="py-3 px-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Recall@3 (Pool Coverage)</td>
                         <td className="py-3 px-3 font-mono font-bold">{(matchingEval.rankingMetrics.recallAtK[3] * 100).toFixed(1)}%</td>
                         <td className="py-3 px-3 font-mono">100.0%</td>
-                        <td className="py-3 px-3 text-xs text-slate-500">Coverage of all qualified applicants in top 3</td>
+                        <td className="py-3 px-3 text-xs text-[#5E6460] dark:text-[#9AA7AB]">Coverage of all qualified applicants in top 3</td>
                       </tr>
                       <tr>
-                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">NDCG@3 (Ranking Order Quality)</td>
+                        <td className="py-3 px-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">NDCG@3 (Ranking Order Quality)</td>
                         <td className="py-3 px-3 font-mono font-bold text-purple-600 dark:text-purple-400">{(matchingEval.rankingMetrics.ndcgAtK[3] * 100).toFixed(1)}%</td>
                         <td className="py-3 px-3 font-mono">100.0%</td>
-                        <td className="py-3 px-3 text-xs text-slate-500">Highest qualified candidates positioned first</td>
+                        <td className="py-3 px-3 text-xs text-[#5E6460] dark:text-[#9AA7AB]">Highest qualified candidates positioned first</td>
                       </tr>
                       <tr>
-                        <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">Explanation Consistency Rate</td>
+                        <td className="py-3 px-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">Explanation Consistency Rate</td>
                         <td className="py-3 px-3 font-mono font-bold text-emerald-600">{(matchingEval.matchingMetrics.explanationConsistencyRate * 100).toFixed(1)}%</td>
                         <td className="py-3 px-3 font-mono">100.0%</td>
-                        <td className="py-3 px-3 text-xs text-slate-500">AI explanations match source evidence with 0 hallucination</td>
+                        <td className="py-3 px-3 text-xs text-[#5E6460] dark:text-[#9AA7AB]">AI explanations match source evidence with 0 hallucination</td>
                       </tr>
                     </tbody>
                   </table>
@@ -612,9 +612,9 @@ export const ResearchPipelinePage: React.FC = () => {
               </div>
             </>
           ) : (
-            <div className="p-8 rounded-2xl bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border text-center">
+            <div className="p-8 rounded-2xl bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border text-center">
               <RefreshCw className="w-8 h-8 animate-spin mx-auto text-purple-600 mb-3" />
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                 Loading matching and ranking benchmark measurements...
               </p>
             </div>

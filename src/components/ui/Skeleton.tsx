@@ -15,7 +15,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   style,
   ...props
 }) => {
-  const baseStyles = 'animate-pulse bg-slate-200 dark:bg-slate-800/80';
+  const baseStyles = 'animate-pulse bg-[#DCDCD7] dark:bg-[#111719]/80';
 
   const variantStyles = {
     text: 'h-4 rounded-md',
@@ -43,7 +43,7 @@ export const CardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="p-5 rounded-card border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card space-y-4"
+          className="p-5 rounded-card border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card space-y-4"
         >
           <div className="flex items-center justify-between">
             <Skeleton variant="circular" className="w-10 h-10" />
@@ -65,8 +65,8 @@ export const CardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => {
 
 export const TableSkeleton: React.FC<{ rows?: number }> = ({ rows = 5 }) => {
   return (
-    <div className="w-full rounded-card border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card p-4 space-y-3">
-      <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-surface-dark-border">
+    <div className="w-full rounded-card border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card p-4 space-y-3">
+      <div className="flex justify-between items-center pb-3 border-b border-[#EFEFEA] dark:border-surface-dark-border">
         <Skeleton variant="text" className="w-32 h-5" />
         <Skeleton variant="rectangular" className="w-24 h-8" />
       </div>

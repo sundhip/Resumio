@@ -119,14 +119,14 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
     value: number,
     onChange: (val: number) => void
   ) => (
-    <div className="p-3 rounded-lg border border-slate-200 dark:border-surface-dark-border bg-slate-50/60 dark:bg-surface-dark-bg/40 space-y-2">
+    <div className="p-3 rounded-lg border border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-bold text-slate-800 dark:text-slate-200">{label}</label>
+        <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">{label}</label>
         <span className="text-xs font-bold px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-300">
           {value} / 5
         </span>
       </div>
-      <p className="text-[11px] text-slate-400">{description}</p>
+      <p className="text-[11px] text-[#8A928D] dark:text-[#657378]">{description}</p>
       <div className="flex items-center gap-1.5 pt-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
@@ -136,7 +136,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
             className={`flex-1 py-1 text-xs font-semibold rounded transition-colors ${
               value >= star
                 ? 'bg-amber-500 text-white shadow-xs'
-                : 'bg-slate-200 dark:bg-surface-dark-card text-slate-500 hover:bg-slate-300'
+                : 'bg-[#DCDCD7] dark:bg-surface-dark-card text-[#5E6460] dark:text-[#9AA7AB] hover:bg-slate-300'
             }`}
           >
             {star}
@@ -161,7 +161,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
       footer={
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400">Composite Score:</span>
+            <span className="text-xs text-[#8A928D] dark:text-[#657378]">Composite Score:</span>
             <span className="text-sm font-extrabold text-brand-600 dark:text-brand-400">
               {overallScore} / 5.0
             </span>
@@ -213,7 +213,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
 
           {/* Recommendation Selector */}
           <div className="space-y-1.5 pt-2">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
               Hiring Recommendation
             </label>
             <div className="grid grid-cols-5 gap-1.5">
@@ -229,7 +229,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
                         : rec === 'Undecided'
                         ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
                         : 'bg-rose-600 text-white border-rose-600 shadow-sm'
-                      : 'bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                      : 'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border text-[#5E6460] dark:text-[#F2F6F7] hover:bg-[#F4F4F1]'
                   }`}
                 >
                   {rec}
@@ -240,7 +240,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
 
           {/* Key Strengths */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
               Demonstrated Strengths
             </label>
             <div className="flex gap-2">
@@ -250,7 +250,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
                 onChange={(e) => setStrengthInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddStrength())}
                 placeholder="e.g. Articulated distributed locking algorithms smoothly"
-                className="flex-1 px-3 py-1.5 text-xs rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white"
+                className="flex-1 px-3 py-1.5 text-xs rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7]"
               />
               <Button variant="secondary" size="sm" onClick={handleAddStrength} className="text-xs">
                 Add
@@ -278,7 +278,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
 
           {/* Observed Areas for Improvement */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
               Growth Areas / Concerns
             </label>
             <div className="flex gap-2">
@@ -288,7 +288,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
                 onChange={(e) => setWeaknessInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddWeakness())}
                 placeholder="e.g. Hesitated when asked about database sharding strategies"
-                className="flex-1 px-3 py-1.5 text-xs rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white"
+                className="flex-1 px-3 py-1.5 text-xs rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7]"
               />
               <Button variant="secondary" size="sm" onClick={handleAddWeakness} className="text-xs">
                 Add
@@ -316,7 +316,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
 
           {/* Evaluator Notes */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
               Executive Evaluation Notes
             </label>
             <textarea
@@ -324,7 +324,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
               value={evaluatorNotes}
               onChange={(e) => setEvaluatorNotes(e.target.value)}
               placeholder="Candidate demonstrated deep technical acumen, proactive ownership, and answered all scenario-based questions with high precision."
-              className="w-full p-2.5 text-xs rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white"
+              className="w-full p-2.5 text-xs rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7]"
             />
           </div>
         </div>

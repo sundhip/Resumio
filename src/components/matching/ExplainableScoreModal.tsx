@@ -66,7 +66,7 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
       {isLoading ? (
         <div className="py-12 flex flex-col items-center justify-center space-y-3">
           <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-slate-500 font-medium">Computing deterministic factor breakdown...</p>
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-medium">Computing deterministic factor breakdown...</p>
         </div>
       ) : error || !data ? (
         <div className="p-6 text-center space-y-3">
@@ -82,7 +82,7 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
           <div className="p-4 rounded-card bg-gradient-to-r from-brand-500/10 via-purple-500/10 to-indigo-500/10 border border-brand-200 dark:border-brand-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   Target Candidate Alignment
                 </span>
                 <Badge
@@ -100,11 +100,11 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
                   {data.categoryLabel}
                 </Badge>
               </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
+              <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mt-0.5">
                 {data.candidateName} for {data.jobTitle}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Company: <span className="font-semibold text-slate-700 dark:text-slate-300">{data.companyName}</span> • Algorithm v{data.algorithmVersion}
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+                Company: <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">{data.companyName}</span> • Algorithm v{data.algorithmVersion}
               </p>
             </div>
 
@@ -113,7 +113,7 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
                 <div className="text-3xl font-extrabold text-brand-600 dark:text-brand-400">
                   {data.finalScore}%
                 </div>
-                <span className="text-[10px] text-slate-400 font-medium">Final Overall Score</span>
+                <span className="text-[10px] text-[#8A928D] dark:text-[#657378] font-medium">Final Overall Score</span>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
           {/* 5-Factor Mathematical Score Breakdown */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
                 <Layers className="w-3.5 h-3.5 text-brand-600" /> Scoring Component Breakdown (Sum: 100 pts)
               </h4>
               <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -129,24 +129,24 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
               </span>
             </div>
 
-            <div className="space-y-3 bg-slate-50 dark:bg-surface-dark-bg/60 p-4 rounded-card border border-slate-200/70 dark:border-surface-dark-border">
+            <div className="space-y-3 bg-[#F4F4F1] dark:bg-surface-dark-bg/60 p-4 rounded-card border border-[#E7E7E2]/70 dark:border-surface-dark-border">
               {/* 1. Required Skills */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
                     1. Required Skills Match (Weight: 50%)
                   </span>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {data.components.requiredSkills.score} / {data.components.requiredSkills.maxScore} pts
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-[#DCDCD7] dark:bg-[#161E21] overflow-hidden">
                   <div
                     className="h-full bg-brand-600 rounded-full"
                     style={{ width: `${(data.components.requiredSkills.score / 50) * 100}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                   {data.components.requiredSkills.summary}
                 </p>
               </div>
@@ -154,20 +154,20 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
               {/* 2. Preferred Skills */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
                     2. Preferred Skills (Weight: 15%)
                   </span>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {data.components.preferredSkills.score} / {data.components.preferredSkills.maxScore} pts
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-[#DCDCD7] dark:bg-[#161E21] overflow-hidden">
                   <div
-                    className="h-full bg-indigo-500 rounded-full"
+                    className="h-full bg-[#1F8FA6]/100 rounded-full"
                     style={{ width: `${(data.components.preferredSkills.score / 15) * 100}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                   {data.components.preferredSkills.summary}
                 </p>
               </div>
@@ -175,20 +175,20 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
               {/* 3. Experience */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
                     3. Experience Length Alignment (Weight: 20%)
                   </span>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {data.components.experience.score} / {data.components.experience.maxScore} pts
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-[#DCDCD7] dark:bg-[#161E21] overflow-hidden">
                   <div
                     className="h-full bg-emerald-500 rounded-full"
                     style={{ width: `${(data.components.experience.score / 20) * 100}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                   {data.components.experience.summary}
                 </p>
               </div>
@@ -196,20 +196,20 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
               {/* 4. Qualification */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
                     4. Educational Qualification (Weight: 10%)
                   </span>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {data.components.qualification.score} / {data.components.qualification.maxScore} pts
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-[#DCDCD7] dark:bg-[#161E21] overflow-hidden">
                   <div
                     className="h-full bg-purple-500 rounded-full"
                     style={{ width: `${(data.components.qualification.score / 10) * 100}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                   {data.components.qualification.summary}
                 </p>
               </div>
@@ -217,14 +217,14 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
               {/* 5. Relevance / Portfolio */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
                     5. Profile Completeness & Project Depth (Weight: 5%)
                   </span>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {data.components.relevance.score} / {data.components.relevance.maxScore} pts
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-[#DCDCD7] dark:bg-[#161E21] overflow-hidden">
                   <div
                     className="h-full bg-blue-400 rounded-full"
                     style={{ width: `${(data.components.relevance.score / 5) * 100}%` }}
@@ -259,7 +259,7 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
                   </span>
                 ))}
                 {data.matchedSkills.required.length === 0 && data.matchedSkills.preferred.length === 0 && (
-                  <span className="text-xs text-slate-400 italic">No skills verified yet</span>
+                  <span className="text-xs text-[#8A928D] dark:text-[#657378] italic">No skills verified yet</span>
                 )}
               </div>
             </div>
@@ -296,21 +296,21 @@ export const ExplainableScoreModal: React.FC<ExplainableScoreModalProps> = ({
           </div>
 
           {/* Natural Language Verified Explanation */}
-          <div className="p-3.5 rounded-card bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border space-y-1.5">
+          <div className="p-3.5 rounded-card bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" /> Explainable Synthesis
             </span>
-            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p className="text-xs text-[#111312] dark:text-[#F2F6F7] leading-relaxed">
               {data.naturalLanguageExplanation}
             </p>
-            <p className="text-[11px] text-slate-400 italic">
+            <p className="text-[11px] text-[#8A928D] dark:text-[#657378] italic">
               {data.factualSummary}
             </p>
           </div>
 
           {/* Footer Close */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-surface-dark-border">
-            <span className="text-[11px] text-slate-400 flex items-center gap-1">
+          <div className="flex items-center justify-between pt-2 border-t border-[#EFEFEA] dark:border-surface-dark-border">
+            <span className="text-[11px] text-[#8A928D] dark:text-[#657378] flex items-center gap-1">
               <Info className="w-3 h-3" /> Deterministic scoring eliminates black-box bias.
             </span>
             <Button variant="secondary" size="md" onClick={onClose}>

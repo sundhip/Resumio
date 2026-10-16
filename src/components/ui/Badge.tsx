@@ -67,7 +67,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   const variantStyles = {
     neutral:
-      'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60',
+      'bg-[#E9E9E5] dark:bg-[#111719]/80 text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2]/80 dark:border-white/6/60',
     purple:
       'bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/60',
     brand:
@@ -78,17 +78,17 @@ export const Badge: React.FC<BadgeProps> = ({
       'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60',
     danger:
       'bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60',
-    info: 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60',
+    info: 'bg-[#1F8FA6]/10 dark:bg-indigo-950/50 text-[#1F8FA6] dark:text-[#5FD3E8] border border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30/60',
   };
 
   const dotStyles = {
-    neutral: 'bg-slate-400 dark:bg-slate-500',
+    neutral: 'bg-slate-400 dark:bg-[#F4F4F1]0',
     purple: 'bg-brand-500',
     brand: 'bg-brand-500',
     success: 'bg-emerald-500',
     warning: 'bg-amber-500',
     danger: 'bg-rose-500',
-    info: 'bg-indigo-500',
+    info: 'bg-[#1F8FA6]/100',
   };
 
   return (

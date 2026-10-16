@@ -459,7 +459,7 @@ export const CandidateJobsPage: React.FC<CandidateJobsPageProps> = ({ onNavigate
                     className={`p-4 rounded-[16px] transition-all duration-200 cursor-pointer border ${
                       isSelected
                         ? 'bg-white dark:bg-[#0C1113] border-[#1F8FA6] shadow-[0_0_0_2px_rgba(31,143,166,0.2),0_8px_20px_rgba(31,143,166,0.08)]'
-                        : 'bg-white dark:bg-[#0C1113] border-[#E7E7E2] dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
+                        : 'bg-white dark:bg-[#0C1113] border-[#E7E7E2] dark:border-white/10 hover:border-[#DCDCD7] dark:hover:border-white/20'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">

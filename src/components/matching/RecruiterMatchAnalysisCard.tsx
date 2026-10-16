@@ -43,24 +43,24 @@ export const RecruiterMatchAnalysisCard: React.FC<RecruiterMatchAnalysisCardProp
 
   if (isLoading) {
     return (
-      <Card className="p-6 bg-slate-50 dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border animate-pulse space-y-4">
+      <Card className="p-6 bg-[#F4F4F1] dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border animate-pulse space-y-4">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-brand-600 animate-spin" />
-          <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
+          <span className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
             Calculating match score and synthesizing AI summary...
           </span>
         </div>
-        <div className="h-4 bg-slate-200 dark:bg-surface-dark-border rounded w-3/4" />
-        <div className="h-20 bg-slate-100 dark:bg-surface-dark-border/40 rounded w-full" />
+        <div className="h-4 bg-[#DCDCD7] dark:bg-surface-dark-border rounded w-3/4" />
+        <div className="h-20 bg-[#E9E9E5] dark:bg-surface-dark-border/40 rounded w-full" />
       </Card>
     );
   }
 
   if (!match) {
     return (
-      <Card className="p-6 text-center space-y-3 bg-slate-50 dark:bg-surface-dark-card">
-        <Sparkles className="w-8 h-8 text-slate-400 mx-auto" />
-        <p className="text-xs text-slate-500">
+      <Card className="p-6 text-center space-y-3 bg-[#F4F4F1] dark:bg-surface-dark-card">
+        <Sparkles className="w-8 h-8 text-[#8A928D] dark:text-[#657378] mx-auto" />
+        <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
           Match analysis has not been generated for this applicant yet.
         </p>
         {onRecompute && (
@@ -78,16 +78,16 @@ export const RecruiterMatchAnalysisCard: React.FC<RecruiterMatchAnalysisCardProp
   return (
     <Card className="p-6 bg-white dark:bg-surface-dark-card border-brand-200/80 dark:border-brand-900/60 shadow-xs space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-surface-dark-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EFEFEA] dark:border-surface-dark-border">
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/70 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
             <Sparkles className="w-3.5 h-3.5 text-brand-500" />
             AI MATCH ANALYSIS
           </div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+          <h3 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">
             Role Alignment & Candidate Ranking Factors
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
             Algorithmic evaluation of submitted resume against verified job requirements.
           </p>
         </div>
@@ -111,54 +111,54 @@ export const RecruiterMatchAnalysisCard: React.FC<RecruiterMatchAnalysisCardProp
 
       {/* Factor Breakdown Strip */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-        <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border space-y-1">
+          <div className="flex items-center justify-between text-[#8A928D] dark:text-[#657378]">
             <span className="font-semibold text-[11px] uppercase">Required Skills</span>
             <Award className="w-3.5 h-3.5 text-brand-500" />
           </div>
-          <div className="text-base font-bold text-slate-900 dark:text-white">
+          <div className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
             {match.requiredSkillsMatched.length} / {totalReq} Matched
           </div>
-          <p className="text-[11px] text-slate-500 font-medium">
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] font-medium">
             Score: {match.scoreBreakdown?.requiredSkillsScore ?? 0} / 50 pts
           </p>
         </div>
 
-        <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border space-y-1">
+          <div className="flex items-center justify-between text-[#8A928D] dark:text-[#657378]">
             <span className="font-semibold text-[11px] uppercase">Preferred Skills</span>
             <TrendingUp className="w-3.5 h-3.5 text-indigo-500" />
           </div>
-          <div className="text-base font-bold text-slate-900 dark:text-white">
+          <div className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
             {match.preferredSkillsMatched.length} / {totalPref || 0} Matched
           </div>
-          <p className="text-[11px] text-slate-500 font-medium">
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] font-medium">
             Score: {match.scoreBreakdown?.preferredSkillsScore ?? 0} / 15 pts
           </p>
         </div>
 
-        <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border space-y-1">
+          <div className="flex items-center justify-between text-[#8A928D] dark:text-[#657378]">
             <span className="font-semibold text-[11px] uppercase">Experience</span>
             <Clock className="w-3.5 h-3.5 text-emerald-500" />
           </div>
-          <div className="text-base font-bold text-slate-900 dark:text-white">
+          <div className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
             {match.candidateExperienceYears > 0 ? `${match.candidateExperienceYears} yrs` : 'Open'}
           </div>
-          <p className="text-[11px] text-slate-500 font-medium truncate" title={match.experienceAssessment}>
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] font-medium truncate" title={match.experienceAssessment}>
             {match.experienceAssessment}
           </p>
         </div>
 
-        <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
+        <div className="p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border space-y-1">
+          <div className="flex items-center justify-between text-[#8A928D] dark:text-[#657378]">
             <span className="font-semibold text-[11px] uppercase">Qualification</span>
             <GraduationCap className="w-3.5 h-3.5 text-brand-500" />
           </div>
-          <div className="text-base font-bold text-slate-900 dark:text-white truncate" title={match.candidateHighestEducation}>
+          <div className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] truncate" title={match.candidateHighestEducation}>
             {match.candidateHighestEducation}
           </div>
-          <p className="text-[11px] text-slate-500 font-medium truncate" title={match.qualificationAssessment}>
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] font-medium truncate" title={match.qualificationAssessment}>
             {match.qualificationAssessment}
           </p>
         </div>
@@ -209,7 +209,7 @@ export const RecruiterMatchAnalysisCard: React.FC<RecruiterMatchAnalysisCardProp
         {/* Missing Preferred Skills */}
         {match.preferredSkillsMissing.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <h4 className="text-xs font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider flex items-center gap-1.5">
               <FileCheck className="w-3.5 h-3.5" />
               Missing Preferred / Secondary Skills ({match.preferredSkillsMissing.length})
             </h4>
@@ -217,7 +217,7 @@ export const RecruiterMatchAnalysisCard: React.FC<RecruiterMatchAnalysisCardProp
               {match.preferredSkillsMissing.map((skill, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-surface-dark-input text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-surface-dark-border"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#E9E9E5] dark:bg-surface-dark-input text-[#5E6460] dark:text-[#9AA7AB] border border-[#E7E7E2] dark:border-surface-dark-border"
                 >
                   {skill}
                 </span>
@@ -229,15 +229,15 @@ export const RecruiterMatchAnalysisCard: React.FC<RecruiterMatchAnalysisCardProp
 
       {/* AI Candidate Summary */}
       {summary && (
-        <div className="pt-4 border-t border-slate-100 dark:border-surface-dark-border space-y-3">
+        <div className="pt-4 border-t border-[#EFEFEA] dark:border-surface-dark-border space-y-3">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-brand-600" />
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+            <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
               AI Candidate Summary
             </h4>
           </div>
 
-          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed p-3.5 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border">
+          <p className="text-xs text-[#111312] dark:text-[#F2F6F7] leading-relaxed p-3.5 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border">
             {summary.summaryText}
           </p>
 

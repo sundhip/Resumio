@@ -49,16 +49,16 @@ export const ResumeStatusCard: React.FC<ResumeStatusCardProps> = ({
 
       {resume ? (
         <div className="space-y-3">
-          <div className="p-3 rounded-control border border-slate-200 dark:border-surface-dark-border bg-slate-50/70 dark:bg-surface-dark-bg/60 flex items-center justify-between gap-3">
+          <div className="p-3 rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/70 dark:bg-surface-dark-bg/60 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="p-2 rounded bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 shrink-0">
                 <FileText className="w-4 h-4" />
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                <p className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] truncate">
                   {resume.original_filename}
                 </p>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                <p className="text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">
                   {formatFileSize(resume.file_size)} • Uploaded on {new Date(resume.created_at).toLocaleDateString()}
                 </p>
               </div>
@@ -102,11 +102,11 @@ export const ResumeStatusCard: React.FC<ResumeStatusCardProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="p-4 text-center rounded-control bg-slate-50/60 dark:bg-surface-dark-bg/40 border border-dashed border-slate-200 dark:border-surface-dark-border space-y-2.5">
-          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+        <div className="p-4 text-center rounded-control bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 border border-dashed border-[#E7E7E2] dark:border-surface-dark-border space-y-2.5">
+          <p className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]">
             No resume uploaded yet
           </p>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500">
+          <p className="text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">
             Upload your PDF or DOCX resume to enable quick applications and complete your profile.
           </p>
           <Button

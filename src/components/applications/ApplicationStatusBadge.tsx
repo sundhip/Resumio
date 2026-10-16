@@ -64,18 +64,18 @@ export const ApplicationStatusBadge: React.FC<ApplicationStatusBadgeProps> = ({
       case 'Withdrawn':
         return {
           label: 'Withdrawn',
-          bg: 'bg-slate-100 dark:bg-surface-dark-input',
-          text: 'text-slate-600 dark:text-slate-400',
-          border: 'border-slate-200 dark:border-surface-dark-border',
+          bg: 'bg-[#E9E9E5] dark:bg-surface-dark-input',
+          text: 'text-[#5E6460] dark:text-[#9AA7AB]',
+          border: 'border-[#E7E7E2] dark:border-surface-dark-border',
           dot: 'bg-slate-400',
           icon: <RotateCcw className="w-3 h-3" />,
         };
       default:
         return {
           label: st || 'Active',
-          bg: 'bg-slate-100 dark:bg-surface-dark-input',
-          text: 'text-slate-700 dark:text-slate-300',
-          border: 'border-slate-200 dark:border-surface-dark-border',
+          bg: 'bg-[#E9E9E5] dark:bg-surface-dark-input',
+          text: 'text-[#111312] dark:text-[#F2F6F7]',
+          border: 'border-[#E7E7E2] dark:border-surface-dark-border',
           dot: 'bg-slate-400',
           icon: <Clock className="w-3 h-3" />,
         };

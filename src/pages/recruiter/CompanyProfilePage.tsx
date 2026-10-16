@@ -124,10 +124,10 @@ export const CompanyProfilePage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
             Company & Recruiter Profile
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Manage your organization information, company brand, and recruiter contact coordinates.
           </p>
         </div>
@@ -165,7 +165,7 @@ export const CompanyProfilePage: React.FC = () => {
                 <img
                   src={companyLogo || currentProfile?.company_logo}
                   alt={companyName || 'Company Logo'}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover ring-2 ring-brand-500/30 border border-slate-200 dark:border-surface-dark-border"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover ring-2 ring-brand-500/30 border border-[#E7E7E2] dark:border-surface-dark-border"
                 />
               ) : (
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold shadow-card">
@@ -176,7 +176,7 @@ export const CompanyProfilePage: React.FC = () => {
 
             <div className="space-y-1.5 min-w-0">
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white truncate">
+                <h2 className="text-xl sm:text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] truncate">
                   {companyName || currentProfile?.company_name || user?.company || 'Company Name'}
                 </h2>
                 <Badge variant="purple" size="sm">
@@ -184,13 +184,13 @@ export const CompanyProfilePage: React.FC = () => {
                 </Badge>
               </div>
 
-              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <p className="text-sm font-medium text-[#111312] dark:text-[#F2F6F7]">
                 {industry || currentProfile?.industry || 'Industry not specified'}
               </p>
 
-              <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
+              <div className="flex items-center gap-3 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex-wrap">
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                  <MapPin className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                   {location || currentProfile?.location || 'Headquarters location not specified'}
                 </span>
                 {website && (
@@ -213,12 +213,12 @@ export const CompanyProfilePage: React.FC = () => {
         </div>
 
         {/* Completion Progress Bar */}
-        <div className="mt-6 pt-5 border-t border-slate-100 dark:border-surface-dark-border space-y-2">
+        <div className="mt-6 pt-5 border-t border-[#EFEFEA] dark:border-surface-dark-border space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold">
-            <span className="text-slate-600 dark:text-slate-400">Company Profile Completion</span>
+            <span className="text-[#5E6460] dark:text-[#9AA7AB]">Company Profile Completion</span>
             <span className="text-brand-600 dark:text-brand-400 font-bold">{completion}%</span>
           </div>
-          <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-[#E9E9E5] dark:bg-[#111719] overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-brand-600 to-indigo-500 rounded-full transition-all duration-500"
               style={{ width: `${completion}%` }}
@@ -285,7 +285,7 @@ export const CompanyProfilePage: React.FC = () => {
               </div>
 
               <div className="sm:col-span-2 space-y-1.5">
-                <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+                <label className="text-[13px] font-medium text-[#111312] dark:text-[#F2F6F7]">
                   Company Description
                 </label>
                 <textarea
@@ -293,11 +293,11 @@ export const CompanyProfilePage: React.FC = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe your company mission, product line, and hiring culture..."
-                  className="w-full p-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                  className="w-full p-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
 
-              <div className="sm:col-span-2 text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 pt-3 border-t border-slate-100 dark:border-surface-dark-border">
+              <div className="sm:col-span-2 text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 pt-3 border-t border-[#EFEFEA] dark:border-surface-dark-border">
                 Lead Recruiter Details
               </div>
 
@@ -317,7 +317,7 @@ export const CompanyProfilePage: React.FC = () => {
               />
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-surface-dark-border">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#EFEFEA] dark:border-surface-dark-border">
               <Button variant="secondary" type="button" onClick={handleCancel} disabled={isSaving}>
                 Cancel
               </Button>
@@ -347,12 +347,12 @@ export const CompanyProfilePage: React.FC = () => {
                 </button>
               </CardHeader>
               {description ? (
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+                <p className="text-xs sm:text-sm text-[#111312] dark:text-[#F2F6F7] leading-relaxed whitespace-pre-line">
                   {description}
                 </p>
               ) : (
-                <div className="p-6 text-center rounded-control bg-slate-50/50 dark:bg-surface-dark-bg/50 border border-dashed border-slate-200 dark:border-surface-dark-border">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                <div className="p-6 text-center rounded-control bg-[#F4F4F1]/50 dark:bg-surface-dark-bg/50 border border-dashed border-[#E7E7E2] dark:border-surface-dark-border">
+                  <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                     No company description provided yet. Click "Edit Company Profile" to add your company background.
                   </p>
                 </div>
@@ -360,11 +360,11 @@ export const CompanyProfilePage: React.FC = () => {
             </Card>
 
             {/* Phase 2 Feature Placeholders */}
-            <Card padding="md" className="border-dashed border-slate-200 dark:border-surface-dark-border bg-slate-50/30 dark:bg-surface-dark-bg/20">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100 dark:border-surface-dark-border">
+            <Card padding="md" className="border-dashed border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/30 dark:bg-surface-dark-bg/20">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#EFEFEA] dark:border-surface-dark-border">
                 <div className="flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-slate-400" />
-                  <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  <Briefcase className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />
+                  <h3 className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                     Active Job Openings
                   </h3>
                 </div>
@@ -372,7 +372,7 @@ export const CompanyProfilePage: React.FC = () => {
                   Phase 2 Feature
                 </Badge>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                 Job creation, applicant tracking pipelines, and automated resume screening will be available in Phase 2.
               </p>
             </Card>
@@ -386,37 +386,37 @@ export const CompanyProfilePage: React.FC = () => {
               </CardHeader>
 
               <div className="space-y-3 text-xs">
-                <div className="flex items-center gap-3 p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200/60 dark:border-surface-dark-border/60">
+                <div className="flex items-center gap-3 p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2]/60 dark:border-surface-dark-border/60">
                   <User className="w-4 h-4 text-brand-500 shrink-0" />
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+                    <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-semibold">
                       Recruiter Name
                     </span>
-                    <span className="font-medium text-slate-900 dark:text-white">
+                    <span className="font-medium text-[#111312] dark:text-[#F2F6F7]">
                       {fullName || currentProfile?.full_name || user?.name || 'Recruiter'}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200/60 dark:border-surface-dark-border/60">
+                <div className="flex items-center gap-3 p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2]/60 dark:border-surface-dark-border/60">
                   <Mail className="w-4 h-4 text-brand-500 shrink-0" />
                   <div className="min-w-0">
-                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+                    <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-semibold">
                       Work Email
                     </span>
-                    <span className="font-medium text-slate-900 dark:text-white truncate block">
+                    <span className="font-medium text-[#111312] dark:text-[#F2F6F7] truncate block">
                       {user?.email}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200/60 dark:border-surface-dark-border/60">
+                <div className="flex items-center gap-3 p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2]/60 dark:border-surface-dark-border/60">
                   <Phone className="w-4 h-4 text-brand-500 shrink-0" />
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+                    <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-semibold">
                       Phone Number
                     </span>
-                    <span className="font-medium text-slate-900 dark:text-white">
+                    <span className="font-medium text-[#111312] dark:text-[#F2F6F7]">
                       {phone || currentProfile?.phone || 'Not provided'}
                     </span>
                   </div>

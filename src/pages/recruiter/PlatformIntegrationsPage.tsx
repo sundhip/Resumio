@@ -379,17 +379,17 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E7E7E2] dark:border-white/8">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+            <div className="p-2.5 rounded-xl bg-[#1F8FA6]/100/10 text-[#1F8FA6] dark:text-[#5FD3E8]">
               <Layers className="w-7 h-7" />
             </div>
             <div>
-              <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              <h1 className="text-2xl font-black tracking-tight text-[#111312] dark:text-[#F2F6F7]">
                 {t('platform.apiKeys')} & Platform Integrations Hub
               </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 Public REST API, Webhooks, ATS connectors, OIDC SSO, ModelOps shadow telemetry, and JD intelligence.
               </p>
             </div>
@@ -398,18 +398,18 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
 
         {/* Language Switcher & Interactive API Docs Link */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-surface-dark-hover px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200">
-            <Languages className="w-4 h-4 text-slate-500" />
+          <div className="flex items-center gap-1.5 bg-[#E9E9E5] dark:bg-surface-dark-hover px-2.5 py-1.5 rounded-lg border border-[#E7E7E2] dark:border-white/6 text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
+            <Languages className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />
             <button
               onClick={() => setLanguage('en')}
-              className={`px-1.5 py-0.5 rounded cursor-pointer ${lang === 'en' ? 'bg-white dark:bg-slate-700 text-emerald-600 font-bold shadow-xs' : 'hover:text-slate-900'}`}
+              className={`px-1.5 py-0.5 rounded cursor-pointer ${lang === 'en' ? 'bg-white dark:bg-[#161E21] text-emerald-600 font-bold shadow-xs' : 'hover:text-[#111312] dark:text-[#F2F6F7]'}`}
             >
               EN
             </button>
             <span>/</span>
             <button
               onClick={() => setLanguage('es')}
-              className={`px-1.5 py-0.5 rounded cursor-pointer ${lang === 'es' ? 'bg-white dark:bg-slate-700 text-emerald-600 font-bold shadow-xs' : 'hover:text-slate-900'}`}
+              className={`px-1.5 py-0.5 rounded cursor-pointer ${lang === 'es' ? 'bg-white dark:bg-[#161E21] text-emerald-600 font-bold shadow-xs' : 'hover:text-[#111312] dark:text-[#F2F6F7]'}`}
             >
               ES
             </button>
@@ -419,7 +419,7 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
             href="/api/v1/public/docs"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 bg-[#1F8FA6] hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors shadow-xs"
           >
             <ExternalLink className="w-3.5 h-3.5" /> Interactive OpenAPI Docs
           </a>
@@ -427,13 +427,13 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 space-x-2 overflow-x-auto pb-1 text-sm font-semibold">
+      <div className="flex border-b border-[#E7E7E2] dark:border-white/8 space-x-2 overflow-x-auto pb-1 text-sm font-semibold">
         <button
           onClick={() => setActiveTab('api_webhooks')}
           className={`px-4 py-2 rounded-t-lg transition-colors cursor-pointer ${
             activeTab === 'api_webhooks'
-              ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/20'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'border-b-2 border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10/50 dark:bg-indigo-950/20'
+              : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7]'
           }`}
         >
           <Key className="w-4 h-4 inline mr-1.5" /> Public API & Webhooks
@@ -443,8 +443,8 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
           onClick={() => setActiveTab('ats_import')}
           className={`px-4 py-2 rounded-t-lg transition-colors cursor-pointer ${
             activeTab === 'ats_import'
-              ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/20'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'border-b-2 border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10/50 dark:bg-indigo-950/20'
+              : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7]'
           }`}
         >
           <Database className="w-4 h-4 inline mr-1.5" /> ATS Connectors & Import
@@ -454,8 +454,8 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
           onClick={() => setActiveTab('model_ops')}
           className={`px-4 py-2 rounded-t-lg transition-colors cursor-pointer ${
             activeTab === 'model_ops'
-              ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/20'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'border-b-2 border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10/50 dark:bg-indigo-950/20'
+              : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7]'
           }`}
         >
           <Cpu className="w-4 h-4 inline mr-1.5" /> ModelOps (Shadow Mode)
@@ -465,8 +465,8 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
           onClick={() => setActiveTab('jd_intel')}
           className={`px-4 py-2 rounded-t-lg transition-colors cursor-pointer ${
             activeTab === 'jd_intel'
-              ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/20'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'border-b-2 border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10/50 dark:bg-indigo-950/20'
+              : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7]'
           }`}
         >
           <Sparkles className="w-4 h-4 inline mr-1.5" /> JD Quality & Inclusivity
@@ -476,8 +476,8 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
           onClick={() => setActiveTab('sso')}
           className={`px-4 py-2 rounded-t-lg transition-colors cursor-pointer ${
             activeTab === 'sso'
-              ? 'border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-950/20'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              ? 'border-b-2 border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10/50 dark:bg-indigo-950/20'
+              : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7]'
           }`}
         >
           <ShieldCheck className="w-4 h-4 inline mr-1.5" /> Enterprise SSO
@@ -506,11 +506,11 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
           )}
 
           {/* API Keys Table */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Active Public API Keys</h3>
-                <p className="text-xs text-slate-500">Scoped access to /api/v1/public (parse, match, rank, explain).</p>
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">Active Public API Keys</h3>
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Scoped access to /api/v1/public (parse, match, rank, explain).</p>
               </div>
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <input
@@ -518,15 +518,15 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
                   placeholder="Key description (e.g. Production CI/CD)"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
-                  className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white flex-1 sm:w-64"
+                  className="text-xs px-3 py-1.5 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] flex-1 sm:w-64"
                 />
                 <Button size="sm" onClick={handleCreateApiKey}>Generate Key</Button>
               </div>
             </div>
 
-            <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
-              <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
-                <thead className="bg-slate-50 dark:bg-surface-dark-hover uppercase text-[10px] font-bold text-slate-500">
+            <div className="overflow-x-auto rounded-lg border border-[#E7E7E2] dark:border-white/8">
+              <table className="w-full text-left text-xs text-[#111312] dark:text-[#F2F6F7]">
+                <thead className="bg-[#F4F4F1] dark:bg-surface-dark-hover uppercase text-[10px] font-bold text-[#5E6460] dark:text-[#9AA7AB]">
                   <tr>
                     <th className="py-2.5 px-3">Name</th>
                     <th className="py-2.5 px-3">Prefix</th>
@@ -538,8 +538,8 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                   {apiKeys.map((k) => (
-                    <tr key={k.id} className="hover:bg-slate-50/50 dark:hover:bg-surface-dark-hover/50">
-                      <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">{k.name}</td>
+                    <tr key={k.id} className="hover:bg-[#F4F4F1]/50 dark:hover:bg-surface-dark-hover/50">
+                      <td className="py-3 px-3 font-semibold text-[#111312] dark:text-[#F2F6F7]">{k.name}</td>
                       <td className="py-3 px-3 font-mono">{k.key_prefix}...</td>
                       <td className="py-3 px-3">
                         <div className="flex gap-1 flex-wrap">
@@ -549,7 +549,7 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
                         </div>
                       </td>
                       <td className="py-3 px-3">{k.rate_limit_per_min} req/min</td>
-                      <td className="py-3 px-3 text-slate-500">{k.last_used_at ? new Date(k.last_used_at).toLocaleDateString() : 'Never'}</td>
+                      <td className="py-3 px-3 text-[#5E6460] dark:text-[#9AA7AB]">{k.last_used_at ? new Date(k.last_used_at).toLocaleDateString() : 'Never'}</td>
                       <td className="py-3 px-3 text-right">
                         <Button variant="danger" size="sm" onClick={() => handleRevokeApiKey(k.id)}>Revoke</Button>
                       </td>
@@ -557,7 +557,7 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
                   ))}
                   {apiKeys.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="py-6 text-center text-slate-500">No active API keys created yet.</td>
+                      <td colSpan={6} className="py-6 text-center text-[#5E6460] dark:text-[#9AA7AB]">No active API keys created yet.</td>
                     </tr>
                   )}
                 </tbody>
@@ -566,11 +566,11 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
           </Card>
 
           {/* Outbound Webhooks Card */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Outbound Webhooks</h3>
-                <p className="text-xs text-slate-500">Real-time HMAC-SHA256 signed event delivery with replay protection.</p>
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">Outbound Webhooks</h3>
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Real-time HMAC-SHA256 signed event delivery with replay protection.</p>
               </div>
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <input
@@ -578,7 +578,7 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
                   placeholder="https://your-domain.com/webhooks"
                   value={newWebhookUrl}
                   onChange={(e) => setNewWebhookUrl(e.target.value)}
-                  className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white flex-1 sm:w-80"
+                  className="text-xs px-3 py-1.5 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] flex-1 sm:w-80"
                 />
                 <Button size="sm" onClick={handleCreateWebhook}>Add Webhook</Button>
               </div>
@@ -586,10 +586,10 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
 
             <div className="space-y-3">
               {webhooks.map((w) => (
-                <div key={w.id} className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-dark-hover flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div key={w.id} className="p-3 rounded-lg border border-[#E7E7E2] dark:border-white/8 bg-[#F4F4F1] dark:bg-surface-dark-hover flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                   <div className="space-y-1">
-                    <div className="font-mono font-bold text-slate-900 dark:text-white">{w.url}</div>
-                    <div className="text-slate-500 font-mono text-[11px]">Secret: {w.secret.slice(0, 10)}... (HMAC-SHA256)</div>
+                    <div className="font-mono font-bold text-[#111312] dark:text-[#F2F6F7]">{w.url}</div>
+                    <div className="text-[#5E6460] dark:text-[#9AA7AB] font-mono text-[11px]">Secret: {w.secret.slice(0, 10)}... (HMAC-SHA256)</div>
                     <div className="flex gap-1">
                       {JSON.parse(w.events_json || '[]').map((ev: string) => (
                         <Badge key={ev} variant="neutral" size="sm">{ev}</Badge>
@@ -613,18 +613,18 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
 
             {/* Delivery Logs Modal/Drawer View */}
             {deliveryLogs.length > 0 && (
-              <div className="mt-4 p-4 rounded-lg bg-slate-900 text-slate-200 text-xs font-mono space-y-2">
+              <div className="mt-4 p-4 rounded-lg bg-[#111312] dark:bg-[#0C1113] text-[#DCDCD7] dark:text-[#C5D0D3] text-xs font-mono space-y-2">
                 <div className="font-bold text-white flex items-center justify-between pb-2 border-b border-slate-800">
                   <span>Recent Webhook Deliveries (HMAC Signed)</span>
-                  <button onClick={() => setDeliveryLogs([])} className="text-slate-400 hover:text-white">✕</button>
+                  <button onClick={() => setDeliveryLogs([])} className="text-[#8A928D] dark:text-[#657378] hover:text-white">✕</button>
                 </div>
                 {deliveryLogs.map((log) => (
                   <div key={log.id} className="flex items-center justify-between py-1 border-b border-slate-800 text-[11px]">
-                    <span className="text-slate-400">{log.event_type}</span>
+                    <span className="text-[#8A928D] dark:text-[#657378]">{log.event_type}</span>
                     <span className={log.status === 'delivered' ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
                       {log.status.toUpperCase()} (HTTP {log.http_status || 'ERR'})
                     </span>
-                    <span className="text-slate-500">{new Date(log.created_at).toLocaleTimeString()}</span>
+                    <span className="text-[#5E6460] dark:text-[#9AA7AB]">{new Date(log.created_at).toLocaleTimeString()}</span>
                   </div>
                 ))}
               </div>
@@ -639,14 +639,14 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
       {activeTab === 'ats_import' && (
         <div className="space-y-6">
           {/* Greenhouse ATS Card */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
                   <Database className="w-5 h-5 text-emerald-600" />
                   Greenhouse Harvest API v1 Connector
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                   Bidirectional sync: fetch active requisitions and candidates; export matched scores into Greenhouse.
                 </p>
               </div>
@@ -658,18 +658,18 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
             {greenhouseStatus && (
               <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-300 dark:border-emerald-800 rounded-lg text-xs space-y-1">
                 <div className="font-bold text-emerald-800 dark:text-emerald-300">✓ {greenhouseStatus.message}</div>
-                <div className="text-slate-500">Latency: {greenhouseStatus.latencyMs} ms</div>
+                <div className="text-[#5E6460] dark:text-[#9AA7AB]">Latency: {greenhouseStatus.latencyMs} ms</div>
               </div>
             )}
 
             {greenhouseJobs.length > 0 && (
               <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Synchronized Requisitions from Greenhouse:</span>
+                <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">Synchronized Requisitions from Greenhouse:</span>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {greenhouseJobs.map((j) => (
-                    <div key={j.externalId} className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 text-xs space-y-1 bg-slate-50 dark:bg-surface-dark-hover">
-                      <div className="font-bold text-slate-900 dark:text-white">{j.title}</div>
-                      <div className="text-slate-500">{j.department} • {j.location}</div>
+                    <div key={j.externalId} className="p-3 rounded-lg border border-[#E7E7E2] dark:border-white/8 text-xs space-y-1 bg-[#F4F4F1] dark:bg-surface-dark-hover">
+                      <div className="font-bold text-[#111312] dark:text-[#F2F6F7]">{j.title}</div>
+                      <div className="text-[#5E6460] dark:text-[#9AA7AB]">{j.department} • {j.location}</div>
                       <div className="flex gap-1 flex-wrap">
                         {j.requiredSkills.map((s: string) => (
                           <Badge key={s} variant="info" size="sm">{s}</Badge>
@@ -683,13 +683,13 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
           </Card>
 
           {/* Dry-Run Import Card */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-slate-800 space-y-4">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-white/8 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                   {t('platform.dryRun')} & Bulk Ingestion
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                   Validates CSV/JSON schema and reports row errors BEFORE any database modification.
                 </p>
               </div>
@@ -702,22 +702,22 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">Entity Type</label>
+                <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block mb-1">Entity Type</label>
                 <select
                   value={importType}
                   onChange={(e) => setImportType(e.target.value as any)}
-                  className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+                  className="w-full text-xs p-2 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
                 >
                   <option value="candidates">Candidates (fullName, email, phone, location, skills)</option>
                   <option value="jobs">Jobs (title, companyName, location, requiredSkills)</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">Format</label>
+                <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block mb-1">Format</label>
                 <select
                   value={importFormat}
                   onChange={(e) => setImportFormat(e.target.value as any)}
-                  className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+                  className="w-full text-xs p-2 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
                 >
                   <option value="csv">CSV (Comma Separated)</option>
                   <option value="json">JSON (Array of objects)</option>
@@ -730,7 +730,7 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
               placeholder={`fullName,email,phone,location,skills,experienceYears\nPriya Sharma,priya@example.com,+91 98765 11111,Chennai,TypeScript;React;Node.js,4`}
               value={importContent}
               onChange={(e) => setImportContent(e.target.value)}
-              className="w-full p-3 font-mono text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+              className="w-full p-3 font-mono text-xs rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-[#F4F4F1] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
             />
 
             <div className="flex items-center gap-2">
@@ -741,9 +741,9 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
 
             {/* Dry-Run Result Table */}
             {dryRunResult && (
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-dark-hover space-y-3 text-xs">
+              <div className="p-4 rounded-xl border border-[#E7E7E2] dark:border-white/8 bg-[#F4F4F1] dark:bg-surface-dark-hover space-y-3 text-xs">
                 <div className="flex items-center gap-4">
-                  <span className="font-bold text-slate-900 dark:text-white">Validation Results:</span>
+                  <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">Validation Results:</span>
                   <Badge variant="success" size="sm">{dryRunResult.validCount} Valid Rows</Badge>
                   {dryRunResult.invalidCount > 0 && (
                     <Badge variant="danger" size="sm">{dryRunResult.invalidCount} Invalid Rows</Badge>
@@ -760,8 +760,8 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
 
                 {dryRunResult.preview?.length > 0 && (
                   <div className="space-y-1">
-                    <span className="font-bold text-slate-700 dark:text-slate-300">Preview (First {dryRunResult.preview.length} valid rows):</span>
-                    <pre className="p-2 bg-slate-900 text-slate-200 rounded text-[11px] overflow-x-auto">
+                    <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">Preview (First {dryRunResult.preview.length} valid rows):</span>
+                    <pre className="p-2 bg-[#111312] dark:bg-[#0C1113] text-[#DCDCD7] dark:text-[#C5D0D3] rounded text-[11px] overflow-x-auto">
                       {JSON.stringify(dryRunResult.preview, null, 2)}
                     </pre>
                   </div>
@@ -777,14 +777,14 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
       {/* ============================================================ */}
       {activeTab === 'model_ops' && (
         <div className="space-y-6">
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E7E7E2] dark:border-white/8">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Cpu className="w-5 h-5 text-indigo-600" />
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
+                  <Cpu className="w-5 h-5 text-[#1F8FA6]" />
                   Model Shadow Mode & Promotion Gate
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                   Runs candidate models in parallel without affecting user-visible scores. Promotion is blocked unless Phase 5 metric gates pass.
                 </p>
               </div>
@@ -801,47 +801,47 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
             {/* Model Comparison Telemetry */}
             {shadowTelemetry && (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                <div className="p-3 bg-slate-50 dark:bg-surface-dark-hover rounded-xl border border-slate-200 dark:border-slate-800">
-                  <div className="text-slate-500 font-semibold">Production Model</div>
-                  <div className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+                <div className="p-3 bg-[#F4F4F1] dark:bg-surface-dark-hover rounded-xl border border-[#E7E7E2] dark:border-white/8">
+                  <div className="text-[#5E6460] dark:text-[#9AA7AB] font-semibold">Production Model</div>
+                  <div className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
                     {shadowTelemetry.prodModel?.model_name}
                   </div>
                   <div className="text-[11px] text-emerald-600 font-semibold">v{shadowTelemetry.prodModel?.version} (Live)</div>
                 </div>
 
-                <div className="p-3 bg-slate-50 dark:bg-surface-dark-hover rounded-xl border border-slate-200 dark:border-slate-800">
-                  <div className="text-slate-500 font-semibold">Candidate Shadow Model</div>
-                  <div className="text-sm font-bold text-indigo-600 dark:text-indigo-400 mt-1">
+                <div className="p-3 bg-[#F4F4F1] dark:bg-surface-dark-hover rounded-xl border border-[#E7E7E2] dark:border-white/8">
+                  <div className="text-[#5E6460] dark:text-[#9AA7AB] font-semibold">Candidate Shadow Model</div>
+                  <div className="text-sm font-bold text-[#1F8FA6] dark:text-[#5FD3E8] mt-1">
                     {shadowTelemetry.shadowModel?.model_name || 'None'}
                   </div>
-                  <div className="text-[11px] text-slate-500">v{shadowTelemetry.shadowModel?.version} (Shadow)</div>
+                  <div className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">v{shadowTelemetry.shadowModel?.version} (Shadow)</div>
                 </div>
 
-                <div className="p-3 bg-slate-50 dark:bg-surface-dark-hover rounded-xl border border-slate-200 dark:border-slate-800">
-                  <div className="text-slate-500 font-semibold">Mean Absolute Error (MAE)</div>
-                  <div className="text-lg font-black text-slate-900 dark:text-white mt-1">
+                <div className="p-3 bg-[#F4F4F1] dark:bg-surface-dark-hover rounded-xl border border-[#E7E7E2] dark:border-white/8">
+                  <div className="text-[#5E6460] dark:text-[#9AA7AB] font-semibold">Mean Absolute Error (MAE)</div>
+                  <div className="text-lg font-black text-[#111312] dark:text-[#F2F6F7] mt-1">
                     {shadowTelemetry.meanAbsoluteError} pts
                   </div>
-                  <div className="text-[11px] text-slate-500">{shadowTelemetry.totalEvaluations} shadow evaluations</div>
+                  <div className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">{shadowTelemetry.totalEvaluations} shadow evaluations</div>
                 </div>
 
-                <div className="p-3 bg-slate-50 dark:bg-surface-dark-hover rounded-xl border border-slate-200 dark:border-slate-800">
-                  <div className="text-slate-500 font-semibold">Phase 5 Metric Gate</div>
+                <div className="p-3 bg-[#F4F4F1] dark:bg-surface-dark-hover rounded-xl border border-[#E7E7E2] dark:border-white/8">
+                  <div className="text-[#5E6460] dark:text-[#9AA7AB] font-semibold">Phase 5 Metric Gate</div>
                   <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-1">
                     ✓ F1 &gt;= 0.85 &amp; NDCG &gt;= 0.90
                   </div>
-                  <div className="text-[11px] text-slate-500">Gate Verified</div>
+                  <div className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">Gate Verified</div>
                 </div>
               </div>
             )}
           </Card>
 
           {/* Active Learning Queue Card */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-slate-800 space-y-4">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-white/8 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Active-Learning Review Queue</h3>
-                <p className="text-xs text-slate-500">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">Active-Learning Review Queue</h3>
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                   Surfaces low-confidence parses (&lt; 0.65) where candidate has consented to AI model training.
                 </p>
               </div>
@@ -855,16 +855,16 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
 
             <div className="space-y-2">
               {activeLearningItems.map((item) => (
-                <div key={item.id} className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 text-xs space-y-1">
+                <div key={item.id} className="p-3 rounded-lg border border-[#E7E7E2] dark:border-white/8 text-xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 dark:text-white">{item.item_type}</span>
+                    <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">{item.item_type}</span>
                     <Badge variant="warning" size="sm">Confidence: {Math.round(item.confidence_score * 100)}%</Badge>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-400 font-mono text-[11px]">{item.raw_text}</p>
+                  <p className="text-[#5E6460] dark:text-[#9AA7AB] font-mono text-[11px]">{item.raw_text}</p>
                 </div>
               ))}
               {activeLearningItems.length === 0 && (
-                <div className="py-6 text-center text-slate-500 text-xs">
+                <div className="py-6 text-center text-[#5E6460] dark:text-[#9AA7AB] text-xs">
                   Active learning queue is clean. All model inferences met confidence thresholds.
                 </div>
               )}
@@ -878,13 +878,13 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
       {/* ============================================================ */}
       {activeTab === 'jd_intel' && (
         <div className="space-y-6">
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-600" />
+              <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[#1F8FA6]" />
                 Job-Description Quality & Inclusivity Analyzer
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                 Identifies unrealistic tech constraints, contradictory seniority, missing requirements separation, and gender-coded language.
               </p>
             </div>
@@ -893,7 +893,7 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
               rows={4}
               value={sampleJdText}
               onChange={(e) => setSampleJdText(e.target.value)}
-              className="w-full p-3 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+              className="w-full p-3 text-xs rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-[#F4F4F1] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
             />
 
             <Button size="sm" onClick={handleAnalyzeJd} isLoading={isAnalyzingJd}>
@@ -901,11 +901,11 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
             </Button>
 
             {jdQualityReport && (
-              <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+              <div className="space-y-4 pt-4 border-t border-[#E7E7E2] dark:border-white/8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-slate-500">Quality Score: </span>
-                    <span className="text-lg font-black text-slate-900 dark:text-white">{jdQualityReport.overallScore}/100</span>
+                    <span className="text-xs font-bold text-[#5E6460] dark:text-[#9AA7AB]">Quality Score: </span>
+                    <span className="text-lg font-black text-[#111312] dark:text-[#F2F6F7]">{jdQualityReport.overallScore}/100</span>
                   </div>
                   <Badge variant={jdQualityReport.overallScore >= 75 ? 'success' : 'danger'}>
                     {jdQualityReport.qualityTier}
@@ -948,24 +948,24 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
       {/* ============================================================ */}
       {activeTab === 'sso' && (
         <div className="space-y-6">
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          <Card className="p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-indigo-600" />
+              <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-[#1F8FA6]" />
                 Enterprise Single Sign-On (Google &amp; Microsoft OIDC)
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                 Enables single-click corporate SSO with domain restriction and automated account provisioning.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">Identity Provider</label>
+                <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block mb-1">Identity Provider</label>
                 <select
                   value={ssoProvider}
                   onChange={(e) => setSsoProvider(e.target.value as any)}
-                  className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+                  className="w-full text-xs p-2 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
                 >
                   <option value="google">Google Workspace (OpenID Connect)</option>
                   <option value="microsoft">Microsoft Entra ID / Azure AD (OpenID Connect)</option>
@@ -973,40 +973,40 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">Allowed Email Domains</label>
+                <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block mb-1">Allowed Email Domains</label>
                 <input
                   type="text"
                   value={ssoAllowedDomains}
                   onChange={(e) => setSsoAllowedDomains(e.target.value)}
                   placeholder="acme.com, engineering.acme.com"
-                  className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+                  className="w-full text-xs p-2 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">Client ID</label>
+                <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block mb-1">Client ID</label>
                 <input
                   type="text"
                   value={ssoClientId}
                   onChange={(e) => setSsoClientId(e.target.value)}
                   placeholder="e.g. 1049281-apps.googleusercontent.com"
-                  className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+                  className="w-full text-xs p-2 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">Client Secret</label>
+                <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block mb-1">Client Secret</label>
                 <input
                   type="password"
                   value={ssoClientSecret}
                   onChange={(e) => setSsoClientSecret(e.target.value)}
                   placeholder="••••••••••••••••"
-                  className="w-full text-xs p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-surface-dark-bg text-slate-900 dark:text-white"
+                  className="w-full text-xs p-2 rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7]"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between pt-4 border-t border-[#E7E7E2] dark:border-white/8">
               <Button size="sm" onClick={() => showToast('success', 'SSO Configured', 'Enterprise OIDC settings saved.')}>
                 Save SSO Configuration
               </Button>
@@ -1014,7 +1014,7 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
                 href="/api/platform/sso/saml/metadata.xml"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-semibold text-indigo-600 hover:underline inline-flex items-center gap-1"
+                className="text-xs font-semibold text-[#1F8FA6] hover:underline inline-flex items-center gap-1"
               >
                 <Download className="w-3.5 h-3.5" /> Download SAML 2.0 SP Metadata XML
               </a>

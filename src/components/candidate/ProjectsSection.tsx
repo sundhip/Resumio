@@ -80,15 +80,15 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
 
       {/* List / Empty State */}
       {projects.length === 0 ? (
-        <div className="p-8 text-center rounded-control bg-slate-50/60 dark:bg-surface-dark-bg/40 border border-dashed border-slate-200 dark:border-surface-dark-border space-y-3">
-          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-surface-dark-card text-slate-400 flex items-center justify-center mx-auto">
+        <div className="p-8 text-center rounded-control bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 border border-dashed border-[#E7E7E2] dark:border-surface-dark-border space-y-3">
+          <div className="w-10 h-10 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-card text-[#8A928D] dark:text-[#657378] flex items-center justify-center mx-auto">
             <FolderGit2 className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
               No projects added yet.
             </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            <p className="text-xs text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
               Highlight personal projects, systems, open-source work, or enterprise builds.
             </p>
           </div>
@@ -112,7 +112,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
               >
                 <div className="space-y-2 min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                       {item.name}
                     </h4>
                     {item.role && (
@@ -123,7 +123,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   </div>
 
                   {(item.start_date || item.end_date) && (
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-500">
+                    <div className="flex items-center gap-2 text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">
                       <Calendar className="w-3 h-3" />
                       <span>
                         {item.start_date || 'N/A'} — {item.end_date || 'Present'}
@@ -132,7 +132,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                   )}
 
                   {item.description && (
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                    <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed whitespace-pre-line">
                       {item.description}
                     </p>
                   )}
@@ -142,7 +142,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                       {techList.map((tech, tIdx) => (
                         <span
                           key={tIdx}
-                          className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-surface-dark-input text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-surface-dark-border"
+                          className="px-2 py-0.5 rounded text-[11px] font-medium bg-[#E9E9E5] dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2]/60 dark:border-surface-dark-border"
                         >
                           {tech}
                         </span>
@@ -168,7 +168,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                         href={item.github_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#9AA7AB] dark:hover:text-white transition-colors"
                       >
                         <GitBranch className="w-3.5 h-3.5" />
                         Repository
@@ -183,7 +183,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                     type="button"
                     onClick={() => handleOpenEdit(item)}
                     title="Edit project"
-                    className="p-1.5 rounded-control text-slate-400 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+                    className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-brand-600 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
                   </button>
@@ -191,7 +191,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                     type="button"
                     onClick={() => setDeletingId(item.id)}
                     title="Delete project"
-                    className="p-1.5 rounded-control text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+                    className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-rose-600 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -239,7 +239,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           </>
         }
       >
-        <p className="text-xs text-slate-600 dark:text-slate-400">
+        <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
           This project record will be permanently deleted from your candidate profile.
         </p>
       </Modal>

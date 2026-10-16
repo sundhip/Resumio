@@ -67,7 +67,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
   // Password Strength Calculation
   const calculatePasswordStrength = (pass: string): { score: number; label: string; color: string } => {
-    if (!pass) return { score: 0, label: 'Not entered', color: 'bg-slate-200 dark:bg-white/10' };
+    if (!pass) return { score: 0, label: 'Not entered', color: 'bg-[#DCDCD7] dark:bg-white/10' };
     let score = 0;
     if (pass.length >= 8) score += 25;
     if (/[A-Z]/.test(pass)) score += 25;
@@ -499,7 +499,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-slate-300 text-[#1F8FA6] focus:ring-[#1F8FA6]"
+                  className="rounded border-[#DCDCD7] text-[#1F8FA6] focus:ring-[#1F8FA6]"
                 />
                 <span>Remember this workstation for 30 days</span>
               </label>

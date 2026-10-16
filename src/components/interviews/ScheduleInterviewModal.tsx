@@ -117,7 +117,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
       <form onSubmit={handleSubmit} className="space-y-4 pt-1 text-xs sm:text-sm">
         {/* Interview Title */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
             Interview Round / Title *
           </label>
           <Input
@@ -130,7 +130,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
 
         {/* Interview Type Selector */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
             Interview Type *
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -140,7 +140,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
               className={`p-2.5 rounded-card border flex items-center justify-center gap-2 text-xs font-semibold transition-all ${
                 interviewType === 'Video'
                   ? 'border-brand-500 bg-brand-50/80 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-slate-50 dark:bg-surface-dark-bg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-dark-hover'
+                  : 'border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover'
               }`}
             >
               <Video className="w-4 h-4 text-brand-600" />
@@ -153,10 +153,10 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
               className={`p-2.5 rounded-card border flex items-center justify-center gap-2 text-xs font-semibold transition-all ${
                 interviewType === 'Phone'
                   ? 'border-brand-500 bg-brand-50/80 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-slate-50 dark:bg-surface-dark-bg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-dark-hover'
+                  : 'border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover'
               }`}
             >
-              <Phone className="w-4 h-4 text-indigo-600" />
+              <Phone className="w-4 h-4 text-[#1F8FA6]" />
               <span>Phone Call</span>
             </button>
 
@@ -166,7 +166,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
               className={`p-2.5 rounded-card border flex items-center justify-center gap-2 text-xs font-semibold transition-all ${
                 interviewType === 'In Person'
                   ? 'border-brand-500 bg-brand-50/80 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-slate-50 dark:bg-surface-dark-bg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-dark-hover'
+                  : 'border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover'
               }`}
             >
               <MapPin className="w-4 h-4 text-emerald-600" />
@@ -178,7 +178,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
         {/* Date, Time & Duration */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Date *
             </label>
             <Input
@@ -190,7 +190,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Time *
             </label>
             <Input
@@ -202,13 +202,13 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Duration
             </label>
             <select
               value={durationMinutes}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setDurationMinutes(Number(e.target.value))}
-              className="w-full h-10 px-3 rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full h-10 px-3 rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <option value={15}>15 minutes</option>
               <option value={30}>30 minutes</option>
@@ -222,14 +222,14 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
         {/* Video Meeting URL */}
         {interviewType === 'Video' && (
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Meeting URL *
             </label>
             <Input
               value={meetingUrl}
               onChange={(e) => setMeetingUrl(e.target.value)}
               placeholder="https://meet.google.com/xxx-xxxx-xxx or https://zoom.us/j/xxx"
-              leftIcon={<Link className="w-3.5 h-3.5 text-slate-400" />}
+              leftIcon={<Link className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />}
               required
             />
           </div>
@@ -238,14 +238,14 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
         {/* In Person Location */}
         {interviewType === 'In Person' && (
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Office / Address Location *
             </label>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g. 4th Floor, Tech Hub Tower, Bengaluru"
-              leftIcon={<MapPin className="w-3.5 h-3.5 text-slate-400" />}
+              leftIcon={<MapPin className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />}
               required
             />
           </div>
@@ -253,7 +253,7 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
 
         {/* Instructions / Notes for Candidate */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
             Candidate Instructions & Notes
           </label>
           <textarea
@@ -261,12 +261,12 @@ export const ScheduleInterviewModal: React.FC<ScheduleInterviewModalProps> = ({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Provide any instructions, preparation topics, or interview format details for the candidate..."
             rows={2}
-            className="w-full p-2.5 rounded-control text-xs bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="w-full p-2.5 rounded-control text-xs bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
         </div>
 
         {/* Modal Actions */}
-        <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-surface-dark-border">
+        <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#EFEFEA] dark:border-surface-dark-border">
           <Button type="button" variant="secondary" size="md" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>

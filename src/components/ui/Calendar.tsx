@@ -75,19 +75,19 @@ export const Calendar: React.FC<CalendarProps> = ({
     <div className={clsx('w-full', className)}>
       {/* Month & Nav */}
       <div className="flex items-center justify-between mb-3 px-1">
-        <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+        <h4 className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
           {monthNames[month]} {year}
         </h4>
         <div className="flex items-center gap-1">
           <button
             onClick={prevMonth}
-            className="p-1 rounded-control text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+            className="p-1 rounded-control text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#657378] dark:hover:text-white hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={nextMonth}
-            className="p-1 rounded-control text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+            className="p-1 rounded-control text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#657378] dark:hover:text-white hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -95,7 +95,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       </div>
 
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-slate-400 dark:text-slate-500 mb-1">
+      <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] mb-1">
         <span>Su</span>
         <span>Mo</span>
         <span>Tu</span>
@@ -120,8 +120,8 @@ export const Calendar: React.FC<CalendarProps> = ({
               }}
               className={clsx(
                 'h-8 text-xs rounded-control flex flex-col items-center justify-center relative transition-all duration-150 select-none',
-                !currentMonth && 'text-slate-300 dark:text-slate-700 pointer-events-none opacity-40',
-                currentMonth && !isSelected && !isToday && 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-dark-hover',
+                !currentMonth && 'text-[#8A928D] dark:text-[#9AA7AB] dark:text-[#5E6460] dark:text-[#9AA7AB] pointer-events-none opacity-40',
+                currentMonth && !isSelected && !isToday && 'text-[#111312] dark:text-[#F2F6F7] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover',
                 isToday && !isSelected && 'border border-brand-500/50 text-brand-600 dark:text-brand-400 font-bold bg-brand-50/40 dark:bg-brand-950/30',
                 isSelected && 'bg-brand-600 text-white font-bold shadow-sm'
               )}
@@ -142,9 +142,9 @@ export const Calendar: React.FC<CalendarProps> = ({
 
       {/* Upcoming events preview */}
       {interviews.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-surface-dark-border space-y-2">
+        <div className="mt-4 pt-4 border-t border-[#EFEFEA] dark:border-surface-dark-border space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+            <span className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] uppercase tracking-wider">
               Upcoming ({interviews.length})
             </span>
           </div>
@@ -152,16 +152,16 @@ export const Calendar: React.FC<CalendarProps> = ({
             {interviews.map((int) => (
               <div
                 key={int.id}
-                className="p-2.5 rounded-control bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border/60 flex items-start justify-between gap-2 text-left"
+                className="p-2.5 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border/60 flex items-start justify-between gap-2 text-left"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-brand-500" />
-                    <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
+                    <p className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] truncate">
                       {int.jobTitle}
                     </p>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                     {int.date} • {int.time} ({int.type})
                   </p>
                 </div>

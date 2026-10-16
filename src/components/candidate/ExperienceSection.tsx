@@ -73,15 +73,15 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
 
       {/* List / Empty State */}
       {experienceList.length === 0 ? (
-        <div className="p-8 text-center rounded-control bg-slate-50/60 dark:bg-surface-dark-bg/40 border border-dashed border-slate-200 dark:border-surface-dark-border space-y-3">
-          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-surface-dark-card text-slate-400 flex items-center justify-center mx-auto">
+        <div className="p-8 text-center rounded-control bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 border border-dashed border-[#E7E7E2] dark:border-surface-dark-border space-y-3">
+          <div className="w-10 h-10 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-card text-[#8A928D] dark:text-[#657378] flex items-center justify-center mx-auto">
             <Briefcase className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
               No experience added yet.
             </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            <p className="text-xs text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
               Add your current or past work history, internships, and full-time employment roles.
             </p>
           </div>
@@ -100,7 +100,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
             >
               <div className="space-y-1 min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {item.job_title}
                   </h4>
                   <Badge variant="neutral" size="sm">
@@ -113,12 +113,12 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]">
                   <Building2 className="w-3.5 h-3.5 text-brand-500" />
                   <span>{item.company}</span>
                 </div>
 
-                <div className="flex items-center gap-3 text-[11px] text-slate-400 dark:text-slate-500 flex-wrap">
+                <div className="flex items-center gap-3 text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] flex-wrap">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     {item.start_date} — {Boolean(item.currently_working) ? 'Present' : item.end_date || 'N/A'}
@@ -135,7 +135,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                 </div>
 
                 {item.description && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed whitespace-pre-line">
+                  <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1.5 leading-relaxed whitespace-pre-line">
                     {item.description}
                   </p>
                 )}
@@ -147,7 +147,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                   type="button"
                   onClick={() => handleOpenEdit(item)}
                   title="Edit experience"
-                  className="p-1.5 rounded-control text-slate-400 hover:text-brand-600 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+                  className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-brand-600 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                 </button>
@@ -155,7 +155,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                   type="button"
                   onClick={() => setDeletingId(item.id)}
                   title="Delete experience"
-                  className="p-1.5 rounded-control text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+                  className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-rose-600 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -202,7 +202,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
           </>
         }
       >
-        <p className="text-xs text-slate-600 dark:text-slate-400">
+        <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
           This record will be permanently deleted from your profile and database.
         </p>
       </Modal>

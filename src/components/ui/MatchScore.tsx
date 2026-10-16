@@ -19,7 +19,7 @@ export const MatchScore: React.FC<MatchScoreProps> = ({
 }) => {
   const getRating = (val: number) => {
     if (val >= 90) return { label: 'Excellent Match', color: 'text-brand-600 dark:text-brand-400', stroke: '#8B5CF6' };
-    if (val >= 80) return { label: 'Strong Match', color: 'text-indigo-600 dark:text-indigo-400', stroke: '#6366F1' };
+    if (val >= 80) return { label: 'Strong Match', color: 'text-[#1F8FA6] dark:text-[#5FD3E8]', stroke: '#6366F1' };
     if (val >= 70) return { label: 'Good Match', color: 'text-emerald-600 dark:text-emerald-400', stroke: '#10B981' };
     return { label: 'Moderate Match', color: 'text-amber-600 dark:text-amber-400', stroke: '#F59E0B' };
   };
@@ -46,8 +46,8 @@ export const MatchScore: React.FC<MatchScoreProps> = ({
   if (variant === 'compact') {
     return (
       <div className={clsx('flex items-center gap-2', className)}>
-        <span className={clsx('font-bold text-sm text-slate-900 dark:text-white')}>{score}%</span>
-        <div className="w-16 h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+        <span className={clsx('font-bold text-sm text-[#111312] dark:text-[#F2F6F7]')}>{score}%</span>
+        <div className="w-16 h-1.5 rounded-full bg-[#E9E9E5] dark:bg-[#111719] overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-brand-600 to-indigo-500 rounded-full transition-all duration-500"
             style={{ width: `${score}%` }}
@@ -61,20 +61,20 @@ export const MatchScore: React.FC<MatchScoreProps> = ({
     return (
       <div className={clsx('w-full', className)}>
         <div className="flex items-center justify-between text-xs mb-1.5">
-          <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-slate-300">
+          <span className="flex items-center gap-1 font-medium text-[#111312] dark:text-[#F2F6F7]">
             <Sparkles className="w-3.5 h-3.5 text-brand-500" />
             AI Match Score
           </span>
           <span className="font-bold text-brand-600 dark:text-brand-400">{score}%</span>
         </div>
-        <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+        <div className="h-2 w-full bg-[#E9E9E5] dark:bg-[#111719] rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-500 rounded-full transition-all duration-700 ease-out"
             style={{ width: `${score}%` }}
           />
         </div>
         {showLabel && (
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             {rating.label} based on resume & job requirements
           </p>
         )}
@@ -98,7 +98,7 @@ export const MatchScore: React.FC<MatchScoreProps> = ({
               stroke="currentColor"
               strokeWidth="6"
               fill="transparent"
-              className="text-slate-200 dark:text-slate-800"
+              className="text-[#DCDCD7] dark:text-[#C5D0D3] dark:text-[#111312] dark:text-[#F2F6F7]"
             />
             <circle
               cx="40"
@@ -114,17 +114,17 @@ export const MatchScore: React.FC<MatchScoreProps> = ({
             />
           </svg>
           <div className="absolute flex flex-col items-center justify-center">
-            <span className="text-lg font-bold text-slate-900 dark:text-white leading-none">{score}%</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mt-0.5">Match</span>
+            <span className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] leading-none">{score}%</span>
+            <span className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider font-semibold mt-0.5">Match</span>
           </div>
         </div>
         {showLabel && (
           <div>
             <div className="flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-brand-500" />
-              <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{rating.label}</h4>
+              <h4 className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">{rating.label}</h4>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">AI semantic alignment</p>
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">AI semantic alignment</p>
           </div>
         )}
       </div>
@@ -143,7 +143,7 @@ export const MatchScore: React.FC<MatchScoreProps> = ({
         <Sparkles className="w-3.5 h-3.5 text-brand-500" />
         AI Match
       </div>
-      <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-1">
+      <div className="text-3xl sm:text-4xl font-extrabold text-[#111312] dark:text-[#F2F6F7] tracking-tight mb-1">
         {score}%
       </div>
       <div className={clsx('text-xs font-medium', rating.color)}>

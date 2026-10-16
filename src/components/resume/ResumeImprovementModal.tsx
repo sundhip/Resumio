@@ -124,12 +124,12 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
     >
       <div className="space-y-5 pt-1 text-xs sm:text-sm">
         {/* Target Job Selector Strip */}
-        <div className="p-3 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-3 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-0.5">
-            <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
               <Briefcase className="w-3.5 h-3.5 text-brand-600" /> Target Job Alignment (Optional)
             </span>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
               Select a position to analyze targeted skill gaps and tailoring tips.
             </p>
           </div>
@@ -138,7 +138,7 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
             <select
               value={selectedJobId}
               onChange={(e) => setSelectedJobId(e.target.value)}
-              className="h-8 px-2.5 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="h-8 px-2.5 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border text-[#111312] dark:text-[#F2F6F7] focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="">General Resume Review</option>
               {jobs.map((j) => (
@@ -164,10 +164,10 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
         {isLoading ? (
           <div className="py-12 flex flex-col items-center justify-center space-y-3">
             <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs text-slate-500 font-medium">Analyzing parsed resume sections and phrasing...</p>
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-medium">Analyzing parsed resume sections and phrasing...</p>
           </div>
         ) : !data ? (
-          <div className="p-8 text-center text-xs text-slate-400">
+          <div className="p-8 text-center text-xs text-[#8A928D] dark:text-[#657378]">
             No resume review data available.
           </div>
         ) : (
@@ -177,27 +177,27 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
               <span className="text-xs font-bold text-brand-800 dark:text-brand-300 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-brand-600" /> Overall Assessment
               </span>
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+              <p className="text-xs text-[#111312] dark:text-[#F2F6F7] leading-relaxed">
                 {data.overallFeedback}
               </p>
             </div>
 
             {/* Target Job Specific Feedback (if selected) */}
             {data.targetJobComparison && (
-              <div className="p-3.5 rounded-card bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-200/80 dark:border-indigo-900/50 space-y-2">
+              <div className="p-3.5 rounded-card bg-[#1F8FA6]/10/60 dark:bg-indigo-950/20 border border-[#1F8FA6]/30/80 dark:border-indigo-900/50 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-indigo-800 dark:text-indigo-300 flex items-center gap-1.5">
-                    <Briefcase className="w-3.5 h-3.5 text-indigo-600" /> Target Role: {data.targetJobComparison.jobTitle}
+                  <span className="text-xs font-bold text-indigo-800 dark:text-[#5FD3E8] flex items-center gap-1.5">
+                    <Briefcase className="w-3.5 h-3.5 text-[#1F8FA6]" /> Target Role: {data.targetJobComparison.jobTitle}
                   </span>
-                  <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">
+                  <span className="text-[11px] text-[#1F8FA6] dark:text-[#5FD3E8] font-semibold">
                     {data.targetJobComparison.companyName}
                   </span>
                 </div>
 
-                <div className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+                <div className="space-y-1.5 text-xs text-[#111312] dark:text-[#F2F6F7]">
                   {data.targetJobComparison.alignmentAdvice.map((adv, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">•</span>
+                      <span className="text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">•</span>
                       <span>{adv}</span>
                     </div>
                   ))}
@@ -213,10 +213,10 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
                     <Zap className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                    <h4 className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
                       Career Copilot: Google XYZ Bullet Rewriter
                     </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                       Convert passive duties into: <em>Accomplished [X] as measured by [Y] by doing [Z]</em>
                     </p>
                   </div>
@@ -232,7 +232,7 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
                   value={bulletInput}
                   onChange={(e) => setBulletInput(e.target.value)}
                   placeholder="Paste your original bullet point, e.g. Built microservices for candidate search"
-                  className="w-full px-3 py-2 text-xs rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full px-3 py-2 text-xs rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-[#111312] dark:text-[#F2F6F7] focus:outline-none focus:ring-1 focus:ring-purple-500"
                 />
 
                 <div className="flex items-center gap-2">
@@ -241,7 +241,7 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
                     value={skillContext}
                     onChange={(e) => setSkillContext(e.target.value)}
                     placeholder="Key skill/tech stack (optional, e.g. Node.js & Redis)"
-                    className="flex-1 px-3 py-1.5 text-xs rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-slate-900 dark:text-white focus:outline-none"
+                    className="flex-1 px-3 py-1.5 text-xs rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card text-[#111312] dark:text-[#F2F6F7] focus:outline-none"
                   />
                   <Button
                     variant="primary"
@@ -271,7 +271,7 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
                       {copiedRewrite ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
-                  <p className="font-semibold text-slate-900 dark:text-white leading-relaxed p-2 rounded bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-100 dark:border-surface-dark-border">
+                  <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] leading-relaxed p-2 rounded bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#EFEFEA] dark:border-surface-dark-border">
                     {rewrittenResult.rewritten}
                   </p>
                 </div>
@@ -280,18 +280,18 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
 
             {/* Section-by-Section Recommendations */}
             <div className="space-y-3 pt-1">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Section-by-Section Guidance
               </h4>
 
               {data.sections.map((sec, idx) => (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-card bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border space-y-2"
+                  className="p-3.5 rounded-card bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border space-y-2"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                      <span className="font-bold text-[#111312] dark:text-[#F2F6F7] text-xs sm:text-sm">
                         {sec.section}
                       </span>
                     </div>
@@ -312,7 +312,7 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
 
                   <div className="space-y-1.5 pt-0.5">
                     {sec.suggestions.map((sug, sIdx) => (
-                      <div key={sIdx} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300">
+                      <div key={sIdx} className="flex items-start gap-2 text-xs text-[#5E6460] dark:text-[#F2F6F7]">
                         <span className="text-brand-600 font-bold shrink-0 mt-0.5">•</span>
                         <span className="leading-relaxed">{sug}</span>
                       </div>
@@ -325,8 +325,8 @@ export const ResumeImprovementModal: React.FC<ResumeImprovementModalProps> = ({
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-surface-dark-border">
-          <span className="text-[11px] text-slate-400">
+        <div className="flex items-center justify-between pt-3 border-t border-[#EFEFEA] dark:border-surface-dark-border">
+          <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">
             Resumio assists with presentation clarity; never fabricate unevidenced credentials.
           </span>
           <Button variant="secondary" size="md" onClick={onClose}>

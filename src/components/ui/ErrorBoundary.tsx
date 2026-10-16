@@ -41,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <h2 className="text-xl font-bold tracking-tight text-white">
                 Application Interrupted
               </h2>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-[#8A928D] dark:text-[#657378] leading-relaxed">
                 An unexpected component rendering error was intercepted. The error boundary prevented a system crash.
               </p>
             </div>

@@ -80,7 +80,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             clsx(
               'absolute z-50 mt-1.5 rounded-card p-1.5',
               'bg-white dark:bg-surface-dark-card',
-              'border border-slate-200 dark:border-surface-dark-border',
+              'border border-[#E7E7E2] dark:border-surface-dark-border',
               'shadow-dropdown dark:shadow-dropdown-dark',
               'animate-fade-in focus:outline-none',
               align === 'right' ? 'right-0' : 'left-0',
@@ -98,7 +98,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   return (
                     <div
                       key={`div-${index}`}
-                      className="my-1 border-t border-slate-100 dark:border-surface-dark-border"
+                      className="my-1 border-t border-[#EFEFEA] dark:border-surface-dark-border"
                     />
                   );
                 }
@@ -116,12 +116,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     className={clsx(
                       'w-full flex items-center justify-between px-3 py-2 rounded-control text-xs sm:text-sm font-medium transition-colors text-left select-none',
                       item.disabled
-                        ? 'opacity-50 cursor-not-allowed text-slate-400'
+                        ? 'opacity-50 cursor-not-allowed text-[#8A928D] dark:text-[#657378]'
                         : item.destructive
                         ? 'text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40'
                         : item.active
                         ? 'bg-brand-50/80 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 font-semibold'
-                        : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-surface-dark-hover'
+                        : 'text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover'
                     )}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">

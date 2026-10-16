@@ -27,7 +27,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   };
 
   return (
-    <div className="rounded-card bg-white dark:bg-surface-dark-card border border-slate-200/80 dark:border-surface-dark-border p-5 sm:p-6 shadow-xs relative overflow-hidden transition-colors">
+    <div className="rounded-card bg-white dark:bg-surface-dark-card border border-[#E7E7E2]/80 dark:border-surface-dark-border p-5 sm:p-6 shadow-xs relative overflow-hidden transition-colors">
       {/* Top subtle decorative gradient bar */}
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-500" />
 
@@ -52,7 +52,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 type="button"
                 onClick={onPhotoUploadClick}
                 title="Change profile photo"
-                className="absolute bottom-0 right-0 p-1.5 rounded-full bg-slate-900/85 hover:bg-brand-600 text-white shadow-xs transition-all border border-white dark:border-surface-dark-card"
+                className="absolute bottom-0 right-0 p-1.5 rounded-full bg-[#111312] dark:bg-[#0C1113]/85 hover:bg-brand-600 text-white shadow-xs transition-all border border-white dark:border-surface-dark-card"
               >
                 <Camera className="w-3.5 h-3.5" />
               </button>
@@ -62,7 +62,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           {/* Identity & Contacts */}
           <div className="space-y-1.5 min-w-0">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight truncate">
+              <h1 className="text-xl sm:text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight truncate">
                 {profile.full_name || 'Candidate Name'}
               </h1>
               <Badge variant="purple" size="sm">
@@ -70,25 +70,25 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </Badge>
             </div>
 
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            <p className="text-sm font-medium text-[#111312] dark:text-[#F2F6F7]">
               {profile.headline || 'No professional headline set yet.'}
             </p>
 
-            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap pt-0.5">
+            <div className="flex items-center gap-3 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex-wrap pt-0.5">
               <span className="flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <MapPin className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                 {profile.location || 'Location not specified'}
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Mail className="w-3.5 h-3.5 text-slate-400" />
+                <Mail className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                 {profile.email || 'Email'}
               </span>
               {profile.phone && (
                 <>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5 text-slate-400" />
+                    <Phone className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                     {profile.phone}
                   </span>
                 </>
@@ -98,9 +98,9 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </div>
 
         {/* Right Action & Dynamic Completion Pill */}
-        <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-surface-dark-border shrink-0">
+        <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-[#EFEFEA] dark:border-surface-dark-border shrink-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-medium">
               Profile Strength:
             </span>
             <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-brand-500/10 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-500/20 flex items-center gap-1">

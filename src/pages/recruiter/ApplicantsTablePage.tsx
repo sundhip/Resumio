@@ -146,29 +146,29 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
             Applicant Pipeline
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Review, screen, filter, and advance candidates with AI Match recommendations.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           {/* Live SSE Bus Status */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border text-slate-600 dark:text-slate-300">
-            <Radio className={`w-3.5 h-3.5 ${isConnected ? 'text-emerald-500 animate-pulse' : 'text-slate-400'}`} />
+          <div className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2] dark:border-surface-dark-border text-[#5E6460] dark:text-[#F2F6F7]">
+            <Radio className={`w-3.5 h-3.5 ${isConnected ? 'text-emerald-500 animate-pulse' : 'text-[#8A928D] dark:text-[#657378]'}`} />
             <span className="hidden sm:inline font-medium">{isConnected ? 'Live Sync' : 'Connecting'}</span>
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-slate-100 dark:bg-surface-dark-bg p-1 rounded-control border border-slate-200 dark:border-surface-dark-border">
+          <div className="flex items-center bg-[#E9E9E5] dark:bg-surface-dark-bg p-1 rounded-control border border-[#E7E7E2] dark:border-surface-dark-border">
             <button
               onClick={() => setViewMode('table')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
                 viewMode === 'table'
                   ? 'bg-white dark:bg-surface-dark-card text-brand-600 dark:text-brand-400 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3]'
               }`}
             >
               <List className="w-3.5 h-3.5" />
@@ -179,7 +179,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
                 viewMode === 'kanban'
                   ? 'bg-white dark:bg-surface-dark-card text-brand-600 dark:text-brand-400 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3]'
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
@@ -200,7 +200,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-control border transition-colors ${
               isBlindMode
                 ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                : 'bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border text-slate-700 dark:text-slate-300 hover:bg-slate-50'
+                : 'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border text-[#111312] dark:text-[#F2F6F7] hover:bg-[#F4F4F1]'
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
@@ -243,7 +243,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-10 px-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              className="h-10 px-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
             >
               <option value="all">All Statuses</option>
               <option value="Shortlisted">Shortlisted</option>
@@ -258,7 +258,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             <select
               value={minScoreFilter}
               onChange={(e) => setMinScoreFilter(Number(e.target.value))}
-              className="h-10 px-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              className="h-10 px-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
             >
               <option value={0}>All AI Scores</option>
               <option value={90}>Score ≥ 90% (Top Fit)</option>
@@ -273,7 +273,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                 setSortBy(e.target.value as any);
                 setCurrentPage(1);
               }}
-              className="h-10 px-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              className="h-10 px-3 text-xs sm:text-sm rounded-control bg-white dark:bg-surface-dark-input text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20"
             >
               <option value="score_desc">Sort: Highest Match</option>
               <option value="score_asc">Sort: Lowest Match</option>
@@ -281,7 +281,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
               <option value="exp_desc">Sort: Most Experience</option>
             </select>
 
-            <span className="text-xs text-slate-400 px-2 shrink-0">
+            <span className="text-xs text-[#8A928D] dark:text-[#657378] px-2 shrink-0">
               Showing {filteredCandidates.length} of {candidates.length}
             </span>
           </div>
@@ -304,14 +304,14 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                     handleStatusChange(candId, colStatus);
                   }
                 }}
-                className="flex flex-col bg-slate-50/80 dark:bg-surface-dark-bg/60 rounded-xl p-3 border border-slate-200/80 dark:border-surface-dark-border min-h-[500px]"
+                className="flex flex-col bg-[#F4F4F1]/80 dark:bg-surface-dark-bg/60 rounded-xl p-3 border border-[#E7E7E2]/80 dark:border-surface-dark-border min-h-[500px]"
               >
                 <div className="flex items-center justify-between mb-3 px-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-200">
+                    <span className="font-bold text-xs uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
                       {colStatus}
                     </span>
-                    <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-white dark:bg-surface-dark-card text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-surface-dark-border shadow-xs">
+                    <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-white dark:bg-surface-dark-card text-[#5E6460] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border shadow-xs">
                       {colCandidates.length}
                     </span>
                   </div>
@@ -319,7 +319,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
 
                 <div className="space-y-2.5 flex-1 overflow-y-auto">
                   {colCandidates.length === 0 ? (
-                    <div className="border border-dashed border-slate-200 dark:border-surface-dark-border rounded-lg p-6 text-center text-xs text-slate-400">
+                    <div className="border border-dashed border-[#E7E7E2] dark:border-surface-dark-border rounded-lg p-6 text-center text-xs text-[#8A928D] dark:text-[#657378]">
                       Drop candidate here
                     </div>
                   ) : (
@@ -331,7 +331,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                           e.dataTransfer.setData('text/plain', cand.id);
                         }}
                         onClick={() => setSelectedCandidate(cand)}
-                        className="p-3.5 rounded-lg bg-white dark:bg-surface-dark-card border border-slate-200/90 dark:border-surface-dark-border shadow-xs hover:shadow-md transition-all cursor-grab active:cursor-grabbing space-y-2.5"
+                        className="p-3.5 rounded-lg bg-white dark:bg-surface-dark-card border border-[#E7E7E2]/90 dark:border-surface-dark-border shadow-xs hover:shadow-md transition-all cursor-grab active:cursor-grabbing space-y-2.5"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
@@ -341,16 +341,16 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                               className="w-8 h-8 rounded-full object-cover shrink-0 ring-1 ring-slate-200"
                             />
                             <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                              <h4 className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] truncate">
                                 {cand.name}
                               </h4>
-                              <p className="text-[10px] text-slate-400 truncate">{cand.title}</p>
+                              <p className="text-[10px] text-[#8A928D] dark:text-[#657378] truncate">{cand.title}</p>
                             </div>
                           </div>
                           <MatchScore score={cand.aiScore} variant="pill" size="sm" />
                         </div>
 
-                        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100 dark:border-surface-dark-border">
+                        <div className="flex items-center justify-between text-[11px] text-[#5E6460] dark:text-[#9AA7AB] pt-1 border-t border-[#EFEFEA] dark:border-surface-dark-border">
                           <span>{cand.experienceYears} yrs exp</span>
                           <span className="text-[10px] text-brand-600 dark:text-brand-400 font-medium truncate max-w-[120px]">
                             {cand.appliedJob}
@@ -370,7 +370,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-surface-dark-border bg-slate-50/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <tr className="border-b border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 <th className="py-3.5 px-5">Candidate</th>
                 <th className="py-3.5 px-4">Job Role</th>
                 <th className="py-3.5 px-4">AI Match</th>
@@ -383,7 +383,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             <tbody className="divide-y divide-slate-100 dark:divide-surface-dark-border text-xs sm:text-sm">
               {paginatedCandidates.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-12 text-slate-400">
+                  <td colSpan={7} className="text-center py-12 text-[#8A928D] dark:text-[#657378]">
                     No candidates match the selected filters.
                   </td>
                 </tr>
@@ -391,14 +391,14 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                 paginatedCandidates.map((cand) => (
                   <tr
                     key={cand.id}
-                    className="hover:bg-slate-50/70 dark:hover:bg-surface-dark-hover/50 transition-colors group cursor-pointer"
+                    className="hover:bg-[#F4F4F1]/70 dark:hover:bg-surface-dark-hover/50 transition-colors group cursor-pointer"
                     onClick={() => setSelectedCandidate(cand)}
                   >
                     {/* Candidate */}
                     <td className="py-3.5 px-5">
                       <div className="flex items-center gap-3 min-w-0">
                         {isBlindMode ? (
-                          <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-surface-dark-border flex items-center justify-center text-slate-500 font-bold text-xs shrink-0 ring-1 ring-slate-300">
+                          <div className="w-9 h-9 rounded-full bg-[#DCDCD7] dark:bg-surface-dark-border flex items-center justify-center text-[#5E6460] dark:text-[#9AA7AB] font-bold text-xs shrink-0 ring-1 ring-slate-300">
                             #
                           </div>
                         ) : (
@@ -409,10 +409,10 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                           />
                         )}
                         <div className="min-w-0">
-                          <p className="font-semibold text-slate-900 dark:text-white truncate">
+                          <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate">
                             {isBlindMode ? `Candidate #${cand.id.replace(/[^a-zA-Z0-9]/g, '').slice(-4).toUpperCase()}` : cand.name}
                           </p>
-                          <p className="text-[11px] text-slate-400 truncate">
+                          <p className="text-[11px] text-[#8A928D] dark:text-[#657378] truncate">
                             {isBlindMode ? 'identity protected (EEOC)' : cand.email}
                           </p>
                         </div>
@@ -420,7 +420,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                     </td>
 
                     {/* Job */}
-                    <td className="py-3.5 px-4 font-medium text-slate-800 dark:text-slate-200 truncate max-w-[180px]">
+                    <td className="py-3.5 px-4 font-medium text-[#111312] dark:text-[#F2F6F7] truncate max-w-[180px]">
                       {cand.appliedJob}
                     </td>
 
@@ -435,13 +435,13 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                         {cand.skills.slice(0, 2).map((s, i) => (
                           <span
                             key={i}
-                            className="px-2 py-0.5 text-[10px] rounded bg-slate-100 dark:bg-surface-dark-bg text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-surface-dark-border"
+                            className="px-2 py-0.5 text-[10px] rounded bg-[#E9E9E5] dark:bg-surface-dark-bg text-[#5E6460] dark:text-[#9AA7AB] border border-[#E7E7E2]/60 dark:border-surface-dark-border"
                           >
                             {s.name}
                           </span>
                         ))}
                         {cand.skills.length > 2 && (
-                          <span className="text-[10px] text-slate-400">
+                          <span className="text-[10px] text-[#8A928D] dark:text-[#657378]">
                             +{cand.skills.length - 2}
                           </span>
                         )}
@@ -449,7 +449,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                     </td>
 
                     {/* Experience */}
-                    <td className="py-3.5 px-4 text-slate-600 dark:text-slate-400">
+                    <td className="py-3.5 px-4 text-[#5E6460] dark:text-[#9AA7AB]">
                       {cand.experienceYears} yrs
                     </td>
 
@@ -467,7 +467,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                         align="right"
                         width="sm"
                         trigger={
-                          <button className="p-1.5 rounded-control text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-surface-dark-hover">
+                          <button className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover">
                             <MoreHorizontal className="w-4 h-4" />
                           </button>
                         }
@@ -475,7 +475,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                           {
                             id: 'view',
                             label: 'View Profile',
-                            icon: <FileText className="w-4 h-4 text-slate-400" />,
+                            icon: <FileText className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />,
                             onClick: () => setSelectedCandidate(cand),
                           },
                           {
@@ -523,7 +523,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
 
         {/* High-Capacity Pagination Footer */}
         {filteredCandidates.length > 0 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 bg-slate-50/75 dark:bg-surface-dark-bg/60 border-t border-slate-200 dark:border-surface-dark-border text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 bg-[#F4F4F1]/75 dark:bg-surface-dark-bg/60 border-t border-[#E7E7E2] dark:border-surface-dark-border text-xs text-[#5E6460] dark:text-[#9AA7AB]">
             <div className="flex items-center gap-2">
               <span>Rows per page:</span>
               <select
@@ -532,7 +532,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="h-8 px-2 rounded-control bg-white dark:bg-surface-dark-input text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-surface-dark-border"
+                className="h-8 px-2 rounded-control bg-white dark:bg-surface-dark-input text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3] border border-[#E7E7E2] dark:border-surface-dark-border"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -554,7 +554,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
               >
                 Previous
               </Button>
-              <span className="px-2 font-medium text-slate-700 dark:text-slate-300">
+              <span className="px-2 font-medium text-[#111312] dark:text-[#F2F6F7]">
                 Page {currentPage} of {totalPages}
               </span>
               <Button
@@ -584,10 +584,10 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
                 className="w-10 h-10 rounded-full object-cover ring-1 ring-slate-200"
               />
               <div>
-                <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+                <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7]">
                   {selectedCandidate.name}
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                   {selectedCandidate.title} • {selectedCandidate.location}
                 </p>
               </div>
@@ -645,28 +645,28 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
               </div>
             )}
 
-            <div className="p-4 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200 dark:border-surface-dark-border flex items-center justify-between">
+            <div className="p-4 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2] dark:border-surface-dark-border flex items-center justify-between">
               <MatchScore score={selectedCandidate.aiScore} variant="circle" />
               <div className="text-right">
-                <span className="text-xs text-slate-400">Compensation Expectation</span>
-                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                <span className="text-xs text-[#8A928D] dark:text-[#657378]">Compensation Expectation</span>
+                <p className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                   {selectedCandidate.salaryExpectation}
                 </p>
-                <span className="text-xs text-slate-400">{selectedCandidate.education}</span>
+                <span className="text-xs text-[#8A928D] dark:text-[#657378]">{selectedCandidate.education}</span>
               </div>
             </div>
 
             <div className="space-y-1">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Professional Overview
               </h5>
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed p-3 rounded-control bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border">
+              <p className="text-xs text-[#111312] dark:text-[#F2F6F7] leading-relaxed p-3 rounded-control bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border">
                 {selectedCandidate.summary}
               </p>
             </div>
 
             <div className="space-y-1">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Extracted Skills
               </h5>
               <div className="flex flex-wrap gap-1.5">
@@ -717,7 +717,7 @@ export const ApplicantsTablePage: React.FC<ApplicantsTablePageProps> = ({ onNavi
             </>
           }
         >
-          <p className="text-xs text-slate-600 dark:text-slate-400">
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
             This will move the candidate's status to <strong>Rejected</strong>. They will receive a respectful notification update.
           </p>
         </Modal>

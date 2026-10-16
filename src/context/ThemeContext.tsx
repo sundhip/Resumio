@@ -3,6 +3,7 @@ import type { Theme } from '../types';
 
 interface ThemeContextType {
   theme: Theme;
+  resolvedTheme: 'light' | 'dark';
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
 }
@@ -16,15 +17,26 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return 'system';
   });
 
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'dark';
+    if (theme === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme === 'light' ? 'light' : 'dark';
+  });
+
   useEffect(() => {
     const root = document.documentElement;
 
     const applyResolvedTheme = () => {
-      let resolved = theme;
+      let resolved: 'light' | 'dark' = 'dark';
       if (theme === 'system') {
         resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      } else {
+        resolved = theme === 'light' ? 'light' : 'dark';
       }
 
+      setResolvedTheme(resolved);
       root.setAttribute('data-theme', resolved);
       root.style.colorScheme = resolved;
 
@@ -58,7 +70,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );

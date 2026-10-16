@@ -468,20 +468,20 @@ export const MatchLabPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E7E7E2] dark:border-white/8 pb-5">
         <div>
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400">
               <Sparkles className="w-5 h-5" />
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               Match Lab & Scoring Engine V2
             </h1>
             <Badge variant="purple" size="sm" className="ml-2 font-mono">
               v2.0.0-v2
             </Badge>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Real-time multi-component scoring simulator with explainability waterfall, counterfactuals, and EEOC blind screening.
           </p>
         </div>
@@ -609,10 +609,10 @@ export const MatchLabPage: React.FC = () => {
       </Card>
 
       {/* Preset Profiles & Rules Toggle Bar */}
-      <Card className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800">
+      <Card className="p-4 bg-[#F4F4F1]/50 dark:bg-[#0C1113]/40 border-[#E7E7E2] dark:border-white/8">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mr-2 flex items-center gap-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB] mr-2 flex items-center gap-1">
               <Sliders className="w-3.5 h-3.5" /> Weight Presets:
             </span>
             {(['engineering', 'data_ml', 'design', 'sales', 'operations'] as PresetProfileName[]).map((preset) => (
@@ -621,8 +621,8 @@ export const MatchLabPage: React.FC = () => {
                 onClick={() => applyPreset(preset)}
                 className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-all ${
                   selectedPreset === preset
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-sm'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-400'
+                    ? 'bg-[#111312] dark:bg-[#0C1113] dark:bg-white text-white dark:text-slate-950 shadow-sm'
+                    : 'bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/6 hover:border-slate-400'
                 }`}
               >
                 {preset.replace('_', ' / ')}
@@ -630,20 +630,20 @@ export const MatchLabPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-4 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-200 dark:border-slate-800">
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <div className="flex items-center gap-4 border-t lg:border-t-0 pt-3 lg:pt-0 border-[#E7E7E2] dark:border-white/8">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]">
               <input
                 type="checkbox"
                 checked={isRulesOnly}
                 onChange={(e) => setIsRulesOnly(e.target.checked)}
-                className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 w-4 h-4"
+                className="rounded border-[#DCDCD7] text-teal-600 focus:ring-teal-500 w-4 h-4"
               />
               Rules Only (Disable Learned Ranker)
             </label>
 
             {!isRulesOnly && (
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-slate-500">Blend (α):</span>
+                <span className="text-[#5E6460] dark:text-[#9AA7AB]">Blend (α):</span>
                 <span className="font-mono font-bold text-teal-600 dark:text-teal-400">
                   {blendAlpha.toFixed(2)}
                 </span>
@@ -662,7 +662,7 @@ export const MatchLabPage: React.FC = () => {
         </div>
 
         {/* Live Weight Sliders Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-4 pt-4 border-t border-[#E7E7E2] dark:border-white/8">
           {(
             [
               { key: 'skills', label: 'Skills Coverage', desc: 'Proficiency-weighted' },
@@ -673,9 +673,9 @@ export const MatchLabPage: React.FC = () => {
               { key: 'semanticFit', label: 'Semantic Fit', desc: isRulesOnly ? 'Rules active (0%)' : 'Learned model' },
             ] as const
           ).map(({ key, label, desc }) => (
-            <div key={key} className="space-y-1.5 bg-white dark:bg-slate-900/70 p-3 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div key={key} className="space-y-1.5 bg-white dark:bg-[#0C1113]/70 p-3 rounded-lg border border-[#E7E7E2] dark:border-white/8 shadow-sm">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-800 dark:text-slate-200">{label}</span>
+                <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">{label}</span>
                 <span className="font-mono font-bold text-teal-600 dark:text-teal-400">
                   {weights[key]}%
                 </span>
@@ -689,7 +689,7 @@ export const MatchLabPage: React.FC = () => {
                 onChange={(e) => handleWeightChange(key, parseInt(e.target.value, 10))}
                 className="w-full accent-teal-600 disabled:opacity-40"
               />
-              <p className="text-[10px] text-slate-400 truncate">{desc}</p>
+              <p className="text-[10px] text-[#8A928D] dark:text-[#657378] truncate">{desc}</p>
             </div>
           ))}
         </div>
@@ -700,11 +700,11 @@ export const MatchLabPage: React.FC = () => {
         {/* Left Column: Ranked Candidates List */}
         <div className="lg:col-span-5 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-1.5">
               <Trophy className="w-4 h-4 text-amber-500" />
               Ranked Candidate Leaderboard ({evaluatedCohort.length})
             </h2>
-            <span className="text-xs text-slate-400">Auto-ranks live</span>
+            <span className="text-xs text-[#8A928D] dark:text-[#657378]">Auto-ranks live</span>
           </div>
 
           <div className="space-y-2.5">
@@ -777,31 +777,31 @@ export const MatchLabPage: React.FC = () => {
                   <div className="grid grid-cols-5 gap-1 mt-2.5 pt-2.5 border-t border-border-default/60 text-[10px] text-text-muted font-mono figure text-center">
                     <div>
                       Skills:{' '}
-                      <strong className="text-slate-700 dark:text-slate-200">
+                      <strong className="text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
                         {cand.scoreResult.contributions.find((c) => c.component === 'skills')?.rawScore.toFixed(0)}%
                       </strong>
                     </div>
                     <div>
                       Exp:{' '}
-                      <strong className="text-slate-700 dark:text-slate-200">
+                      <strong className="text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
                         {cand.scoreResult.contributions.find((c) => c.component === 'experience')?.rawScore.toFixed(0)}%
                       </strong>
                     </div>
                     <div>
                       Proj:{' '}
-                      <strong className="text-slate-700 dark:text-slate-200">
+                      <strong className="text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
                         {cand.scoreResult.contributions.find((c) => c.component === 'projectDepth')?.rawScore.toFixed(0)}%
                       </strong>
                     </div>
                     <div>
                       Edu:{' '}
-                      <strong className="text-slate-700 dark:text-slate-200">
+                      <strong className="text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
                         {cand.scoreResult.contributions.find((c) => c.component === 'education')?.rawScore.toFixed(0)}%
                       </strong>
                     </div>
                     <div>
                       Sem:{' '}
-                      <strong className="text-slate-700 dark:text-slate-200">
+                      <strong className="text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
                         {cand.scoreResult.contributions.find((c) => c.component === 'semanticFit')?.rawScore.toFixed(0)}%
                       </strong>
                     </div>
@@ -814,12 +814,12 @@ export const MatchLabPage: React.FC = () => {
 
         {/* Right Column: Detailed Candidate Match Report */}
         <div className="lg:col-span-7 space-y-6">
-          <Card className="p-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 space-y-6">
+          <Card className="p-6 bg-white dark:bg-[#0C1113] border-[#E7E7E2] dark:border-white/8 space-y-6">
             {/* Candidate Header & Score Summary */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E7E7E2] dark:border-white/8 pb-5">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-black text-slate-900 dark:text-white">
+                  <h2 className="text-xl font-black text-[#111312] dark:text-[#F2F6F7]">
                     {displayName}
                   </h2>
                   {showUnredacted ? (
@@ -832,13 +832,13 @@ export const MatchLabPage: React.FC = () => {
                     </Badge>
                   )}
                 </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 space-y-0.5">
+                <div className="text-xs text-[#5E6460] dark:text-[#9AA7AB] space-y-0.5">
                   <p className="flex items-center gap-1.5">
-                    <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                    <Briefcase className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                     <span>Current Org: <strong>{displayEmployer}</strong></span>
                   </p>
                   <p className="flex items-center gap-1.5">
-                    <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+                    <GraduationCap className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                     <span>Education: <strong>{displayUniversity}</strong></span>
                   </p>
                 </div>
@@ -847,9 +847,9 @@ export const MatchLabPage: React.FC = () => {
               {/* Score Ring Display */}
               <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <div className="text-2xl font-black font-mono text-slate-900 dark:text-white">
+                  <div className="text-2xl font-black font-mono text-[#111312] dark:text-[#F2F6F7]">
                     {activeCandidate.scoreResult.finalScore}
-                    <span className="text-sm font-normal text-slate-400">/100</span>
+                    <span className="text-sm font-normal text-[#8A928D] dark:text-[#657378]">/100</span>
                   </div>
                   <Badge
                     variant={
@@ -871,7 +871,7 @@ export const MatchLabPage: React.FC = () => {
             </div>
 
             {/* Action Bar (Reveal Identity, Export JSON, Print HTML) */}
-            <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-50 dark:bg-slate-800/40 rounded-lg text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-[#F4F4F1] dark:bg-[#111719]/40 rounded-lg text-xs">
               <div className="flex items-center gap-2">
                 {!showUnredacted ? (
                   <Button
@@ -884,7 +884,7 @@ export const MatchLabPage: React.FC = () => {
                     <span>Reveal Candidate Identity</span>
                   </Button>
                 ) : (
-                  <span className="text-slate-500 flex items-center gap-1">
+                  <span className="text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-1">
                     <ShieldCheck className="w-4 h-4 text-emerald-500" /> Identity revealed & audit logged
                   </span>
                 )}
@@ -905,10 +905,10 @@ export const MatchLabPage: React.FC = () => {
             {/* Section 1: Contribution Waterfall Chart */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   Contribution Waterfall Breakdown
                 </h3>
-                <span className="text-[11px] text-slate-400">
+                <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">
                   Exact mathematical sum: ∑ contributions = {activeCandidate.scoreResult.finalScore} pts
                 </span>
               </div>
@@ -918,18 +918,18 @@ export const MatchLabPage: React.FC = () => {
                   return (
                     <div key={w.component} className="space-y-1">
                       <div className="flex justify-between items-center text-xs">
-                        <span className="font-medium text-slate-700 dark:text-slate-300">
+                        <span className="font-medium text-[#111312] dark:text-[#F2F6F7]">
                           {w.label} (Weight {w.weight}%)
                         </span>
                         <div className="flex items-center gap-2 font-mono">
-                          <span className="text-slate-400">Raw: {w.rawScore.toFixed(0)}%</span>
-                          <span className="font-bold text-slate-900 dark:text-white">
+                          <span className="text-[#8A928D] dark:text-[#657378]">Raw: {w.rawScore.toFixed(0)}%</span>
+                          <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
                             +{w.pointsContributed.toFixed(1)} pts
                           </span>
                         </div>
                       </div>
 
-                      <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
+                      <div className="h-2 w-full bg-[#E9E9E5] dark:bg-[#111719] rounded-full overflow-hidden flex">
                         <div
                           className="h-full bg-teal-500 rounded-full transition-all duration-300"
                           style={{ width: `${Math.min(100, (w.pointsContributed / (w.maxPossiblePoints || 1)) * 100)}%` }}
@@ -942,12 +942,12 @@ export const MatchLabPage: React.FC = () => {
             </div>
 
             {/* Section 2: Per-Skill Evidence Grid */}
-            <div className="space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5">
+            <div className="space-y-3 border-t border-[#E7E7E2] dark:border-white/8 pt-5">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   Requirements & Evidence Spans ({activeCandidate.explanations.skillsBreakdown.overallCoveragePercent}% Coverage)
                 </h3>
-                <span className="text-[11px] text-slate-400">
+                <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">
                   {activeCandidate.explanations.skillsBreakdown.matchedRequired.length} matched /{' '}
                   {activeCandidate.explanations.skillsBreakdown.missingRequired.length} missing
                 </span>
@@ -970,7 +970,7 @@ export const MatchLabPage: React.FC = () => {
                       </span>
                     </div>
                     {s.evidenceSnippet && (
-                      <p className="text-[11px] text-slate-600 dark:text-slate-300 italic">
+                      <p className="text-[11px] text-[#5E6460] dark:text-[#F2F6F7] italic">
                         "{s.evidenceSnippet}"
                       </p>
                     )}
@@ -990,7 +990,7 @@ export const MatchLabPage: React.FC = () => {
                       </div>
                       <span className="text-[10px] text-rose-600 dark:text-rose-400">Missing evidence</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                       Requirement not evidenced in parsed resume milestones.
                     </p>
                   </div>
@@ -999,9 +999,9 @@ export const MatchLabPage: React.FC = () => {
             </div>
 
             {/* Section 3: Red Flags & Neutral Career Intervals */}
-            <div className="space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5">
+            <div className="space-y-3 border-t border-[#E7E7E2] dark:border-white/8 pt-5">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-1.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
                   Interview Topics & Neutral Intervals ({activeCandidate.redFlags.flags.length})
                 </h3>
@@ -1011,7 +1011,7 @@ export const MatchLabPage: React.FC = () => {
               </div>
 
               {activeCandidate.redFlags.flags.length === 0 ? (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                   No chronological inversions, overlap discrepancies, or unevidenced claims found.
                 </p>
               ) : (
@@ -1019,10 +1019,10 @@ export const MatchLabPage: React.FC = () => {
                   {activeCandidate.redFlags.flags.map((flag) => (
                     <div
                       key={flag.id}
-                      className="p-3 rounded-lg border bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/60 text-xs space-y-1.5"
+                      className="p-3 rounded-lg border bg-[#F4F4F1] dark:bg-[#111719]/40 border-[#E7E7E2] dark:border-white/6/60 text-xs space-y-1.5"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900 dark:text-white">
+                        <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
                           {flag.title}
                         </span>
                         <Badge
@@ -1038,8 +1038,8 @@ export const MatchLabPage: React.FC = () => {
                           {flag.severity}
                         </Badge>
                       </div>
-                      <p className="text-slate-600 dark:text-slate-300">{flag.description}</p>
-                      <div className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] text-teal-800 dark:text-teal-300 flex items-start gap-1.5">
+                      <p className="text-[#5E6460] dark:text-[#F2F6F7]">{flag.description}</p>
+                      <div className="p-2 rounded bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/8 text-[11px] text-teal-800 dark:text-teal-300 flex items-start gap-1.5">
                         <HelpCircle className="w-3.5 h-3.5 mt-0.5 shrink-0 text-teal-600 dark:text-teal-400" />
                         <div>
                           <strong>Suggested Recruiter Question:</strong> "{flag.suggestedRecruiterQuestion}"
@@ -1052,29 +1052,29 @@ export const MatchLabPage: React.FC = () => {
             </div>
 
             {/* Section 4: Counterfactual Recommendations (What would raise this score) */}
-            <div className="space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5">
+            <div className="space-y-3 border-t border-[#E7E7E2] dark:border-white/8 pt-5">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-1.5">
                   <TrendingUp className="w-3.5 h-3.5 text-teal-500" />
                   Counterfactual What-If Recommendations
                 </h3>
-                <span className="text-[11px] text-slate-400">Computed via real re-scoring</span>
+                <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">Computed via real re-scoring</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {activeCandidate.explanations.counterfactuals.map((cf) => (
                   <div
                     key={cf.actionId}
-                    className="p-3 rounded-lg border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-xs space-y-1.5 shadow-sm"
+                    className="p-3 rounded-lg border bg-white dark:bg-[#0C1113] border-[#E7E7E2] dark:border-white/8 text-xs space-y-1.5 shadow-sm"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-slate-900 dark:text-white">{cf.title}</span>
+                      <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">{cf.title}</span>
                       <span className="font-mono font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 px-1.5 py-0.5 rounded text-[11px]">
                         +{cf.deltaPoints} pts
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400">{cf.suggestedAction}</p>
-                    <div className="text-[10px] text-slate-400 font-mono">
+                    <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">{cf.suggestedAction}</p>
+                    <div className="text-[10px] text-[#8A928D] dark:text-[#657378] font-mono">
                       Simulated Score: {cf.currentScore} → <strong>{cf.simulatedScore}</strong>
                     </div>
                   </div>
@@ -1098,7 +1098,7 @@ export const MatchLabPage: React.FC = () => {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]">
               Reason for Identity Reveal <span className="text-rose-500">*</span>
             </label>
             <textarea
@@ -1106,7 +1106,7 @@ export const MatchLabPage: React.FC = () => {
               value={revealReason}
               onChange={(e) => setRevealReason(e.target.value)}
               placeholder="Enter recruiter business reason..."
-              className="w-full text-xs p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-teal-500 focus:border-teal-500"
+              className="w-full text-xs p-2.5 rounded-lg border border-[#DCDCD7] dark:border-white/6 bg-white dark:bg-[#0C1113] text-[#111312] dark:text-[#F2F6F7] focus:ring-teal-500 focus:border-teal-500"
             />
           </div>
 

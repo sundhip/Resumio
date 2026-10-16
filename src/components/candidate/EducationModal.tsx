@@ -140,7 +140,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             placeholder="e.g. B.Tech, M.S., B.Sc."
             value={degree}
             onChange={(e) => setDegree(e.target.value)}
-            leftIcon={<GraduationCap className="w-4 h-4 text-slate-400" />}
+            leftIcon={<GraduationCap className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -149,7 +149,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             placeholder="e.g. Computer Science & Engineering"
             value={fieldOfStudy}
             onChange={(e) => setFieldOfStudy(e.target.value)}
-            leftIcon={<Award className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Award className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -158,7 +158,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             placeholder="e.g. Anna University, IIT Madras"
             value={institution}
             onChange={(e) => setInstitution(e.target.value)}
-            leftIcon={<Building className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Building className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -167,7 +167,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             placeholder="e.g. Chennai, India"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            leftIcon={<MapPin className="w-4 h-4 text-slate-400" />}
+            leftIcon={<MapPin className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -175,7 +175,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             placeholder="YYYY-MM (e.g. 2020-08)"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -185,7 +185,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             disabled={currentlyStudying}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             helperText={currentlyStudying ? 'Disabled while studying' : ''}
           />
 
@@ -202,7 +202,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
             />
             <label
               htmlFor="currently-studying-chk"
-              className="text-xs text-slate-300 select-none font-medium cursor-pointer"
+              className="text-xs text-[#8A928D] dark:text-[#9AA7AB] select-none font-medium cursor-pointer"
             >
               I currently study here
             </label>
@@ -214,12 +214,12 @@ export const EducationModal: React.FC<EducationModalProps> = ({
               placeholder="e.g. CGPA: 8.7 / 10 or 3.8 GPA"
               value={gradeOrGpa}
               onChange={(e) => setGradeOrGpa(e.target.value)}
-              leftIcon={<Award className="w-4 h-4 text-slate-400" />}
+              leftIcon={<Award className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             />
           </div>
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-semibold text-slate-300 block">
+            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
               Description & Highlights (Optional)
             </label>
             <textarea

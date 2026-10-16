@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCountUp } from '../../hooks/useCountUp';
 
 export interface ArcGaugeProps {
   score: number; // 0 to 100
@@ -6,6 +7,7 @@ export interface ArcGaugeProps {
   strokeWidth?: number;
   label?: string;
   statusText?: string;
+  animate?: boolean;
   className?: string;
 }
 
@@ -15,16 +17,16 @@ export const ArcGauge: React.FC<ArcGaugeProps> = ({
   strokeWidth = 12,
   label = 'ATS Score',
   statusText,
+  animate = true,
   className = '',
 }) => {
   const clampedScore = Math.min(100, Math.max(0, score));
+  const animatedScore = useCountUp(clampedScore, animate ? 280 : 0);
   const radius = (size - strokeWidth * 2) / 2;
   const cx = size / 2;
   const cy = size / 2 + 10;
 
   // 180-degree semicircle arc
-  const startAngle = Math.PI;
-  const endAngle = 2 * Math.PI;
   const arcLength = Math.PI * radius;
   const activeOffset = arcLength * (1 - clampedScore / 100);
 
@@ -62,7 +64,7 @@ export const ArcGauge: React.FC<ArcGaugeProps> = ({
             className="text-[#E7E7E2] dark:text-white/10"
           />
 
-          {/* Active arc */}
+          {/* Active arc with smooth draw-in */}
           <path
             d={`M ${cx - radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx + radius} ${cy}`}
             fill="none"
@@ -71,14 +73,16 @@ export const ArcGauge: React.FC<ArcGaugeProps> = ({
             strokeLinecap="round"
             strokeDasharray={arcLength}
             strokeDashoffset={activeOffset}
-            className="transition-all duration-700 ease-out"
+            style={{
+              transition: 'stroke-dashoffset 280ms cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
           />
         </svg>
 
         {/* Center Readout */}
         <div className="absolute inset-x-0 bottom-1 flex flex-col items-center justify-center text-center">
           <span className="figure text-3xl font-extrabold tracking-tight text-[#111312] dark:text-[#F2F6F7]">
-            {clampedScore}
+            {animatedScore}
           </span>
           <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#5E6460] dark:text-[#9AA7AB]">
             {label}

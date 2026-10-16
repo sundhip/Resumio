@@ -117,7 +117,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="e.g. AWS Certified Solutions Architect - Associate"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            leftIcon={<Award className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Award className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -126,7 +126,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="e.g. Amazon Web Services (AWS), Google Cloud, Microsoft"
             value={issuingOrganization}
             onChange={(e) => setIssuingOrganization(e.target.value)}
-            leftIcon={<Building className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Building className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -135,7 +135,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="YYYY-MM (e.g. 2023-08)"
             value={issueDate}
             onChange={(e) => setIssueDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -143,7 +143,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="YYYY-MM (e.g. 2026-08, or leave blank if does not expire)"
             value={expirationDate}
             onChange={(e) => setExpirationDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -151,7 +151,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="e.g. AWS-PSA-1082947"
             value={credentialId}
             onChange={(e) => setCredentialId(e.target.value)}
-            leftIcon={<Hash className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Hash className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -159,7 +159,7 @@ export const CertificationModal: React.FC<CertificationModalProps> = ({
             placeholder="https://www.credly.com/badges/..."
             value={credentialUrl}
             onChange={(e) => setCredentialUrl(e.target.value)}
-            leftIcon={<ExternalLink className="w-4 h-4 text-slate-400" />}
+            leftIcon={<ExternalLink className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
         </div>
       </form>

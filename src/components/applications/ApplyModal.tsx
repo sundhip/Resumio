@@ -137,10 +137,10 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               <Send className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight">
+              <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] leading-tight">
                 Apply for {job.title}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-normal">
                 {job.company_name} • {job.location || 'Remote'}
               </p>
             </div>
@@ -202,10 +202,10 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             <CheckCircle2 className="w-9 h-9" />
           </div>
           <div className="space-y-1">
-            <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h4 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">
               Application Successfully Sent!
             </h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] max-w-sm mx-auto leading-relaxed">
               The hiring team at <strong>{job.company_name}</strong> has received your profile and resume snapshot.
               You can track your application status in real-time under My Applications.
             </p>
@@ -214,14 +214,14 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       ) : step === 'review' ? (
         /* Step 2: Application Review */
         <div className="space-y-4 text-xs sm:text-sm">
-          <div className="p-3.5 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border space-y-2">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+          <div className="p-3.5 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border space-y-2">
+            <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase tracking-wider block">
               Applying Position
             </span>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-bold text-slate-900 dark:text-white text-sm">{job.title}</p>
-                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                <p className="font-bold text-[#111312] dark:text-[#F2F6F7] text-sm">{job.title}</p>
+                <div className="flex items-center gap-2 text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                   <span className="flex items-center gap-1">
                     <Building2 className="w-3.5 h-3.5" />
                     {job.company_name}
@@ -237,7 +237,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
           </div>
 
           {isLoadingPreview ? (
-            <div className="p-3.5 rounded-card bg-slate-100 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border animate-pulse text-xs text-slate-500">
+            <div className="p-3.5 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border animate-pulse text-xs text-[#5E6460] dark:text-[#9AA7AB]">
               Running pre-submit ATS & Match preview...
             </div>
           ) : previewData ? (
@@ -252,13 +252,13 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 </span>
               </div>
               {previewData.matchedRequiredSkills?.length > 0 && (
-                <div className="text-[11px] text-slate-700 dark:text-slate-300">
+                <div className="text-[11px] text-[#111312] dark:text-[#F2F6F7]">
                   <strong className="text-emerald-700 dark:text-emerald-400">Matched Skills: </strong>
                   {previewData.matchedRequiredSkills.join(', ')}
                 </div>
               )}
               {previewData.missingRequiredSkills?.length > 0 && (
-                <div className="text-[11px] text-slate-700 dark:text-slate-300">
+                <div className="text-[11px] text-[#111312] dark:text-[#F2F6F7]">
                   <strong className="text-amber-700 dark:text-amber-400">Missing Skills: </strong>
                   {previewData.missingRequiredSkills.join(', ')}
                 </div>
@@ -266,8 +266,8 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             </div>
           ) : null}
 
-          <div className="p-3.5 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border space-y-2">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+          <div className="p-3.5 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border space-y-2">
+            <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase tracking-wider block">
               Submitted Resume Snapshot
             </span>
             <div className="flex items-center gap-3">
@@ -275,10 +275,10 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 PDF
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-slate-900 dark:text-white truncate">
+                <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate">
                   {selectedResume?.original_filename || 'Candidate Resume'}
                 </p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-[#8A928D] dark:text-[#657378]">
                   {formatFileSize(selectedResume?.file_size || 0)} • Snapshot attached
                 </p>
               </div>
@@ -286,21 +286,21 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
           </div>
 
           {coverLetter.trim() ? (
-            <div className="p-3.5 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+            <div className="p-3.5 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border space-y-1.5">
+              <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase tracking-wider block">
                 Cover Letter Note
               </span>
-              <p className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed">
+              <p className="text-xs text-[#111312] dark:text-[#F2F6F7] whitespace-pre-line leading-relaxed">
                 {coverLetter.trim()}
               </p>
             </div>
           ) : (
-            <div className="p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg/40 text-[11px] text-slate-400 italic">
+            <div className="p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/40 text-[11px] text-[#8A928D] dark:text-[#657378] italic">
               No additional note attached.
             </div>
           )}
 
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
             By submitting, your candidate profile and the selected resume file will be shared with the recruiter.
           </p>
         </div>
@@ -310,7 +310,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
           {/* Resume Selection */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] uppercase tracking-wider">
                 Select Resume <span className="text-rose-500">*</span>
               </label>
               {onNavigateToResumeManager && (
@@ -329,14 +329,14 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             </div>
 
             {isLoadingProfile ? (
-              <div className="h-16 rounded-card bg-slate-100 dark:bg-surface-dark-bg animate-pulse" />
+              <div className="h-16 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-bg animate-pulse" />
             ) : resumes.length === 0 ? (
               <div className="p-4 rounded-card border border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 text-xs space-y-2">
                 <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-semibold">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>No Active Resume Found</span>
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
                   Please upload a PDF or DOCX resume in your Resume Manager before applying.
                 </p>
                 {onNavigateToResumeManager && (
@@ -364,7 +364,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                       className={`p-3.5 rounded-card border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                         isSelected
                           ? 'border-brand-500 bg-brand-50/50 dark:bg-brand-950/40 ring-1 ring-brand-500/20'
-                          : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:border-slate-300'
+                          : 'border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:border-[#DCDCD7]'
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
@@ -372,14 +372,14 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                           className={`w-9 h-9 rounded-control flex items-center justify-center font-bold text-xs shrink-0 ${
                             isSelected
                               ? 'bg-brand-600 text-white'
-                              : 'bg-slate-100 dark:bg-surface-dark-input text-slate-600 dark:text-slate-400'
+                              : 'bg-[#E9E9E5] dark:bg-surface-dark-input text-[#5E6460] dark:text-[#9AA7AB]'
                           }`}
                         >
                           <FileText className="w-4 h-4" />
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+                            <p className="font-semibold text-xs sm:text-sm text-[#111312] dark:text-[#F2F6F7] truncate">
                               {resume.original_filename}
                             </p>
                             {Boolean(resume.is_active) && (
@@ -388,7 +388,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-slate-400">
+                          <p className="text-[11px] text-[#8A928D] dark:text-[#657378]">
                             {formatFileSize(resume.file_size)} • {resume.file_type}
                           </p>
                         </div>
@@ -411,11 +411,11 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
           {/* Optional Cover Letter / Pitch */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-                Cover Letter / Pitch Note <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                Cover Letter / Pitch Note <span className="text-[#8A928D] dark:text-[#657378] font-normal lowercase">(optional)</span>
               </label>
-              <span className="text-[11px] text-slate-400">{coverLetter.length}/1000</span>
+              <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">{coverLetter.length}/1000</span>
             </div>
             <textarea
               rows={4}
@@ -423,7 +423,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Introduce yourself, highlight relevant achievements, or explain why you are a great fit for this position..."
-              className="w-full p-3 rounded-control text-xs sm:text-sm bg-white dark:bg-surface-dark-input text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder:text-slate-400"
+              className="w-full p-3 rounded-control text-xs sm:text-sm bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder:text-[#8A928D] dark:text-[#657378]"
             />
           </div>
         </div>

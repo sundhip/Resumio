@@ -120,7 +120,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="e.g. AI Resume Screening Platform"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            leftIcon={<Layers className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Layers className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -129,7 +129,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="e.g. Lead Full Stack Architect"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            leftIcon={<User className="w-4 h-4 text-slate-400" />}
+            leftIcon={<User className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -137,7 +137,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="e.g. React, TypeScript, Node.js, SQLite"
             value={technologies}
             onChange={(e) => setTechnologies(e.target.value)}
-            leftIcon={<Code2 className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Code2 className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             helperText="Comma separated list"
           />
 
@@ -146,7 +146,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="https://myproject.com"
             value={projectUrl}
             onChange={(e) => setProjectUrl(e.target.value)}
-            leftIcon={<Globe className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Globe className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -154,7 +154,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="https://github.com/username/repo"
             value={githubUrl}
             onChange={(e) => setGithubUrl(e.target.value)}
-            leftIcon={<GitBranch className="w-4 h-4 text-slate-400" />}
+            leftIcon={<GitBranch className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -162,7 +162,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="YYYY-MM (e.g. 2024-01)"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -170,11 +170,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
             placeholder="YYYY-MM (e.g. 2024-06)"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-semibold text-slate-300 block">
+            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
               Project Description & Architectural Details
             </label>
             <textarea

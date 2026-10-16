@@ -165,14 +165,14 @@ export const ApplicationsPage: React.FC<ApplicationsPageProps> = ({ onNavigate }
         return {
           title: 'Application Withdrawn',
           description: 'You voluntarily withdrew this application. The hiring team was notified and records were archived.',
-          icon: <RotateCcw className="w-4 h-4 text-slate-400" />,
+          icon: <RotateCcw className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />,
           action: null,
         };
       default:
         return {
           title: 'In Progress',
           description: 'Awaiting recruiter action.',
-          icon: <Clock className="w-4 h-4 text-slate-400" />,
+          icon: <Clock className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />,
           action: null,
         };
     }
@@ -490,7 +490,7 @@ export const ApplicationsPage: React.FC<ApplicationsPageProps> = ({ onNavigate }
                               className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 ${
                                 isTerminatedHere
                                   ? app.status === 'Withdrawn'
-                                    ? 'bg-slate-500 text-white shadow-xs'
+                                    ? 'bg-[#F4F4F1]0 text-white shadow-xs'
                                     : 'bg-rose-500 text-white shadow-xs'
                                   : isPassed
                                   ? 'bg-[#1F8FA6] text-white shadow-[0_2px_8px_rgba(43,179,201,0.35)]'

@@ -97,7 +97,7 @@ export const NotificationsMenu: React.FC<NotificationsMenuProps> = ({ onNavigate
       case 'application_status':
         return <FileText className="w-3.5 h-3.5 text-brand-500" />;
       default:
-        return <AlertCircle className="w-3.5 h-3.5 text-slate-500" />;
+        return <AlertCircle className="w-3.5 h-3.5 text-[#5E6460] dark:text-[#9AA7AB]" />;
     }
   };
 
@@ -118,7 +118,7 @@ export const NotificationsMenu: React.FC<NotificationsMenuProps> = ({ onNavigate
     <div className="relative">
       <button
         onClick={handleOpen}
-        className="relative p-2 rounded-control text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+        className="relative p-2 rounded-control text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#657378] dark:hover:text-white hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
         title="Notifications"
       >
         <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -132,11 +132,11 @@ export const NotificationsMenu: React.FC<NotificationsMenuProps> = ({ onNavigate
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-card bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-dropdown dark:shadow-dropdown-dark z-50 overflow-hidden animate-fade-in">
+          <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-card bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border shadow-dropdown dark:shadow-dropdown-dark z-50 overflow-hidden animate-fade-in">
             {/* Header */}
-            <div className="p-3.5 border-b border-slate-100 dark:border-surface-dark-border flex items-center justify-between">
+            <div className="p-3.5 border-b border-[#EFEFEA] dark:border-surface-dark-border flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                <span className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                   Notifications
                 </span>
                 {unreadCount > 0 ? (
@@ -144,7 +144,7 @@ export const NotificationsMenu: React.FC<NotificationsMenuProps> = ({ onNavigate
                     {unreadCount} unread
                   </span>
                 ) : (
-                  <span className="text-[11px] text-slate-400">All caught up</span>
+                  <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">All caught up</span>
                 )}
               </div>
               {unreadCount > 0 && (
@@ -160,8 +160,8 @@ export const NotificationsMenu: React.FC<NotificationsMenuProps> = ({ onNavigate
             {/* List */}
             <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-surface-dark-border">
               {notifications.length === 0 ? (
-                <div className="p-8 text-center text-xs text-slate-400 dark:text-slate-500 space-y-1">
-                  <Bell className="w-6 h-6 mx-auto text-slate-300 dark:text-slate-600 stroke-[1.5]" />
+                <div className="p-8 text-center text-xs text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] space-y-1">
+                  <Bell className="w-6 h-6 mx-auto text-[#8A928D] dark:text-[#9AA7AB] dark:text-[#5E6460] dark:text-[#9AA7AB] stroke-[1.5]" />
                   <p>No notifications yet</p>
                 </div>
               ) : (
@@ -170,26 +170,26 @@ export const NotificationsMenu: React.FC<NotificationsMenuProps> = ({ onNavigate
                     key={item.id}
                     onClick={() => handleNotificationClick(item)}
                     className={clsx(
-                      'p-3.5 flex items-start gap-3 hover:bg-slate-50 dark:hover:bg-surface-dark-hover/70 transition-colors cursor-pointer text-left',
+                      'p-3.5 flex items-start gap-3 hover:bg-[#F4F4F1] dark:hover:bg-surface-dark-hover/70 transition-colors cursor-pointer text-left',
                       item.is_read === 0 && 'bg-brand-50/40 dark:bg-brand-950/30'
                     )}
                   >
-                    <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-surface-dark-bg flex items-center justify-center shrink-0 mt-0.5 border border-slate-200/50 dark:border-surface-dark-border">
+                    <div className="w-7 h-7 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-bg flex items-center justify-center shrink-0 mt-0.5 border border-[#E7E7E2]/50 dark:border-surface-dark-border">
                       {getIcon(item.type)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1">
-                        <p className={clsx('text-xs truncate', item.is_read === 0 ? 'font-bold text-slate-900 dark:text-white' : 'font-semibold text-slate-700 dark:text-slate-300')}>
+                        <p className={clsx('text-xs truncate', item.is_read === 0 ? 'font-bold text-[#111312] dark:text-[#F2F6F7]' : 'font-semibold text-[#111312] dark:text-[#F2F6F7]')}>
                           {item.title}
                         </p>
                         {item.is_read === 0 && (
                           <span className="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0" />
                         )}
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-relaxed">
+                      <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] line-clamp-2 mt-0.5 leading-relaxed">
                         {item.message}
                       </p>
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 inline-block">
+                      <span className="text-[10px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] mt-1 inline-block">
                         {formatRelativeTime(item.created_at)}
                       </span>
                     </div>
@@ -199,8 +199,8 @@ export const NotificationsMenu: React.FC<NotificationsMenuProps> = ({ onNavigate
             </div>
 
             {/* Footer */}
-            <div className="p-2.5 text-center border-t border-slate-100 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-bg/50">
-              <span className="text-[11px] text-slate-400 dark:text-slate-500">
+            <div className="p-2.5 text-center border-t border-[#EFEFEA] dark:border-surface-dark-border bg-[#F4F4F1]/50 dark:bg-surface-dark-bg/50">
+              <span className="text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">
                 Resumio Live In-App Notification Center
               </span>
             </div>

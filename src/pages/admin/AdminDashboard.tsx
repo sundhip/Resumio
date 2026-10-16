@@ -163,14 +163,14 @@ export const AdminDashboard: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               Admin Platform Console
             </h1>
             <Badge variant="purple" size="sm">
               Root System
             </Badge>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Real SQLite database metrics, user accounts, job postings, applications, and system health.
           </p>
         </div>
@@ -209,7 +209,7 @@ export const AdminDashboard: React.FC = () => {
               value={searchQuery}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder={`Search ${activeTab}...`}
-              leftIcon={<Search className="w-4 h-4 text-slate-400" />}
+              leftIcon={<Search className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             />
           </div>
         )}
@@ -232,7 +232,7 @@ export const AdminDashboard: React.FC = () => {
               value={stats.candidatesCount}
               change="Active jobseekers"
               trend="neutral"
-              icon={<User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
+              icon={<User className="w-4 h-4 text-[#1F8FA6] dark:text-[#5FD3E8]" />}
             />
             <StatCard
               label="Employer Recruiters"
@@ -253,10 +253,10 @@ export const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* System Database Table Health */}
             <Card padding="md" className="lg:col-span-2 space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-surface-dark-border pb-3">
+              <div className="flex items-center justify-between border-b border-[#EFEFEA] dark:border-surface-dark-border pb-3">
                 <div className="flex items-center gap-2">
                   <Database className="w-5 h-5 text-brand-600 dark:text-brand-400" />
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                     SQLite Database Record Health
                   </h3>
                 </div>
@@ -270,12 +270,12 @@ export const AdminDashboard: React.FC = () => {
                   Object.entries(systemHealth.tables).map(([table, count]) => (
                     <div
                       key={table}
-                      className="p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/70 dark:border-surface-dark-border/70"
+                      className="p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/70 dark:border-surface-dark-border/70"
                     >
-                      <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 truncate">
+                      <p className="text-[11px] font-mono text-[#5E6460] dark:text-[#9AA7AB] truncate">
                         {table}
                       </p>
-                      <p className="text-lg font-extrabold text-slate-900 dark:text-white mt-1">
+                      <p className="text-lg font-extrabold text-[#111312] dark:text-[#F2F6F7] mt-1">
                         {count}
                       </p>
                     </div>
@@ -285,9 +285,9 @@ export const AdminDashboard: React.FC = () => {
 
             {/* Quick Actions */}
             <Card padding="md" className="space-y-4">
-              <div className="flex items-center gap-2 border-b border-slate-100 dark:border-surface-dark-border pb-3">
+              <div className="flex items-center gap-2 border-b border-[#EFEFEA] dark:border-surface-dark-border pb-3">
                 <Activity className="w-5 h-5 text-indigo-500" />
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                   Quick Console Navigation
                 </h3>
               </div>
@@ -295,7 +295,7 @@ export const AdminDashboard: React.FC = () => {
               <div className="space-y-2">
                 <button
                   onClick={() => setActiveTab('users')}
-                  className="w-full p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg/60 hover:bg-slate-100 dark:hover:bg-surface-dark-hover border border-slate-200/70 dark:border-surface-dark-border/70 flex items-center justify-between text-xs font-semibold text-slate-900 dark:text-white transition-colors cursor-pointer"
+                  className="w-full p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/60 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover border border-[#E7E7E2]/70 dark:border-surface-dark-border/70 flex items-center justify-between text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] transition-colors cursor-pointer"
                 >
                   <span>Manage Platform Users</span>
                   <Badge variant="neutral" size="sm">{usersList.length}</Badge>
@@ -303,7 +303,7 @@ export const AdminDashboard: React.FC = () => {
 
                 <button
                   onClick={() => setActiveTab('jobs')}
-                  className="w-full p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg/60 hover:bg-slate-100 dark:hover:bg-surface-dark-hover border border-slate-200/70 dark:border-surface-dark-border/70 flex items-center justify-between text-xs font-semibold text-slate-900 dark:text-white transition-colors cursor-pointer"
+                  className="w-full p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/60 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover border border-[#E7E7E2]/70 dark:border-surface-dark-border/70 flex items-center justify-between text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] transition-colors cursor-pointer"
                 >
                   <span>Manage Job Postings</span>
                   <Badge variant="neutral" size="sm">{jobsList.length}</Badge>
@@ -311,7 +311,7 @@ export const AdminDashboard: React.FC = () => {
 
                 <button
                   onClick={() => setActiveTab('applications')}
-                  className="w-full p-3 rounded-control bg-slate-50 dark:bg-surface-dark-bg/60 hover:bg-slate-100 dark:hover:bg-surface-dark-hover border border-slate-200/70 dark:border-surface-dark-border/70 flex items-center justify-between text-xs font-semibold text-slate-900 dark:text-white transition-colors cursor-pointer"
+                  className="w-full p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/60 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover border border-[#E7E7E2]/70 dark:border-surface-dark-border/70 flex items-center justify-between text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] transition-colors cursor-pointer"
                 >
                   <span>View Candidate Applications</span>
                   <Badge variant="neutral" size="sm">{appsList.length}</Badge>
@@ -325,12 +325,12 @@ export const AdminDashboard: React.FC = () => {
       {/* Tab Content: User Management */}
       {activeTab === 'users' && (
         <Card padding="none" className="overflow-hidden animate-fade-in">
-          <div className="p-5 border-b border-slate-100 dark:border-surface-dark-border flex items-center justify-between">
+          <div className="p-5 border-b border-[#EFEFEA] dark:border-surface-dark-border flex items-center justify-between">
             <div>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+              <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7]">
                 User Management Foundation
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 Live SQLite database records ({filteredUsers.length} total)
               </p>
             </div>
@@ -339,7 +339,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-surface-dark-border bg-slate-50/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <tr className="border-b border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   <th className="py-3 px-5">User</th>
                   <th className="py-3 px-4">Email Address</th>
                   <th className="py-3 px-4">Role</th>
@@ -351,7 +351,7 @@ export const AdminDashboard: React.FC = () => {
               <tbody className="divide-y divide-slate-100 dark:divide-surface-dark-border text-xs sm:text-sm">
                 {filteredUsers.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-8 text-slate-400">
+                    <td colSpan={6} className="text-center py-8 text-[#8A928D] dark:text-[#657378]">
                       No users match your query.
                     </td>
                   </tr>
@@ -364,9 +364,9 @@ export const AdminDashboard: React.FC = () => {
                     return (
                       <tr
                         key={u.id}
-                        className="hover:bg-slate-50/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
+                        className="hover:bg-[#F4F4F1]/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
                       >
-                        <td className="py-3 px-5 font-semibold text-slate-900 dark:text-white">
+                        <td className="py-3 px-5 font-semibold text-[#111312] dark:text-[#F2F6F7]">
                           <div className="flex items-center gap-2.5">
                             <div className="w-7 h-7 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 flex items-center justify-center font-bold text-xs shrink-0">
                               {initial}
@@ -374,7 +374,7 @@ export const AdminDashboard: React.FC = () => {
                             <div>
                               <span>{displayName}</span>
                               {u.company && (
-                                <span className="text-[10px] text-slate-400 block -mt-0.5">
+                                <span className="text-[10px] text-[#8A928D] dark:text-[#657378] block -mt-0.5">
                                   {u.company}
                                 </span>
                               )}
@@ -382,7 +382,7 @@ export const AdminDashboard: React.FC = () => {
                           </div>
                         </td>
 
-                        <td className="py-3 px-4 font-mono text-xs text-slate-600 dark:text-slate-400">
+                        <td className="py-3 px-4 font-mono text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                           {u.email || '-'}
                         </td>
 
@@ -412,7 +412,7 @@ export const AdminDashboard: React.FC = () => {
                           </span>
                         </td>
 
-                        <td className="py-3 px-4 text-xs text-slate-500 dark:text-slate-400">
+                        <td className="py-3 px-4 text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                           {u.createdAt || '-'}
                         </td>
 
@@ -441,12 +441,12 @@ export const AdminDashboard: React.FC = () => {
       {/* Tab Content: Job Management */}
       {activeTab === 'jobs' && (
         <Card padding="none" className="overflow-hidden animate-fade-in">
-          <div className="p-5 border-b border-slate-100 dark:border-surface-dark-border flex items-center justify-between">
+          <div className="p-5 border-b border-[#EFEFEA] dark:border-surface-dark-border flex items-center justify-between">
             <div>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+              <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7]">
                 Platform Job Postings
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 All employer job listings across the platform ({filteredJobs.length} total)
               </p>
             </div>
@@ -455,7 +455,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-surface-dark-border bg-slate-50/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <tr className="border-b border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   <th className="py-3 px-5">Job Title</th>
                   <th className="py-3 px-4">Company & Recruiter</th>
                   <th className="py-3 px-4">Location / Mode</th>
@@ -467,7 +467,7 @@ export const AdminDashboard: React.FC = () => {
               <tbody className="divide-y divide-slate-100 dark:divide-surface-dark-border text-xs sm:text-sm">
                 {filteredJobs.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-8 text-slate-400">
+                    <td colSpan={6} className="text-center py-8 text-[#8A928D] dark:text-[#657378]">
                       No job postings match your query.
                     </td>
                   </tr>
@@ -475,31 +475,31 @@ export const AdminDashboard: React.FC = () => {
                   filteredJobs.map((j) => (
                     <tr
                       key={j.id}
-                      className="hover:bg-slate-50/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
+                      className="hover:bg-[#F4F4F1]/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
                     >
-                      <td className="py-3 px-5 font-semibold text-slate-900 dark:text-white">
+                      <td className="py-3 px-5 font-semibold text-[#111312] dark:text-[#F2F6F7]">
                         <div>
                           <span>{j.title}</span>
-                          <span className="text-[10px] text-slate-400 block font-normal">
+                          <span className="text-[10px] text-[#8A928D] dark:text-[#657378] block font-normal">
                             {j.employmentType}
                           </span>
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-xs text-slate-600 dark:text-slate-300">
+                      <td className="py-3 px-4 text-xs text-[#5E6460] dark:text-[#F2F6F7]">
                         <div>
                           <span className="font-semibold">{j.company}</span>
-                          <span className="text-[10px] text-slate-400 block">
+                          <span className="text-[10px] text-[#8A928D] dark:text-[#657378] block">
                             By {j.recruiterName}
                           </span>
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-xs text-slate-500 dark:text-slate-400">
+                      <td className="py-3 px-4 text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                         {j.location} ({j.workMode})
                       </td>
 
-                      <td className="py-3 px-4 font-semibold text-slate-900 dark:text-white">
+                      <td className="py-3 px-4 font-semibold text-[#111312] dark:text-[#F2F6F7]">
                         <Badge variant="brand" size="sm">{j.applicantsCount} Applicants</Badge>
                       </td>
 
@@ -531,12 +531,12 @@ export const AdminDashboard: React.FC = () => {
       {/* Tab Content: Application Management */}
       {activeTab === 'applications' && (
         <Card padding="none" className="overflow-hidden animate-fade-in">
-          <div className="p-5 border-b border-slate-100 dark:border-surface-dark-border flex items-center justify-between">
+          <div className="p-5 border-b border-[#EFEFEA] dark:border-surface-dark-border flex items-center justify-between">
             <div>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+              <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7]">
                 Candidate Applications Audit
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 All submitted applications across candidates and jobs ({filteredApps.length} total)
               </p>
             </div>
@@ -545,7 +545,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-surface-dark-border bg-slate-50/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <tr className="border-b border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/75 dark:bg-surface-dark-bg/60 text-[11px] font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   <th className="py-3 px-5">Candidate</th>
                   <th className="py-3 px-4">Position & Company</th>
                   <th className="py-3 px-4">Match Score</th>
@@ -556,7 +556,7 @@ export const AdminDashboard: React.FC = () => {
               <tbody className="divide-y divide-slate-100 dark:divide-surface-dark-border text-xs sm:text-sm">
                 {filteredApps.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-slate-400">
+                    <td colSpan={5} className="text-center py-8 text-[#8A928D] dark:text-[#657378]">
                       No applications match your query.
                     </td>
                   </tr>
@@ -564,21 +564,21 @@ export const AdminDashboard: React.FC = () => {
                   filteredApps.map((a) => (
                     <tr
                       key={a.id}
-                      className="hover:bg-slate-50/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
+                      className="hover:bg-[#F4F4F1]/70 dark:hover:bg-surface-dark-hover/50 transition-colors"
                     >
-                      <td className="py-3 px-5 font-semibold text-slate-900 dark:text-white">
+                      <td className="py-3 px-5 font-semibold text-[#111312] dark:text-[#F2F6F7]">
                         <div>
                           <span>{a.candidateName}</span>
-                          <span className="text-[10px] text-slate-400 block font-mono">
+                          <span className="text-[10px] text-[#8A928D] dark:text-[#657378] block font-mono">
                             {a.candidateEmail}
                           </span>
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-xs text-slate-700 dark:text-slate-300">
+                      <td className="py-3 px-4 text-xs text-[#111312] dark:text-[#F2F6F7]">
                         <div>
                           <span className="font-semibold">{a.jobTitle}</span>
-                          <span className="text-[10px] text-slate-400 block">
+                          <span className="text-[10px] text-[#8A928D] dark:text-[#657378] block">
                             {a.company}
                           </span>
                         </div>
@@ -597,7 +597,7 @@ export const AdminDashboard: React.FC = () => {
                         <ApplicationStatusBadge status={a.status as any} size="sm" showDot />
                       </td>
 
-                      <td className="py-3 px-5 text-right text-xs text-slate-500 dark:text-slate-400">
+                      <td className="py-3 px-5 text-right text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                         {a.createdAt || '-'}
                       </td>
                     </tr>

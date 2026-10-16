@@ -132,7 +132,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             placeholder="e.g. Senior Software Engineer"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
-            leftIcon={<Briefcase className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Briefcase className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -141,12 +141,12 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             placeholder="e.g. Acme Technologies"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            leftIcon={<Building2 className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Building2 className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
           <div className="space-y-1.5">
-            <label className="text-[13px] font-semibold text-slate-300 block">
+            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
               Employment Type
             </label>
             <select
@@ -168,7 +168,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             placeholder="e.g. Chennai, India (Hybrid)"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            leftIcon={<MapPin className="w-4 h-4 text-slate-400" />}
+            leftIcon={<MapPin className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
           />
 
           <Input
@@ -176,7 +176,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             placeholder="YYYY-MM (e.g. 2022-06)"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             required
           />
 
@@ -186,7 +186,7 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             disabled={currentlyWorking}
-            leftIcon={<Calendar className="w-4 h-4 text-slate-400" />}
+            leftIcon={<Calendar className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
             helperText={currentlyWorking ? 'Disabled while working here' : ''}
           />
 
@@ -203,14 +203,14 @@ export const ExperienceModal: React.FC<ExperienceModalProps> = ({
             />
             <label
               htmlFor="currently-working-chk"
-              className="text-xs text-slate-300 select-none font-medium cursor-pointer"
+              className="text-xs text-[#8A928D] dark:text-[#9AA7AB] select-none font-medium cursor-pointer"
             >
               I currently work in this role
             </label>
           </div>
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-semibold text-slate-300 block">
+            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
               Role Description & Key Accomplishments
             </label>
             <textarea

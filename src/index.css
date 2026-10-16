@@ -95,11 +95,24 @@ body {
   overflow-x: hidden;
 }
 
-/* Dark Obsidian Canvas Teal Glow */
-html.dark body {
-  background-image: radial-gradient(circle at 100% 0%, rgba(43, 179, 201, 0.10) 0%, transparent 60%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+/* Localized Teal Radial Glow (For Hero cards & Hero headers only, never full-page wash) */
+.hero-glow-teal {
+  position: relative;
+}
+.hero-glow-teal::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
+  max-height: 380px;
+  background: radial-gradient(circle, rgba(43, 179, 201, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(48px);
 }
 
 /* Monospace / Tabular Numerals for big numbers, scores, and KPI accuracy */
@@ -213,3 +226,154 @@ html.dark ::-webkit-scrollbar-thumb {
 html.dark ::-webkit-scrollbar-thumb:hover {
   background: #1F8FA6;
 }
+
+/* ============================================================
+   MOTION SYSTEM (Durations under 300ms, transform & opacity only)
+   ============================================================ */
+
+:root {
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 220ms;
+  --duration-stagger: 260ms;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes rankPulse {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.015);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-page-enter {
+  animation: pageEnter var(--duration-normal) var(--ease-smooth) forwards;
+}
+
+/* Staggered Entrance Utilities for Dashboard Bento Cards */
+.animate-stagger-1 {
+  animation: pageEnter var(--duration-stagger) var(--ease-smooth) 0ms both;
+}
+.animate-stagger-2 {
+  animation: pageEnter var(--duration-stagger) var(--ease-smooth) 35ms both;
+}
+.animate-stagger-3 {
+  animation: pageEnter var(--duration-stagger) var(--ease-smooth) 70ms both;
+}
+.animate-stagger-4 {
+  animation: pageEnter var(--duration-stagger) var(--ease-smooth) 105ms both;
+}
+.animate-stagger-5 {
+  animation: pageEnter var(--duration-stagger) var(--ease-smooth) 140ms both;
+}
+.animate-stagger-6 {
+  animation: pageEnter var(--duration-stagger) var(--ease-smooth) 175ms both;
+}
+
+.animate-rank-pulse {
+  animation: rankPulse 260ms var(--ease-smooth);
+}
+
+/* Reduced Motion Compliance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   PRINT & EXPORT STYLESHEET
+   Clean, ink-on-paper layout for reports, resumes, and comparisons
+   ============================================================ */
+
+@media print {
+  html,
+  body {
+    background: #FFFFFF !important;
+    color: #111312 !important;
+  }
+
+  /* Hide app navigation chrome, toolbars, buttons, and floating controls */
+  aside,
+  header,
+  nav,
+  button,
+  .print-hide,
+  .no-print,
+  [role="dialog"] > div:first-child:not([role="document"]),
+  .fixed:not(.print-keep),
+  .sticky {
+    display: none !important;
+  }
+
+  main,
+  .print-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Convert cards to clean paper boxes with crisp borders and no shadow */
+  [class*="rounded-"],
+  [class*="border"] {
+    box-shadow: none !important;
+    border-color: #D1D5DB !important;
+    background-color: #FFFFFF !important;
+    color: #111312 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* High contrast numbers */
+  .figure,
+  .font-numeral {
+    color: #111312 !important;
+    font-weight: 700 !important;
+  }
+
+  /* High contrast skill pills and badges */
+  [class*="pill-"],
+  [class*="badge-"] {
+    border: 1px solid #9CA3AF !important;
+    background: #F3F4F6 !important;
+    color: #111312 !important;
+  }
+
+  .page-break {
+    page-break-before: always;
+    break-before: page;
+  }
+}
+

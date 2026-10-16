@@ -28,7 +28,7 @@ export const AIScreeningPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               AI Screening & Comparison Center
             </h1>
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-950/70 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/60">
@@ -36,7 +36,7 @@ export const AIScreeningPage: React.FC = () => {
               Neural Match Engine v4.2
             </span>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Deep algorithmic candidate comparisons, skill vector matching, and automated qualification rules.
           </p>
         </div>
@@ -58,10 +58,10 @@ export const AIScreeningPage: React.FC = () => {
               <Sliders className="w-4 h-4" />
               Automated Screening Threshold
             </div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+            <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7]">
               Automatically advance candidates who score above the qualification threshold
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] max-w-xl">
               Candidates scoring above {threshold}% are automatically tagged as <strong>Shortlisted</strong> and queued for initial interview availability.
             </p>
           </div>
@@ -69,7 +69,7 @@ export const AIScreeningPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
             <div className="w-48 sm:w-64 space-y-1.5">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="text-slate-500">Min Score:</span>
+                <span className="text-[#5E6460] dark:text-[#9AA7AB]">Min Score:</span>
                 <span className="text-brand-600 dark:text-brand-400 font-bold">{threshold}% Match</span>
               </div>
               <input
@@ -78,7 +78,7 @@ export const AIScreeningPage: React.FC = () => {
                 max="95"
                 value={threshold}
                 onChange={(e) => setThreshold(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-600"
+                className="w-full h-2 bg-[#DCDCD7] dark:bg-[#111719] rounded-lg appearance-none cursor-pointer accent-brand-600"
               />
             </div>
             <Button variant="secondary" size="md" onClick={handleSaveThreshold}>
@@ -91,17 +91,17 @@ export const AIScreeningPage: React.FC = () => {
       {/* Side-by-Side Candidate Deep Comparison Matrix */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+          <h2 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
             <Layers className="w-4 h-4 text-brand-500" />
             Side-by-Side Candidate Match Matrix
           </h2>
-          <span className="text-xs text-slate-400">Comparing 2 top candidates</span>
+          <span className="text-xs text-[#8A928D] dark:text-[#657378]">Comparing 2 top candidates</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Candidate A Card */}
           <Card padding="md" className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-surface-dark-border">
+            <div className="flex items-center justify-between pb-3 border-b border-[#EFEFEA] dark:border-surface-dark-border">
               <div className="flex items-center gap-3">
                 <img
                   src={candidateA.avatar}
@@ -109,10 +109,10 @@ export const AIScreeningPage: React.FC = () => {
                   className="w-12 h-12 rounded-full object-cover ring-2 ring-brand-500/30"
                 />
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {candidateA.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                     {candidateA.title} • {candidateA.experienceYears} yrs
                   </p>
                 </div>
@@ -123,12 +123,12 @@ export const AIScreeningPage: React.FC = () => {
             <MatchScore score={candidateA.aiScore} variant="bar" />
 
             <div className="space-y-2">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Core Strengths
               </h5>
               <ul className="text-xs space-y-1">
                 {candidateA.topStrengths.map((s, i) => (
-                  <li key={i} className="flex items-start gap-1.5 text-slate-700 dark:text-slate-300">
+                  <li key={i} className="flex items-start gap-1.5 text-[#111312] dark:text-[#F2F6F7]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
                     <span>{s}</span>
                   </li>
@@ -137,14 +137,14 @@ export const AIScreeningPage: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Extracted Skills Taxonomy
               </h5>
               <div className="flex flex-wrap gap-1.5">
                 {candidateA.skills.map((s, i) => (
                   <span
                     key={i}
-                    className="px-2.5 py-0.5 text-xs rounded-full bg-slate-100 dark:bg-surface-dark-bg text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-surface-dark-border"
+                    className="px-2.5 py-0.5 text-xs rounded-full bg-[#E9E9E5] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border"
                   >
                     {s.name}
                   </span>
@@ -152,8 +152,8 @@ export const AIScreeningPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-100 dark:border-surface-dark-border flex items-center justify-between text-xs">
-              <span className="text-slate-400">Salary: {candidateA.salaryExpectation}</span>
+            <div className="pt-2 border-t border-[#EFEFEA] dark:border-surface-dark-border flex items-center justify-between text-xs">
+              <span className="text-[#8A928D] dark:text-[#657378]">Salary: {candidateA.salaryExpectation}</span>
               <Button variant="primary" size="sm">
                 Shortlist Candidate
               </Button>
@@ -162,7 +162,7 @@ export const AIScreeningPage: React.FC = () => {
 
           {/* Candidate B Card */}
           <Card padding="md" className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-surface-dark-border">
+            <div className="flex items-center justify-between pb-3 border-b border-[#EFEFEA] dark:border-surface-dark-border">
               <div className="flex items-center gap-3">
                 <img
                   src={candidateB.avatar}
@@ -170,10 +170,10 @@ export const AIScreeningPage: React.FC = () => {
                   className="w-12 h-12 rounded-full object-cover ring-2 ring-indigo-500/30"
                 />
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                     {candidateB.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                     {candidateB.title} • {candidateB.experienceYears} yrs
                   </p>
                 </div>
@@ -184,12 +184,12 @@ export const AIScreeningPage: React.FC = () => {
             <MatchScore score={candidateB.aiScore} variant="bar" />
 
             <div className="space-y-2">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Core Strengths
               </h5>
               <ul className="text-xs space-y-1">
                 {candidateB.topStrengths.map((s, i) => (
-                  <li key={i} className="flex items-start gap-1.5 text-slate-700 dark:text-slate-300">
+                  <li key={i} className="flex items-start gap-1.5 text-[#111312] dark:text-[#F2F6F7]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
                     <span>{s}</span>
                   </li>
@@ -198,14 +198,14 @@ export const AIScreeningPage: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Extracted Skills Taxonomy
               </h5>
               <div className="flex flex-wrap gap-1.5">
                 {candidateB.skills.map((s, i) => (
                   <span
                     key={i}
-                    className="px-2.5 py-0.5 text-xs rounded-full bg-slate-100 dark:bg-surface-dark-bg text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-surface-dark-border"
+                    className="px-2.5 py-0.5 text-xs rounded-full bg-[#E9E9E5] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border"
                   >
                     {s.name}
                   </span>
@@ -213,8 +213,8 @@ export const AIScreeningPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-100 dark:border-surface-dark-border flex items-center justify-between text-xs">
-              <span className="text-slate-400">Salary: {candidateB.salaryExpectation}</span>
+            <div className="pt-2 border-t border-[#EFEFEA] dark:border-surface-dark-border flex items-center justify-between text-xs">
+              <span className="text-[#8A928D] dark:text-[#657378]">Salary: {candidateB.salaryExpectation}</span>
               <Button variant="primary" size="sm">
                 Shortlist Candidate
               </Button>

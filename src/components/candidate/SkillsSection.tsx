@@ -80,9 +80,9 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
       case 'Advanced':
         return 'bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border-brand-200 dark:border-brand-800/60';
       case 'Intermediate':
-        return 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/60';
+        return 'bg-[#1F8FA6]/10 dark:bg-indigo-950/60 text-[#1F8FA6] dark:text-[#5FD3E8] border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30/60';
       case 'Beginner':
-        return 'bg-slate-100 dark:bg-surface-dark-bg text-slate-700 dark:text-slate-300 border-slate-200 dark:border-surface-dark-border';
+        return 'bg-[#E9E9E5] dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] border-[#E7E7E2] dark:border-surface-dark-border';
     }
   };
 
@@ -146,15 +146,15 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
 
       {/* Skills Chip Collection / Empty State */}
       {skillsList.length === 0 ? (
-        <div className="p-8 text-center rounded-control bg-slate-50/60 dark:bg-surface-dark-bg/40 border border-dashed border-slate-200 dark:border-surface-dark-border space-y-3">
-          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-surface-dark-card text-slate-400 flex items-center justify-center mx-auto">
+        <div className="p-8 text-center rounded-control bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 border border-dashed border-[#E7E7E2] dark:border-surface-dark-border space-y-3">
+          <div className="w-10 h-10 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-card text-[#8A928D] dark:text-[#657378] flex items-center justify-center mx-auto">
             <Award className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
               No skills added yet.
             </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            <p className="text-xs text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
               Add technical skills, programming languages, and tools to highlight your competencies.
             </p>
           </div>
@@ -171,7 +171,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
                 skill.proficiency
               )}`}
             >
-              <span className="font-bold text-slate-900 dark:text-white">{skill.name}</span>
+              <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">{skill.name}</span>
               <span className="text-[10px] uppercase font-bold opacity-75">
                 • {skill.proficiency}
               </span>
@@ -184,7 +184,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
                   setEditProficiency(skill.proficiency);
                 }}
                 title="Edit proficiency"
-                className="p-1 rounded-full text-slate-400 hover:text-brand-600 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                className="p-1 rounded-full text-[#8A928D] dark:text-[#657378] hover:text-brand-600 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
               >
                 <Edit3 className="w-3 h-3" />
               </button>
@@ -194,7 +194,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
                 type="button"
                 onClick={() => onDelete(skill.id)}
                 title="Remove skill"
-                className="p-1 rounded-full text-slate-400 hover:text-rose-600 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                className="p-1 rounded-full text-[#8A928D] dark:text-[#657378] hover:text-rose-600 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -222,7 +222,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
         }
       >
         <div className="space-y-3 py-1 text-left">
-          <label className="text-[13px] font-semibold text-slate-300 block">
+          <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
             Proficiency Level
           </label>
           <div className="grid grid-cols-2 gap-3">
@@ -234,7 +234,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
                 className={`p-3 rounded-xl text-left border text-xs font-semibold transition-all ${
                   editProficiency === level
                     ? 'border-brand-500 bg-brand-950/40 text-brand-300 shadow-sm ring-1 ring-brand-500/50'
-                    : 'border-slate-800 bg-[#0d101d] text-slate-300 hover:bg-[#121624]'
+                    : 'border-slate-800 bg-[#0d101d] text-[#8A928D] dark:text-[#9AA7AB] hover:bg-[#121624]'
                 }`}
               >
                 {level}

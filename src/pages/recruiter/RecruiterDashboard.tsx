@@ -147,10 +147,10 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
   const topCandidate = data?.topCandidates?.[0] || null;
 
   return (
-    <div className="space-y-6 w-full pb-16">
+    <div className="space-y-6 w-full pb-16 animate-page-enter">
       {/* 1. Onboarding Checklist (Disappears when all complete) */}
       {!isAllComplete && !isChecklistDismissed && (
-        <Card className="bg-[#E6EEFF]/40 dark:bg-[#1F8FA6]/10 border-[#2F5BEA]/20 dark:border-[#1F8FA6]/30">
+        <Card className="bg-[#E6EEFF]/40 dark:bg-[#1F8FA6]/10 border-[#2F5BEA]/20 dark:border-[#1F8FA6]/30 animate-stagger-1">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
@@ -220,7 +220,7 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
 
       {/* 2. Deterministic AI Insight of the Day Banner */}
       {insight && (
-        <div className="p-3.5 rounded-[16px] bg-[#1F8FA6]/10 dark:bg-[#1F8FA6]/15 border border-[#1F8FA6]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-3.5 rounded-[16px] bg-[#1F8FA6]/10 dark:bg-[#1F8FA6]/15 border border-[#1F8FA6]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-stagger-2">
           <div className="flex items-center gap-2.5">
             <span className="p-1.5 rounded-lg bg-[#1F8FA6] text-white flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
@@ -242,7 +242,7 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
       )}
 
       {/* 3. Bento Metric Stat Tiles (4-column grid) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-stagger-3">
         <StatTile
           label="Total Applications"
           value={data?.pipelineStats?.total || 0}
@@ -285,7 +285,7 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
       </div>
 
       {/* 4. Hero Bento Row (Match Health & Hiring Goals Feature Card) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-stagger-4">
         {/* Match Health Card (8 columns) */}
         <Card className="lg:col-span-8 flex flex-col justify-between py-6">
           <div>
@@ -392,7 +392,7 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
       </div>
 
       {/* 5. Charts & Schedule Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-stagger-5">
         {/* Applications Over Time (8 columns) */}
         <Card className="lg:col-span-8 flex flex-col justify-between">
           <div>
@@ -452,7 +452,7 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
 
       {/* 6. Top Candidate Spotlight Card */}
       {topCandidate ? (
-        <Card className="border-[#1F8FA6]/30 shadow-[0_8px_32px_rgba(31,143,166,0.08)]">
+        <Card className="border-[#1F8FA6]/30 shadow-[0_8px_32px_rgba(31,143,166,0.08)] animate-stagger-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-start gap-4">
               <div className="w-14 h-14 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-lg shadow-md flex-shrink-0">

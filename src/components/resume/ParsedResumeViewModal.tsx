@@ -44,21 +44,21 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-start sm:items-center justify-center p-3 sm:p-4 md:p-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#111312] dark:bg-[#0C1113]/60 backdrop-blur-sm flex items-start sm:items-center justify-center p-3 sm:p-4 md:p-6">
       <div
-        className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="relative bg-white dark:bg-[#0C1113] rounded-2xl shadow-2xl border border-[#E7E7E2] dark:border-white/8 w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
       >
         {/* Modal Header */}
-        <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
+        <div className="px-6 py-5 border-b border-[#E7E7E2] dark:border-white/8 flex items-center justify-between bg-[#F4F4F1]/50 dark:bg-[#0C1113]/50 shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-900/40">
               <FileText className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                <h3 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">
                   Extracted Resume Data
                 </h3>
                 {status === 'Processed' && (
@@ -80,7 +80,7 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 {filename || 'Uploaded Resume Document'} • Automated structural extraction
               </p>
             </div>
@@ -91,7 +91,7 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
               <button
                 onClick={onReparse}
                 disabled={isReparsing}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#111312] dark:text-[#F2F6F7] bg-[#E9E9E5] dark:bg-[#111719] hover:bg-[#DCDCD7] dark:hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50"
                 title="Re-run text parsing on this resume"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isReparsing ? 'animate-spin' : ''}`} />
@@ -100,7 +100,7 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
             )}
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              className="p-1.5 text-[#8A928D] dark:text-[#657378] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3] hover:bg-[#E9E9E5] dark:hover:bg-white/5 rounded-lg transition-colors"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
@@ -146,10 +146,10 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
           {status === 'Processing' && (
             <div className="p-8 text-center">
               <RefreshCw className="w-8 h-8 text-primary-600 animate-spin mx-auto mb-3" />
-              <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
+              <h4 className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                 Parsing Resume Document...
               </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 max-w-sm mx-auto">
                 Extracting contact information, skills, work experience, and educational background without modifying your profile.
               </p>
             </div>
@@ -158,48 +158,48 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
           {parsedData && (
             <div className="space-y-6">
               {/* 1. Contact / Header Info */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
+                <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   <User className="w-3.5 h-3.5" />
                   Contact & Personal Details
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <span className="text-xs text-slate-500 dark:text-slate-400">Extracted Name</span>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Extracted Name</span>
+                    <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                       {parsedData.personal?.candidateName || 'Not specified in header'}
                     </p>
                   </div>
                   {parsedData.personal?.headline && (
                     <div>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">Headline</span>
-                      <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                      <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">Headline</span>
+                      <p className="text-sm font-medium text-[#111312] dark:text-[#F2F6F7]">
                         {parsedData.personal.headline}
                       </p>
                     </div>
                   )}
                   <div>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-1">
                       <Mail className="w-3 h-3" /> Email
                     </span>
-                    <p className="text-sm text-slate-800 dark:text-slate-200">
-                      {parsedData.personal?.email || <span className="italic text-slate-400">Not detected</span>}
+                    <p className="text-sm text-[#111312] dark:text-[#F2F6F7]">
+                      {parsedData.personal?.email || <span className="italic text-[#8A928D] dark:text-[#657378]">Not detected</span>}
                     </p>
                   </div>
                   <div>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-1">
                       <Phone className="w-3 h-3" /> Phone
                     </span>
-                    <p className="text-sm text-slate-800 dark:text-slate-200">
-                      {parsedData.personal?.phone || <span className="italic text-slate-400">Not detected</span>}
+                    <p className="text-sm text-[#111312] dark:text-[#F2F6F7]">
+                      {parsedData.personal?.phone || <span className="italic text-[#8A928D] dark:text-[#657378]">Not detected</span>}
                     </p>
                   </div>
                   {parsedData.personal?.location && (
                     <div>
-                      <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                      <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-1">
                         <MapPin className="w-3 h-3" /> Location
                       </span>
-                      <p className="text-sm text-slate-800 dark:text-slate-200">
+                      <p className="text-sm text-[#111312] dark:text-[#F2F6F7]">
                         {parsedData.personal.location}
                       </p>
                     </div>
@@ -209,27 +209,27 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
 
               {/* 2. Professional Summary */}
               {parsedData.summary && (
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
+                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                     <Sparkles className="w-3.5 h-3.5 text-primary-500" />
                     Summary Statement
                   </div>
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                  <p className="text-sm text-[#111312] dark:text-[#F2F6F7] leading-relaxed">
                     {parsedData.summary}
                   </p>
                 </div>
               )}
 
               {/* 3. Extracted Skills */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
+              <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                     <Sparkles className="w-3.5 h-3.5 text-primary-500" />
                     Standardized Skills ({parsedData.skills?.length || 0})
                   </div>
                   {parsedData.confidence?.skills && (
-                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                      Confidence: <span className="font-semibold text-slate-700 dark:text-slate-300 capitalize">{parsedData.confidence.skills}</span>
+                    <span className="text-[11px] font-medium text-[#5E6460] dark:text-[#9AA7AB]">
+                      Confidence: <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] capitalize">{parsedData.confidence.skills}</span>
                     </span>
                   )}
                 </div>
@@ -238,30 +238,30 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
                     {parsedData.skills.map((skill, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-sm"
+                        className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-[#0C1113] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/6 shadow-sm"
                       >
                         {skill}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 italic">No standardized technical skills identified.</p>
+                  <p className="text-xs text-[#8A928D] dark:text-[#657378] italic">No standardized technical skills identified.</p>
                 )}
               </div>
 
               {/* 4. Work Experience */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
+                <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   <Briefcase className="w-3.5 h-3.5" />
                   Work Experience ({parsedData.experience?.length || 0})
                 </div>
                 {parsedData.experience && parsedData.experience.length > 0 ? (
                   <div className="space-y-4">
                     {parsedData.experience.map((exp, idx) => (
-                      <div key={idx} className="pb-3 border-b border-slate-200/60 dark:border-slate-800 last:border-b-0 last:pb-0">
+                      <div key={idx} className="pb-3 border-b border-[#E7E7E2]/60 dark:border-white/8 last:border-b-0 last:pb-0">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h5 className="text-sm font-semibold text-slate-900 dark:text-white">
+                            <h5 className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                               {exp.jobTitle}
                             </h5>
                             <p className="text-xs font-medium text-primary-600 dark:text-primary-400">
@@ -269,13 +269,13 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
                             </p>
                           </div>
                           {(exp.startDate || exp.endDate) && (
-                            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                            <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-mono">
                               {exp.startDate || ''} {exp.endDate ? `— ${exp.endDate}` : ''}
                             </span>
                           )}
                         </div>
                         {exp.description && (
-                          <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-3">
+                          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-2 line-clamp-3">
                             {exp.description}
                           </p>
                         )}
@@ -283,30 +283,30 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 italic">No work experience sections detected.</p>
+                  <p className="text-xs text-[#8A928D] dark:text-[#657378] italic">No work experience sections detected.</p>
                 )}
               </div>
 
               {/* 5. Education */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
+                <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                   <GraduationCap className="w-3.5 h-3.5" />
                   Education ({parsedData.education?.length || 0})
                 </div>
                 {parsedData.education && parsedData.education.length > 0 ? (
                   <div className="space-y-3">
                     {parsedData.education.map((edu, idx) => (
-                      <div key={idx} className="flex items-start justify-between pb-2.5 border-b border-slate-200/60 dark:border-slate-800 last:border-b-0 last:pb-0">
+                      <div key={idx} className="flex items-start justify-between pb-2.5 border-b border-[#E7E7E2]/60 dark:border-white/8 last:border-b-0 last:pb-0">
                         <div>
-                          <h5 className="text-sm font-semibold text-slate-900 dark:text-white">
+                          <h5 className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
                             {edu.degree} {edu.field ? `in ${edu.field}` : ''}
                           </h5>
-                          <p className="text-xs text-slate-600 dark:text-slate-400">
+                          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                             {edu.institution} {edu.grade ? `• Grade: ${edu.grade}` : ''}
                           </p>
                         </div>
                         {(edu.startDate || edu.endDate) && (
-                          <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                          <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-mono">
                             {edu.startDate} {edu.endDate ? `— ${edu.endDate}` : ''}
                           </span>
                         )}
@@ -314,7 +314,7 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 italic">No formal education records detected.</p>
+                  <p className="text-xs text-[#8A928D] dark:text-[#657378] italic">No formal education records detected.</p>
                 )}
               </div>
 
@@ -322,16 +322,16 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
               {(parsedData.projects?.length > 0 || parsedData.certifications?.length > 0) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {parsedData.projects?.length > 0 && (
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                      <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
+                      <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                         <FolderGit2 className="w-3.5 h-3.5" />
                         Projects ({parsedData.projects.length})
                       </div>
                       <div className="space-y-2">
                         {parsedData.projects.map((p, idx) => (
                           <div key={idx} className="text-xs">
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">{p.name}</span>
-                            {p.description && <p className="text-slate-500 line-clamp-2 mt-0.5">{p.description}</p>}
+                            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">{p.name}</span>
+                            {p.description && <p className="text-[#5E6460] dark:text-[#9AA7AB] line-clamp-2 mt-0.5">{p.description}</p>}
                           </div>
                         ))}
                       </div>
@@ -339,16 +339,16 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
                   )}
 
                   {parsedData.certifications?.length > 0 && (
-                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                      <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
+                      <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                         <Award className="w-3.5 h-3.5" />
                         Certifications ({parsedData.certifications.length})
                       </div>
                       <div className="space-y-2">
                         {parsedData.certifications.map((c, idx) => (
                           <div key={idx} className="text-xs">
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">{c.name}</span>
-                            <p className="text-slate-500">{c.issuingOrg}</p>
+                            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">{c.name}</span>
+                            <p className="text-[#5E6460] dark:text-[#9AA7AB]">{c.issuingOrg}</p>
                           </div>
                         ))}
                       </div>
@@ -359,8 +359,8 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
 
               {/* 7. Spoken Languages */}
               {parsedData.languages && parsedData.languages.length > 0 && (
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
-                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#111719]/60 border border-[#E7E7E2] dark:border-white/8">
+                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                     <Globe className="w-3.5 h-3.5" />
                     Languages ({parsedData.languages.length})
                   </div>
@@ -368,7 +368,7 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
                     {parsedData.languages.map((lang, idx) => (
                       <span
                         key={idx}
-                        className="text-xs px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                        className="text-xs px-2.5 py-1 rounded-md bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/6 text-[#111312] dark:text-[#F2F6F7]"
                       >
                         {lang.language} {lang.proficiency ? `(${lang.proficiency})` : ''}
                       </span>
@@ -381,10 +381,10 @@ export const ParsedResumeViewModal: React.FC<ParsedResumeViewModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
+        <div className="px-6 py-4 border-t border-[#E7E7E2] dark:border-white/8 flex items-center justify-end gap-3 bg-[#F4F4F1]/50 dark:bg-[#0C1113]/50 shrink-0">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="px-4 py-2 text-sm font-semibold text-[#111312] dark:text-[#F2F6F7] hover:bg-[#E9E9E5] dark:hover:bg-white/5 rounded-xl transition-colors"
           >
             Close
           </button>

@@ -101,7 +101,7 @@ export const RescheduleInterviewModal: React.FC<RescheduleInterviewModalProps> =
         {/* Date, Time & Duration */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               New Date *
             </label>
             <Input
@@ -113,7 +113,7 @@ export const RescheduleInterviewModal: React.FC<RescheduleInterviewModalProps> =
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               New Time *
             </label>
             <Input
@@ -125,13 +125,13 @@ export const RescheduleInterviewModal: React.FC<RescheduleInterviewModalProps> =
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Duration
             </label>
             <select
               value={durationMinutes}
               onChange={(e) => setDurationMinutes(Number(e.target.value))}
-              className="w-full h-10 px-3 rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full h-10 px-3 rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <option value={15}>15 minutes</option>
               <option value={30}>30 minutes</option>
@@ -145,14 +145,14 @@ export const RescheduleInterviewModal: React.FC<RescheduleInterviewModalProps> =
         {/* Video Meeting URL (if Video) */}
         {interview.interviewType === 'Video' && (
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Meeting URL
             </label>
             <Input
               value={meetingUrl}
               onChange={(e) => setMeetingUrl(e.target.value)}
               placeholder="https://meet.google.com/xxx-xxxx-xxx"
-              leftIcon={<Link className="w-3.5 h-3.5 text-slate-400" />}
+              leftIcon={<Link className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />}
             />
           </div>
         )}
@@ -160,20 +160,20 @@ export const RescheduleInterviewModal: React.FC<RescheduleInterviewModalProps> =
         {/* Location (if In Person) */}
         {interview.interviewType === 'In Person' && (
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
               Location / Office
             </label>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              leftIcon={<MapPin className="w-3.5 h-3.5 text-slate-400" />}
+              leftIcon={<MapPin className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />}
             />
           </div>
         )}
 
         {/* Reschedule Reason */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
             Reschedule Reason & Note for Candidate
           </label>
           <textarea
@@ -181,12 +181,12 @@ export const RescheduleInterviewModal: React.FC<RescheduleInterviewModalProps> =
             onChange={(e) => setReason(e.target.value)}
             placeholder="Brief reason or updated instructions for the candidate..."
             rows={2}
-            className="w-full p-2.5 rounded-control text-xs bg-white dark:bg-surface-dark-input text-slate-900 dark:text-white border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="w-full p-2.5 rounded-control text-xs bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
         </div>
 
         {/* Modal Actions */}
-        <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-surface-dark-border">
+        <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#EFEFEA] dark:border-surface-dark-border">
           <Button type="button" variant="secondary" size="md" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>

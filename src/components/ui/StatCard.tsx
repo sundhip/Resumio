@@ -23,18 +23,18 @@ export const StatCard: React.FC<StatCardProps> = ({
   className,
 }) => {
   return (
-    <Card padding="sm" className={clsx('relative overflow-hidden transition-all hover:border-slate-300 dark:hover:border-surface-dark-border/80', className)}>
+    <Card padding="sm" className={clsx('relative overflow-hidden transition-all hover:border-[#DCDCD7] dark:hover:border-surface-dark-border/80', className)}>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+        <span className="text-xs font-medium text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
           {label}
         </span>
-        <div className={clsx('w-9 h-9 rounded-control flex items-center justify-center shrink-0 shadow-subtle border border-slate-100 dark:border-surface-dark-border', iconBgColor)}>
+        <div className={clsx('w-9 h-9 rounded-control flex items-center justify-center shrink-0 shadow-subtle border border-[#EFEFEA] dark:border-surface-dark-border', iconBgColor)}>
           {icon}
         </div>
       </div>
 
       <div className="flex items-baseline justify-between gap-2">
-        <div className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+        <div className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
           {value}
         </div>
         {change && (
@@ -43,7 +43,7 @@ export const StatCard: React.FC<StatCardProps> = ({
               'flex items-center gap-1 text-xs font-medium',
               trend === 'up' && 'text-emerald-600 dark:text-emerald-400',
               trend === 'down' && 'text-rose-600 dark:text-rose-400',
-              trend === 'neutral' && 'text-slate-500 dark:text-slate-400'
+              trend === 'neutral' && 'text-[#5E6460] dark:text-[#9AA7AB]'
             )}
           >
             {trend === 'up' && <TrendingUp className="w-3.5 h-3.5" />}

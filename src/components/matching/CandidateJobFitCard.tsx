@@ -41,12 +41,12 @@ export const CandidateJobFitCard: React.FC<CandidateJobFitCardProps> = ({
       <Card className="p-6 bg-gradient-to-r from-brand-50/60 to-indigo-50/60 dark:from-brand-950/30 dark:to-indigo-950/30 border-brand-200/80 dark:border-brand-900/60 animate-pulse">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles className="w-5 h-5 text-brand-600 animate-spin text-brand-500" />
-          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+          <h3 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
             Analyzing your resume against this job...
           </h3>
         </div>
-        <div className="h-4 bg-slate-200 dark:bg-surface-dark-border rounded w-3/4 mb-2" />
-        <div className="h-4 bg-slate-200 dark:bg-surface-dark-border rounded w-1/2" />
+        <div className="h-4 bg-[#DCDCD7] dark:bg-surface-dark-border rounded w-3/4 mb-2" />
+        <div className="h-4 bg-[#DCDCD7] dark:bg-surface-dark-border rounded w-1/2" />
       </Card>
     );
   }
@@ -60,10 +60,10 @@ export const CandidateJobFitCard: React.FC<CandidateJobFitCardProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                 Discover Your Fit for this Job
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xl leading-relaxed">
+              <p className="text-xs text-[#5E6460] dark:text-[#F2F6F7] mt-1 max-w-xl leading-relaxed">
                 Upload your resume to instantly see your personalized AI Match Score ($0–100\%$), matched skills, and actionable skill gap recommendations.
               </p>
             </div>
@@ -112,16 +112,16 @@ export const CandidateJobFitCard: React.FC<CandidateJobFitCardProps> = ({
   return (
     <Card className="p-6 bg-white dark:bg-surface-dark-card border-brand-200/80 dark:border-brand-900/60 shadow-xs relative overflow-hidden">
       {/* Top Banner with Score Gauge */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100 dark:border-surface-dark-border">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-[#EFEFEA] dark:border-surface-dark-border">
         <div className="space-y-2">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/70 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
             <Sparkles className="w-3.5 h-3.5 text-brand-500" />
             YOUR FIT FOR THIS JOB
           </div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-xl font-bold text-[#111312] dark:text-[#F2F6F7]">
             Resume Match Analysis
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] max-w-xl leading-relaxed">
             Calculated by evaluating required skills, preferred skills, relevant experience duration, and academic qualification.
           </p>
         </div>
@@ -142,32 +142,32 @@ export const CandidateJobFitCard: React.FC<CandidateJobFitCardProps> = ({
       </div>
 
       {/* Matching Factors Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-5 pb-5 border-b border-slate-100 dark:border-surface-dark-border text-xs">
-        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-5 pb-5 border-b border-[#EFEFEA] dark:border-surface-dark-border text-xs">
+        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border">
           <Award className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
           <div>
-            <span className="text-slate-400 font-medium block text-[11px]">Required Skills Match</span>
-            <span className="font-bold text-slate-900 dark:text-white">
+            <span className="text-[#8A928D] dark:text-[#657378] font-medium block text-[11px]">Required Skills Match</span>
+            <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
               {match.requiredSkillsMatched.length} of {match.requiredSkillsMatched.length + match.requiredSkillsMissing.length} Matched
             </span>
           </div>
         </div>
 
-        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border">
+        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border">
           <Clock className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
           <div>
-            <span className="text-slate-400 font-medium block text-[11px]">Experience Alignment</span>
-            <span className="font-bold text-slate-900 dark:text-white">
+            <span className="text-[#8A928D] dark:text-[#657378] font-medium block text-[11px]">Experience Alignment</span>
+            <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">
               {match.candidateExperienceYears > 0 ? `${match.candidateExperienceYears} yrs documented` : 'Open'}
             </span>
           </div>
         </div>
 
-        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border">
+        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/60 dark:border-surface-dark-border">
           <GraduationCap className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
           <div>
-            <span className="text-slate-400 font-medium block text-[11px]">Education Level</span>
-            <span className="font-bold text-slate-900 dark:text-white truncate block max-w-[170px]" title={match.candidateHighestEducation}>
+            <span className="text-[#8A928D] dark:text-[#657378] font-medium block text-[11px]">Education Level</span>
+            <span className="font-bold text-[#111312] dark:text-[#F2F6F7] truncate block max-w-[170px]" title={match.candidateHighestEducation}>
               {match.candidateHighestEducation}
             </span>
           </div>
@@ -193,7 +193,7 @@ export const CandidateJobFitCard: React.FC<CandidateJobFitCardProps> = ({
               </span>
             ))}
             {[...match.requiredSkillsMatched, ...match.preferredSkillsMatched].length === 0 && (
-              <span className="text-xs text-slate-400">No direct skill matches detected yet</span>
+              <span className="text-xs text-[#8A928D] dark:text-[#657378]">No direct skill matches detected yet</span>
             )}
           </div>
         </div>
@@ -225,7 +225,7 @@ export const CandidateJobFitCard: React.FC<CandidateJobFitCardProps> = ({
 
       {/* AI Summary Snippet */}
       {summary?.summaryText && (
-        <div className="mt-5 p-3.5 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+        <div className="mt-5 p-3.5 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border text-xs text-[#111312] dark:text-[#F2F6F7] leading-relaxed">
           <span className="font-bold text-brand-700 dark:text-brand-400 block mb-1">AI Match Summary:</span>
           {summary.summaryText}
         </div>

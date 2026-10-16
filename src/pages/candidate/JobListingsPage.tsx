@@ -64,10 +64,10 @@ export const JobListingsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
             Explore Opportunities
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Browse high-growth roles automatically matched with your AI resume profile.
           </p>
         </div>
@@ -116,10 +116,10 @@ export const JobListingsPage: React.FC = () => {
                       {(job.company || 'C').charAt(0)}
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                      <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                         {job.title}
                       </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5">
+                      <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5 flex items-center gap-1.5">
                         <Building2 className="w-3.5 h-3.5" />
                         {job.company}
                       </p>
@@ -128,7 +128,7 @@ export const JobListingsPage: React.FC = () => {
 
                   <button
                     onClick={(e) => toggleSave(job.id, e)}
-                    className="p-1.5 rounded-control text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors"
+                    className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-brand-600 dark:hover:text-brand-400 hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover transition-colors"
                   >
                     {isSaved ? (
                       <BookmarkCheck className="w-5 h-5 text-brand-600 dark:text-brand-400 fill-current" />
@@ -152,7 +152,7 @@ export const JobListingsPage: React.FC = () => {
                 </div>
 
                 {/* Snippet */}
-                <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] line-clamp-2 leading-relaxed">
                   {job.description}
                 </p>
 
@@ -161,7 +161,7 @@ export const JobListingsPage: React.FC = () => {
                   {job.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 text-[11px] rounded bg-slate-100 dark:bg-surface-dark-bg text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-surface-dark-border"
+                      className="px-2 py-0.5 text-[11px] rounded bg-[#E9E9E5] dark:bg-surface-dark-bg text-[#5E6460] dark:text-[#F2F6F7] border border-[#E7E7E2]/60 dark:border-surface-dark-border"
                     >
                       {tag}
                     </span>
@@ -170,8 +170,8 @@ export const JobListingsPage: React.FC = () => {
               </div>
 
               {/* Card Footer */}
-              <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-surface-dark-border">
-                <span className="text-sm font-bold text-slate-900 dark:text-white">
+              <div className="flex items-center justify-between pt-3 border-t border-[#EFEFEA] dark:border-surface-dark-border">
+                <span className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                   {job.salaryRange}
                 </span>
 
@@ -203,10 +203,10 @@ export const JobListingsPage: React.FC = () => {
                 {selectedJob.company.charAt(0)}
               </div>
               <div>
-                <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+                <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7]">
                   {selectedJob.title}
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                   {selectedJob.company} • {selectedJob.location} ({selectedJob.workplace})
                 </p>
               </div>
@@ -215,7 +215,7 @@ export const JobListingsPage: React.FC = () => {
           size="lg"
           footer={
             <div className="flex items-center justify-between w-full">
-              <span className="text-sm font-bold text-slate-900 dark:text-white">
+              <span className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                 {selectedJob.salaryRange}
               </span>
               <div className="flex gap-2">
@@ -244,16 +244,16 @@ export const JobListingsPage: React.FC = () => {
             )}
 
             <div className="space-y-2">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Role Description
               </h5>
-              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed p-3.5 rounded-control bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200 dark:border-surface-dark-border">
+              <p className="text-xs sm:text-sm text-[#111312] dark:text-[#F2F6F7] leading-relaxed p-3.5 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2] dark:border-surface-dark-border">
                 {selectedJob.description}
               </p>
             </div>
 
             <div className="space-y-2">
-              <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
                 Required Qualifications & Skills
               </h5>
               <div className="flex flex-wrap gap-2">
@@ -300,7 +300,7 @@ export const JobListingsPage: React.FC = () => {
             <p className="font-semibold text-brand-700 dark:text-brand-300">
               ✨ Fast-Track Verification
             </p>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-[#5E6460] dark:text-[#9AA7AB]">
               Your 94% AI Match score and verified skill credentials will be prioritized in the recruiter's incoming screening queue.
             </p>
           </div>

@@ -39,23 +39,23 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} size="lg" title="">
       <div className="space-y-6 pb-2">
         {/* Header Strip */}
-        <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100 dark:border-surface-dark-border">
+        <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#EFEFEA] dark:border-surface-dark-border">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/70 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
               <Sparkles className="w-3.5 h-3.5 text-brand-500" />
               AI SKILL GAP ANALYSIS
             </div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               Skill Alignment & Development Gaps
             </h2>
-            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-              <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+            <div className="flex items-center gap-2 text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+              <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1">
                 <Briefcase className="w-3.5 h-3.5 text-brand-600" />
                 {jobTitle}
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                <Building2 className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                 {companyName}
               </span>
             </div>
@@ -71,18 +71,18 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
         {isLoading ? (
           <div className="py-12 text-center space-y-3 animate-pulse">
             <Sparkles className="w-8 h-8 text-brand-600 animate-spin mx-auto text-brand-500" />
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
               Synthesizing skill gap analysis...
             </p>
           </div>
         ) : !skillGap ? (
-          <div className="py-8 text-center text-xs text-slate-500">
+          <div className="py-8 text-center text-xs text-[#5E6460] dark:text-[#9AA7AB]">
             No skill gap data available for this position.
           </div>
         ) : (
           <div className="space-y-5">
             {/* AI Strategic Overview Banner */}
-            <div className="p-4 rounded-xl bg-gradient-to-r from-brand-50/70 via-indigo-50/50 to-transparent dark:from-brand-950/40 dark:via-indigo-950/20 dark:to-transparent border border-brand-200/80 dark:border-brand-900/60 text-xs text-slate-800 dark:text-slate-200 leading-relaxed space-y-1.5">
+            <div className="p-4 rounded-xl bg-gradient-to-r from-brand-50/70 via-indigo-50/50 to-transparent dark:from-brand-950/40 dark:via-indigo-950/20 dark:to-transparent border border-brand-200/80 dark:border-brand-900/60 text-xs text-[#111312] dark:text-[#F2F6F7] leading-relaxed space-y-1.5">
               <span className="font-bold text-brand-800 dark:text-brand-300 flex items-center gap-1.5 text-sm">
                 <Lightbulb className="w-4 h-4 text-brand-600" />
                 Executive Summary
@@ -107,7 +107,7 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
                   </span>
                 ))}
                 {skillGap.matchedAreas.length === 0 && (
-                  <span className="text-xs text-slate-400 italic">No direct matches recorded</span>
+                  <span className="text-xs text-[#8A928D] dark:text-[#657378] italic">No direct matches recorded</span>
                 )}
               </div>
             </div>
@@ -143,7 +143,7 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
             {/* Preferred / Nice-to-Have Gaps */}
             {skillGap.preferredGaps && skillGap.preferredGaps.length > 0 && (
               <div className="space-y-2.5">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-800 dark:text-indigo-400 flex items-center gap-1.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-800 dark:text-[#5FD3E8] flex items-center gap-1.5">
                   <TrendingUp className="w-4 h-4" />
                   Nice-to-Have / Preferred Skill Opportunities ({skillGap.preferredGaps.length})
                 </h3>
@@ -151,7 +151,7 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
                   {skillGap.preferredGaps.map((skill, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-950/40 text-indigo-800 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40"
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-[#1F8FA6]/10 dark:bg-indigo-950/40 text-indigo-800 dark:text-[#5FD3E8] border border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30/40"
                     >
                       {skill}
                     </span>
@@ -162,8 +162,8 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
 
             {/* Recommendations Overview */}
             {skillGap.recommendationsOverview && (
-              <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                <span className="font-bold text-slate-900 dark:text-white block mb-1">
+              <div className="p-3.5 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#E7E7E2]/80 dark:border-surface-dark-border text-xs text-[#111312] dark:text-[#F2F6F7] leading-relaxed">
+                <span className="font-bold text-[#111312] dark:text-[#F2F6F7] block mb-1">
                   Preparation Advice:
                 </span>
                 {skillGap.recommendationsOverview}
@@ -171,8 +171,8 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
             )}
 
             {/* Privacy Note */}
-            <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/40 border border-slate-200/60 dark:border-surface-dark-border text-[11px] text-slate-400 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
+            <div className="p-3 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg/40 border border-[#E7E7E2]/60 dark:border-surface-dark-border text-[11px] text-[#8A928D] dark:text-[#657378] flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-[#8A928D] dark:text-[#657378] shrink-0" />
               <span>
                 This skill gap analysis is generated privately for your personal development and candidate preparation.
               </span>
@@ -180,7 +180,7 @@ export const SkillGapAnalysisModal: React.FC<SkillGapAnalysisModalProps> = ({
           </div>
         )}
 
-        <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-surface-dark-border">
+        <div className="flex justify-end pt-4 border-t border-[#EFEFEA] dark:border-surface-dark-border">
           <Button variant="secondary" size="sm" onClick={onClose}>
             Close
           </Button>

@@ -64,14 +64,14 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               My Interviews
             </h1>
             <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
               {upcoming.length} Upcoming
             </span>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Access meeting links, view scheduled session timings, and review interview preparation instructions.
           </p>
         </div>
@@ -89,13 +89,13 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-surface-dark-border pb-2">
+      <div className="flex items-center gap-2 border-b border-[#E7E7E2] dark:border-surface-dark-border pb-2">
         <button
           onClick={() => setActiveTab('upcoming')}
           className={`px-4 py-2 rounded-control text-xs font-bold transition-all flex items-center gap-2 ${
             activeTab === 'upcoming'
               ? 'bg-brand-600 text-white shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-surface-dark-hover'
+              : 'text-[#5E6460] dark:text-[#9AA7AB] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover'
           }`}
         >
           <Calendar className="w-4 h-4" />
@@ -107,7 +107,7 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
           className={`px-4 py-2 rounded-control text-xs font-bold transition-all flex items-center gap-2 ${
             activeTab === 'past'
               ? 'bg-brand-600 text-white shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-surface-dark-hover'
+              : 'text-[#5E6460] dark:text-[#9AA7AB] hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover'
           }`}
         >
           <Clock className="w-4 h-4" />
@@ -118,13 +118,13 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
       {/* Content */}
       {isLoading ? (
         <div className="space-y-4 py-4 animate-pulse">
-          <div className="h-32 rounded-card bg-slate-100 dark:bg-surface-dark-card" />
-          <div className="h-32 rounded-card bg-slate-100 dark:bg-surface-dark-card" />
+          <div className="h-32 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-card" />
+          <div className="h-32 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-card" />
         </div>
       ) : activeTab === 'upcoming' ? (
         upcoming.length === 0 ? (
           <EmptyState
-            icon={<Calendar className="w-10 h-10 text-slate-300 dark:text-slate-600" />}
+            icon={<Calendar className="w-10 h-10 text-[#8A928D] dark:text-[#9AA7AB] dark:text-[#5E6460] dark:text-[#9AA7AB]" />}
             title="No upcoming interviews"
             description="When employers shortlist your profile and schedule an interview, it will appear here."
             actionLabel={onNavigate ? "Explore Open Positions" : undefined}
@@ -138,21 +138,21 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
                 <Card
                   key={item.id}
                   padding="md"
-                  className="space-y-4 border-l-4 border-l-brand-600 hover:border-slate-300 dark:hover:border-surface-dark-border transition-all"
+                  className="space-y-4 border-l-4 border-l-brand-600 hover:border-[#DCDCD7] dark:hover:border-surface-dark-border transition-all"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                        <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                           {item.title}
                         </h3>
                         <InterviewStatusBadge status={item.status} size="sm" />
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-surface-dark-input text-slate-600 dark:text-slate-400">
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-input text-[#5E6460] dark:text-[#9AA7AB]">
                           {item.interviewType}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
-                        <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                      <div className="flex items-center gap-2 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex-wrap">
+                        <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1">
                           <Building2 className="w-3.5 h-3.5 text-brand-600" />
                           {item.companyName}
                         </span>
@@ -162,7 +162,7 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
                           <>
                             <span>•</span>
                             <span className="flex items-center gap-1">
-                              <User className="w-3 h-3 text-slate-400" />
+                              <User className="w-3 h-3 text-[#8A928D] dark:text-[#657378]" />
                               Interviewer: {item.recruiterName}
                             </span>
                           </>
@@ -184,7 +184,7 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
                           <ExternalLink className="w-3 h-3 ml-0.5 opacity-80" />
                         </a>
                       ) : item.interviewType === 'Phone' ? (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-control bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold text-xs border border-indigo-200 dark:border-indigo-800">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-control bg-[#1F8FA6]/10 dark:bg-indigo-950/60 text-[#1F8FA6] dark:text-[#5FD3E8] font-semibold text-xs border border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30">
                           <Phone className="w-3.5 h-3.5" />
                           Phone Interview
                         </div>
@@ -198,33 +198,33 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
                   </div>
 
                   {/* Date & Time Strip */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-100 dark:border-surface-dark-border text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border border-[#EFEFEA] dark:border-surface-dark-border text-xs">
                     <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Date</span>
-                      <p className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1 mt-0.5">
+                      <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase">Date</span>
+                      <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1 mt-0.5">
                         <Calendar className="w-3.5 h-3.5 text-brand-600" />
                         {dateStr}
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Time</span>
-                      <p className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1 mt-0.5">
-                        <Clock className="w-3.5 h-3.5 text-indigo-600" />
+                      <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase">Time</span>
+                      <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1 mt-0.5">
+                        <Clock className="w-3.5 h-3.5 text-[#1F8FA6]" />
                         {timeStr}
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Duration</span>
-                      <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+                      <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase">Duration</span>
+                      <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] mt-0.5">
                         {item.durationMinutes} minutes
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Location / Link</span>
-                      <p className="font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
+                      <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase">Location / Link</span>
+                      <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate mt-0.5">
                         {item.interviewType === 'Video'
                           ? 'Online Video Room'
                           : item.location || 'Location provided in notes'}
@@ -246,10 +246,10 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
                   {/* Description / Preparation Notes */}
                   {item.description && (
                     <div className="space-y-1 pt-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#8A928D] dark:text-[#657378] block">
                         Employer Instructions & Preparation
                       </span>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-white dark:bg-surface-dark-card p-3 rounded-card border border-slate-200/60 dark:border-surface-dark-border">
+                      <p className="text-xs text-[#5E6460] dark:text-[#F2F6F7] leading-relaxed bg-white dark:bg-surface-dark-card p-3 rounded-card border border-[#E7E7E2]/60 dark:border-surface-dark-border">
                         {item.description}
                       </p>
                     </div>
@@ -263,7 +263,7 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
         /* Past Interviews Tab */
         past.length === 0 ? (
           <EmptyState
-            icon={<Clock className="w-10 h-10 text-slate-300 dark:text-slate-600" />}
+            icon={<Clock className="w-10 h-10 text-[#8A928D] dark:text-[#9AA7AB] dark:text-[#5E6460] dark:text-[#9AA7AB]" />}
             title="No past interview records"
             description="Completed and past interview records will be archived here."
           />
@@ -276,12 +276,12 @@ export const CandidateInterviewsPage: React.FC<CandidateInterviewsPageProps> = (
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                        <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                           {item.title}
                         </h4>
                         <InterviewStatusBadge status={item.status} size="sm" />
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                         {item.companyName} • {item.jobTitle} • {dateStr} at {timeStr}
                       </p>
                     </div>

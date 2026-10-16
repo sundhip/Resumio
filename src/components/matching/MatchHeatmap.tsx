@@ -28,25 +28,25 @@ export const MatchHeatmap: React.FC<MatchHeatmapProps> = ({
   }, [resumeText, matchedSkills, requiredKeywords]);
 
   return (
-    <Card className={`p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border ${className}`}>
+    <Card className={`p-5 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border ${className}`}>
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-[#E7E7E2] dark:border-white/8">
         <div>
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-emerald-500" />
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
               {t('match.heatmapTitle')}
             </h3>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Visual overlay tracing lines that directly contributed to job fit scores.
           </p>
         </div>
 
         {/* Evidence Metrics & Toggles */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-50 dark:bg-surface-dark-hover px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
-            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+          <div className="flex items-center gap-2 bg-[#F4F4F1] dark:bg-surface-dark-hover px-3 py-1.5 rounded-lg border border-[#E7E7E2] dark:border-white/6">
+            <span className="text-xs font-semibold text-[#5E6460] dark:text-[#F2F6F7]">
               {t('match.heatRatio')}:
             </span>
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
@@ -54,7 +54,7 @@ export const MatchHeatmap: React.FC<MatchHeatmapProps> = ({
             </span>
           </div>
 
-          <label className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
+          <label className="flex items-center gap-1.5 text-xs text-[#111312] dark:text-[#F2F6F7] cursor-pointer">
             <input
               type="checkbox"
               checked={highlightStrong}
@@ -65,7 +65,7 @@ export const MatchHeatmap: React.FC<MatchHeatmapProps> = ({
             <span>Strong ({heatmapResult.strongEvidenceCount})</span>
           </label>
 
-          <label className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
+          <label className="flex items-center gap-1.5 text-xs text-[#111312] dark:text-[#F2F6F7] cursor-pointer">
             <input
               type="checkbox"
               checked={highlightWeak}
@@ -82,7 +82,7 @@ export const MatchHeatmap: React.FC<MatchHeatmapProps> = ({
       <div className="mt-4 relative">
         {/* Floating Tooltip Callout */}
         {activeTooltipSpan && (
-          <div className="mb-4 p-3 bg-slate-900 text-white rounded-lg shadow-xl border border-slate-700 text-xs animate-in fade-in duration-150">
+          <div className="mb-4 p-3 bg-[#111312] dark:bg-[#0C1113] text-white rounded-lg shadow-xl border border-slate-700 text-xs animate-in fade-in duration-150">
             <div className="flex items-center justify-between gap-2 mb-1">
               <span className="font-bold flex items-center gap-1.5">
                 {activeTooltipSpan.category === 'strong_evidence' ? (
@@ -98,20 +98,20 @@ export const MatchHeatmap: React.FC<MatchHeatmapProps> = ({
                 </Badge>
               )}
             </div>
-            <p className="text-slate-300">{activeTooltipSpan.explanation}</p>
+            <p className="text-[#8A928D] dark:text-[#9AA7AB]">{activeTooltipSpan.explanation}</p>
           </div>
         )}
 
-        <div className="font-mono text-xs leading-relaxed max-h-96 overflow-y-auto p-4 rounded-lg bg-slate-50 dark:bg-surface-dark-bg border border-slate-200 dark:border-slate-800 space-y-1">
+        <div className="font-mono text-xs leading-relaxed max-h-96 overflow-y-auto p-4 rounded-lg bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2] dark:border-white/8 space-y-1">
           {heatmapResult.spans.map((span) => {
             const isStrongActive = span.category === 'strong_evidence' && highlightStrong;
             const isWeakActive = span.category === 'weak_evidence' && highlightWeak;
 
-            let spanStyle = 'text-slate-700 dark:text-slate-300 py-0.5 px-2 rounded block transition-colors duration-150';
+            let spanStyle = 'text-[#111312] dark:text-[#F2F6F7] py-0.5 px-2 rounded block transition-colors duration-150';
             if (isStrongActive) {
-              spanStyle += ' bg-emerald-500/15 border-l-4 border-emerald-500 text-slate-900 dark:text-emerald-200 cursor-pointer hover:bg-emerald-500/25';
+              spanStyle += ' bg-emerald-500/15 border-l-4 border-emerald-500 text-[#111312] dark:text-[#F2F6F7] dark:text-emerald-200 cursor-pointer hover:bg-emerald-500/25';
             } else if (isWeakActive) {
-              spanStyle += ' bg-amber-500/15 border-l-4 border-amber-500 text-slate-900 dark:text-amber-200 cursor-pointer hover:bg-amber-500/25';
+              spanStyle += ' bg-amber-500/15 border-l-4 border-amber-500 text-[#111312] dark:text-[#F2F6F7] dark:text-amber-200 cursor-pointer hover:bg-amber-500/25';
             }
 
             return (
@@ -137,12 +137,12 @@ export const MatchHeatmap: React.FC<MatchHeatmapProps> = ({
       </div>
 
       {/* Heatmap Legend */}
-      <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-3">
+      <div className="mt-4 pt-3 border-t border-[#E7E7E2] dark:border-white/8 flex flex-wrap items-center justify-between text-xs text-[#5E6460] dark:text-[#9AA7AB] gap-3">
         {heatmapResult.legend.map((item) => (
           <div key={item.category} className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.hexColor }} />
-            <span className="font-semibold text-slate-700 dark:text-slate-300">{item.label}:</span>
-            <span className="text-slate-500 dark:text-slate-400">{item.description}</span>
+            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">{item.label}:</span>
+            <span className="text-[#5E6460] dark:text-[#9AA7AB]">{item.description}</span>
           </div>
         ))}
       </div>

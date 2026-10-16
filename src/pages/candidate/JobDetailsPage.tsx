@@ -150,11 +150,11 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
   if (isLoading) {
     return (
       <div className="w-full space-y-6 pb-16 animate-pulse">
-        <div className="h-6 w-32 bg-slate-200 dark:bg-surface-dark-border rounded mb-4" />
+        <div className="h-6 w-32 bg-[#DCDCD7] dark:bg-surface-dark-border rounded mb-4" />
         <Card className="p-8 space-y-4">
-          <div className="h-8 bg-slate-200 dark:bg-surface-dark-border rounded w-1/2" />
-          <div className="h-5 bg-slate-100 dark:bg-surface-dark-border/60 rounded w-1/4" />
-          <div className="h-20 bg-slate-100 dark:bg-surface-dark-border/40 rounded w-full" />
+          <div className="h-8 bg-[#DCDCD7] dark:bg-surface-dark-border rounded w-1/2" />
+          <div className="h-5 bg-[#E9E9E5] dark:bg-surface-dark-border/60 rounded w-1/4" />
+          <div className="h-20 bg-[#E9E9E5] dark:bg-surface-dark-border/40 rounded w-full" />
         </Card>
       </div>
     );
@@ -163,8 +163,8 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
   if (!job) {
     return (
       <Card className="max-w-2xl mx-auto p-12 text-center mt-12">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Job Posting Not Found</h2>
-        <p className="text-sm text-slate-500 mt-2 mb-6">
+        <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">Job Posting Not Found</h2>
+        <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-2 mb-6">
           This role may have been closed or removed by the hiring company.
         </p>
         <Button variant="primary" onClick={() => onNavigate('jobs')}>
@@ -180,35 +180,35 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
       <div>
         <button
           onClick={() => onNavigate('jobs')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#657378] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Back to Explore Jobs
         </button>
       </div>
 
       {/* Main Role Header Card */}
-      <Card className="p-6 sm:p-8 bg-white dark:bg-surface-dark-card border-slate-200/80 dark:border-surface-dark-border shadow-xs">
+      <Card className="p-6 sm:p-8 bg-white dark:bg-surface-dark-card border-[#E7E7E2]/80 dark:border-surface-dark-border shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
                 {job.title}
               </h1>
               <Badge variant="primary">{job.work_mode}</Badge>
               <Badge variant="default">{job.employment_type}</Badge>
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-300 flex-wrap pt-1">
-              <span className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+            <div className="flex items-center gap-4 text-sm text-[#5E6460] dark:text-[#F2F6F7] flex-wrap pt-1">
+              <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
                 <Building2 className="w-4 h-4 text-brand-600" />
                 {job.company_name}
               </span>
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-slate-400" />
+                <MapPin className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />
                 {job.location || 'Remote'}
               </span>
               {job.published_at && (
-                <span className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span className="flex items-center gap-1.5 text-xs text-[#8A928D] dark:text-[#657378]">
                   <Clock className="w-3.5 h-3.5" />
                   Posted on {new Date(job.published_at).toLocaleDateString()}
                 </span>
@@ -246,29 +246,29 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
         </div>
 
         {/* Quick Highlights Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-100 dark:border-surface-dark-border text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-[#EFEFEA] dark:border-surface-dark-border text-xs">
           <div>
-            <span className="text-slate-400 block mb-0.5">Experience Range</span>
-            <span className="font-semibold text-slate-800 dark:text-slate-200">
+            <span className="text-[#8A928D] dark:text-[#657378] block mb-0.5">Experience Range</span>
+            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
               {job.min_experience ?? 0}
               {job.max_experience ? ` - ${job.max_experience} Years` : '+ Years'}
             </span>
           </div>
           <div>
-            <span className="text-slate-400 block mb-0.5">Education / Degree</span>
-            <span className="font-semibold text-slate-800 dark:text-slate-200">
+            <span className="text-[#8A928D] dark:text-[#657378] block mb-0.5">Education / Degree</span>
+            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
               {job.qualification || 'Not Specified'}
             </span>
           </div>
           <div>
-            <span className="text-slate-400 block mb-0.5">Compensation</span>
+            <span className="text-[#8A928D] dark:text-[#657378] block mb-0.5">Compensation</span>
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {formatSalary(job)}
             </span>
           </div>
           <div>
-            <span className="text-slate-400 block mb-0.5">Application Deadline</span>
-            <span className="font-semibold text-slate-800 dark:text-slate-200">
+            <span className="text-[#8A928D] dark:text-[#657378] block mb-0.5">Application Deadline</span>
+            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
               {job.deadline ? new Date(job.deadline).toLocaleDateString() : 'Rolling Basis'}
             </span>
           </div>
@@ -356,11 +356,11 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
         <div className="lg:col-span-2 space-y-6">
           {/* Overview */}
           <Card className="p-6 bg-white dark:bg-surface-dark-card">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+            <h2 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-3 flex items-center gap-2">
               <Briefcase className="w-4 h-4 text-brand-600" />
               About the Role
             </h2>
-            <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line space-y-3">
+            <div className="text-xs sm:text-sm text-[#111312] dark:text-[#F2F6F7] leading-relaxed whitespace-pre-line space-y-3">
               {job.description}
             </div>
           </Card>
@@ -368,11 +368,11 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
           {/* Key Responsibilities */}
           {job.responsibilities && (
             <Card className="p-6 bg-white dark:bg-surface-dark-card">
-              <h2 className="text-base font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+              <h2 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-3 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-brand-600" />
                 Key Responsibilities & Deliverables
               </h2>
-              <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line space-y-2 font-mono text-xs">
+              <div className="text-xs sm:text-sm text-[#111312] dark:text-[#F2F6F7] leading-relaxed whitespace-pre-line space-y-2 font-mono text-xs">
                 {job.responsibilities}
               </div>
             </Card>
@@ -381,7 +381,7 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
           {/* Required & Preferred Skills */}
           <Card className="p-6 bg-white dark:bg-surface-dark-card space-y-5">
             <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-2.5 flex items-center gap-2">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7] mb-2.5 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-brand-600" />
                 Required Qualifications & Skills
               </h2>
@@ -396,21 +396,21 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-slate-400">None specified</span>
+                  <span className="text-xs text-[#8A928D] dark:text-[#657378]">None specified</span>
                 )}
               </div>
             </div>
 
             {job.preferred_skills && job.preferred_skills.length > 0 && (
-              <div className="pt-4 border-t border-slate-100 dark:border-surface-dark-border">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2.5">
+              <div className="pt-4 border-t border-[#EFEFEA] dark:border-surface-dark-border">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7] mb-2.5">
                   Nice-to-Have / Preferred Skills
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {job.preferred_skills.map((skill, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40"
+                      className="px-3 py-1 rounded-full text-xs font-medium bg-[#1F8FA6]/10 dark:bg-indigo-950/40 text-[#1F8FA6] dark:text-[#5FD3E8] border border-[#1F8FA6]/30 dark:border-[#1F8FA6]/30/40"
                     >
                       {skill}
                     </span>
@@ -424,33 +424,33 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
         {/* Right Column: Company Overview Sidebar Card */}
         <div className="space-y-6">
           <Card className="p-5 bg-white dark:bg-surface-dark-card space-y-4">
-            <div className="pb-3 border-b border-slate-100 dark:border-surface-dark-border">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="pb-3 border-b border-[#EFEFEA] dark:border-surface-dark-border">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#8A928D] dark:text-[#657378]">
                 Hiring Organization
               </h3>
-              <p className="text-base font-bold text-slate-900 dark:text-white mt-1">
+              <p className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
                 {companyProfile?.company_name || job.company_name}
               </p>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+            <div className="space-y-3 text-xs text-[#5E6460] dark:text-[#F2F6F7]">
               {companyProfile?.industry && (
                 <div className="flex items-center gap-2">
-                  <Layers className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>Industry: <strong className="text-slate-800 dark:text-slate-200">{companyProfile.industry}</strong></span>
+                  <Layers className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378] shrink-0" />
+                  <span>Industry: <strong className="text-[#111312] dark:text-[#F2F6F7]">{companyProfile.industry}</strong></span>
                 </div>
               )}
 
               {companyProfile?.location && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>HQ Location: <strong className="text-slate-800 dark:text-slate-200">{companyProfile.location}</strong></span>
+                  <MapPin className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378] shrink-0" />
+                  <span>HQ Location: <strong className="text-[#111312] dark:text-[#F2F6F7]">{companyProfile.location}</strong></span>
                 </div>
               )}
 
               {companyProfile?.website && (
                 <div className="flex items-center gap-2">
-                  <Globe className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <Globe className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378] shrink-0" />
                   <a
                     href={companyProfile.website.startsWith('http') ? companyProfile.website : `https://${companyProfile.website}`}
                     target="_blank"
@@ -463,19 +463,19 @@ export const JobDetailsPage: React.FC<JobDetailsPageProps> = ({ jobId, onNavigat
               )}
 
               {companyProfile?.description && (
-                <div className="pt-2 border-t border-slate-100 dark:border-surface-dark-border text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                <div className="pt-2 border-t border-[#EFEFEA] dark:border-surface-dark-border text-xs leading-relaxed text-[#5E6460] dark:text-[#9AA7AB]">
                   {companyProfile.description}
                 </div>
               )}
             </div>
           </Card>
 
-          <Card className="p-4 bg-slate-50 dark:bg-surface-dark-bg/60 border-slate-200/80 dark:border-surface-dark-border text-xs space-y-2">
-            <span className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+          <Card className="p-4 bg-[#F4F4F1] dark:bg-surface-dark-bg/60 border-[#E7E7E2]/80 dark:border-surface-dark-border text-xs space-y-2">
+            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
               <ShieldAlert className="w-3.5 h-3.5 text-brand-600" />
               Verified Employer Post
             </span>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
               This job posting has been created directly by an authenticated recruiter organization on Resumio.
             </p>
           </Card>

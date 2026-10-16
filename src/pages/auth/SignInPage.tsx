@@ -43,12 +43,12 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-surface-light-bg dark:bg-surface-dark-bg text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen w-full flex bg-surface-light-bg dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] transition-colors">
       {/* Left Brand Visual Hero (Desktop) */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-950 via-[#0f1220] to-[#1c1538] text-white p-12 flex-col justify-between relative overflow-hidden border-r border-slate-800/80">
         {/* Subtle glow circles */}
         <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-600/20 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-indigo-600/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-[#1F8FA6]/20 blur-3xl pointer-events-none" />
 
         {/* Brand Header */}
         <div className="flex items-center gap-3 relative z-10">
@@ -77,7 +77,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
             </span>
           </h2>
 
-          <p className="text-slate-300 text-sm leading-relaxed">
+          <p className="text-[#8A928D] dark:text-[#9AA7AB] text-sm leading-relaxed">
             Resumio combines deep semantic parsing with multi-dimensional candidate evaluation to eliminate hiring friction.
           </p>
 
@@ -87,7 +87,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
               'Fair, unbiased semantic fit scores with full explainability',
               'Unified workspace for candidates and enterprise recruiters',
             ].map((item, idx) => (
-              <div key={idx} className="flex items-center gap-3 text-xs text-slate-200">
+              <div key={idx} className="flex items-center gap-3 text-xs text-[#DCDCD7] dark:text-[#C5D0D3]">
                 <CheckCircle2 className="w-4 h-4 text-brand-400 shrink-0" />
                 <span>{item}</span>
               </div>
@@ -96,7 +96,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
         </div>
 
         {/* Hero Footer */}
-        <div className="relative z-10 text-xs text-slate-400 flex items-center justify-between">
+        <div className="relative z-10 text-xs text-[#8A928D] dark:text-[#657378] flex items-center justify-between">
           <span>© 2026 Resumio Technologies Inc.</span>
           <span>Enterprise Grade Security</span>
         </div>
@@ -110,52 +110,52 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
             <div className="w-8 h-8 rounded-control bg-brand-600 flex items-center justify-center text-white font-bold">
               R
             </div>
-            <span className="font-bold text-base text-slate-900 dark:text-white">Resumio</span>
+            <span className="font-bold text-base text-[#111312] dark:text-[#F2F6F7]">Resumio</span>
           </div>
 
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-control text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover ml-auto transition-colors"
+            className="p-2 rounded-control text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#657378] dark:hover:text-white hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover ml-auto transition-colors"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-[#1F8FA6]" />}
           </button>
         </div>
 
         {/* Center Form Box */}
         <div className="space-y-6 my-auto">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               Welcome back
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
               Sign in to your Resumio recruitment workspace
             </p>
           </div>
 
           {/* Quick Persona Demo Selector */}
-          <div className="p-3 rounded-card bg-slate-50 dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border space-y-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+          <div className="p-3 rounded-card bg-[#F4F4F1] dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border space-y-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8A928D] dark:text-[#657378] block">
               Quick One-Click Demo Sign In:
             </span>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickDemo('candidate')}
-                className="py-1.5 px-2 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border hover:border-brand-500 text-slate-800 dark:text-slate-200 transition-all text-center"
+                className="py-1.5 px-2 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-bg border border-[#E7E7E2] dark:border-surface-dark-border hover:border-brand-500 text-[#111312] dark:text-[#F2F6F7] transition-all text-center"
               >
                 Candidate
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickDemo('recruiter')}
-                className="py-1.5 px-2 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border hover:border-brand-500 text-slate-800 dark:text-slate-200 transition-all text-center"
+                className="py-1.5 px-2 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-bg border border-[#E7E7E2] dark:border-surface-dark-border hover:border-brand-500 text-[#111312] dark:text-[#F2F6F7] transition-all text-center"
               >
                 Recruiter
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickDemo('admin')}
-                className="py-1.5 px-2 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border hover:border-brand-500 text-slate-800 dark:text-slate-200 transition-all text-center"
+                className="py-1.5 px-2 text-xs font-semibold rounded-control bg-white dark:bg-surface-dark-bg border border-[#E7E7E2] dark:border-surface-dark-border hover:border-brand-500 text-[#111312] dark:text-[#F2F6F7] transition-all text-center"
               >
                 Admin
               </button>
@@ -176,7 +176,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
 
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+                <label className="text-[13px] font-medium text-[#111312] dark:text-[#F2F6F7]">
                   Password
                 </label>
                 <a href="#" className="text-xs text-brand-600 dark:text-brand-400 hover:underline">
@@ -205,7 +205,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
           </form>
 
           {/* Switch to Sign Up */}
-          <div className="text-center text-xs text-slate-500 dark:text-slate-400">
+          <div className="text-center text-xs text-[#5E6460] dark:text-[#9AA7AB]">
             Don't have an account?{' '}
             <button
               onClick={onSwitchToSignUp}
@@ -217,7 +217,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onSwitchToSignUp }) => {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-[11px] text-slate-400 pt-6">
+        <div className="text-center text-[11px] text-[#8A928D] dark:text-[#657378] pt-6">
           By continuing, you agree to Resumio's Terms of Service & Privacy Policy.
         </div>
       </div>

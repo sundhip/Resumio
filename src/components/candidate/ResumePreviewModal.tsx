@@ -30,10 +30,10 @@ export const ResumePreviewModal: React.FC<ResumePreviewModalProps> = ({
             <FileText className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
               Resume Preview
             </h3>
-            <p className="text-xs text-slate-400 font-normal">{filename}</p>
+            <p className="text-xs text-[#8A928D] dark:text-[#657378] font-normal">{filename}</p>
           </div>
         </div>
       }
@@ -43,7 +43,7 @@ export const ResumePreviewModal: React.FC<ResumePreviewModalProps> = ({
             href={previewUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#657378] dark:hover:text-white transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             Open in New Window
@@ -67,7 +67,7 @@ export const ResumePreviewModal: React.FC<ResumePreviewModalProps> = ({
         </div>
       }
     >
-      <div className="w-full h-[72vh] rounded-control border border-slate-200 dark:border-surface-dark-border bg-slate-900/10 dark:bg-slate-900 overflow-hidden">
+      <div className="w-full h-[72vh] rounded-control border border-[#E7E7E2] dark:border-surface-dark-border bg-[#111312] dark:bg-[#0C1113]/10 dark:bg-[#0C1113] overflow-hidden">
         <iframe
           src={`${previewUrl}#toolbar=0`}
           title="Resume Document Viewer"

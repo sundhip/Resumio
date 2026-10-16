@@ -94,10 +94,10 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-base font-semibold text-[#111312] dark:text-[#F2F6F7]">
               AI Resume Screener & Parser
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
               Upload candidate resume for deep neural qualification scoring
             </p>
           </div>
@@ -152,7 +152,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
             className={`border-2 border-dashed rounded-card p-8 text-center transition-all cursor-pointer ${
               isDragging
                 ? 'border-brand-500 bg-brand-50/40 dark:bg-brand-950/20'
-                : 'border-slate-200 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-bg/40 hover:bg-slate-100/50 dark:hover:bg-surface-dark-hover/40'
+                : 'border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/50 dark:bg-surface-dark-bg/40 hover:bg-[#E9E9E5]/50 dark:hover:bg-surface-dark-hover/40'
             }`}
           >
             <input
@@ -166,10 +166,10 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
               <div className="w-12 h-12 rounded-full bg-brand-100 dark:bg-brand-950/70 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-3 shadow-subtle">
                 <Upload className="w-5 h-5" />
               </div>
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">
+              <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7] mb-1">
                 {file ? file.name : 'Click to upload or drag & drop resume'}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                 Supports PDF, DOCX, DOC up to 15MB
               </p>
             </label>
@@ -177,14 +177,14 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
 
           {/* Selected File Card */}
           {file && (
-            <div className="p-3.5 rounded-control bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border flex items-center justify-between">
+            <div className="p-3.5 rounded-control bg-white dark:bg-surface-dark-card border border-[#E7E7E2] dark:border-surface-dark-border flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <FileText className="w-5 h-5 text-brand-500" />
                 <div>
-                  <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate max-w-xs">
+                  <p className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] truncate max-w-xs">
                     {file.name}
                   </p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-[#8A928D] dark:text-[#657378]">
                     {(file.size / (1024 * 1024)).toFixed(2)} MB • Ready for AI screening
                   </p>
                 </div>
@@ -211,7 +211,7 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
                   style={{ width: `${((parsingStage + 1) / 4) * 100}%` }}
                 />
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 animate-pulse">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] animate-pulse">
                 {stages[parsingStage]}
               </p>
             </div>
@@ -222,21 +222,21 @@ export const ResumeUploadModal: React.FC<ResumeUploadModalProps> = ({
         <div className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <MatchScore score={94} variant="card" />
-            <div className="sm:col-span-2 p-4 rounded-card border border-slate-200 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-bg/50 flex flex-col justify-center">
+            <div className="sm:col-span-2 p-4 rounded-card border border-[#E7E7E2] dark:border-surface-dark-border bg-[#F4F4F1]/50 dark:bg-surface-dark-bg/50 flex flex-col justify-center">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">
                 <CheckCircle2 className="w-4 h-4" /> Passed High-Confidence Threshold
               </div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+              <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
                 Strong fit for Senior Full Stack & Lead Frontend roles
               </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1">
                 Extracted 6.5+ years verifiable commercial experience with React, TypeScript, Node.js & cloud infrastructure.
               </p>
             </div>
           </div>
 
-          <div className="p-4 rounded-card border border-slate-200 dark:border-surface-dark-border space-y-3">
-            <h5 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <div className="p-4 rounded-card border border-[#E7E7E2] dark:border-surface-dark-border space-y-3">
+            <h5 className="text-xs font-semibold uppercase tracking-wider text-[#5E6460] dark:text-[#9AA7AB]">
               Extracted Skills & Match Alignment
             </h5>
             <div className="flex flex-wrap gap-1.5">

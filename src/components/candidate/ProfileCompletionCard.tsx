@@ -123,20 +123,20 @@ export const ProfileCompletionCard: React.FC<ProfileCompletionCardProps> = ({
 
       {/* Progress bar */}
       <div className="space-y-1.5">
-        <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-surface-dark-input overflow-hidden">
+        <div className="w-full h-2.5 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-input overflow-hidden">
           <div
             className={`h-full transition-all duration-500 rounded-full ${getProgressGradient()}`}
             style={{ width: `${Math.min(100, Math.max(0, score))}%` }}
           />
         </div>
-        <div className="flex justify-between text-[11px] text-slate-400 dark:text-slate-500">
+        <div className="flex justify-between text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">
           <span>{completedCount} of 10 sections completed</span>
           <span>{score === 100 ? 'All Star Profile' : `${100 - score}% remaining`}</span>
         </div>
       </div>
 
       {/* Checklist items */}
-      <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-surface-dark-border">
+      <div className="space-y-2 pt-2 border-t border-[#EFEFEA] dark:border-surface-dark-border">
         {checklistItems.map((item) => (
           <div
             key={item.id}
@@ -147,22 +147,22 @@ export const ProfileCompletionCard: React.FC<ProfileCompletionCardProps> = ({
             }}
             className={`flex items-center justify-between p-2 rounded-control text-xs transition-colors ${
               item.completed
-                ? 'bg-slate-50/60 dark:bg-surface-dark-bg/40 text-slate-600 dark:text-slate-400'
-                : 'bg-brand-50/30 dark:bg-brand-950/20 text-slate-800 dark:text-slate-200 border border-brand-100/50 dark:border-brand-900/40 cursor-pointer hover:bg-brand-100/40'
+                ? 'bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 text-[#5E6460] dark:text-[#9AA7AB]'
+                : 'bg-brand-50/30 dark:bg-brand-950/20 text-[#111312] dark:text-[#F2F6F7] border border-brand-100/50 dark:border-brand-900/40 cursor-pointer hover:bg-brand-100/40'
             }`}
           >
             <div className="flex items-center gap-2 min-w-0">
               {item.completed ? (
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
               ) : (
-                <Circle className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
+                <Circle className="w-4 h-4 text-[#8A928D] dark:text-[#9AA7AB] dark:text-[#5E6460] dark:text-[#9AA7AB] shrink-0" />
               )}
               <div className="min-w-0">
-                <span className={`font-semibold block truncate ${item.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''}`}>
+                <span className={`font-semibold block truncate ${item.completed ? 'line-through text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]' : ''}`}>
                   {item.label}
                 </span>
                 {!item.completed && (
-                  <span className="text-[10px] text-slate-400 dark:text-slate-500 block truncate">
+                  <span className="text-[10px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] block truncate">
                     {item.tip}
                   </span>
                 )}
@@ -170,11 +170,11 @@ export const ProfileCompletionCard: React.FC<ProfileCompletionCardProps> = ({
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
-              <span className="text-[11px] font-semibold text-slate-400">
+              <span className="text-[11px] font-semibold text-[#8A928D] dark:text-[#657378]">
                 +{item.weight}%
               </span>
               {!item.completed && onNavigateToSection && (
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                <ChevronRight className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
               )}
             </div>
           </div>

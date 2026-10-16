@@ -81,15 +81,15 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
 
       {/* List / Empty State */}
       {certifications.length === 0 ? (
-        <div className="p-8 text-center rounded-control bg-slate-50/60 dark:bg-surface-dark-bg/40 border border-dashed border-slate-200 dark:border-surface-dark-border space-y-3">
-          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-surface-dark-card text-slate-400 flex items-center justify-center mx-auto">
+        <div className="p-8 text-center rounded-control bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/40 border border-dashed border-[#E7E7E2] dark:border-surface-dark-border space-y-3">
+          <div className="w-10 h-10 rounded-full bg-[#E9E9E5] dark:bg-surface-dark-card text-[#8A928D] dark:text-[#657378] flex items-center justify-center mx-auto">
             <Award className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <p className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7]">
               No certifications added yet.
             </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            <p className="text-xs text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
               Add professional credentials like AWS, GCP, Azure, PMP, or Cisco to boost your profile score.
             </p>
           </div>
@@ -102,7 +102,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
           {certifications.map((item) => (
             <div
               key={item.id}
-              className="p-3.5 rounded-card border border-slate-200/80 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-card flex flex-col justify-between gap-2.5 transition-shadow hover:shadow-subtle"
+              className="p-3.5 rounded-card border border-[#E7E7E2]/80 dark:border-surface-dark-border bg-[#F4F4F1]/50 dark:bg-surface-dark-card flex flex-col justify-between gap-2.5 transition-shadow hover:shadow-subtle"
             >
               <div className="space-y-1.5">
                 <div className="flex items-start justify-between gap-2">
@@ -111,11 +111,11 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                       <Award className="w-3.5 h-3.5" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                      <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7] leading-tight">
                         {item.name}
                       </h4>
-                      <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-0.5 flex items-center gap-1">
-                        <Building className="w-3 h-3 text-slate-400" />
+                      <p className="text-xs font-medium text-[#5E6460] dark:text-[#F2F6F7] mt-0.5 flex items-center gap-1">
+                        <Building className="w-3 h-3 text-[#8A928D] dark:text-[#657378]" />
                         {item.issuing_organization}
                       </p>
                     </div>
@@ -127,7 +127,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                       type="button"
                       onClick={() => handleOpenEdit(item)}
                       title="Edit certification"
-                      className="p-1.5 rounded-control text-slate-400 hover:text-brand-600 hover:bg-slate-200/60 dark:hover:bg-surface-dark-hover transition-colors"
+                      className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-brand-600 hover:bg-[#DCDCD7]/60 dark:hover:bg-surface-dark-hover transition-colors"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
@@ -135,7 +135,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                       type="button"
                       onClick={() => setDeletingId(item.id)}
                       title="Delete certification"
-                      className="p-1.5 rounded-control text-slate-400 hover:text-rose-600 hover:bg-slate-200/60 dark:hover:bg-surface-dark-hover transition-colors"
+                      className="p-1.5 rounded-control text-[#8A928D] dark:text-[#657378] hover:text-rose-600 hover:bg-[#DCDCD7]/60 dark:hover:bg-surface-dark-hover transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -143,7 +143,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                 </div>
 
                 {/* Dates & Details */}
-                <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] text-slate-400 dark:text-slate-500 pt-1">
+                <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] pt-1">
                   {item.issue_date && (
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
@@ -156,7 +156,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
                     </span>
                   )}
                   {item.credential_id && (
-                    <span className="text-slate-500 dark:text-slate-400">
+                    <span className="text-[#5E6460] dark:text-[#9AA7AB]">
                       ID: {item.credential_id}
                     </span>
                   )}
@@ -165,7 +165,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
 
               {/* Credential link */}
               {item.credential_url && (
-                <div className="pt-2 border-t border-slate-200/60 dark:border-surface-dark-border/60">
+                <div className="pt-2 border-t border-[#E7E7E2]/60 dark:border-surface-dark-border/60">
                   <a
                     href={item.credential_url}
                     target="_blank"
@@ -220,7 +220,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({
           </>
         }
       >
-        <p className="text-xs text-slate-600 dark:text-slate-400">
+        <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
           This record will be permanently deleted from your candidate profile.
         </p>
       </Modal>

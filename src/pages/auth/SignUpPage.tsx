@@ -33,7 +33,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ onSwitchToSignIn }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-surface-light-bg dark:bg-surface-dark-bg text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen w-full flex bg-surface-light-bg dark:bg-surface-dark-bg text-[#111312] dark:text-[#F2F6F7] transition-colors">
       {/* Left Brand Area (Desktop) */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-950 via-[#0f1220] to-[#1c1538] text-white p-12 flex-col justify-between relative overflow-hidden border-r border-slate-800/80">
         <div className="flex items-center gap-3 relative z-10">
@@ -61,12 +61,12 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ onSwitchToSignIn }) => {
             </span>
           </h2>
 
-          <p className="text-slate-300 text-sm leading-relaxed">
+          <p className="text-[#8A928D] dark:text-[#9AA7AB] text-sm leading-relaxed">
             Join thousands of modern tech companies and world-class engineers using Resumio's AI matching platform.
           </p>
         </div>
 
-        <div className="relative z-10 text-xs text-slate-400">
+        <div className="relative z-10 text-xs text-[#8A928D] dark:text-[#657378]">
           © 2026 Resumio Technologies Inc. All rights reserved.
         </div>
       </div>
@@ -79,24 +79,24 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ onSwitchToSignIn }) => {
             <div className="w-8 h-8 rounded-control bg-brand-600 flex items-center justify-center text-white font-bold">
               R
             </div>
-            <span className="font-bold text-base text-slate-900 dark:text-white">Resumio</span>
+            <span className="font-bold text-base text-[#111312] dark:text-[#F2F6F7]">Resumio</span>
           </div>
 
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-control text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover ml-auto transition-colors"
+            className="p-2 rounded-control text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:text-[#F2F6F7] dark:text-[#8A928D] dark:text-[#657378] dark:hover:text-white hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover ml-auto transition-colors"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-[#1F8FA6]" />}
           </button>
         </div>
 
         {/* Center Registration Form */}
         <div className="space-y-6 my-auto">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               Create your account
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
               Select your role to personalize your workspace experience
             </p>
           </div>
@@ -108,14 +108,14 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ onSwitchToSignIn }) => {
               className={`p-4 rounded-card border-2 cursor-pointer transition-all ${
                 selectedRole === 'candidate'
                   ? 'border-brand-600 bg-brand-50/50 dark:bg-brand-950/40 shadow-xs'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:border-slate-300'
+                  : 'border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:border-[#DCDCD7]'
               }`}
             >
               <div className="w-9 h-9 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-2">
                 <User className="w-5 h-5" />
               </div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">Candidate</h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">Candidate</h4>
+              <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 Find your next role & get AI matched
               </p>
             </div>
@@ -125,14 +125,14 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ onSwitchToSignIn }) => {
               className={`p-4 rounded-card border-2 cursor-pointer transition-all ${
                 selectedRole === 'recruiter'
                   ? 'border-brand-600 bg-brand-50/50 dark:bg-brand-950/40 shadow-xs'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:border-slate-300'
+                  : 'border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:border-[#DCDCD7]'
               }`}
             >
-              <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-2">
+              <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-950 text-[#1F8FA6] dark:text-[#5FD3E8] flex items-center justify-center mb-2">
                 <Building2 className="w-5 h-5" />
               </div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">Recruiter</h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">Recruiter</h4>
+              <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 Find great talent & screen with AI
               </p>
             </div>
@@ -198,7 +198,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ onSwitchToSignIn }) => {
           </form>
 
           {/* Switch to Sign In */}
-          <div className="text-center text-xs text-slate-500 dark:text-slate-400">
+          <div className="text-center text-xs text-[#5E6460] dark:text-[#9AA7AB]">
             Already have an account?{' '}
             <button
               onClick={onSwitchToSignIn}
@@ -209,7 +209,7 @@ export const SignUpPage: React.FC<SignUpPageProps> = ({ onSwitchToSignIn }) => {
           </div>
         </div>
 
-        <div className="text-center text-[11px] text-slate-400 pt-4">
+        <div className="text-center text-[11px] text-[#8A928D] dark:text-[#657378] pt-4">
           By signing up, you agree to Resumio's Terms of Service & Privacy Policy.
         </div>
       </div>

@@ -19,13 +19,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-[13px] font-medium text-slate-700 dark:text-slate-300 select-none">
+          <label htmlFor={inputId} className="text-[13px] font-medium text-[#111312] dark:text-[#F2F6F7] select-none">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+            <div className="absolute left-3.5 flex items-center pointer-events-none text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">
               {leftIcon}
             </div>
           )}
@@ -35,8 +35,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={twMerge(
               clsx(
                 'w-full h-11 px-3.5 text-sm rounded-control transition-all duration-150',
-                'bg-white dark:bg-surface-dark-input text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500',
-                'border border-slate-200 dark:border-surface-dark-border shadow-subtle',
+                'bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] placeholder:text-[#8A928D] dark:text-[#657378] dark:placeholder:text-[#5E6460] dark:text-[#9AA7AB]',
+                'border border-[#E7E7E2] dark:border-surface-dark-border shadow-subtle',
                 'focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20',
                 leftIcon && 'pl-10',
                 (rightIcon || error || isSuccess) && 'pr-10',
@@ -51,7 +51,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {error && <AlertCircle className="w-4 h-4 text-rose-500" />}
             {isSuccess && !error && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
             {!error && !isSuccess && rightIcon && (
-              <span className="text-slate-400 dark:text-slate-500">{rightIcon}</span>
+              <span className="text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB]">{rightIcon}</span>
             )}
           </div>
         </div>
@@ -61,7 +61,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {helperText && !error && (
-          <p className="text-xs text-slate-500 dark:text-slate-400">{helperText}</p>
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">{helperText}</p>
         )}
       </div>
     );
@@ -85,7 +85,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   return (
     <div className="relative flex items-center w-full">
-      <Search className="w-4 h-4 absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none" />
+      <Search className="w-4 h-4 absolute left-3.5 text-[#8A928D] dark:text-[#657378] dark:text-[#5E6460] dark:text-[#9AA7AB] pointer-events-none" />
       <input
         type="text"
         value={value}
@@ -94,9 +94,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         className={twMerge(
           clsx(
             'w-full h-10 pl-10 pr-16 text-xs sm:text-sm rounded-control transition-all duration-150',
-            'bg-slate-50/80 dark:bg-surface-dark-input hover:bg-white dark:hover:bg-surface-dark-card',
-            'text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500',
-            'border border-slate-200 dark:border-surface-dark-border',
+            'bg-[#F4F4F1]/80 dark:bg-surface-dark-input hover:bg-white dark:hover:bg-surface-dark-card',
+            'text-[#111312] dark:text-[#F2F6F7] placeholder:text-[#8A928D] dark:text-[#657378] dark:placeholder:text-[#5E6460] dark:text-[#9AA7AB]',
+            'border border-[#E7E7E2] dark:border-surface-dark-border',
             'focus:outline-none focus:bg-white dark:focus:bg-surface-dark-input focus:border-brand-500 dark:focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20',
             className
           )
@@ -108,13 +108,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           <button
             type="button"
             onClick={onClear}
-            className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded"
+            className="p-1 text-[#8A928D] dark:text-[#657378] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#DCDCD7] dark:text-[#C5D0D3] rounded"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         ) : (
           shortcut && (
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-surface-dark-border/60 rounded border border-slate-200 dark:border-slate-700/60 shadow-xs">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold text-[#5E6460] dark:text-[#9AA7AB] bg-[#E9E9E5] dark:bg-surface-dark-border/60 rounded border border-[#E7E7E2] dark:border-white/6/60 shadow-xs">
               {shortcut}
             </kbd>
           )

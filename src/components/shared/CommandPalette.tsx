@@ -59,14 +59,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       id: 'settings',
       title: 'Account Settings & Security',
       category: 'Navigation',
-      icon: <User className="w-4 h-4 text-slate-500" />,
+      icon: <User className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />,
       action: () => onNavigate('settings'),
     },
     {
       id: 'theme',
       title: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`,
       category: 'Preferences',
-      icon: theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />,
+      icon: theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-[#5FD3E8]" />,
       action: () => toggleTheme(),
     },
     {

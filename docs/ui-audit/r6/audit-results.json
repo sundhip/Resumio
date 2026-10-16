@@ -1,0 +1,59 @@
+{
+  "motionVerification": {
+    "useCountUpVerified": true,
+    "maxAnimationDurationMs": 280,
+    "reducedMotionOverridePresent": true,
+    "staggerKeyframesVerified": true
+  },
+  "chartAccessibility": {
+    "keyboardFocusable": true,
+    "accessibleDataTableToggle": true,
+    "semanticTableStructure": true,
+    "roundedBarTops": true
+  },
+  "themeContrast": {
+    "darkThemeSurfacesPurged": true,
+    "zeroGreyOrNavyObsidianSurfaces": true,
+    "heroTealGlowLocalized": true,
+    "lightThemeWarmCanvas": true,
+    "inkBlackPrimaryButtons": true,
+    "systemModeLiveSync": true
+  },
+  "printStyles": {
+    "mediaPrintRulesVerified": true,
+    "cleanWhiteCanvas": true,
+    "navigationHiddenOnPrint": true
+  },
+  "captures": [
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\01_landing_page_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\01_landing_page_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\01_landing_page_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\02_auth_split_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\02_auth_split_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\02_auth_split_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\03_candidate_dashboard_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\03_candidate_dashboard_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\03_candidate_dashboard_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\04_recruiter_dashboard_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\04_recruiter_dashboard_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\04_recruiter_dashboard_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\05_jobs_list_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\05_jobs_list_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\05_jobs_list_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\06_applicant_pipeline_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\06_applicant_pipeline_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\06_applicant_pipeline_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\07_resume_split_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\07_resume_split_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\07_resume_split_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\08_career_skills_hub_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\08_career_skills_hub_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\08_career_skills_hub_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\09_ml_benchmark_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\09_ml_benchmark_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\09_ml_benchmark_system_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\10_settings_security_dark_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\10_settings_security_light_1440.png",
+    "C:\\Users\\sundhip\\.gemini\\antigravity\\scratch\\resumio\\docs\\ui-audit\\r6\\10_settings_security_system_dark_1440.png"
+  ]
+}

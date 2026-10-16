@@ -67,14 +67,14 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               AI Natural-Language Candidate Search
             </h1>
             <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
               Query Interpretation Engine
             </span>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Describe your target candidate profile in natural language. Resumio translates your query into structured database filters.
           </p>
         </div>
@@ -101,13 +101,13 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
           className="space-y-3"
         >
           <div className="relative flex items-center">
-            <Search className="w-5 h-5 absolute left-3.5 text-slate-400 pointer-events-none" />
+            <Search className="w-5 h-5 absolute left-3.5 text-[#8A928D] dark:text-[#657378] pointer-events-none" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Describe what you're looking for, e.g. 'Find Python and Django engineers with 3+ years experience'..."
-              className="w-full h-12 pl-11 pr-28 text-sm rounded-control bg-slate-50/80 dark:bg-surface-dark-input text-slate-900 dark:text-white border border-slate-200 dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all placeholder:text-slate-400"
+              className="w-full h-12 pl-11 pr-28 text-sm rounded-control bg-[#F4F4F1]/80 dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all placeholder:text-[#8A928D] dark:text-[#657378]"
             />
             <div className="absolute right-2 flex items-center">
               <Button
@@ -124,7 +124,7 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
 
           {/* Quick Example Prompt Chips */}
           <div className="flex items-center gap-2 flex-wrap pt-1">
-            <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
+            <span className="text-xs font-semibold text-[#8A928D] dark:text-[#657378] flex items-center gap-1">
               <Filter className="w-3 h-3" /> Try searching:
             </span>
             {SAMPLE_QUERIES.map((q, idx) => (
@@ -132,7 +132,7 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
                 key={idx}
                 type="button"
                 onClick={() => handleSearch(q)}
-                className="px-2.5 py-1 text-xs rounded-control bg-slate-100 dark:bg-surface-dark-card hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/40 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-surface-dark-border transition-colors text-left truncate max-w-xs sm:max-w-none"
+                className="px-2.5 py-1 text-xs rounded-control bg-[#E9E9E5] dark:bg-surface-dark-card hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/40 text-[#5E6460] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border transition-colors text-left truncate max-w-xs sm:max-w-none"
               >
                 {q}
               </button>
@@ -158,41 +158,41 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
 
       {/* Interpreted Search Filters Breakdown */}
       {searchResult && !searchResult.isRejected && (
-        <Card padding="sm" className="space-y-2.5 bg-slate-50/60 dark:bg-surface-dark-bg/60 border-slate-200/80 dark:border-surface-dark-border">
+        <Card padding="sm" className="space-y-2.5 bg-[#F4F4F1]/60 dark:bg-surface-dark-bg/60 border-[#E7E7E2]/80 dark:border-surface-dark-border">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" /> Query Interpretation
             </span>
-            <span className="text-xs font-semibold text-slate-500">
+            <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB]">
               Found {searchResult.totalResults} matching candidate(s)
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-slate-100 dark:border-surface-dark-border">
-              <span className="text-[10px] font-bold text-slate-400 uppercase block">Extracted Skills</span>
-              <p className="font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
+            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-[#EFEFEA] dark:border-surface-dark-border">
+              <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase block">Extracted Skills</span>
+              <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate mt-0.5">
                 {searchResult.interpreted.skills.length > 0 ? searchResult.interpreted.skills.join(', ') : 'Any'}
               </p>
             </div>
 
-            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-slate-100 dark:border-surface-dark-border">
-              <span className="text-[10px] font-bold text-slate-400 uppercase block">Min Experience</span>
-              <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-[#EFEFEA] dark:border-surface-dark-border">
+              <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase block">Min Experience</span>
+              <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] mt-0.5">
                 {searchResult.interpreted.minExperience !== null ? `${searchResult.interpreted.minExperience}+ years` : 'Any level'}
               </p>
             </div>
 
-            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-slate-100 dark:border-surface-dark-border">
-              <span className="text-[10px] font-bold text-slate-400 uppercase block">Role Focus</span>
-              <p className="font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
+            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-[#EFEFEA] dark:border-surface-dark-border">
+              <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase block">Role Focus</span>
+              <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate mt-0.5">
                 {searchResult.interpreted.jobTitles.length > 0 ? searchResult.interpreted.jobTitles.join(', ') : 'All engineering'}
               </p>
             </div>
 
-            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-slate-100 dark:border-surface-dark-border">
-              <span className="text-[10px] font-bold text-slate-400 uppercase block">Location Filter</span>
-              <p className="font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
+            <div className="p-2 rounded bg-white dark:bg-surface-dark-card border border-[#EFEFEA] dark:border-surface-dark-border">
+              <span className="text-[10px] font-bold text-[#8A928D] dark:text-[#657378] uppercase block">Location Filter</span>
+              <p className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate mt-0.5">
                 {searchResult.interpreted.locations.length > 0 ? searchResult.interpreted.locations.join(', ') : 'Any location / Remote'}
               </p>
             </div>
@@ -203,13 +203,13 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
       {/* Candidate Results Grid */}
       {isSearching ? (
         <div className="space-y-4 py-8 animate-pulse">
-          <div className="h-28 rounded-card bg-slate-100 dark:bg-surface-dark-card" />
-          <div className="h-28 rounded-card bg-slate-100 dark:bg-surface-dark-card" />
+          <div className="h-28 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-card" />
+          <div className="h-28 rounded-card bg-[#E9E9E5] dark:bg-surface-dark-card" />
         </div>
       ) : searchResult && !searchResult.isRejected ? (
         searchResult.candidates.length === 0 ? (
           <EmptyState
-            icon={<Search className="w-10 h-10 text-slate-300 dark:text-slate-600" />}
+            icon={<Search className="w-10 h-10 text-[#8A928D] dark:text-[#9AA7AB] dark:text-[#5E6460] dark:text-[#9AA7AB]" />}
             title="No candidates matched your search"
             description="Try broadening your search query or mentioning different skills and experience criteria."
           />
@@ -219,7 +219,7 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
               <Card
                 key={cand.candidateProfileId}
                 padding="md"
-                className="space-y-3 hover:border-slate-300 dark:hover:border-surface-dark-border transition-all"
+                className="space-y-3 hover:border-[#DCDCD7] dark:hover:border-surface-dark-border transition-all"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-start gap-3">
@@ -237,7 +237,7 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
                         <span className="text-xs font-bold text-brand-600 dark:text-brand-400">
                           #{idx + 1}
                         </span>
-                        <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                        <h3 className="text-sm sm:text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                           {cand.fullName}
                         </h3>
                         {cand.matchScore !== null && (
@@ -246,29 +246,29 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
                           </span>
                         )}
                         {cand.latestApplicationStatus && (
-                          <span className="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 dark:bg-surface-dark-card text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-surface-dark-border">
+                          <span className="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-[#E9E9E5] dark:bg-surface-dark-card text-[#5E6460] dark:text-[#9AA7AB] border border-[#E7E7E2] dark:border-surface-dark-border">
                             {cand.latestApplicationStatus}
                           </span>
                         )}
                       </div>
 
-                      <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                      <p className="text-xs text-[#5E6460] dark:text-[#F2F6F7] font-medium">
                         {cand.headline}
                       </p>
 
-                      <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
+                      <div className="flex items-center gap-3 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex-wrap">
                         <span className="flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                          <MapPin className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                           {cand.location}
                         </span>
                         <span>•</span>
                         <span className="flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <Clock className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                           ~{cand.experienceYears} yrs experience
                         </span>
                         <span>•</span>
                         <span className="flex items-center gap-1">
-                          <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+                          <GraduationCap className="w-3.5 h-3.5 text-[#8A928D] dark:text-[#657378]" />
                           {cand.highestEducation}
                         </span>
                       </div>
@@ -291,8 +291,8 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
                 </div>
 
                 {/* Skills tags */}
-                <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-slate-100 dark:border-surface-dark-border">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1">
+                <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-[#EFEFEA] dark:border-surface-dark-border">
+                  <span className="text-[11px] font-bold text-[#8A928D] dark:text-[#657378] uppercase tracking-wider mr-1">
                     Skills:
                   </span>
                   {cand.skills.map((s) => {
@@ -303,7 +303,7 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
                         className={`px-2 py-0.5 rounded-full text-[11px] font-semibold transition-colors ${
                           isMatched
                             ? 'bg-brand-600 text-white shadow-xs font-bold'
-                            : 'bg-slate-100 dark:bg-surface-dark-card text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-surface-dark-border'
+                            : 'bg-[#E9E9E5] dark:bg-surface-dark-card text-[#5E6460] dark:text-[#9AA7AB] border border-[#E7E7E2] dark:border-surface-dark-border'
                         }`}
                       >
                         {isMatched ? `✓ ${s}` : s}
@@ -318,7 +318,7 @@ export const AICandidateSearchPage: React.FC<AICandidateSearchPageProps> = ({ on
       ) : (
         /* Initial Empty State */
         <EmptyState
-          icon={<Search className="w-10 h-10 text-slate-300 dark:text-slate-600" />}
+          icon={<Search className="w-10 h-10 text-[#8A928D] dark:text-[#9AA7AB] dark:text-[#5E6460] dark:text-[#9AA7AB]" />}
           title="Search verified candidates with AI"
           description="Type queries matching specific technologies, years of experience, and role requirements above."
         />

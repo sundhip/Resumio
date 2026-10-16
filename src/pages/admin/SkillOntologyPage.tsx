@@ -320,21 +320,21 @@ export const SkillOntologyPage: React.FC = () => {
             <div className="p-2 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400">
               <BookOpen className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl font-bold tracking-tight text-[#111312] dark:text-[#F2F6F7]">
               Skill Ontology & Knowledge Base
             </h1>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Standardized technical taxonomy seeded from{' '}
-            <span className="font-semibold text-slate-700 dark:text-slate-300">ESCO v1.1</span> &{' '}
-            <span className="font-semibold text-slate-700 dark:text-slate-300">O*NET 28.0</span> under CC BY 4.0.
+            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">ESCO v1.1</span> &{' '}
+            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">O*NET 28.0</span> under CC BY 4.0.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsMergeModalOpen(true)}
-            className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-card dark:bg-surface-dark-card text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-card dark:bg-surface-dark-card text-[#111312] dark:text-[#F2F6F7] hover:bg-[#E9E9E5] dark:hover:bg-white/5 transition-colors flex items-center gap-1.5"
           >
             <GitMerge className="w-4 h-4 text-indigo-500" />
             Merge Duplicates
@@ -352,8 +352,8 @@ export const SkillOntologyPage: React.FC = () => {
       {/* Stats Summary Bento Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="p-4 rounded-2xl bg-surface-light-card dark:bg-surface-dark-card border border-border-light-primary dark:border-border-dark-primary shadow-sm">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Canonical Skills</p>
-          <p className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
+          <p className="text-xs font-medium text-[#5E6460] dark:text-[#9AA7AB]">Canonical Skills</p>
+          <p className="text-2xl font-bold font-mono text-[#111312] dark:text-[#F2F6F7] mt-1">
             {stats ? stats.totalSkills.toLocaleString() : '...'}
           </p>
           <p className="text-[11px] text-teal-600 dark:text-teal-400 mt-1 flex items-center gap-1">
@@ -362,23 +362,23 @@ export const SkillOntologyPage: React.FC = () => {
         </div>
 
         <div className="p-4 rounded-2xl bg-surface-light-card dark:bg-surface-dark-card border border-border-light-primary dark:border-border-dark-primary shadow-sm">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Taxonomy Categories</p>
-          <p className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
+          <p className="text-xs font-medium text-[#5E6460] dark:text-[#9AA7AB]">Taxonomy Categories</p>
+          <p className="text-2xl font-bold font-mono text-[#111312] dark:text-[#F2F6F7] mt-1">
             {stats ? Object.keys(stats.categories).length : '11'}
           </p>
-          <p className="text-[11px] text-slate-500 mt-1">Languages, Clouds, Tools, DBs</p>
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-1">Languages, Clouds, Tools, DBs</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-surface-light-card dark:bg-surface-dark-card border border-border-light-primary dark:border-border-dark-primary shadow-sm">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Implied Relationships</p>
-          <p className="text-2xl font-bold font-mono text-indigo-600 dark:text-indigo-400 mt-1">
+          <p className="text-xs font-medium text-[#5E6460] dark:text-[#9AA7AB]">Implied Relationships</p>
+          <p className="text-2xl font-bold font-mono text-[#1F8FA6] dark:text-[#5FD3E8] mt-1">
             {stats ? stats.totalRelationships : '...'}
           </p>
-          <p className="text-[11px] text-slate-500 mt-1">Weighted Directed Edges</p>
+          <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-1">Weighted Directed Edges</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-surface-light-card dark:bg-surface-dark-card border border-border-light-primary dark:border-border-dark-primary shadow-sm">
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Review Queue</p>
+          <p className="text-xs font-medium text-[#5E6460] dark:text-[#9AA7AB]">Review Queue</p>
           <p className="text-2xl font-bold font-mono text-amber-500 mt-1">
             {stats ? stats.pendingQueueCount : '0'}
           </p>
@@ -395,7 +395,7 @@ export const SkillOntologyPage: React.FC = () => {
           className={`pb-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
             activeTab === 'explorer'
               ? 'border-teal-500 text-teal-600 dark:text-teal-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#8A928D] dark:text-[#9AA7AB]'
           }`}
         >
           <Database className="w-4 h-4" />
@@ -406,7 +406,7 @@ export const SkillOntologyPage: React.FC = () => {
           className={`pb-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
             activeTab === 'queue'
               ? 'border-teal-500 text-teal-600 dark:text-teal-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#8A928D] dark:text-[#9AA7AB]'
           }`}
         >
           <Sparkles className="w-4 h-4" />
@@ -417,7 +417,7 @@ export const SkillOntologyPage: React.FC = () => {
           className={`pb-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
             activeTab === 'audit'
               ? 'border-teal-500 text-teal-600 dark:text-teal-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#5E6460] dark:text-[#9AA7AB] dark:hover:text-[#8A928D] dark:text-[#9AA7AB]'
           }`}
         >
           <Clock className="w-4 h-4" />
@@ -431,7 +431,7 @@ export const SkillOntologyPage: React.FC = () => {
           {/* Search & Category Pills */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3 top-3 text-[#8A928D] dark:text-[#657378]" />
               <input
                 type="text"
                 placeholder="Search canonical skills, acronyms or aliases (e.g. k8s, postgres, ts)..."
@@ -440,7 +440,7 @@ export const SkillOntologyPage: React.FC = () => {
                   setSearchTerm(e.target.value);
                   setPage(0);
                 }}
-                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-card dark:bg-surface-dark-card focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100"
+                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-card dark:bg-surface-dark-card focus:outline-none focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7]"
               />
             </div>
           </div>
@@ -456,7 +456,7 @@ export const SkillOntologyPage: React.FC = () => {
                 className={`px-3 py-1 rounded-lg text-xs font-medium capitalize transition-colors ${
                   selectedCategory === cat
                     ? 'bg-teal-600 text-white shadow-sm'
-                    : 'bg-surface-light-card dark:bg-surface-dark-card border border-border-light-primary dark:border-border-dark-primary text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    : 'bg-surface-light-card dark:bg-surface-dark-card border border-border-light-primary dark:border-border-dark-primary text-[#5E6460] dark:text-[#9AA7AB] hover:bg-[#E9E9E5] dark:hover:bg-white/5'
                 }`}
               >
                 {cat.replace('_', ' ')}
@@ -469,7 +469,7 @@ export const SkillOntologyPage: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-border-light-primary dark:border-border-dark-primary bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 font-medium">
+                  <tr className="border-b border-border-light-primary dark:border-border-dark-primary bg-[#F4F4F1] dark:bg-[#0C1113]/40 text-[#5E6460] dark:text-[#9AA7AB] font-medium">
                     <th className="py-3 px-4">Canonical Skill</th>
                     <th className="py-3 px-4">Category</th>
                     <th className="py-3 px-4">Role Family</th>
@@ -480,14 +480,14 @@ export const SkillOntologyPage: React.FC = () => {
                 <tbody className="divide-y divide-border-light-primary dark:divide-border-dark-primary">
                   {isLoading ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-slate-500">
+                      <td colSpan={5} className="py-12 text-center text-[#5E6460] dark:text-[#9AA7AB]">
                         <RefreshCw className="w-5 h-5 animate-spin mx-auto text-teal-500 mb-2" />
                         Loading skill ontology...
                       </td>
                     </tr>
                   ) : skills.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-slate-500">
+                      <td colSpan={5} className="py-12 text-center text-[#5E6460] dark:text-[#9AA7AB]">
                         No skills found matching your query.
                       </td>
                     </tr>
@@ -495,9 +495,9 @@ export const SkillOntologyPage: React.FC = () => {
                     skills.map((skill) => (
                       <tr
                         key={skill.id}
-                        className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                        className="hover:bg-[#F4F4F1]/70 dark:hover:bg-white/5/40 transition-colors"
                       >
-                        <td className="py-3 px-4 font-semibold text-slate-900 dark:text-slate-100">
+                        <td className="py-3 px-4 font-semibold text-[#111312] dark:text-[#F2F6F7]">
                           <div className="flex items-center gap-2">
                             <span>{skill.canonical_name}</span>
                             {skill.is_deprecated ? (
@@ -506,14 +506,14 @@ export const SkillOntologyPage: React.FC = () => {
                               </span>
                             ) : null}
                           </div>
-                          <span className="text-[10px] font-mono text-slate-400">{skill.id}</span>
+                          <span className="text-[10px] font-mono text-[#8A928D] dark:text-[#657378]">{skill.id}</span>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 capitalize">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#E9E9E5] dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] capitalize">
                             {skill.category.replace('_', ' ')}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-slate-600 dark:text-slate-400">
+                        <td className="py-3 px-4 text-[#5E6460] dark:text-[#9AA7AB]">
                           {skill.role_family || 'General'}
                         </td>
                         <td className="py-3 px-4">
@@ -528,10 +528,10 @@ export const SkillOntologyPage: React.FC = () => {
                                 </span>
                               ))
                             ) : (
-                              <span className="text-slate-400 text-[11px]">—</span>
+                              <span className="text-[#8A928D] dark:text-[#657378] text-[11px]">—</span>
                             )}
                             {skill.aliases && skill.aliases.length > 5 ? (
-                              <span className="text-[10px] text-slate-400">
+                              <span className="text-[10px] text-[#8A928D] dark:text-[#657378]">
                                 +{skill.aliases.length - 5} more
                               </span>
                             ) : null}
@@ -541,7 +541,7 @@ export const SkillOntologyPage: React.FC = () => {
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => handleOpenEdit(skill)}
-                              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors"
+                              className="p-1.5 rounded-lg hover:bg-[#E9E9E5] dark:hover:bg-white/5 text-[#5E6460] dark:text-[#9AA7AB] transition-colors"
                               title="Edit Skill"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
@@ -563,7 +563,7 @@ export const SkillOntologyPage: React.FC = () => {
             </div>
 
             {/* Pagination footer */}
-            <div className="p-3 border-t border-border-light-primary dark:border-border-dark-primary flex items-center justify-between text-xs text-slate-500">
+            <div className="p-3 border-t border-border-light-primary dark:border-border-dark-primary flex items-center justify-between text-xs text-[#5E6460] dark:text-[#9AA7AB]">
               <span>
                 Showing {Math.min(totalSkills, page * pageSize + 1)} -{' '}
                 {Math.min(totalSkills, (page + 1) * pageSize)} of {totalSkills} skills
@@ -604,7 +604,7 @@ export const SkillOntologyPage: React.FC = () => {
 
           <div className="bg-surface-light-card dark:bg-surface-dark-card rounded-2xl border border-border-light-primary dark:border-border-dark-primary shadow-sm overflow-hidden">
             {reviewQueue.length === 0 ? (
-              <div className="py-16 text-center text-slate-500 text-xs">
+              <div className="py-16 text-center text-[#5E6460] dark:text-[#9AA7AB] text-xs">
                 <CheckCircle className="w-8 h-8 text-teal-500 mx-auto mb-2 opacity-60" />
                 Review queue is clear! All discovered skills have been classified.
               </div>
@@ -614,16 +614,16 @@ export const SkillOntologyPage: React.FC = () => {
                   <div key={item.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+                        <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] text-sm">
                           "{item.extracted_phrase}"
                         </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E9E9E5] dark:bg-[#111719] text-[#5E6460] dark:text-[#9AA7AB]">
                           Discovered Phrase
                         </span>
                       </div>
                       {item.suggested_name ? (
-                        <p className="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
-                          Suggested match: <span className="font-medium text-slate-700 dark:text-slate-300">{item.suggested_name}</span>
+                        <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1 flex items-center gap-1.5">
+                          Suggested match: <span className="font-medium text-[#111312] dark:text-[#F2F6F7]">{item.suggested_name}</span>
                           {item.similarity_score ? (
                             <span className="text-[10px] font-mono text-teal-600">
                               ({(item.similarity_score * 100).toFixed(0)}% match)
@@ -631,7 +631,7 @@ export const SkillOntologyPage: React.FC = () => {
                           ) : null}
                         </p>
                       ) : null}
-                      <p className="text-[10px] text-slate-400 mt-0.5">
+                      <p className="text-[10px] text-[#8A928D] dark:text-[#657378] mt-0.5">
                         Queued on {new Date(item.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -646,7 +646,7 @@ export const SkillOntologyPage: React.FC = () => {
                       {item.suggested_skill_id ? (
                         <button
                           onClick={() => handleQueueDecision(item.id, 'approved', item.suggested_skill_id)}
-                          className="px-3 py-1.5 text-xs font-semibold rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-card dark:bg-surface-dark-card hover:bg-slate-100 text-slate-700 dark:text-slate-300 transition-colors"
+                          className="px-3 py-1.5 text-xs font-semibold rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-card dark:bg-surface-dark-card hover:bg-[#E9E9E5] text-[#111312] dark:text-[#F2F6F7] transition-colors"
                         >
                           Map as Alias to {item.suggested_name}
                         </button>
@@ -670,31 +670,31 @@ export const SkillOntologyPage: React.FC = () => {
       {/* Tab 3: Change History & Audit Logs */}
       {activeTab === 'audit' && (
         <div className="bg-surface-light-card dark:bg-surface-dark-card rounded-2xl border border-border-light-primary dark:border-border-dark-primary shadow-sm overflow-hidden p-4">
-          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-[#111312] dark:text-[#F2F6F7] mb-3 flex items-center gap-2">
             <Clock className="w-4 h-4 text-teal-500" />
             Audit Ledger (SOC 2 & Reproducibility)
           </h3>
           {auditLogs.length === 0 ? (
-            <p className="text-xs text-slate-500 py-8 text-center">No recent audit log entries.</p>
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] py-8 text-center">No recent audit log entries.</p>
           ) : (
             <div className="space-y-3">
               {auditLogs.map((log) => (
                 <div
                   key={log.id}
-                  className="p-3 rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-slate-50/50 dark:bg-slate-900/30 text-xs"
+                  className="p-3 rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-[#F4F4F1]/50 dark:bg-[#0C1113]/30 text-xs"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-800 dark:text-slate-200 capitalize">
+                    <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] capitalize">
                       Action: {log.action.replace('_', ' ')}
                     </span>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-[#8A928D] dark:text-[#657378]">
                       {new Date(log.created_at).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-slate-500 mt-1 font-mono text-[11px]">
+                  <p className="text-[#5E6460] dark:text-[#9AA7AB] mt-1 font-mono text-[11px]">
                     Target: {log.skill_id} | Actor: {log.actor_id || 'system'}
                   </p>
-                  <pre className="mt-1.5 p-2 rounded bg-slate-100 dark:bg-slate-900 text-[10px] font-mono text-slate-700 dark:text-slate-300 overflow-x-auto">
+                  <pre className="mt-1.5 p-2 rounded bg-[#E9E9E5] dark:bg-[#0C1113] text-[10px] font-mono text-[#111312] dark:text-[#F2F6F7] overflow-x-auto">
                     {log.details_json}
                   </pre>
                 </div>
@@ -708,13 +708,13 @@ export const SkillOntologyPage: React.FC = () => {
       {(isAddModalOpen || isEditModalOpen) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-lg bg-surface-light-card dark:bg-surface-dark-card rounded-2xl border border-border-light-primary dark:border-border-dark-primary shadow-2xl p-6">
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-4">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-4">
               {isEditModalOpen ? 'Edit Canonical Skill' : 'Add New Skill to Taxonomy'}
             </h3>
 
             <form onSubmit={isEditModalOpen ? handleEditSubmit : handleCreateSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-medium text-[#111312] dark:text-[#F2F6F7] mb-1">
                   Canonical Display Name *
                 </label>
                 <input
@@ -723,19 +723,19 @@ export const SkillOntologyPage: React.FC = () => {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="e.g. Kubernetes, React, PostgreSQL"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-medium text-[#111312] dark:text-[#F2F6F7] mb-1">
                     Category *
                   </label>
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100 capitalize"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7] capitalize"
                   >
                     {categories.filter((c) => c !== 'all').map((cat) => (
                       <option key={cat} value={cat}>
@@ -746,7 +746,7 @@ export const SkillOntologyPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-medium text-[#111312] dark:text-[#F2F6F7] mb-1">
                     Role Family
                   </label>
                   <input
@@ -754,13 +754,13 @@ export const SkillOntologyPage: React.FC = () => {
                     value={formRoleFamily}
                     onChange={(e) => setFormRoleFamily(e.target.value)}
                     placeholder="e.g. Backend Engineering"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-medium text-[#111312] dark:text-[#F2F6F7] mb-1">
                   Aliases & Synonyms (comma-separated)
                 </label>
                 <input
@@ -768,15 +768,15 @@ export const SkillOntologyPage: React.FC = () => {
                   value={formAliases}
                   onChange={(e) => setFormAliases(e.target.value)}
                   placeholder="e.g. k8s, kube, kubernetes cluster"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7]"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
+                <p className="text-[10px] text-[#8A928D] dark:text-[#657378] mt-1">
                   All variations will automatically resolve to this canonical skill name.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-medium text-[#111312] dark:text-[#F2F6F7] mb-1">
                   Description / Documentation Link
                 </label>
                 <textarea
@@ -784,7 +784,7 @@ export const SkillOntologyPage: React.FC = () => {
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="Brief description or ESCO/O*NET mapping details..."
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7]"
                 />
               </div>
 
@@ -797,7 +797,7 @@ export const SkillOntologyPage: React.FC = () => {
                     onChange={(e) => setFormDeprecated(e.target.checked)}
                     className="rounded text-teal-600 focus:ring-teal-500"
                   />
-                  <label htmlFor="dep-check" className="text-xs text-slate-700 dark:text-slate-300">
+                  <label htmlFor="dep-check" className="text-xs text-[#111312] dark:text-[#F2F6F7]">
                     Mark as deprecated technology
                   </label>
                 </div>
@@ -810,7 +810,7 @@ export const SkillOntologyPage: React.FC = () => {
                     setIsAddModalOpen(false);
                     setIsEditModalOpen(false);
                   }}
-                  className="px-4 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400"
+                  className="px-4 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary hover:bg-[#E9E9E5] dark:hover:bg-white/5 text-[#5E6460] dark:text-[#9AA7AB]"
                 >
                   Cancel
                 </button>
@@ -830,11 +830,11 @@ export const SkillOntologyPage: React.FC = () => {
       {isMergeModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-lg bg-surface-light-card dark:bg-surface-dark-card rounded-2xl border border-border-light-primary dark:border-border-dark-primary shadow-2xl p-6">
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mb-2 flex items-center gap-2">
               <GitMerge className="w-5 h-5 text-indigo-500" />
               Merge Duplicate Skills
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mb-4">
               Merges all aliases and relationships from the source duplicate into the target canonical skill, then deletes the duplicate.
             </p>
 
@@ -847,7 +847,7 @@ export const SkillOntologyPage: React.FC = () => {
 
             <form onSubmit={handleMergeSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-medium text-[#111312] dark:text-[#F2F6F7] mb-1">
                   1. Canonical Target Skill ID (Kept) *
                 </label>
                 <input
@@ -856,12 +856,12 @@ export const SkillOntologyPage: React.FC = () => {
                   value={mergeTargetId}
                   onChange={(e) => setMergeTargetId(e.target.value)}
                   placeholder="e.g. skill_postgresql"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-xs font-medium text-[#111312] dark:text-[#F2F6F7] mb-1">
                   2. Source Duplicate Skill ID (Merged & Deleted) *
                 </label>
                 <input
@@ -870,7 +870,7 @@ export const SkillOntologyPage: React.FC = () => {
                   value={mergeSourceId}
                   onChange={(e) => setMergeSourceId(e.target.value)}
                   placeholder="e.g. skill_postgres"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-slate-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary bg-surface-light-bg dark:bg-surface-dark-bg focus:ring-2 focus:ring-teal-500 text-[#111312] dark:text-[#F2F6F7]"
                 />
               </div>
 
@@ -878,13 +878,13 @@ export const SkillOntologyPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsMergeModalOpen(false)}
-                  className="px-4 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400"
+                  className="px-4 py-2 text-xs rounded-xl border border-border-light-primary dark:border-border-dark-primary hover:bg-[#E9E9E5] dark:hover:bg-white/5 text-[#5E6460] dark:text-[#9AA7AB]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm flex items-center gap-1.5"
+                  className="px-4 py-2 text-xs font-semibold rounded-xl bg-[#1F8FA6] hover:bg-[#1F8FA6]/100 text-white shadow-sm flex items-center gap-1.5"
                 >
                   <GitMerge className="w-3.5 h-3.5" />
                   Execute Merge

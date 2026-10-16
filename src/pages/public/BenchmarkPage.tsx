@@ -18,7 +18,7 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E7E7E2] dark:border-white/8">
         <div>
           {onNavigate && (
             <button
@@ -33,10 +33,10 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
               <BarChart3 className="w-7 h-7" />
             </div>
             <div>
-              <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              <h1 className="text-2xl font-black tracking-tight text-[#111312] dark:text-[#F2F6F7]">
                 Resumio Empirical ML Benchmark & Model Cards
               </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
                 Verifiable metrics from held-out test partitions. Guaranteed non-drift from committed evaluations.
               </p>
             </div>
@@ -44,8 +44,8 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Reproducibility Command Badge */}
-        <div className="bg-slate-900 dark:bg-black text-slate-200 p-3 rounded-xl border border-slate-700/60 font-mono text-xs max-w-md">
-          <div className="flex items-center justify-between text-slate-400 pb-1 mb-1 border-b border-slate-800">
+        <div className="bg-[#111312] dark:bg-[#0C1113] dark:bg-black text-[#DCDCD7] dark:text-[#C5D0D3] p-3 rounded-xl border border-slate-700/60 font-mono text-xs max-w-md">
+          <div className="flex items-center justify-between text-[#8A928D] dark:text-[#657378] pb-1 mb-1 border-b border-slate-800">
             <span className="flex items-center gap-1.5">
               <Terminal className="w-3.5 h-3.5 text-emerald-400" /> Exact Reproducibility Command
             </span>
@@ -56,20 +56,20 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Section 1: Head-to-Head Comparison Table */}
-      <Card className="p-6 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+      <Card className="p-6 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
             <Cpu className="w-5 h-5 text-emerald-600" />
             Head-to-Head: Resumio vs. Open-Source Resume-Matcher
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Evaluated on identical held-out test resume-JD pairs with standardized Information Retrieval metrics.
           </p>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
-          <table className="w-full text-left text-xs text-slate-700 dark:text-slate-200">
-            <thead className="bg-slate-50 dark:bg-surface-dark-hover uppercase tracking-wider text-[11px] font-bold text-slate-500 dark:text-slate-400">
+        <div className="overflow-x-auto rounded-xl border border-[#E7E7E2] dark:border-white/8">
+          <table className="w-full text-left text-xs text-[#5E6460] dark:text-[#9AA7AB] dark:text-[#DCDCD7] dark:text-[#C5D0D3]">
+            <thead className="bg-[#F4F4F1] dark:bg-surface-dark-hover uppercase tracking-wider text-[11px] font-bold text-[#5E6460] dark:text-[#9AA7AB]">
               <tr>
                 <th className="py-3 px-4">Architecture</th>
                 <th className="py-3 px-4 text-center">Precision</th>
@@ -85,13 +85,13 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
               {HEAD_TO_HEAD_BENCHMARKS.map((row, idx) => (
                 <tr
                   key={row.system}
-                  className={`hover:bg-slate-50/50 dark:hover:bg-surface-dark-hover/50 ${
+                  className={`hover:bg-[#F4F4F1]/50 dark:hover:bg-surface-dark-hover/50 ${
                     idx === HEAD_TO_HEAD_BENCHMARKS.length - 1 ? 'bg-emerald-50/30 dark:bg-emerald-950/10 font-medium' : ''
                   }`}
                 >
                   <td className="py-3.5 px-4">
-                    <div className="font-bold text-slate-900 dark:text-white">{row.system}</div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">{row.architecture}</div>
+                    <div className="font-bold text-[#111312] dark:text-[#F2F6F7]">{row.system}</div>
+                    <div className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">{row.architecture}</div>
                   </td>
                   <td className="py-3.5 px-4 text-center">{(row.precision * 100).toFixed(1)}%</td>
                   <td className="py-3.5 px-4 text-center">{(row.recall * 100).toFixed(1)}%</td>
@@ -114,34 +114,34 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
       {/* Section 2: Model Cards & Anti-Bias Exclusions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {MODEL_CARDS.map((card) => (
-          <Card key={card.id} className="p-6 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          <Card key={card.id} className="p-6 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border space-y-4">
             <div className="flex items-start justify-between">
               <div>
                 <Badge variant="neutral" size="sm">Model Card v{card.version}</Badge>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] mt-1">
                   {card.name}
                 </h3>
-                <p className="text-xs text-slate-500">{card.type}</p>
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">{card.type}</p>
               </div>
               <div className="text-right">
-                <div className="text-xs font-semibold text-slate-500">Benchmark F1</div>
+                <div className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB]">Benchmark F1</div>
                 <div className="text-lg font-black text-emerald-600 dark:text-emerald-400">
                   {(card.metrics.f1 * 100).toFixed(1)}%
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-surface-dark-hover p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <p className="text-xs text-[#5E6460] dark:text-[#F2F6F7] leading-relaxed bg-[#F4F4F1] dark:bg-surface-dark-hover p-3 rounded-lg border border-[#E7E7E2] dark:border-white/8">
               <strong>Intended Use:</strong> {card.intendedUse}
             </p>
 
             {/* Input vs Excluded Features */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div className="space-y-1.5">
-                <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-emerald-600">
+                <span className="font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5 text-emerald-600">
                   <CheckCircle2 className="w-4 h-4" /> Allowed Input Features
                 </span>
-                <ul className="list-disc pl-4 space-y-1 text-slate-600 dark:text-slate-400 text-[11px]">
+                <ul className="list-disc pl-4 space-y-1 text-[#5E6460] dark:text-[#9AA7AB] text-[11px]">
                   {card.inputFeatures.map((f, i) => (
                     <li key={i}>{f}</li>
                   ))}
@@ -149,10 +149,10 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
               </div>
 
               <div className="space-y-1.5">
-                <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
+                <span className="font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
                   <ShieldCheck className="w-4 h-4" /> Strictly Excluded (Non-Demographic)
                 </span>
-                <ul className="list-disc pl-4 space-y-1 text-slate-600 dark:text-slate-400 text-[11px]">
+                <ul className="list-disc pl-4 space-y-1 text-[#5E6460] dark:text-[#9AA7AB] text-[11px]">
                   {card.excludedFeatures.map((f, i) => (
                     <li key={i}>{f}</li>
                   ))}
@@ -160,7 +160,7 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 space-y-1">
+            <div className="pt-3 border-t border-[#E7E7E2] dark:border-white/8 text-xs text-[#5E6460] dark:text-[#9AA7AB] space-y-1">
               <div><strong>Known Limitations:</strong> {card.limitations}</div>
               <div><strong>Offline Fallback:</strong> {card.offlineFallback}</div>
             </div>
@@ -169,14 +169,14 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Section 3: Fairness & EEOC 4/5ths Rule Evaluation */}
-      <Card className="p-6 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-slate-800 space-y-4">
+      <Card className="p-6 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-white/8 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <Scale className="w-5 h-5 text-emerald-600" />
               EEOC 80% (4/5ths) Adverse Impact Compliance Audit
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-1">
               Evaluated across voluntary decoupled demographic disclosures. Adverse impact ratio must remain &gt; 0.80 to satisfy non-discrimination standards.
             </p>
           </div>
@@ -185,17 +185,17 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {FAIRNESS_BENCHMARKS.map((m) => (
-            <div key={m.demographicGroup} className="p-4 rounded-xl bg-slate-50 dark:bg-surface-dark-hover border border-slate-200 dark:border-slate-700/80 space-y-2">
-              <div className="text-xs font-bold text-slate-900 dark:text-white truncate" title={m.demographicGroup}>
+            <div key={m.demographicGroup} className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-surface-dark-hover border border-[#E7E7E2] dark:border-white/6/80 space-y-2">
+              <div className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] truncate" title={m.demographicGroup}>
                 {m.demographicGroup}
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
                   {(m.adverseImpactRatio * 100).toFixed(1)}%
                 </span>
-                <span className="text-[10px] text-slate-500 font-semibold">AIR</span>
+                <span className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] font-semibold">AIR</span>
               </div>
-              <div className="flex items-center justify-between text-[11px] text-slate-500">
+              <div className="flex items-center justify-between text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                 <span>Sample: {m.sampleSize}</span>
                 <span className="text-emerald-600 font-bold">✓ Pass</span>
               </div>
@@ -205,22 +205,22 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
       </Card>
 
       {/* Section 4: Dataset Provenance & Anti-Leakage Guarantees */}
-      <Card className="p-6 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-slate-800 space-y-3">
-        <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+      <Card className="p-6 bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-white/8 space-y-3">
+        <h3 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
           <Layers className="w-4 h-4 text-emerald-600" />
           Dataset Provenance & Anti-Leakage Safeguards
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 dark:text-slate-300">
-          <div className="p-3 bg-slate-50 dark:bg-surface-dark-hover rounded-lg border border-slate-200 dark:border-slate-800 space-y-1">
-            <span className="font-bold text-slate-900 dark:text-white">Stratified Partitions:</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#5E6460] dark:text-[#F2F6F7]">
+          <div className="p-3 bg-[#F4F4F1] dark:bg-surface-dark-hover rounded-lg border border-[#E7E7E2] dark:border-white/8 space-y-1">
+            <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">Stratified Partitions:</span>
             <p>{DATASET_PROVENANCE.heldOutSplitRatio}</p>
           </div>
-          <div className="p-3 bg-slate-50 dark:bg-surface-dark-hover rounded-lg border border-slate-200 dark:border-slate-800 space-y-1">
-            <span className="font-bold text-slate-900 dark:text-white">Isolation Guarantee:</span>
+          <div className="p-3 bg-[#F4F4F1] dark:bg-surface-dark-hover rounded-lg border border-[#E7E7E2] dark:border-white/8 space-y-1">
+            <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">Isolation Guarantee:</span>
             <p>{DATASET_PROVENANCE.isolationGuarantee}</p>
           </div>
-          <div className="p-3 bg-slate-50 dark:bg-surface-dark-hover rounded-lg border border-slate-200 dark:border-slate-800 space-y-1">
-            <span className="font-bold text-slate-900 dark:text-white">Synthetic Data Audit:</span>
+          <div className="p-3 bg-[#F4F4F1] dark:bg-surface-dark-hover rounded-lg border border-[#E7E7E2] dark:border-white/8 space-y-1">
+            <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">Synthetic Data Audit:</span>
             <p>{DATASET_PROVENANCE.syntheticDataAudit}</p>
           </div>
         </div>

@@ -33,8 +33,11 @@ export function DataTable<T extends Record<string, any>>({
 }: DataTableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [isPulsing, setIsPulsing] = useState(false);
 
   const handleSort = (key: string) => {
+    setIsPulsing(true);
+    setTimeout(() => setIsPulsing(false), 280);
     if (sortKey === key) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -111,7 +114,7 @@ export function DataTable<T extends Record<string, any>>({
               <tr
                 key={keyExtractor(row)}
                 onClick={() => onRowClick && onRowClick(row)}
-                className={`transition-colors ${
+                className={`transition-colors ${isPulsing ? 'animate-rank-pulse' : ''} ${
                   onRowClick
                     ? 'cursor-pointer hover:bg-[#F6F6F3] dark:hover:bg-white/4'
                     : 'hover:bg-[#FAFAF8] dark:hover:bg-white/2'

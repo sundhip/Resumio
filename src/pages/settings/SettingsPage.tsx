@@ -68,10 +68,10 @@ export const SettingsPage: React.FC = () => {
     <div className="space-y-6 w-full">
       {/* Header */}
       <div className="pb-2">
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
           Account Settings
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+        <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
           Manage your account credentials, security preferences, and workspace appearance.
         </p>
       </div>
@@ -91,30 +91,30 @@ export const SettingsPage: React.FC = () => {
         </CardHeader>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          <div className="p-3.5 rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200/70 dark:border-surface-dark-border/70 space-y-1">
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+          <div className="p-3.5 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2]/70 dark:border-surface-dark-border/70 space-y-1">
+            <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-semibold">
               Registered Name
             </span>
-            <p className="font-semibold text-sm text-slate-900 dark:text-white">
+            <p className="font-semibold text-sm text-[#111312] dark:text-[#F2F6F7]">
               {user?.name || 'User'}
             </p>
           </div>
 
-          <div className="p-3.5 rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200/70 dark:border-surface-dark-border/70 space-y-1">
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+          <div className="p-3.5 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2]/70 dark:border-surface-dark-border/70 space-y-1">
+            <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-semibold">
               Email Address
             </span>
-            <p className="font-semibold text-sm text-slate-900 dark:text-white">
+            <p className="font-semibold text-sm text-[#111312] dark:text-[#F2F6F7]">
               {user?.email}
             </p>
           </div>
 
           {user?.company && (
-            <div className="p-3.5 rounded-control bg-slate-50 dark:bg-surface-dark-bg border border-slate-200/70 dark:border-surface-dark-border/70 space-y-1 sm:col-span-2">
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+            <div className="p-3.5 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg border border-[#E7E7E2]/70 dark:border-surface-dark-border/70 space-y-1 sm:col-span-2">
+              <span className="text-[#8A928D] dark:text-[#657378] block text-[10px] uppercase font-semibold">
                 Company Workspace
               </span>
-              <p className="font-semibold text-sm text-slate-900 dark:text-white">
+              <p className="font-semibold text-sm text-[#111312] dark:text-[#F2F6F7]">
                 {user?.company}
               </p>
             </div>
@@ -202,15 +202,15 @@ export const SettingsPage: React.FC = () => {
             className={`p-4 rounded-card border-2 text-left transition-all flex items-center gap-3 ${
               theme === 'light'
                 ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 shadow-xs'
-                : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-slate-50'
+                : 'border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-[#F4F4F1]'
             }`}
           >
             <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center shrink-0">
               <Sun className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">Light Mode</p>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Clean neutral workspace</p>
+              <p className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">Light Mode</p>
+              <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">Clean neutral workspace</p>
             </div>
           </button>
 
@@ -220,15 +220,15 @@ export const SettingsPage: React.FC = () => {
             className={`p-4 rounded-card border-2 text-left transition-all flex items-center gap-3 ${
               theme === 'dark'
                 ? 'border-brand-600 bg-brand-50/60 dark:bg-brand-950/40 shadow-xs'
-                : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-slate-50'
+                : 'border-[#E7E7E2] dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-[#F4F4F1]'
             }`}
           >
-            <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-indigo-400 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-[#5FD3E8] flex items-center justify-center shrink-0">
               <Moon className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">Dark Mode</p>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Charcoal SaaS surface</p>
+              <p className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">Dark Mode</p>
+              <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">Charcoal SaaS surface</p>
             </div>
           </button>
         </div>
@@ -241,7 +241,7 @@ export const SettingsPage: React.FC = () => {
             <h3 className="text-base font-semibold text-rose-700 dark:text-rose-400">
               Sign Out of Session
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
               Terminates your current JWT authenticated session on this browser.
             </p>
           </div>

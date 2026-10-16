@@ -43,16 +43,16 @@ export const StatTile: React.FC<StatTileProps> = ({
   return (
     <div
       className={twMerge(
-        'group relative flex flex-col justify-between p-4 sm:p-5 rounded-card bg-surface-light-card dark:bg-surface-dark-card border border-surface-light-border dark:border-surface-dark-border shadow-subtle hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200',
+        'group relative flex flex-col justify-between p-4 sm:p-5 rounded-card bg-surface-light-card dark:bg-surface-dark-card border border-surface-light-border dark:border-surface-dark-border shadow-subtle hover:border-[#DCDCD7] dark:hover:border-slate-700 transition-all duration-200',
         className
       )}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+        <span className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
           {label}
         </span>
         {icon && (
-          <div className="p-2 rounded-control bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+          <div className="p-2 rounded-control bg-[#E9E9E5] dark:bg-[#111719] text-[#5E6460] dark:text-[#F2F6F7]">
             {icon}
           </div>
         )}
@@ -60,11 +60,11 @@ export const StatTile: React.FC<StatTileProps> = ({
 
       <div className="flex items-baseline justify-between mt-1">
         <div className="space-y-1">
-          <div className="font-numeral text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          <div className="font-numeral text-2xl sm:text-3xl font-black text-[#111312] dark:text-[#F2F6F7] tracking-tight">
             {value}
           </div>
           {subtitle && (
-            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <div className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-medium">
               {subtitle}
             </div>
           )}
@@ -90,7 +90,7 @@ export const StatTile: React.FC<StatTileProps> = ({
                 delta.isPositive
                   ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                   : delta.isNeutral
-                  ? 'bg-slate-500/10 text-slate-600 dark:text-slate-400'
+                  ? 'bg-[#F4F4F1]0/10 text-[#5E6460] dark:text-[#9AA7AB]'
                   : 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
               )}
             >

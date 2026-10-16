@@ -40,17 +40,17 @@ export const ComponentShowcase: React.FC = () => {
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-surface-dark-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E7E7E2] dark:border-surface-dark-border">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
               Resumio Design System & Component Library
             </h1>
             <Badge variant="purple" size="sm">
               Design Tokens v1.0
             </Badge>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-sm text-[#5E6460] dark:text-[#9AA7AB] mt-1">
             Standardized atomic UI building blocks, typography, semantic status systems, and theme layers.
           </p>
         </div>
@@ -75,7 +75,7 @@ export const ComponentShowcase: React.FC = () => {
 
       {showSkeletons ? (
         <div className="space-y-6 animate-fade-in">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Skeleton Loaders Preview</h2>
+          <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">Skeleton Loaders Preview</h2>
           <CardSkeleton count={3} />
           <TableSkeleton rows={4} />
         </div>
@@ -83,7 +83,7 @@ export const ComponentShowcase: React.FC = () => {
         <div className="space-y-10 animate-fade-in">
           {/* Section 1: Buttons */}
           <section className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-500" />
               1. Button System
             </h2>
@@ -107,7 +107,7 @@ export const ComponentShowcase: React.FC = () => {
                 </Button>
               </div>
 
-              <div className="flex items-center gap-3 pt-3 border-t border-slate-100 dark:border-surface-dark-border">
+              <div className="flex items-center gap-3 pt-3 border-t border-[#EFEFEA] dark:border-surface-dark-border">
                 <Button size="sm">Small (36px)</Button>
                 <Button size="md">Medium (40px)</Button>
                 <Button size="lg">Large (44px)</Button>
@@ -117,7 +117,7 @@ export const ComponentShowcase: React.FC = () => {
 
           {/* Section 2: AI Match Score Components */}
           <section className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-500" />
               2. AI Match Score Visualizations
             </h2>
@@ -130,7 +130,7 @@ export const ComponentShowcase: React.FC = () => {
                 <MatchScore score={85} variant="bar" />
               </Card>
               <Card padding="md" className="flex flex-col justify-center items-start gap-2">
-                <span className="text-xs text-slate-400">Pill Variants:</span>
+                <span className="text-xs text-[#8A928D] dark:text-[#657378]">Pill Variants:</span>
                 <MatchScore score={95} variant="pill" size="lg" />
                 <MatchScore score={88} variant="pill" size="md" />
                 <MatchScore score={74} variant="pill" size="sm" />
@@ -140,7 +140,7 @@ export const ComponentShowcase: React.FC = () => {
 
           {/* Section 3: Status Badges */}
           <section className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-500" />
               3. Semantic Status Badges
             </h2>
@@ -155,7 +155,7 @@ export const ComponentShowcase: React.FC = () => {
 
           {/* Section 4: Form Controls */}
           <section className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-500" />
               4. Form System & Inputs
             </h2>
@@ -193,13 +193,13 @@ export const ComponentShowcase: React.FC = () => {
 
           {/* Section 5: Tabs & Dropdowns */}
           <section className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-500" />
               5. Tabs & Dropdown Menus
             </h2>
             <Card padding="md" className="space-y-6">
               <div className="space-y-2">
-                <span className="text-xs text-slate-400 block font-semibold">Pills Tab Style:</span>
+                <span className="text-xs text-[#8A928D] dark:text-[#657378] block font-semibold">Pills Tab Style:</span>
                 <Tabs
                   activeTab={activeTab}
                   onChange={setActiveTab}
@@ -213,7 +213,7 @@ export const ComponentShowcase: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <span className="text-xs text-slate-400 block font-semibold">Boxed Tab Style:</span>
+                <span className="text-xs text-[#8A928D] dark:text-[#657378] block font-semibold">Boxed Tab Style:</span>
                 <Tabs
                   activeTab={activeTab}
                   onChange={setActiveTab}
@@ -246,7 +246,7 @@ export const ComponentShowcase: React.FC = () => {
 
           {/* Section 6: Toast Notifications */}
           <section className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-500" />
               6. Toast Notification System
             </h2>
@@ -276,7 +276,7 @@ export const ComponentShowcase: React.FC = () => {
 
           {/* Section 7: Empty State Preview */}
           <section className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-brand-500" />
               7. Intentional Empty State
             </h2>
@@ -319,7 +319,7 @@ export const ComponentShowcase: React.FC = () => {
           <p className="font-semibold text-brand-700 dark:text-brand-300">
             AI Summary: High Confidence Fit (94%)
           </p>
-          <p className="text-slate-600 dark:text-slate-400">
+          <p className="text-[#5E6460] dark:text-[#9AA7AB]">
             Candidate exceeds baseline requirements for React and system architecture.
           </p>
         </div>
