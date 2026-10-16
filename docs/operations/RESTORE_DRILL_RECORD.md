@@ -1,24 +1,24 @@
 # RESUMIO DISASTER RECOVERY DRILL AUDIT RECORD
-**Drill Execution Timestamp:** 2026-10-16T13:45:56.461Z
-**Backup Size:** 6692.00 KB
+**Drill Execution Timestamp:** 2026-10-16T14:54:41.285Z
+**Backup Size:** 6972.00 KB
 **Tables Verified:** 10
-**Total Records Restored & Verified:** 3986
+**Total Records Restored & Verified:** 4139
 **Cryptographic Parity Result:** 100% PARITY CONFIRMED (Zero Corruption)
-**Recovery Time Objective (RTO) Achieved:** 0.12s (Target: < 300s)
+**Recovery Time Objective (RTO) Achieved:** 0.11s (Target: < 300s)
 **Recovery Point Objective (RPO) Achieved:** 0s data loss
 
 ## Verification Breakdown
 | Table | Records | SHA-256 Checksum Verified | Parity Status |
 |---|---|---|---|
-| `users` | 829 | `01b2dddb1b6706b6...` | ✅ MATCH |
-| `candidate_profiles` | 400 | `b83d3a3651d1978f...` | ✅ MATCH |
-| `recruiter_profiles` | 398 | `34bd74604e8188f5...` | ✅ MATCH |
-| `jobs` | 394 | `531cd81216a3a621...` | ✅ MATCH |
-| `candidate_resumes` | 474 | `12aba9da82debdc2...` | ✅ MATCH |
-| `candidate_skills` | 726 | `28593fec15024337...` | ✅ MATCH |
-| `applications` | 296 | `76e851d6d387866e...` | ✅ MATCH |
-| `resume_screenings` | 94 | `9d0dee4172baa06e...` | ✅ MATCH |
-| `audit_logs` | 372 | `60b6a4a32af4e700...` | ✅ MATCH |
+| `users` | 859 | `280ad451934d43fb...` | ✅ MATCH |
+| `candidate_profiles` | 415 | `28f6525cc699f846...` | ✅ MATCH |
+| `recruiter_profiles` | 412 | `1274c0d089c41012...` | ✅ MATCH |
+| `jobs` | 408 | `f42d718d2acc5895...` | ✅ MATCH |
+| `candidate_resumes` | 491 | `0bec6325329642b4...` | ✅ MATCH |
+| `candidate_skills` | 757 | `c611ad2446655d16...` | ✅ MATCH |
+| `applications` | 307 | `0268aec91f71f786...` | ✅ MATCH |
+| `resume_screenings` | 97 | `fef507c8b8e435a4...` | ✅ MATCH |
+| `audit_logs` | 390 | `d48abdb05e6a568f...` | ✅ MATCH |
 | `api_keys` | 3 | `41e5abc5e53a95b5...` | ✅ MATCH |
 
 ## Certification

@@ -31,7 +31,7 @@ TWO THEMES, ONE BRAND. Brand accent is teal. Dark theme = "Obsidian" (inspired b
 - **text:** `#111312` / secondary `#5E6460` / tertiary `#8C928E`
 - **primary button:** ink `#111312` with white text; secondary = white with hairline border
 - **accent:** `#1F8FA6` (same brand teal)
-- **delta pill:** green bg `#E3F5EA` / text `#15803D`; info chip bg `#E6EEFF` / text `#2F5BEA`
+- **delta pill:** green bg `#E3F5EA` / text `#166534` (adjusted from `#15803D` for WCAG 2.2 AA 4.5:1+ contrast pass, measured 6.2:1); info chip bg `#E6EEFF` / text `#2F5BEA`
 - **shadow:** `0 1px 2px rgba(17,19,18,0.04), 0 8px 24px rgba(17,19,18,0.05)`
 
 ---

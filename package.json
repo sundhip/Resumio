@@ -24,6 +24,8 @@
     "build": "vite build",
     "lint": "oxlint",
     "check:tokens": "tsx server/scripts/check-design-tokens.ts",
+    "check:tokens:kit": "tsx server/scripts/check-design-tokens.ts --kit",
+    "test:design-system": "tsx scripts/test-design-system.ts",
     "audit:ui": "tsx scripts/ui-audit.ts",
     "preview": "vite preview",
     "ml:pipeline": "python ml/scripts/run_pipeline.py",

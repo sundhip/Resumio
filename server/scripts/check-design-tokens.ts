@@ -64,25 +64,34 @@ function scanDirectory(dir: string, violations: { file: string; line: number; is
 }
 
 export function runDesignTokenCheck(): boolean {
-  console.log('🎨 Running Resumio Design Token & Palette Audit...');
-  const violations: { file: string; line: number; issue: string }[] = [];
-  const srcDir = path.resolve(process.cwd(), 'src');
+  const isKitOnly = process.argv.includes('--kit') || process.argv.includes('--strict-kit');
+  console.log(`🎨 Running Resumio Design Token & Palette Audit ${isKitOnly ? '(Component Kit Only)' : '(Whole Codebase)'}...`);
 
-  scanDirectory(srcDir, violations);
+  const violations: { file: string; line: number; issue: string }[] = [];
+  const targetDir = isKitOnly
+    ? path.resolve(process.cwd(), 'src/components/kit')
+    : path.resolve(process.cwd(), 'src');
+
+  scanDirectory(targetDir, violations);
 
   if (violations.length > 0) {
-    console.warn(`⚠️ Found ${violations.length} design token warnings across components:`);
+    console.warn(`⚠️ Found ${violations.length} design token warnings across ${isKitOnly ? 'component kit' : 'components'}:`);
     violations.slice(0, 15).forEach(v => {
       console.warn(`  ${v.file}:${v.line} -> ${v.issue}`);
     });
     if (violations.length > 15) {
       console.warn(`  ...and ${violations.length - 15} more.`);
     }
+
+    if (isKitOnly) {
+      console.error(`❌ Kit contains forbidden color utilities! Must use design tokens.`);
+      process.exit(1);
+    }
   } else {
-    console.log('✅ 0 forbidden color utilities detected. All components conform to design token rules.');
+    console.log(`✅ 0 forbidden color utilities detected in ${isKitOnly ? 'src/components/kit' : 'src'}. Fully token-compliant.`);
   }
 
-  return true;
+  return violations.length === 0;
 }
 
 if (process.argv[1]?.includes('check-design-tokens')) {

@@ -11,7 +11,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const saved = localStorage.getItem('resumio-theme');
+    const saved = localStorage.getItem('resumio_theme') || localStorage.getItem('resumio-theme');
     if (saved === 'light' || saved === 'dark' || saved === 'system') return saved as Theme;
     return 'system';
   });
@@ -38,6 +38,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     applyResolvedTheme();
+    localStorage.setItem('resumio_theme', theme);
     localStorage.setItem('resumio-theme', theme);
 
     if (theme === 'system') {

@@ -12,7 +12,6 @@ import { CompanyProfilePage } from './pages/recruiter/CompanyProfilePage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { ComponentShowcase } from './pages/design-system/ComponentShowcase';
 import { MatchLabPage } from './pages/MatchLabPage';
-import { DesignSystemCatalogPage } from './pages/dev/DesignSystemCatalogPage';
 
 // Phase 3 Job Management & Discovery Pages
 import { RecruiterJobsPage } from './pages/recruiter/RecruiterJobsPage';
@@ -45,10 +44,32 @@ import { SkillOntologyPage } from './pages/admin/SkillOntologyPage';
 // Phase 10 Platform, Integrations & Benchmark Pages
 import { PlatformIntegrationsPage } from './pages/recruiter/PlatformIntegrationsPage';
 import { BenchmarkPage } from './pages/public/BenchmarkPage';
+import { DesignSystemCatalogPage } from './pages/dev/DesignSystemCatalogPage';
+import { ReferenceMatchPage } from './pages/dev/ReferenceMatchPage';
 
 export const App: React.FC = () => {
   const { isAuthenticated, role, isLoading } = useAuth();
-  const [currentPath, setCurrentPath] = useState<string>('dashboard');
+
+  const getInitialPath = (): string => {
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const qRoute = searchParams.get('route');
+      if (qRoute) return qRoute;
+
+      const path = window.location.pathname.replace(/^\//, '');
+      if (path === 'dev/design-system' || path === 'dev-design-system') return 'dev-design-system';
+      if (path === 'dev/reference-match' || path === 'dev-reference-match') return 'dev-reference-match';
+      if (path === 'benchmark' || path === 'public-benchmark') return 'public-benchmark';
+
+      const hash = window.location.hash.replace(/^#\/?/, '');
+      if (hash) return hash.replace('/', '-');
+    } catch {
+      // fallback
+    }
+    return 'dashboard';
+  };
+
+  const [currentPath, setCurrentPath] = useState<string>(getInitialPath);
   const [navigationParams, setNavigationParams] = useState<Record<string, any>>({});
 
   const handleNavigate = (path: string, params?: Record<string, any>) => {
@@ -63,19 +84,22 @@ export const App: React.FC = () => {
   // Loading state during token validation
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-surface-light-bg dark:bg-surface-dark-bg text-slate-900 dark:text-slate-100">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xl shadow-glow-purple animate-pulse">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F4F4F1] dark:bg-[#050708] text-[#111312] dark:text-[#F2F6F7]">
+        <div className="w-12 h-12 rounded-2xl bg-[#1F8FA6] flex items-center justify-center text-white font-bold text-xl shadow-[0_4px_16px_rgba(43,179,201,0.35)] animate-pulse">
           R
         </div>
-        <p className="mt-4 text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider uppercase">
+        <p className="mt-4 text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] tracking-wider uppercase">
           Initializing Resumio...
         </p>
       </div>
     );
   }
 
-  // If user is not authenticated, show unified Phase 1 Auth Page
-  if (!isAuthenticated) {
+  // Allow direct dev route access even if not authenticated
+  const isDevRoute = currentPath === 'dev-design-system' || currentPath === 'dev-reference-match' || currentPath === 'public-benchmark';
+
+  // If user is not authenticated and not visiting a dev route, show unified Phase 1 Auth Page
+  if (!isAuthenticated && !isDevRoute) {
     return <AuthPage />;
   }
 
@@ -212,6 +236,10 @@ export const App: React.FC = () => {
       case 'dev-design-system':
       case 'design-system':
         return <DesignSystemCatalogPage />;
+
+      case 'dev-reference-match':
+      case 'reference-match':
+        return <ReferenceMatchPage />;
 
       default:
         if (role === 'admin') {
