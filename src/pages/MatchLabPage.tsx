@@ -1,386 +1,1015 @@
 import React, { useState, useMemo } from 'react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Slider } from '../components/ui/Slider';
+import { Badge } from '../components/ui/Badge';
+import { Modal } from '../components/ui/Modal';
 import { ScoreRing } from '../components/ui/ScoreRing';
-import { GradientHealthBar } from '../components/ui/GradientHealthBar';
+import type {
+  CandidateScoringInputV2,
+  JobScoringInputV2,
+  PresetProfileName,
+  ScoringWeightsV2,
+  ScoreV2Result,
+  ExplainabilityReportV2,
+  RedFlagAnalysisResult,
+  WorkExperienceEntry,
+} from '../../packages/shared/src/index.js';
+import {
+  WEIGHT_PRESETS,
+  calculateScoreV2,
+  generateScoreExplanations,
+  detectRedFlagsAndGaps,
+} from '../../packages/shared/src/index.js';
 import {
   FileText,
   Tags,
   Cpu,
   Trophy,
-  CheckCircle2,
-  ChevronRight,
-  ChevronLeft,
   Sparkles,
   Sliders,
-  Layers,
-  BarChart3,
-  Search,
+  ShieldCheck,
+  Eye,
+  EyeOff,
+  Download,
+  AlertTriangle,
+  Info,
+  CheckCircle2,
+  XCircle,
+  TrendingUp,
+  HelpCircle,
+  Printer,
+  ChevronRight,
+  Briefcase,
+  GraduationCap,
 } from 'lucide-react';
 
-interface Stage {
-  id: number;
-  title: string;
-  shortTitle: string;
-  icon: React.ReactNode;
-  engine: string;
-  strategy: string;
-  payloadFormat: string;
-  description: string;
+// Sample benchmark job specification
+const SAMPLE_JOB: JobScoringInputV2 = {
+  jobId: 'job_senior_fullstack_2026',
+  title: 'Senior Staff Full-Stack Engineer',
+  requiredSkills: ['TypeScript', 'React', 'Node.js', 'PostgreSQL', 'System Architecture'],
+  preferredSkills: ['Kubernetes', 'Docker', 'GraphQL', 'AWS Cloud', 'Performance Optimization'],
+  minExperienceYears: 5,
+  targetSeniority: 'senior',
+  domain: 'FinTech / SaaS',
+  requiredDegree: 'bachelor',
+  mustHaveCriteria: [
+    {
+      id: 'mh_typescript',
+      description: 'Hands-on production proficiency in TypeScript',
+      type: 'required_skill',
+      targetValue: 'TypeScript',
+    },
+    {
+      id: 'mh_min_exp',
+      description: 'Minimum 5 years of commercial software engineering experience',
+      type: 'min_experience',
+      targetValue: 5,
+    },
+  ],
+};
+
+// Realistic candidate cohort for live simulator
+interface CandidateProfileData {
+  scoringInput: CandidateScoringInputV2;
+  workExperiences: WorkExperienceEntry[];
+  unredactedName: string;
+  unredactedEmail: string;
+  unredactedLocation: string;
+  unredactedEmployer: string;
+  unredactedUniversity: string;
+  unredactedGradYear: number;
 }
 
-const STAGES: Stage[] = [
+const CANDIDATE_COHORT: CandidateProfileData[] = [
   {
-    id: 1,
-    title: 'Stage 1: Document Parsing & OCR Extraction',
-    shortTitle: 'Parsing & OCR',
-    icon: <FileText className="w-4 h-4" />,
-    engine: 'LayoutLMv3 + PDFPlumber / Regex Rule Engine',
-    strategy: 'Segment document layout into logical nodes (Contact, Summary, Experience, Education, Skills)',
-    payloadFormat: '{\n  "raw_text": "...",\n  "sections": ["Experience", "Skills", "Education"],\n  "file_hash": "sha256_e4a8..."\n}',
-    description: 'Converts multi-column PDF, DOCX, and scanned documents into structured AST JSON blocks, defangs formatting noise, and strips layout artifacts.',
-  },
-  {
-    id: 2,
-    title: 'Stage 2: Skill Taxonomy Normalization',
-    shortTitle: 'Taxonomy',
-    icon: <Tags className="w-4 h-4" />,
-    engine: 'Resumio Canonical Ontology (400+ Technical Entities)',
-    strategy: 'Resolves colloquial variations and aliases (e.g. "ReactJS", "React.js" -> "react")',
-    payloadFormat: '{\n  "normalized_skills": ["react", "typescript", "node.js"],\n  "canonical_categories": ["Frontend", "Backend"]\n}',
-    description: 'Eliminates naming ambiguity by projecting disparate candidate skill tokens onto standardized industry ontological hierarchies.',
-  },
-  {
-    id: 3,
-    title: 'Stage 3: Dense Semantic Vector Embeddings',
-    shortTitle: 'Embeddings',
-    icon: <Cpu className="w-4 h-4" />,
-    engine: 'sentence-transformers/all-MiniLM-L6-v2 (384-d)',
-    strategy: 'Transforms narrative experience and job responsibilities into contextual dense vectors',
-    payloadFormat: '{\n  "embedding_dim": 384,\n  "cosine_similarity": 0.884,\n  "semantic_density": 0.92\n}',
-    description: 'Captures semantic nuances beyond exact keyword matches, recognizing that "Kubernetes container orchestration" relates directly to "cloud infrastructure".',
-  },
-  {
-    id: 4,
-    title: 'Stage 4: Explainable AI Multi-Component Ranking (XAI)',
-    shortTitle: 'XAI Ranking',
-    icon: <Trophy className="w-4 h-4" />,
-    engine: 'Reciprocal Rank Fusion + Dynamic Weight Engine',
-    strategy: 'Computes explainable composite fit score traceable to verifiable evidence spans',
-    payloadFormat: '{\n  "final_score": 92.8,\n  "breakdown": {\n    "skills": 42.0,\n    "projects": 28.5,\n    "achievements": 13.5,\n    "education": 8.8\n  }\n}',
-    description: 'Mathematically synthesizes technical depth, verified project scope, measurable impact, and academic pedigree with instant recruiter explainability.',
-  },
-];
-
-interface CandidateSimulation {
-  id: string;
-  name: string;
-  role: string;
-  baseScores: {
-    technicalSkills: number;
-    projectDepth: number;
-    achievements: number;
-    education: number;
-    experienceRecency: number;
-  };
-  matchedSkills: string[];
-}
-
-const CANDIDATES: CandidateSimulation[] = [
-  {
-    id: 'c1',
-    name: 'Candidate A (Full-Stack & Distributed Systems)',
-    role: 'Senior Staff Engineer',
-    baseScores: {
-      technicalSkills: 95,
-      projectDepth: 92,
-      achievements: 90,
-      education: 85,
-      experienceRecency: 98,
+    unredactedName: 'Alex Rivera',
+    unredactedEmail: 'alex.rivera@example.com',
+    unredactedLocation: 'San Francisco, CA',
+    unredactedEmployer: 'Stripe Inc.',
+    unredactedUniversity: 'Stanford University',
+    unredactedGradYear: 2017,
+    scoringInput: {
+      candidateId: 'cand_alex_01',
+      skills: [
+        { name: 'TypeScript', proficiency: 0.95, evidenceCount: 4, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'React', proficiency: 0.92, evidenceCount: 3, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'Node.js', proficiency: 0.9, evidenceCount: 3, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'PostgreSQL', proficiency: 0.88, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'System Architecture', proficiency: 0.85, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'Docker', proficiency: 0.8, evidenceCount: 1, hasActionVerb: false, hasQuantifiedMetric: false },
+        { name: 'AWS Cloud', proficiency: 0.85, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: true },
+      ],
+      experienceYears: 7,
+      seniorityLevel: 'senior',
+      domain: 'FinTech / SaaS',
+      hasRecentExperience: true,
+      projects: [
+        {
+          name: 'Distributed Ledger Settlement Gateway',
+          description: 'Engineered high-throughput payout pipeline processing $45M daily volume with 99.99% availability using TypeScript, Node.js, and PostgreSQL.',
+          technologies: ['TypeScript', 'Node.js', 'PostgreSQL', 'Redis'],
+          metricsCount: 3,
+          actionVerbsCount: 4,
+          url: 'https://github.com/alexrivera/settlement-gateway',
+        },
+        {
+          name: 'Real-Time Financial Analytics Dashboard',
+          description: 'Built responsive client web portal reducing latency by 42% for 65k active institutional operators.',
+          technologies: ['React', 'TypeScript', 'TailwindCSS'],
+          metricsCount: 2,
+          actionVerbsCount: 3,
+          url: 'https://github.com/alexrivera/analytics-ui',
+        },
+      ],
+      achievements: [
+        { title: 'Tech Innovation Award 2024', description: 'Awarded for reducing cloud infrastructure cost by $180k annually', hasMetric: true },
+      ],
+      certifications: [
+        { name: 'AWS Certified Solutions Architect - Professional', organization: 'Amazon Web Services' },
+      ],
+      highestDegree: 'master',
+      fieldOfStudy: 'Computer Science',
+      rawText: 'Alex Rivera is a Senior Staff Engineer with 7 years of full-stack experience in TypeScript, React, Node.js, and PostgreSQL...',
+      learnedSemanticScore: 92,
+      atsReadinessScore: 98,
     },
-    matchedSkills: ['React', 'TypeScript', 'Node.js', 'Distributed Systems', 'PostgreSQL'],
+    workExperiences: [
+      {
+        title: 'Senior Staff Software Engineer',
+        company: 'Stripe Inc.',
+        location: 'San Francisco, CA',
+        startDate: '2021-03',
+        endDate: 'present',
+        isFullTime: true,
+      },
+      {
+        title: 'Full-Stack Software Engineer',
+        company: 'Plaid Technologies',
+        location: 'San Francisco, CA',
+        startDate: '2017-08',
+        endDate: '2021-02',
+        isFullTime: true,
+      },
+    ],
   },
   {
-    id: 'c2',
-    name: 'Candidate B (Cloud Architect & SRE Lead)',
-    role: 'Principal Cloud Architect',
-    baseScores: {
-      technicalSkills: 88,
-      projectDepth: 96,
-      achievements: 92,
-      education: 80,
-      experienceRecency: 94,
+    unredactedName: 'Samantha Chen',
+    unredactedEmail: 'samantha.chen@example.org',
+    unredactedLocation: 'Seattle, WA',
+    unredactedEmployer: 'Amazon Web Services',
+    unredactedUniversity: 'University of Washington',
+    unredactedGradYear: 2019,
+    scoringInput: {
+      candidateId: 'cand_samantha_02',
+      skills: [
+        { name: 'TypeScript', proficiency: 0.88, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'React', proficiency: 0.9, evidenceCount: 3, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'Node.js', proficiency: 0.85, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'Kubernetes', proficiency: 0.94, evidenceCount: 4, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'Docker', proficiency: 0.92, evidenceCount: 3, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'AWS Cloud', proficiency: 0.96, evidenceCount: 4, hasActionVerb: true, hasQuantifiedMetric: true },
+      ],
+      experienceYears: 5,
+      seniorityLevel: 'mid',
+      domain: 'Cloud Infrastructure',
+      hasRecentExperience: true,
+      projects: [
+        {
+          name: 'Multi-Region Kubernetes Ingress Controller',
+          description: 'Orchestrated automated zero-downtime failover across 3 AWS availability zones reducing outage duration to under 15 seconds.',
+          technologies: ['Kubernetes', 'Docker', 'AWS Cloud', 'Go'],
+          metricsCount: 2,
+          actionVerbsCount: 3,
+        },
+      ],
+      achievements: [],
+      certifications: [
+        { name: 'Certified Kubernetes Administrator (CKA)', organization: 'Linux Foundation' },
+      ],
+      highestDegree: 'bachelor',
+      fieldOfStudy: 'Software Engineering',
+      rawText: 'Samantha Chen is a Cloud and Full-Stack specialist with 5 years experience focused on Kubernetes, TypeScript, and AWS...',
+      learnedSemanticScore: 84,
+      atsReadinessScore: 92,
     },
-    matchedSkills: ['Kubernetes', 'Docker', 'Go', 'AWS', 'Terraform', 'Observability'],
+    workExperiences: [
+      {
+        title: 'Senior Cloud Engineer',
+        company: 'Amazon Web Services',
+        location: 'Seattle, WA',
+        startDate: '2021-06',
+        endDate: 'present',
+        isFullTime: true,
+      },
+      {
+        title: 'Software Development Engineer',
+        company: 'Nordstrom Tech',
+        location: 'Seattle, WA',
+        startDate: '2019-07',
+        endDate: '2021-05',
+        isFullTime: true,
+      },
+    ],
   },
   {
-    id: 'c3',
-    name: 'Candidate C (Academic Specialist & ML Researcher)',
-    role: 'Applied Research Scientist',
-    baseScores: {
-      technicalSkills: 82,
-      projectDepth: 74,
-      achievements: 68,
-      education: 98,
-      experienceRecency: 78,
+    unredactedName: 'David K. O’Connor',
+    unredactedEmail: 'david.oconnor@example.com',
+    unredactedLocation: 'Austin, TX',
+    unredactedEmployer: 'Dell Technologies',
+    unredactedUniversity: 'University of Texas at Austin',
+    unredactedGradYear: 2022,
+    scoringInput: {
+      candidateId: 'cand_david_03',
+      skills: [
+        { name: 'TypeScript', proficiency: 0.8, evidenceCount: 1, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'React', proficiency: 0.82, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'PostgreSQL', proficiency: 0.75, evidenceCount: 1, hasActionVerb: false, hasQuantifiedMetric: false },
+      ],
+      experienceYears: 2,
+      seniorityLevel: 'entry',
+      domain: 'Enterprise Software',
+      hasRecentExperience: true,
+      projects: [
+        {
+          name: 'Customer Portal Redesign',
+          description: 'Created modern UI components in React and TypeScript for internal customer relationship tools.',
+          technologies: ['React', 'TypeScript'],
+          metricsCount: 0,
+          actionVerbsCount: 2,
+        },
+      ],
+      achievements: [],
+      certifications: [],
+      highestDegree: 'bachelor',
+      fieldOfStudy: 'Information Systems',
+      rawText: 'David OConnor is a software engineer with 2 years of experience building React and TypeScript applications...',
+      learnedSemanticScore: 68,
+      atsReadinessScore: 88,
     },
-    matchedSkills: ['Python', 'PyTorch', 'Data Structures', 'Statistical Modeling'],
+    workExperiences: [
+      {
+        title: 'Associate Software Developer',
+        company: 'Dell Technologies',
+        location: 'Austin, TX',
+        startDate: '2022-08',
+        endDate: 'present',
+        isFullTime: true,
+      },
+    ],
   },
   {
-    id: 'c4',
-    name: 'Candidate D (Frontend Product Engineer)',
-    role: 'Lead UI/UX Engineer',
-    baseScores: {
-      technicalSkills: 90,
-      projectDepth: 85,
-      achievements: 82,
-      education: 75,
-      experienceRecency: 90,
+    unredactedName: 'Elena Rostova',
+    unredactedEmail: 'elena.rostova@example.net',
+    unredactedLocation: 'New York, NY',
+    unredactedEmployer: 'Goldman Sachs',
+    unredactedUniversity: 'Columbia University',
+    unredactedGradYear: 2015,
+    scoringInput: {
+      candidateId: 'cand_elena_04',
+      skills: [
+        { name: 'TypeScript', proficiency: 0.9, evidenceCount: 3, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'React', proficiency: 0.88, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: false },
+        { name: 'Node.js', proficiency: 0.92, evidenceCount: 3, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'PostgreSQL', proficiency: 0.95, evidenceCount: 4, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'System Architecture', proficiency: 0.94, evidenceCount: 4, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'Performance Optimization', proficiency: 0.92, evidenceCount: 3, hasActionVerb: true, hasQuantifiedMetric: true },
+        { name: 'Docker', proficiency: 0.85, evidenceCount: 2, hasActionVerb: true, hasQuantifiedMetric: false },
+      ],
+      experienceYears: 9,
+      seniorityLevel: 'principal',
+      domain: 'FinTech / High-Frequency Trading',
+      hasRecentExperience: true,
+      projects: [
+        {
+          name: 'Ultra-Low Latency Order Matching Engine',
+          description: 'Architected distributed event bus processing 120k TPS with sub-millisecond p99 latency using Node.js, TypeScript, and partitioned PostgreSQL.',
+          technologies: ['TypeScript', 'Node.js', 'PostgreSQL', 'Redis'],
+          metricsCount: 3,
+          actionVerbsCount: 4,
+        },
+      ],
+      achievements: [
+        { title: 'Global Engineering Excellence Award', description: 'Awarded for zero-downtime database partition migration across 4TB transactional data.', hasMetric: true },
+      ],
+      certifications: [
+        { name: 'PostgreSQL Certified Professional', organization: 'PostgreSQL Community' },
+      ],
+      highestDegree: 'master',
+      fieldOfStudy: 'Computer Engineering',
+      rawText: 'Elena Rostova is a Principal Systems Architect with 9 years of high-scale backend and full-stack engineering...',
+      learnedSemanticScore: 95,
+      atsReadinessScore: 96,
     },
-    matchedSkills: ['React', 'Next.js', 'TailwindCSS', 'Accessibility (WCAG)', 'Design Systems'],
+    workExperiences: [
+      {
+        title: 'Principal Architect',
+        company: 'Goldman Sachs',
+        location: 'New York, NY',
+        startDate: '2021-01',
+        endDate: 'present',
+        isFullTime: true,
+      },
+      {
+        title: 'Vice President of Engineering',
+        company: 'Two Sigma Ventures',
+        location: 'New York, NY',
+        startDate: '2016-06',
+        endDate: '2020-08',
+        isFullTime: true,
+      },
+    ],
   },
 ];
 
 export const MatchLabPage: React.FC = () => {
-  const [activeStageId, setActiveStageId] = useState<number>(1);
+  // Simulator Controls State
+  const [selectedPreset, setSelectedPreset] = useState<PresetProfileName>('engineering');
+  const [weights, setWeights] = useState<ScoringWeightsV2>(WEIGHT_PRESETS.engineering);
+  const [isRulesOnly, setIsRulesOnly] = useState<boolean>(false);
+  const [blendAlpha, setBlendAlpha] = useState<number>(0.25);
+  const [isBlindMode, setIsBlindMode] = useState<boolean>(true);
+  const [selectedCandidateId, setSelectedCandidateId] = useState<string>(CANDIDATE_COHORT[0].scoringInput.candidateId);
 
-  // Live Rubric Sliders (default weights sum to 100%)
-  const [techWeight, setTechWeight] = useState<number>(40);
-  const [projWeight, setProjWeight] = useState<number>(25);
-  const [achieveWeight, setAchieveWeight] = useState<number>(15);
-  const [eduWeight, setEduWeight] = useState<number>(10);
-  const [recencyWeight, setRecencyWeight] = useState<number>(10);
+  // Reveal Identity Modal State
+  const [isRevealModalOpen, setIsRevealModalOpen] = useState<boolean>(false);
+  const [revealReason, setRevealReason] = useState<string>('');
+  const [revealedCandidates, setRevealedCandidates] = useState<Set<string>>(new Set());
 
-  const activeStage = STAGES.find((s) => s.id === activeStageId) || STAGES[0];
+  // Handle Preset Selection
+  const applyPreset = (presetName: PresetProfileName) => {
+    setSelectedPreset(presetName);
+    setWeights({ ...WEIGHT_PRESETS[presetName] });
+  };
 
-  // Re-rank candidates live based on slider weights
-  const rankedCandidates = useMemo(() => {
-    const totalWeight = techWeight + projWeight + achieveWeight + eduWeight + recencyWeight || 1;
+  // Adjust a single weight slider and renormalize the others to keep sum = 100
+  const handleWeightChange = (key: keyof ScoringWeightsV2, newValue: number) => {
+    const val = Math.max(0, Math.min(100, newValue));
+    const otherKeys = (Object.keys(weights) as Array<keyof ScoringWeightsV2>).filter((k) => k !== key);
+    const currentOtherSum = otherKeys.reduce((acc, k) => acc + weights[k], 0);
 
-    return CANDIDATES.map((cand) => {
-      const composite =
-        (cand.baseScores.technicalSkills * techWeight +
-          cand.baseScores.projectDepth * projWeight +
-          cand.baseScores.achievements * achieveWeight +
-          cand.baseScores.education * eduWeight +
-          cand.baseScores.experienceRecency * recencyWeight) /
-        totalWeight;
+    const targetOtherSum = 100 - val;
+    const newWeights: any = { ...weights, [key]: val };
+
+    if (currentOtherSum > 0) {
+      for (const k of otherKeys) {
+        newWeights[k] = Math.round((weights[k] / currentOtherSum) * targetOtherSum);
+      }
+    } else {
+      const split = Math.floor(targetOtherSum / otherKeys.length);
+      for (const k of otherKeys) {
+        newWeights[k] = split;
+      }
+    }
+
+    // Fix rounding remainder on first other key
+    const actualSum = Object.values(newWeights).reduce((a: any, b: any) => a + b, 0) as number;
+    const diff = 100 - actualSum;
+    if (diff !== 0 && otherKeys.length > 0) {
+      newWeights[otherKeys[0]] += diff;
+    }
+
+    setWeights(newWeights);
+  };
+
+  // Run live Score V2 calculations across the candidate cohort
+  const evaluatedCohort = useMemo(() => {
+    return CANDIDATE_COHORT.map((item) => {
+      const scoreResult = calculateScoreV2(item.scoringInput, SAMPLE_JOB, {
+        customWeights: weights,
+        preset: selectedPreset,
+        rulesOnly: isRulesOnly,
+        blendAlpha,
+      });
+
+      const explanations = generateScoreExplanations(item.scoringInput, SAMPLE_JOB, scoreResult);
+      const redFlags = detectRedFlagsAndGaps(item.scoringInput, item.workExperiences);
 
       return {
-        ...cand,
-        finalScore: Math.round(composite * 10) / 10,
+        data: item,
+        scoreResult,
+        explanations,
+        redFlags,
       };
-    }).sort((a, b) => b.finalScore - a.finalScore);
-  }, [techWeight, projWeight, achieveWeight, eduWeight, recencyWeight]);
+    }).sort((a, b) => b.scoreResult.finalScore - a.scoreResult.finalScore);
+  }, [weights, selectedPreset, isRulesOnly, blendAlpha]);
+
+  // Selected candidate evaluation details
+  const activeCandidate = evaluatedCohort.find(
+    (c) => c.data.scoringInput.candidateId === selectedCandidateId
+  ) || evaluatedCohort[0];
+
+  const isCandidateRevealed = revealedCandidates.has(activeCandidate.data.scoringInput.candidateId);
+  const showUnredacted = !isBlindMode || isCandidateRevealed;
+
+  const displayName = showUnredacted
+    ? activeCandidate.data.unredactedName
+    : `Candidate #${activeCandidate.data.scoringInput.candidateId.slice(-4).toUpperCase()}`;
+
+  const displayEmployer = showUnredacted
+    ? activeCandidate.data.unredactedEmployer
+    : 'Series-B Enterprise FinTech';
+
+  const displayUniversity = showUnredacted
+    ? `${activeCandidate.data.unredactedUniversity} (${activeCandidate.data.unredactedGradYear})`
+    : 'Tier-1 Engineering & Research University [Degree Completed]';
+
+  const displayLocation = showUnredacted
+    ? activeCandidate.data.unredactedLocation
+    : 'Sanitized [EEOC Protected]';
+
+  // Handle Identity Reveal Submission
+  const handleConfirmReveal = () => {
+    if (revealReason.trim().length < 5) return;
+    setRevealedCandidates((prev) => new Set([...prev, activeCandidate.data.scoringInput.candidateId]));
+    setIsRevealModalOpen(false);
+    setRevealReason('');
+  };
+
+  // Export JSON Rationale
+  const handleExportJson = () => {
+    const exportData = {
+      auditTitle: 'Resumio Match Rationale Audit Export',
+      exportedAt: new Date().toISOString(),
+      jobId: SAMPLE_JOB.jobId,
+      jobTitle: SAMPLE_JOB.title,
+      candidateIdentifier: displayName,
+      isBlindScreeningMode: !showUnredacted,
+      scoreResult: activeCandidate.scoreResult,
+      waterfall: activeCandidate.explanations.waterfall,
+      skillsBreakdown: activeCandidate.explanations.skillsBreakdown,
+      shapExplanations: activeCandidate.explanations.shapExplanations,
+      counterfactuals: activeCandidate.explanations.counterfactuals,
+      redFlags: activeCandidate.redFlags,
+      fairnessStandard: 'Resumio EEOC & Fair Hiring Standard V2 (Demographic Free)',
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `resumio-rationale-${activeCandidate.data.scoringInput.candidateId}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Printable Rationale in new tab
+  const handlePrintRationale = () => {
+    window.open(`/api/matching/rationale-export/${activeCandidate.data.scoringInput.candidateId}?format=html`, '_blank');
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400">
               <Sparkles className="w-5 h-5" />
             </span>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-              Match Lab & Pipeline Simulator
+              Match Lab & Scoring Engine V2
             </h1>
+            <Badge variant="purple" size="sm" className="ml-2 font-mono">
+              v2.0.0-v2
+            </Badge>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Explore Resumio's 4-stage explainable pipeline. Adjust live weights to observe dynamic ATS re-ranking.
+            Real-time multi-component scoring simulator with explainability waterfall, counterfactuals, and EEOC blind screening.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setTechWeight(40);
-              setProjWeight(25);
-              setAchieveWeight(15);
-              setEduWeight(10);
-              setRecencyWeight(10);
-            }}
+        {/* Global Controls & Blind Mode Toggle */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsBlindMode(!isBlindMode)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+              isBlindMode
+                ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800 text-blue-700 dark:text-blue-300 shadow-sm'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+            }`}
+            title="Toggle EEOC Blind Screening Mode (Server-Side Redaction)"
           >
-            Reset Baseline
+            {isBlindMode ? <EyeOff className="w-4 h-4 text-blue-600 dark:text-blue-400" /> : <Eye className="w-4 h-4" />}
+            <span>Blind Screening: {isBlindMode ? 'ACTIVE' : 'OFF'}</span>
+          </button>
+
+          <Button variant="outline" size="sm" onClick={() => applyPreset('engineering')}>
+            Reset Defaults
           </Button>
         </div>
       </div>
 
-      {/* 4-Stage Stepper Header */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {STAGES.map((stage) => {
-          const isActive = stage.id === activeStageId;
-          const isPassed = stage.id < activeStageId;
-
-          return (
-            <button
-              key={stage.id}
-              onClick={() => setActiveStageId(stage.id)}
-              className={`flex items-center gap-3 p-3.5 rounded-card border transition-all text-left ${
-                isActive
-                  ? 'bg-teal-500/10 dark:bg-teal-950/40 border-teal-500 dark:border-teal-400 shadow-glow-teal text-teal-700 dark:text-teal-300'
-                  : 'bg-surface-light-card dark:bg-surface-dark-card border-surface-light-border dark:border-surface-dark-border text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700'
-              }`}
-            >
-              <div
-                className={`p-2 rounded-control font-numeral font-bold text-xs shrink-0 ${
-                  isActive
-                    ? 'bg-teal-500 text-white dark:bg-teal-400 dark:text-slate-950'
-                    : isPassed
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+      {/* Preset Profiles & Rules Toggle Bar */}
+      <Card className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mr-2 flex items-center gap-1">
+              <Sliders className="w-3.5 h-3.5" /> Weight Presets:
+            </span>
+            {(['engineering', 'data_ml', 'design', 'sales', 'operations'] as PresetProfileName[]).map((preset) => (
+              <button
+                key={preset}
+                onClick={() => applyPreset(preset)}
+                className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-all ${
+                  selectedPreset === preset
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-sm'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-400'
                 }`}
               >
-                0{stage.id}
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs uppercase tracking-wider font-semibold opacity-70">Stage {stage.id}</div>
-                <div className="text-sm font-bold truncate text-slate-900 dark:text-white">{stage.shortTitle}</div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Stage Detail Card & Output Payload Panel */}
-      <Card padding="lg" className="border-teal-500/30 dark:border-teal-500/20 shadow-glow-teal">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-surface-light-border dark:border-surface-dark-border pb-4">
-          <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-control bg-teal-500/10 text-teal-600 dark:text-teal-400">
-              {activeStage.icon}
-            </span>
-            <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">{activeStage.title}</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{activeStage.description}</p>
-            </div>
+                {preset.replace('_', ' / ')}
+              </button>
+            ))}
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={activeStageId === 1}
-              onClick={() => setActiveStageId((prev) => Math.max(1, prev - 1))}
-            >
-              <ChevronLeft className="w-4 h-4 mr-1" /> Prev
+          <div className="flex items-center gap-4 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-200 dark:border-slate-800">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <input
+                type="checkbox"
+                checked={isRulesOnly}
+                onChange={(e) => setIsRulesOnly(e.target.checked)}
+                className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 w-4 h-4"
+              />
+              Rules Only (Disable Learned Ranker)
+            </label>
+
+            {!isRulesOnly && (
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-slate-500">Blend (α):</span>
+                <span className="font-mono font-bold text-teal-600 dark:text-teal-400">
+                  {blendAlpha.toFixed(2)}
+                </span>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={blendAlpha}
+                  onChange={(e) => setBlendAlpha(parseFloat(e.target.value))}
+                  className="w-20 accent-teal-600"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Live Weight Sliders Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+          {(
+            [
+              { key: 'skills', label: 'Skills Coverage', desc: 'Proficiency-weighted' },
+              { key: 'experience', label: 'Experience Fit', desc: 'Duration & seniority' },
+              { key: 'projectDepth', label: 'Project Depth', desc: 'Impact & metrics' },
+              { key: 'achievements', label: 'Achievements', desc: 'Awards & honors' },
+              { key: 'education', label: 'Education Tier', desc: 'Degree alignment' },
+              { key: 'semanticFit', label: 'Semantic Fit', desc: isRulesOnly ? 'Rules active (0%)' : 'Learned model' },
+            ] as const
+          ).map(({ key, label, desc }) => (
+            <div key={key} className="space-y-1.5 bg-white dark:bg-slate-900/70 p-3 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{label}</span>
+                <span className="font-mono font-bold text-teal-600 dark:text-teal-400">
+                  {weights[key]}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={weights[key]}
+                disabled={isRulesOnly && key === 'semanticFit'}
+                onChange={(e) => handleWeightChange(key, parseInt(e.target.value, 10))}
+                className="w-full accent-teal-600 disabled:opacity-40"
+              />
+              <p className="text-[10px] text-slate-400 truncate">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Main Two-Column Layout: Cohort Leaderboard (Left) & Detailed Inspector (Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column: Ranked Candidates List */}
+        <div className="lg:col-span-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <Trophy className="w-4 h-4 text-amber-500" />
+              Ranked Candidate Leaderboard ({evaluatedCohort.length})
+            </h2>
+            <span className="text-xs text-slate-400">Auto-ranks live</span>
+          </div>
+
+          <div className="space-y-2.5">
+            {evaluatedCohort.map((cand, index) => {
+              const isSelected = cand.data.scoringInput.candidateId === activeCandidate.data.scoringInput.candidateId;
+              const isRev = revealedCandidates.has(cand.data.scoringInput.candidateId);
+              const isBlindActive = isBlindMode && !isRev;
+
+              const cName = isBlindActive
+                ? `Candidate #${cand.data.scoringInput.candidateId.slice(-4).toUpperCase()}`
+                : cand.data.unredactedName;
+
+              const cRole = cand.data.scoringInput.seniorityLevel
+                ? `${cand.data.scoringInput.seniorityLevel.toUpperCase()} Engineer`
+                : 'Software Engineer';
+
+              return (
+                <div
+                  key={cand.data.scoringInput.candidateId}
+                  onClick={() => setSelectedCandidateId(cand.data.scoringInput.candidateId)}
+                  className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-teal-500/5 border-teal-500 dark:border-teal-400 shadow-md ring-1 ring-teal-500/30'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-400'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-slate-300">
+                        #{index + 1}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm text-slate-900 dark:text-white">
+                            {cName}
+                          </span>
+                          {isBlindActive && (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-medium">
+                              Blind
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-0.5">
+                          <span>{cRole}</span>
+                          <span>•</span>
+                          <span>{cand.data.scoringInput.experienceYears}y exp</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <div className="font-black text-lg text-slate-900 dark:text-white font-mono">
+                        {cand.scoreResult.finalScore}
+                        <span className="text-xs text-slate-400 font-normal">/100</span>
+                      </div>
+                      <span className="text-[10px] font-semibold text-teal-600 dark:text-teal-400">
+                        {cand.scoreResult.confidenceBand}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Micro subscore indicators */}
+                  <div className="grid grid-cols-5 gap-1 mt-2.5 pt-2.5 border-t border-slate-100 dark:border-slate-800/80 text-[10px] text-slate-400 font-mono text-center">
+                    <div>
+                      Skills:{' '}
+                      <strong className="text-slate-700 dark:text-slate-200">
+                        {cand.scoreResult.contributions.find((c) => c.component === 'skills')?.rawScore.toFixed(0)}%
+                      </strong>
+                    </div>
+                    <div>
+                      Exp:{' '}
+                      <strong className="text-slate-700 dark:text-slate-200">
+                        {cand.scoreResult.contributions.find((c) => c.component === 'experience')?.rawScore.toFixed(0)}%
+                      </strong>
+                    </div>
+                    <div>
+                      Proj:{' '}
+                      <strong className="text-slate-700 dark:text-slate-200">
+                        {cand.scoreResult.contributions.find((c) => c.component === 'projectDepth')?.rawScore.toFixed(0)}%
+                      </strong>
+                    </div>
+                    <div>
+                      Edu:{' '}
+                      <strong className="text-slate-700 dark:text-slate-200">
+                        {cand.scoreResult.contributions.find((c) => c.component === 'education')?.rawScore.toFixed(0)}%
+                      </strong>
+                    </div>
+                    <div>
+                      Sem:{' '}
+                      <strong className="text-slate-700 dark:text-slate-200">
+                        {cand.scoreResult.contributions.find((c) => c.component === 'semanticFit')?.rawScore.toFixed(0)}%
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right Column: Detailed Candidate Match Report */}
+        <div className="lg:col-span-7 space-y-6">
+          <Card className="p-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 space-y-6">
+            {/* Candidate Header & Score Summary */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-black text-slate-900 dark:text-white">
+                    {displayName}
+                  </h2>
+                  {showUnredacted ? (
+                    <Badge variant="neutral" size="sm">
+                      Verified Identity
+                    </Badge>
+                  ) : (
+                    <Badge variant="info" size="sm" showDot>
+                      Blind Mode Active
+                    </Badge>
+                  )}
+                </div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 space-y-0.5">
+                  <p className="flex items-center gap-1.5">
+                    <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Current Org: <strong>{displayEmployer}</strong></span>
+                  </p>
+                  <p className="flex items-center gap-1.5">
+                    <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Education: <strong>{displayUniversity}</strong></span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Score Ring Display */}
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <div className="text-2xl font-black font-mono text-slate-900 dark:text-white">
+                    {activeCandidate.scoreResult.finalScore}
+                    <span className="text-sm font-normal text-slate-400">/100</span>
+                  </div>
+                  <Badge
+                    variant={
+                      activeCandidate.scoreResult.confidenceBand === 'Strong Match'
+                        ? 'success'
+                        : activeCandidate.scoreResult.confidenceBand === 'Moderate Match'
+                        ? 'warning'
+                        : 'danger'
+                    }
+                    size="sm"
+                  >
+                    {activeCandidate.scoreResult.confidenceBand}
+                  </Badge>
+                </div>
+                <div className="w-14 h-14">
+                  <ScoreRing score={activeCandidate.scoreResult.finalScore} size={56} strokeWidth={6} />
+                </div>
+              </div>
+            </div>
+
+            {/* Action Bar (Reveal Identity, Export JSON, Print HTML) */}
+            <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-50 dark:bg-slate-800/40 rounded-lg text-xs">
+              <div className="flex items-center gap-2">
+                {!showUnredacted ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsRevealModalOpen(true)}
+                    className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900 hover:bg-blue-50 dark:hover:bg-blue-950/50"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>Reveal Candidate Identity</span>
+                  </Button>
+                ) : (
+                  <span className="text-slate-500 flex items-center gap-1">
+                    <ShieldCheck className="w-4 h-4 text-emerald-500" /> Identity revealed & audit logged
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={handleExportJson} className="flex items-center gap-1.5">
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Export JSON</span>
+                </Button>
+                <Button variant="outline" size="sm" onClick={handlePrintRationale} className="flex items-center gap-1.5">
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Print Rationale</span>
+                </Button>
+              </div>
+            </div>
+
+            {/* Section 1: Contribution Waterfall Chart */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Contribution Waterfall Breakdown
+                </h3>
+                <span className="text-[11px] text-slate-400">
+                  Exact mathematical sum: ∑ contributions = {activeCandidate.scoreResult.finalScore} pts
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {activeCandidate.explanations.waterfall.map((w) => {
+                  return (
+                    <div key={w.component} className="space-y-1">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-medium text-slate-700 dark:text-slate-300">
+                          {w.label} (Weight {w.weight}%)
+                        </span>
+                        <div className="flex items-center gap-2 font-mono">
+                          <span className="text-slate-400">Raw: {w.rawScore.toFixed(0)}%</span>
+                          <span className="font-bold text-slate-900 dark:text-white">
+                            +{w.pointsContributed.toFixed(1)} pts
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex">
+                        <div
+                          className="h-full bg-teal-500 rounded-full transition-all duration-300"
+                          style={{ width: `${Math.min(100, (w.pointsContributed / (w.maxPossiblePoints || 1)) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Section 2: Per-Skill Evidence Grid */}
+            <div className="space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Requirements & Evidence Spans ({activeCandidate.explanations.skillsBreakdown.overallCoveragePercent}% Coverage)
+                </h3>
+                <span className="text-[11px] text-slate-400">
+                  {activeCandidate.explanations.skillsBreakdown.matchedRequired.length} matched /{' '}
+                  {activeCandidate.explanations.skillsBreakdown.missingRequired.length} missing
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {/* Matched Required Skills */}
+                {activeCandidate.explanations.skillsBreakdown.matchedRequired.map((s) => (
+                  <div
+                    key={s.skillName}
+                    className="p-2.5 rounded-lg border bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/60 text-xs space-y-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 font-bold text-emerald-900 dark:text-emerald-300">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <span>{s.skillName}</span>
+                      </div>
+                      <span className="font-mono text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">
+                        {(s.proficiency * 100).toFixed(0)}% prof
+                      </span>
+                    </div>
+                    {s.evidenceSnippet && (
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300 italic">
+                        "{s.evidenceSnippet}"
+                      </p>
+                    )}
+                  </div>
+                ))}
+
+                {/* Missing Required Skills */}
+                {activeCandidate.explanations.skillsBreakdown.missingRequired.map((s) => (
+                  <div
+                    key={s.skillName}
+                    className="p-2.5 rounded-lg border bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800/60 text-xs space-y-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 font-bold text-rose-900 dark:text-rose-300">
+                        <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+                        <span>{s.skillName}</span>
+                      </div>
+                      <span className="text-[10px] text-rose-600 dark:text-rose-400">Missing evidence</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Requirement not evidenced in parsed resume milestones.
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Section 3: Red Flags & Neutral Career Intervals */}
+            <div className="space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                  Interview Topics & Neutral Intervals ({activeCandidate.redFlags.flags.length})
+                </h3>
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                  Zero Algorithmic Point Deduction
+                </span>
+              </div>
+
+              {activeCandidate.redFlags.flags.length === 0 ? (
+                <p className="text-xs text-slate-500">
+                  No chronological inversions, overlap discrepancies, or unevidenced claims found.
+                </p>
+              ) : (
+                <div className="space-y-2.5">
+                  {activeCandidate.redFlags.flags.map((flag) => (
+                    <div
+                      key={flag.id}
+                      className="p-3 rounded-lg border bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/60 text-xs space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900 dark:text-white">
+                          {flag.title}
+                        </span>
+                        <Badge
+                          variant={
+                            flag.severity === 'discrepancy'
+                              ? 'danger'
+                              : flag.severity === 'warning'
+                              ? 'warning'
+                              : 'neutral'
+                          }
+                          size="sm"
+                        >
+                          {flag.severity}
+                        </Badge>
+                      </div>
+                      <p className="text-slate-600 dark:text-slate-300">{flag.description}</p>
+                      <div className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] text-teal-800 dark:text-teal-300 flex items-start gap-1.5">
+                        <HelpCircle className="w-3.5 h-3.5 mt-0.5 shrink-0 text-teal-600 dark:text-teal-400" />
+                        <div>
+                          <strong>Suggested Recruiter Question:</strong> "{flag.suggestedRecruiterQuestion}"
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Section 4: Counterfactual Recommendations (What would raise this score) */}
+            <div className="space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                  <TrendingUp className="w-3.5 h-3.5 text-teal-500" />
+                  Counterfactual What-If Recommendations
+                </h3>
+                <span className="text-[11px] text-slate-400">Computed via real re-scoring</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {activeCandidate.explanations.counterfactuals.map((cf) => (
+                  <div
+                    key={cf.actionId}
+                    className="p-3 rounded-lg border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-xs space-y-1.5 shadow-sm"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-slate-900 dark:text-white">{cf.title}</span>
+                      <span className="font-mono font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 px-1.5 py-0.5 rounded text-[11px]">
+                        +{cf.deltaPoints} pts
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400">{cf.suggestedAction}</p>
+                    <div className="text-[10px] text-slate-400 font-mono">
+                      Simulated Score: {cf.currentScore} → <strong>{cf.simulatedScore}</strong>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* Reveal Identity Confirmation Modal */}
+      <Modal
+        isOpen={isRevealModalOpen}
+        onClose={() => setIsRevealModalOpen(false)}
+        title="Reveal Candidate Identity"
+        description="Under EEOC guidelines and Resumio Blind Screening policy, revealing candidate identity is logged permanently to the compliance audit trail."
+      >
+        <div className="space-y-4 pt-2">
+          <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-xs text-amber-800 dark:text-amber-300">
+            <strong>Audit Requirement:</strong> Please provide a legitimate business justification (e.g. "Candidate shortlisted for Phase 2 technical interview").
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Reason for Identity Reveal <span className="text-rose-500">*</span>
+            </label>
+            <textarea
+              rows={3}
+              value={revealReason}
+              onChange={(e) => setRevealReason(e.target.value)}
+              placeholder="Enter recruiter business reason..."
+              className="w-full text-xs p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-teal-500 focus:border-teal-500"
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="outline" size="sm" onClick={() => setIsRevealModalOpen(false)}>
+              Cancel
             </Button>
             <Button
               variant="primary"
               size="sm"
-              disabled={activeStageId === 4}
-              onClick={() => setActiveStageId((prev) => Math.min(4, prev + 1))}
+              disabled={revealReason.trim().length < 5}
+              onClick={handleConfirmReveal}
             >
-              Next <ChevronRight className="w-4 h-4 ml-1" />
+              Confirm & Reveal Identity
             </Button>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-5">
-          <div className="space-y-4">
-            <div>
-              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Engine / Strategy</div>
-              <div className="text-sm font-semibold text-slate-800 dark:text-slate-200 mt-1">{activeStage.engine}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{activeStage.strategy}</div>
-            </div>
-
-            <div className="p-3.5 rounded-control bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 space-y-2">
-              <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Pipeline Verification Rule
-              </div>
-              <p>
-                Resumio executes deterministic offline heuristics alongside neural transformers so processing is guaranteed with zero GPU dependency.
-              </p>
-            </div>
-          </div>
-
-          {/* JSON Payload Specimen */}
-          <div>
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Output Payload Specimen</div>
-            <pre className="font-numeral text-xs p-4 rounded-card bg-slate-950 text-teal-300 overflow-x-auto border border-slate-800 shadow-inner">
-              {activeStage.payloadFormat}
-            </pre>
-          </div>
-        </div>
-      </Card>
-
-      {/* Live Scoring Rubric Sliders & Ranked Candidate Leaderboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Sliders Panel */}
-        <Card padding="md" className="lg:col-span-5 space-y-5">
-          <div className="flex items-center justify-between border-b border-surface-light-border dark:border-surface-dark-border pb-3">
-            <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-teal-500" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Live Rubric Weights</h3>
-            </div>
-            <span className="font-numeral text-xs font-bold text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2.5 py-0.5 rounded-full">
-              Sum: {techWeight + projWeight + achieveWeight + eduWeight + recencyWeight}%
-            </span>
-          </div>
-
-          <div className="space-y-4">
-            <Slider label="Technical Skills Fit" value={techWeight} onChange={setTechWeight} />
-            <Slider label="Project Scope & Architecture" value={projWeight} onChange={setProjWeight} />
-            <Slider label="Measurable Achievements" value={achieveWeight} onChange={setAchieveWeight} />
-            <Slider label="Education & Credentials" value={eduWeight} onChange={setEduWeight} />
-            <Slider label="Experience Recency & Seniority" value={recencyWeight} onChange={setRecencyWeight} />
-          </div>
-        </Card>
-
-        {/* Leaderboard Panel */}
-        <Card padding="md" className="lg:col-span-7 space-y-4">
-          <div className="flex items-center justify-between border-b border-surface-light-border dark:border-surface-dark-border pb-3">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-amber-500" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Real-Time Ranked Leaderboard</h3>
-            </div>
-            <span className="text-xs text-slate-400">Re-calculated instantly</span>
-          </div>
-
-          <div className="space-y-3">
-            {rankedCandidates.map((cand, idx) => (
-              <div
-                key={cand.id}
-                className="p-3.5 rounded-card bg-surface-light-raised dark:bg-surface-dark-raised border border-surface-light-border dark:border-surface-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-teal-500/50 transition-all"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`font-numeral text-xs font-black px-2 py-0.5 rounded ${
-                        idx === 0
-                          ? 'bg-amber-500 text-white'
-                          : idx === 1
-                          ? 'bg-slate-300 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                      }`}
-                    >
-                      #{idx + 1}
-                    </span>
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">{cand.name}</h4>
-                  </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">{cand.role}</div>
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    {cand.matchedSkills.slice(0, 3).map((s) => (
-                      <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="w-32 hidden sm:block">
-                    <GradientHealthBar score={cand.finalScore} showIndicator={false} label="Fit Health" />
-                  </div>
-                  <ScoreRing score={cand.finalScore} size={64} strokeWidth={6} label="" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
+      </Modal>
     </div>
   );
 };

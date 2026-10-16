@@ -40,15 +40,27 @@ export interface NaturalLanguageSearchResponse {
   searchId: string;
 }
 
-// Protected characteristics blacklist for strict AI bias guardrails
+// Protected characteristics and bias keywords for strict AI fairness guardrails
 const PROTECTED_CHARACTERISTICS_KEYWORDS = [
-  'male', 'female', 'man', 'woman', 'gender', 'boy', 'girl',
-  'race', 'black', 'white', 'asian', 'caucasian', 'hispanic', 'latino', 'african', 'ethnic',
-  'religion', 'christian', 'muslim', 'hindu', 'jewish', 'sikh', 'buddhist', 'atheist',
+  'male', 'female', 'man', 'woman', 'men', 'women', 'gender', 'boy', 'girl', 'lady', 'ladies', 'guy', 'guys',
+  'race', 'black', 'white', 'asian', 'caucasian', 'hispanic', 'latino', 'latina', 'african', 'ethnic', 'nationality',
+  'religion', 'christian', 'muslim', 'hindu', 'jewish', 'sikh', 'buddhist', 'atheist', 'mormon',
   'gay', 'lesbian', 'bisexual', 'transgender', 'queer', 'lgbt', 'lgbtq', 'sexual orientation',
-  'disability', 'handicapped', 'disabled', 'wheelchair', 'autistic',
-  'pregnant', 'pregnancy', 'maternity', 'marital status', 'married', 'single',
+  'disability', 'handicapped', 'disabled', 'wheelchair', 'autistic', 'neurodivergent',
+  'pregnant', 'pregnancy', 'maternity', 'paternity', 'marital status', 'married', 'single', 'divorced',
   'caste', 'tribe', 'political', 'democrat', 'republican',
+];
+
+// Institution prestige keywords blocked under blind screening and merit-first policy
+const PRESTIGE_BIAS_KEYWORDS = [
+  'stanford', 'harvard', 'mit', 'berkeley', 'princeton', 'columbia', 'yale', 'oxford', 'cambridge',
+  'ivy league', 'iit', 'faang', 'manga', 'tier 1 college', 'top tier university'
+];
+
+// Adversarial prompt injection keywords
+const PROMPT_INJECTION_KEYWORDS = [
+  'ignore previous instructions', 'ignore all instructions', 'system override', 'disregard safety',
+  'dan mode', 'jailbreak', 'bypass guardrail', 'unrestricted mode', 'developer mode on'
 ];
 
 /**
@@ -56,18 +68,91 @@ const PROTECTED_CHARACTERISTICS_KEYWORDS = [
  */
 export class NaturalLanguageSearchService {
   /**
-   * Evaluates query safety against protected-characteristic guardrails
+   * Normalizes text by unfolding leetspeak and collapsing separators (f.e.m.a.l.e -> female)
+   */
+  private static normalizeEvasionText(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[@4]/g, 'a')
+      .replace(/[1!|]/g, 'i')
+      .replace(/[3]/g, 'e')
+      .replace(/[0]/g, 'o')
+      .replace(/[$5]/g, 's')
+      .replace(/[+]/g, 't')
+      .replace(/[^a-z0-9]/g, '');
+  }
+
+  /**
+   * Evaluates query safety against protected-characteristic guardrails, age circumvention,
+   * institution prestige, and adversarial prompt injection evasion attempts.
    */
   public static checkQuerySafety(query: string): { isSafe: boolean; rejectionReason?: string } {
-    const lower = query.toLowerCase();
-    const tokens = lower.replace(/[^\w\s]/g, ' ').split(/\s+/);
+    if (!query || !query.trim()) {
+      return { isSafe: true };
+    }
 
-    for (const keyword of PROTECTED_CHARACTERISTICS_KEYWORDS) {
-      if (tokens.includes(keyword)) {
+    const lower = query.toLowerCase();
+    const tokens = lower.replace(/[^\w\s]/g, ' ').split(/\s+/).filter(Boolean);
+    const collapsed = this.normalizeEvasionText(query);
+
+    // 1. Adversarial prompt injection check
+    for (const inj of PROMPT_INJECTION_KEYWORDS) {
+      if (lower.includes(inj)) {
         return {
           isSafe: false,
           rejectionReason:
-            'I can help search by job-relevant qualifications such as skills, experience, education, portfolio, and location. Searches targeting protected personal characteristics are strictly barred.',
+            'Security violation: Prompt injection or system instruction overrides are blocked. Please formulate job-qualification criteria directly.',
+        };
+      }
+    }
+
+    // 2. Direct token & leetspeak/evasion checks for protected demographic markers
+    for (const keyword of PROTECTED_CHARACTERISTICS_KEYWORDS) {
+      if (tokens.includes(keyword) || lower.includes(` ${keyword} `) || lower.startsWith(`${keyword} `) || lower.endsWith(` ${keyword}`)) {
+        return {
+          isSafe: false,
+          rejectionReason:
+            'I can help search by job-relevant qualifications such as skills, experience, education degree, portfolio, and work mode. Searches targeting protected personal characteristics (gender, race, religion, etc.) are strictly barred.',
+        };
+      }
+      // Check collapsed leetspeak/spaced evasion (e.g. "f e m a l e" or "w0m4n")
+      if (keyword.length >= 4 && collapsed.includes(this.normalizeEvasionText(keyword))) {
+        return {
+          isSafe: false,
+          rejectionReason:
+            'Search query contains obfuscated protected demographic terms. Searches targeting personal characteristics are strictly barred.',
+        };
+      }
+    }
+
+    // 3. Age & Graduation-Year Proxy Circumvention Checks
+    // Queries like: "graduated before 2000", "class of 1995", "born in 1980", "under 25 years old", "older than 50"
+    const graduationYearPattern = /\b(graduated|graduating|class\s+of|degree\s+in)\s+(before|after|in|prior\s+to|around)?\s*(19\d{2}|20[0-1]\d)\b/i;
+    if (graduationYearPattern.test(lower)) {
+      return {
+        isSafe: false,
+        rejectionReason:
+          'Queries filtering on historical graduation years act as age proxies and are barred under Resumio Blind Screening and EEOC guidelines. Please search by minimum required years of experience instead.',
+      };
+    }
+
+    const ageExplicitPattern = /\b(born\s+(in|before|after)|older\s+than|younger\s+than|under\s+\d{2}\s*years?\s*old|\d{2}\s*years?\s*of\s*age)\b/i;
+    if (ageExplicitPattern.test(lower)) {
+      return {
+        isSafe: false,
+        rejectionReason:
+          'Age-based filtering is barred under EEOC and Fair Hiring standards. Please search by experience duration or technical skillset.',
+      };
+    }
+
+    // 4. University / Institution Prestige Bias Checks
+    // Queries like: "from Stanford", "Harvard graduates", "Ivy League candidates", "IIT grads only"
+    for (const prestige of PRESTIGE_BIAS_KEYWORDS) {
+      if (lower.includes(prestige) || collapsed.includes(this.normalizeEvasionText(prestige))) {
+        return {
+          isSafe: false,
+          rejectionReason:
+            `Filtering specifically by institution prestige ("${prestige}") is restricted in blind screening mode to prevent systemic pedigree bias. Search by required degree level, verified skills, and project accomplishments.`,
         };
       }
     }

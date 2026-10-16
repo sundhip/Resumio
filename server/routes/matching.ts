@@ -1,10 +1,22 @@
 import { Router, Request, Response } from 'express';
+import crypto from 'crypto';
 import { db } from '../database/db.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { ResumeJobMatchingService } from '../services/matchingService.js';
 import { CandidateSummaryService } from '../services/candidateSummaryService.js';
 import { SkillGapAnalysisService } from '../services/skillGapService.js';
 import { processResumeAndScreen } from '../services/resumeProcessingPipeline.js';
+import {
+  calculateScoreV2,
+  generateScoreExplanations,
+  detectRedFlagsAndGaps,
+  CandidateScoringInputV2,
+  JobScoringInputV2,
+  PresetProfileName,
+  ScoringWeightsV2,
+} from '../../packages/shared/src/index.js';
+import { BlindScreeningService } from '../services/blindScreeningService.js';
+import { ExplanationValidatorService } from '../services/explanationValidator.js';
 
 export const matchingRouter = Router();
 
@@ -460,5 +472,280 @@ matchingRouter.post('/recruiter/applications/:id/recompute-matching', authentica
   } catch (err: any) {
     console.error('Recompute matching error:', err);
     return res.status(500).json({ success: false, message: 'Failed to recompute match.', error: err.message });
+  }
+});
+
+// ============================================================
+// PHASE 6: SCORING ENGINE V2, EXPLAINABILITY, & BLIND SCREENING
+// ============================================================
+
+/**
+ * POST /api/matching/score-v2
+ * Pure TypeScript Score V2 evaluation engine with explainability, waterfall,
+ * counterfactuals, and fairness guarantees.
+ */
+matchingRouter.post('/matching/score-v2', async (req: Request, res: Response) => {
+  try {
+    const {
+      candidate,
+      job,
+      customWeights,
+      preset,
+      rulesOnly,
+      blendAlpha,
+      isBlind,
+    } = req.body;
+
+    if (!candidate || !job) {
+      return res.status(400).json({
+        success: false,
+        message: 'Both candidate and job objects are required for Score V2 evaluation.',
+      });
+    }
+
+    // Server-side blind screening redaction if requested
+    const effectiveCandidate: CandidateScoringInputV2 = isBlind
+      ? BlindScreeningService.redactCandidate(candidate)
+      : candidate;
+
+    // 1. Calculate Score V2
+    const scoreResult = calculateScoreV2(effectiveCandidate, job, {
+      customWeights,
+      preset: preset as PresetProfileName,
+      rulesOnly: Boolean(rulesOnly),
+      blendAlpha: blendAlpha !== undefined ? Number(blendAlpha) : undefined,
+    });
+
+    // 2. Generate Explainability Report V2
+    const explanations = generateScoreExplanations(effectiveCandidate, job, scoreResult);
+
+    // 3. Detect Red Flags and Neutral Gaps
+    const redFlags = detectRedFlagsAndGaps(effectiveCandidate, req.body.workExperiences, Boolean(req.body.hiddenTextDetected));
+
+    // 4. Grounded Summary & Cryptographic Audit Hash
+    const evidenceLedger = ExplanationValidatorService.buildEvidenceLedger(explanations, redFlags);
+    const deterministicSummary = ExplanationValidatorService.generateDeterministicSummary(
+      evidenceLedger,
+      scoreResult.finalScore,
+      scoreResult.confidenceBand
+    );
+    const auditHash = ExplanationValidatorService.computeAuditHash(
+      effectiveCandidate.candidateId,
+      job.jobId,
+      scoreResult,
+      evidenceLedger
+    );
+
+    // 5. Save Score V2 Provenance Record
+    const provenanceId = `prov_${crypto.randomUUID()}`;
+    try {
+      db.prepare(`
+        INSERT INTO match_score_v2_provenance (
+          id, candidate_id, job_id, algorithm_version, final_score, confidence_band,
+          weights_applied, is_rules_only, blend_alpha, contributions_json,
+          must_have_flags_json, shap_json, counterfactuals_json, ats_score
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        provenanceId,
+        effectiveCandidate.candidateId,
+        job.jobId,
+        scoreResult.algorithmVersion,
+        scoreResult.finalScore,
+        scoreResult.confidenceBand,
+        JSON.stringify(scoreResult.weightsApplied),
+        scoreResult.isRulesOnly ? 1 : 0,
+        scoreResult.blendAlpha,
+        JSON.stringify(scoreResult.contributions),
+        JSON.stringify(scoreResult.mustHaveFlags),
+        JSON.stringify(explanations.shapExplanations),
+        JSON.stringify(explanations.counterfactuals),
+        scoreResult.atsReadinessDiagnostic.atsScore
+      );
+    } catch {
+      // Non-fatal if table doesn't exist yet before migration runner
+    }
+
+    return res.json({
+      success: true,
+      provenanceId,
+      auditHash,
+      isBlind: Boolean(isBlind),
+      scoreResult,
+      explanations,
+      redFlags,
+      groundedSummary: {
+        text: deterministicSummary,
+        evidenceItems: evidenceLedger,
+      },
+    });
+  } catch (err: any) {
+    console.error('Score V2 evaluation error:', err);
+    return res.status(500).json({ success: false, message: 'Score V2 evaluation failed.', error: err.message });
+  }
+});
+
+/**
+ * GET /api/matching/provenance/:id
+ * Fetches an immutable audit record of a prior Score V2 computation.
+ */
+matchingRouter.get('/matching/provenance/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const row = db.prepare('SELECT * FROM match_score_v2_provenance WHERE id = ? OR candidate_id = ?').get(id, id) as any;
+    if (!row) {
+      return res.status(404).json({ success: false, message: 'Score provenance record not found.' });
+    }
+
+    return res.json({
+      success: true,
+      provenance: {
+        ...row,
+        weights_applied: JSON.parse(row.weights_applied || '{}'),
+        contributions: JSON.parse(row.contributions_json || '[]'),
+        must_have_flags: JSON.parse(row.must_have_flags_json || '[]'),
+        shap_explanations: JSON.parse(row.shap_json || '[]'),
+        counterfactuals: JSON.parse(row.counterfactuals_json || '[]'),
+      },
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, message: 'Failed to fetch score provenance.', error: err.message });
+  }
+});
+
+/**
+ * GET /api/matching/rationale-export/:id
+ * Generates an auditable recruiter rationale export in JSON or printable self-contained HTML.
+ */
+matchingRouter.get('/matching/rationale-export/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const format = req.query.format === 'html' ? 'html' : 'json';
+
+    const row = db.prepare('SELECT * FROM match_score_v2_provenance WHERE id = ? OR candidate_id = ?').get(id, id) as any;
+    if (!row) {
+      return res.status(404).json({ success: false, message: 'Provenance record not found for export.' });
+    }
+
+    const weights = JSON.parse(row.weights_applied || '{}');
+    const contributions = JSON.parse(row.contributions_json || '[]');
+    const mustHaves = JSON.parse(row.must_have_flags_json || '[]');
+    const shap = JSON.parse(row.shap_json || '[]');
+    const counterfactuals = JSON.parse(row.counterfactuals_json || '[]');
+
+    const scoreResult: ScoreV2Result = {
+      candidateId: row.candidate_id,
+      jobId: row.job_id,
+      algorithmVersion: row.algorithm_version,
+      finalScore: row.final_score,
+      confidenceBand: row.confidence_band,
+      contributions,
+      mustHaveFlags: mustHaves,
+      allMustHavesMet: mustHaves.every((m: any) => m.met),
+      isRulesOnly: Boolean(row.is_rules_only),
+      blendAlpha: row.blend_alpha,
+      weightsApplied: weights,
+      atsReadinessDiagnostic: {
+        atsScore: row.ats_score,
+        isFactorInScore: false,
+        note: 'ATS-readiness evaluated separately from candidate qualification score.',
+      },
+    };
+
+    const dummyCand: CandidateScoringInputV2 = {
+      candidateId: row.candidate_id,
+      skills: [],
+      experienceYears: 0,
+      projects: [],
+      achievements: [],
+      certifications: [],
+    };
+
+    const dummyJob: JobScoringInputV2 = {
+      jobId: row.job_id,
+      title: 'Target Position',
+      requiredSkills: [],
+      minExperienceYears: 0,
+    };
+
+    const explanations = generateScoreExplanations(dummyCand, dummyJob, scoreResult);
+    explanations.waterfall = contributions.map((c: any) => ({
+      component: c.component,
+      label: c.displayName,
+      weight: c.weight,
+      rawScore: c.rawScore,
+      pointsContributed: c.contribution,
+      maxPossiblePoints: c.weight,
+      percentageOfMax: c.rawScore,
+      details: c.details || [],
+    }));
+    explanations.shapExplanations = shap;
+    explanations.counterfactuals = counterfactuals;
+
+    const redFlags = detectRedFlagsAndGaps(dummyCand);
+    const auditHash = crypto.createHash('sha256').update(row.id + row.final_score + row.created_at).digest('hex');
+
+    if (format === 'html') {
+      const html = ExplanationValidatorService.generatePrintableRationaleHtml({
+        candidateName: `Candidate #${row.candidate_id.slice(-4).toUpperCase()}`,
+        jobTitle: 'Position Match',
+        companyName: 'Resumio Verified Hiring',
+        scoreResult,
+        report: explanations,
+        redFlags,
+        isBlind: true,
+        auditHash,
+      });
+      res.setHeader('Content-Type', 'text/html');
+      return res.send(html);
+    }
+
+    return res.json({
+      success: true,
+      auditHash,
+      scoreResult,
+      explanations,
+      redFlags,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, message: 'Failed to export rationale.', error: err.message });
+  }
+});
+
+/**
+ * POST /api/matching/reveal-identity
+ * Logs an explicit recruiter identity reveal action into the audit trail.
+ */
+matchingRouter.post('/matching/reveal-identity', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (user.role !== 'recruiter' && user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only recruiters and administrators can reveal candidate identities.' });
+    }
+
+    const { candidateId, jobId, reason } = req.body;
+    if (!candidateId || !reason || reason.trim().length < 5) {
+      return res.status(400).json({
+        success: false,
+        message: 'A candidate ID and a substantive reason (minimum 5 characters) are required for identity reveal.',
+      });
+    }
+
+    const result = await BlindScreeningService.recordIdentityReveal({
+      recruiterId: user.id,
+      candidateId,
+      jobId,
+      reason,
+      ipAddress: req.ip || '',
+    });
+
+    return res.json({
+      success: true,
+      message: 'Candidate identity revealed and recorded in immutable compliance audit trail.',
+      revealId: result.revealId,
+      revealedAt: result.revealedAt,
+    });
+  } catch (err: any) {
+    console.error('Identity reveal error:', err);
+    return res.status(500).json({ success: false, message: err.message });
   }
 });

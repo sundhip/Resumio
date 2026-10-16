@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
 export * from './resumeDocument.js';
+export * from './scoringV2.js';
+export * from './explanationsV2.js';
+export * from './redFlags.js';
 
 // ==========================================
 // User & Auth Schemas
