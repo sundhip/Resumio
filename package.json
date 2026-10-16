@@ -23,6 +23,7 @@
     "server": "tsx server/index.ts",
     "build": "vite build",
     "lint": "oxlint",
+    "check:tokens": "tsx server/scripts/check-design-tokens.ts",
     "preview": "vite preview",
     "ml:pipeline": "python ml/scripts/run_pipeline.py",
     "ml:test": "python -m pytest ml/tests -v"
