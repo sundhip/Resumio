@@ -40,6 +40,22 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [step, setStep] = useState<'details' | 'review'>('details');
+  const [previewData, setPreviewData] = useState<any>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+
+  const loadPreview = async () => {
+    setIsLoadingPreview(true);
+    try {
+      const res = await api.getPreApplyPreview(job.id);
+      if (res.success && res.data) {
+        setPreviewData(res.data);
+      }
+    } catch {
+      // non-blocking preview error
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -167,6 +183,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                       return;
                     }
                     setStep('review');
+                    loadPreview();
                   }}
                   disabled={isLoadingProfile || resumes.length === 0}
                   rightIcon={<ArrowRight className="w-4 h-4" />}
@@ -218,6 +235,36 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               </div>
             </div>
           </div>
+
+          {isLoadingPreview ? (
+            <div className="p-3.5 rounded-card bg-slate-100 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border animate-pulse text-xs text-slate-500">
+              Running pre-submit ATS & Match preview...
+            </div>
+          ) : previewData ? (
+            <div className="p-3.5 rounded-card bg-brand-50/60 dark:bg-brand-950/20 border border-brand-200 dark:border-brand-800/40 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-brand-700 dark:text-brand-300 uppercase tracking-wider flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+                  Pre-Submit Match & ATS Check
+                </span>
+                <span className="text-xs font-bold text-brand-800 dark:text-brand-200">
+                  Match: {previewData.overallMatchScore}% ({previewData.matchGrade}) • ATS: {previewData.atsReadinessScore}%
+                </span>
+              </div>
+              {previewData.matchedRequiredSkills?.length > 0 && (
+                <div className="text-[11px] text-slate-700 dark:text-slate-300">
+                  <strong className="text-emerald-700 dark:text-emerald-400">Matched Skills: </strong>
+                  {previewData.matchedRequiredSkills.join(', ')}
+                </div>
+              )}
+              {previewData.missingRequiredSkills?.length > 0 && (
+                <div className="text-[11px] text-slate-700 dark:text-slate-300">
+                  <strong className="text-amber-700 dark:text-amber-400">Missing Skills: </strong>
+                  {previewData.missingRequiredSkills.join(', ')}
+                </div>
+              )}
+            </div>
+          ) : null}
 
           <div className="p-3.5 rounded-card bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/80 dark:border-surface-dark-border space-y-2">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">

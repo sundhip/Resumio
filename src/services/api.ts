@@ -1766,6 +1766,144 @@ export const api = {
     const res = await fetch(url, { headers: getAuthHeaders() });
     return handleResponse(res);
   },
+
+  // ============================================================
+  // PHASE 9: CANDIDATE EXPERIENCE & VERIFICATION
+  // ============================================================
+  async getCandidateDashboard(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/dashboard`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async getJobRecommendations(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/recommendations`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async updateJobPreferences(preferences: any): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/preferences`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(preferences),
+    });
+    return handleResponse(res);
+  },
+
+  async dismissJobRecommendation(jobId: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/recommendations/${jobId}/dismiss`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async getUpskillingRoadmap(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/upskilling-roadmap`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async runWhatIfSimulation(data: { jobId: string; hypotheticalSkills: string[]; hypotheticalExperienceYears?: number }): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/what-if-simulator`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  async verifyGitHub(data: { githubUsername: string; accessToken?: string }): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/verify-github`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  async verifyPortfolio(portfolioUrl: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/verify-portfolio`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ portfolioUrl }),
+    });
+    return handleResponse(res);
+  },
+
+  async verifyLinkedInExport(data: { handleOrUrl: string; exportSummary?: string; uploadedData?: any }): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/verify-linkedin`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  async getPreApplyPreview(jobId: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/pre-apply-preview/${jobId}`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async withdrawApplication(applicationId: string, reason?: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/applications/${applicationId}/withdraw`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ reason }),
+    });
+    return handleResponse(res);
+  },
+
+  async exportCandidateData(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/data-export`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async deleteCandidateAccount(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/account`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async getCandidateConsents(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/consents`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async updateCandidateConsents(data: { talentPoolInclusion: boolean; trainingDataInclusion: boolean }): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/consents`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  async getProfileAccessLogs(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/profile-access-audit`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async getCuratedResources(): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/candidate-experience/curated-resources`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
 };
 
 

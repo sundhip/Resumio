@@ -8,6 +8,7 @@ export * from './optimizerV2.js';
 export * from './leaderboardV2.js';
 export * from './searchCompilerV2.js';
 export * from './candidateComparisonV2.js';
+export * from './candidateExperienceV2.js';
 
 // ==========================================
 // User & Auth Schemas

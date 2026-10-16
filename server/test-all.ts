@@ -20,6 +20,7 @@ const testSuites = [
   { name: 'Phase 8 - Advanced AI Recruitment Intelligence', file: 'server/test-phase8.ts' },
   { name: 'Phase 8 - Recruiter Workspace, Search Compiler & Pipeline', file: 'server/test-phase8-workspace.ts' },
   { name: 'Phase 9 - Final Integration, Security & Production Readiness', file: 'server/test-phase9.ts' },
+  { name: 'Phase 9 - Candidate Experience & Evidence Verification', file: 'server/test-phase9-candidate-verification.ts' },
   { name: 'Phase 10 - Research Experimentation & Performance Analysis', file: 'server/test-phase10.ts' },
   { name: 'Phase 11 - Full-System Integration & Smoke Validation', file: 'server/test-phase11-smoke.ts' },
 ];

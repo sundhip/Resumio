@@ -21,6 +21,7 @@ import { EditJobPage } from './pages/recruiter/EditJobPage';
 import { CandidateJobsPage } from './pages/candidate/CandidateJobsPage';
 import { JobDetailsPage } from './pages/candidate/JobDetailsPage';
 import { RecommendationsPage } from './pages/candidate/RecommendationsPage';
+import { CandidateExperiencePage } from './pages/candidate/CandidateExperiencePage';
 
 // Phase 4 Job Applications & Recruitment Pipeline Pages
 import { ApplicationsPage } from './pages/candidate/ApplicationsPage';
@@ -131,6 +132,10 @@ export const App: React.FC = () => {
 
       case 'recommendations':
         return <RecommendationsPage onNavigate={handleNavigate} />;
+
+      case 'candidate-experience':
+      case 'career-hub':
+        return <CandidateExperiencePage onNavigate={handleNavigate} />;
 
       // Phase 4: Candidate Applications
       case 'applications':

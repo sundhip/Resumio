@@ -18,6 +18,7 @@ import {
   TrendingUp,
   Database,
   BookOpen,
+  Compass,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -61,6 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             groupTitle: 'Opportunities',
             items: [
               { id: 'jobs', label: 'Explore Jobs', icon: <Briefcase className="w-4 h-4" /> },
+              { id: 'candidate-experience', label: 'Career Hub & Evidence', icon: <Compass className="w-4 h-4 text-emerald-500" /> },
               { id: 'recommendations', label: 'Recommendations', icon: <Sparkles className="w-4 h-4" /> },
               { id: 'applications', label: 'My Applications', icon: <Send className="w-4 h-4" /> },
               { id: 'interviews', label: 'My Interviews', icon: <Calendar className="w-4 h-4" /> },

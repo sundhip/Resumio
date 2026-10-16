@@ -110,6 +110,11 @@ export function verifyDatabaseIntegrity(): { isValid: boolean; fkViolations: any
   safeDelete('DELETE FROM saved_searches WHERE user_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM candidate_consents WHERE candidate_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM voluntary_demographics WHERE candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_job_preferences WHERE candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_verifications WHERE candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_skill_verifications WHERE candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM profile_access_logs WHERE candidate_id NOT IN (SELECT id FROM users) OR viewer_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_data_retention_consents WHERE candidate_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM organization_members WHERE user_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM job_access_control WHERE user_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM bulk_upload_batches WHERE recruiter_id NOT IN (SELECT id FROM users)');
@@ -265,3 +270,5 @@ export async function initDatabase() {
     console.log('✅ Default Recruiter account seeded: recruiter@resumio.demo / Recruiter@123');
   }
 }
+
+export default db;
