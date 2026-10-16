@@ -49,7 +49,7 @@ export function extractTextFromPdf(buffer: Buffer): string {
       const btBlocks = decoded.match(/BT[\s\S]*?ET/g) || [decoded];
       for (const block of btBlocks) {
         // Match string literals in parentheses (text) Tj or '
-        const tjMatches = block.match(/\(([^)]*)\)\s*(?:Tj|'|")/g);
+        const tjMatches = block.match(/\(((?:[^()\\]|\\.)*)\)\s*(?:Tj|'|")/g);
         if (tjMatches) {
           for (const m of tjMatches) {
             const inner = m.replace(/\)\s*(?:Tj|'|")$/, '').replace(/^\(/, '');
@@ -63,7 +63,7 @@ export function extractTextFromPdf(buffer: Buffer): string {
         const arrayMatches = block.match(/\[([\s\S]*?)\]\s*TJ/g);
         if (arrayMatches) {
           for (const arr of arrayMatches) {
-            const innerStrings = arr.match(/\(([^)]*)\)/g);
+            const innerStrings = arr.match(/\(((?:[^()\\]|\\.)*)\)/g);
             if (innerStrings) {
               const line = innerStrings
                 .map((s) => unescapePdfString(s.slice(1, -1)))

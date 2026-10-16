@@ -4,6 +4,7 @@ export * from './resumeDocument.js';
 export * from './scoringV2.js';
 export * from './explanationsV2.js';
 export * from './redFlags.js';
+export * from './optimizerV2.js';
 
 // ==========================================
 // User & Auth Schemas

@@ -14,6 +14,7 @@ const testSuites = [
   { name: 'Phase 6 - AI Matching, Ranking & Skill Gap Analysis', file: 'server/test-phase6.ts' },
   { name: 'Phase 6 - Advanced AI Matching & Explainable Scoring Engine', file: 'server/test-advanced-matching.ts' },
   { name: 'Phase 6 - Scoring Engine V2, Explainability & Blind Screening', file: 'server/test-phase6-scoring.ts' },
+  { name: 'Phase 7 - ATS Optimizer, Builder & Simulator', file: 'server/test-phase7-optimizer.ts' },
   { name: 'Phase 7 - Interviews, Notifications & Analytics', file: 'server/test-phase7.ts' },
   { name: 'Phase 8 - Deployment & Production Readiness', file: 'server/test-deployment-readiness.ts' },
   { name: 'Phase 8 - Advanced AI Recruitment Intelligence', file: 'server/test-phase8.ts' },

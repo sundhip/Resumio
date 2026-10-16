@@ -71,6 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             items: [
               { id: 'profile', label: 'My Profile', icon: <User className="w-4 h-4" /> },
               { id: 'resume', label: 'Resume Manager', icon: <FileText className="w-4 h-4" /> },
+              { id: 'resume-builder', label: 'ATS Resume Studio', icon: <Sparkles className="w-4 h-4 text-brand-500" /> },
             ],
           },
           {

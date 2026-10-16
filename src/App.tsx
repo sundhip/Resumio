@@ -7,6 +7,7 @@ import { RecruiterDashboard } from './pages/recruiter/RecruiterDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { CandidateProfilePage } from './pages/candidate/CandidateProfilePage';
 import { ResumePage } from './pages/candidate/ResumePage';
+import { ResumeBuilderPage } from './pages/candidate/ResumeBuilderPage';
 import { CompanyProfilePage } from './pages/recruiter/CompanyProfilePage';
 import { SettingsPage } from './pages/settings/SettingsPage';
 import { ComponentShowcase } from './pages/design-system/ComponentShowcase';
@@ -96,6 +97,9 @@ export const App: React.FC = () => {
 
       case 'resume':
         return <ResumePage onNavigate={handleNavigate} />;
+
+      case 'resume-builder':
+        return <ResumeBuilderPage onNavigate={handleNavigate} />;
 
       // Recruiter Job Postings & Management
       case 'recruiter-jobs':

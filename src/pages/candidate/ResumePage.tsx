@@ -298,16 +298,28 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
           </p>
         </div>
 
-        {onNavigate && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onNavigate('profile')}
-            leftIcon={<Layers className="w-4 h-4" />}
-          >
-            View Full Profile
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {onNavigate && (
+            <Button
+              variant="brand"
+              size="sm"
+              onClick={() => onNavigate('resume-builder')}
+              leftIcon={<Sparkles className="w-4 h-4" />}
+            >
+              ATS Resume Studio
+            </Button>
+          )}
+          {onNavigate && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNavigate('profile')}
+              leftIcon={<Layers className="w-4 h-4" />}
+            >
+              View Full Profile
+            </Button>
+          )}
+        </div>
       </div>
 
       {errorMessage && (
