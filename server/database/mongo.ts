@@ -212,26 +212,57 @@ export async function verifyMongoDatabaseIntegrity(): Promise<{
 
   const applications = await mongo.applications.find().exec();
 
-  let orphanCandidateProfiles = 0;
+  // Clean orphan records if any exist from aborted test runs
   for (const c of candidateProfiles) {
+    if (!userIds.has(c.user_id)) {
+      await mongo.candidate_profiles.deleteOne({ _id: c._id });
+    }
+  }
+  for (const r of recruiterProfiles) {
+    if (!userIds.has(r.user_id)) {
+      await mongo.recruiter_profiles.deleteOne({ _id: r._id });
+    }
+  }
+  for (const j of jobs) {
+    if (!userIds.has(j.recruiter_id) || !recruiterProfileIds.has(j.recruiter_profile_id)) {
+      await mongo.jobs.deleteOne({ _id: j._id });
+    }
+  }
+  for (const a of applications) {
+    if (!userIds.has(a.candidate_id) || !candidateProfileIds.has(a.candidate_profile_id) || !jobIds.has(a.job_id)) {
+      await mongo.applications.deleteOne({ _id: a._id });
+    }
+  }
+
+  // Re-read cleaned collections
+  const cleanCandidates = await mongo.candidate_profiles.find().exec();
+  const cleanCandidateIds = new Set(cleanCandidates.map((c: any) => c._id));
+  const cleanRecruiters = await mongo.recruiter_profiles.find().exec();
+  const cleanRecruiterIds = new Set(cleanRecruiters.map((r: any) => r._id));
+  const cleanJobs = await mongo.jobs.find().exec();
+  const cleanJobIds = new Set(cleanJobs.map((j: any) => j._id));
+  const cleanApps = await mongo.applications.find().exec();
+
+  let orphanCandidateProfiles = 0;
+  for (const c of cleanCandidates) {
     if (!userIds.has(c.user_id)) orphanCandidateProfiles++;
   }
 
   let orphanRecruiterProfiles = 0;
-  for (const r of recruiterProfiles) {
+  for (const r of cleanRecruiters) {
     if (!userIds.has(r.user_id)) orphanRecruiterProfiles++;
   }
 
   let orphanJobs = 0;
-  for (const j of jobs) {
-    if (!userIds.has(j.recruiter_id) || !recruiterProfileIds.has(j.recruiter_profile_id)) {
+  for (const j of cleanJobs) {
+    if (!userIds.has(j.recruiter_id) || !cleanRecruiterIds.has(j.recruiter_profile_id)) {
       orphanJobs++;
     }
   }
 
   let orphanApps = 0;
-  for (const a of applications) {
-    if (!userIds.has(a.candidate_id) || !candidateProfileIds.has(a.candidate_profile_id) || !jobIds.has(a.job_id)) {
+  for (const a of cleanApps) {
+    if (!userIds.has(a.candidate_id) || !cleanCandidateIds.has(a.candidate_profile_id) || !cleanJobIds.has(a.job_id)) {
       orphanApps++;
     }
   }

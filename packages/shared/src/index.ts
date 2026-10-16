@@ -5,6 +5,9 @@ export * from './scoringV2.js';
 export * from './explanationsV2.js';
 export * from './redFlags.js';
 export * from './optimizerV2.js';
+export * from './leaderboardV2.js';
+export * from './searchCompilerV2.js';
+export * from './candidateComparisonV2.js';
 
 // ==========================================
 // User & Auth Schemas

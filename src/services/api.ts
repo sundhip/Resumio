@@ -1625,6 +1625,147 @@ export const api = {
     const res = await fetch(url, { headers: getAuthHeaders() });
     return handleResponse(res);
   },
+
+  // ==========================================
+  // Phase 8: Recruiter Workspace API Methods
+  // ==========================================
+  async uploadBulkResumes(formData: FormData): Promise<any> {
+    const token = localStorage.getItem('resumio_token');
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/bulk-upload`, {
+      method: 'POST',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: formData,
+    });
+    return handleResponse(res);
+  },
+
+  async getBulkBatchStatus(batchId: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/bulk-upload/${batchId}`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async getWorkspaceLeaderboard(params: Record<string, string>): Promise<any> {
+    const qs = new URLSearchParams(params).toString();
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/leaderboard?${qs}`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async compileSearchQuery(query: string, facets: any = {}): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/search/compile`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ query, facets }),
+    });
+    return handleResponse(res);
+  },
+
+  async compareApplicants(jobId: string, applicationIds: string[], isBlindMode: boolean = false): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/compare`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ jobId, applicationIds, isBlindMode }),
+    });
+    return handleResponse(res);
+  },
+
+  async getPipelineStages(jobId?: string): Promise<any> {
+    const url = jobId ? `${API_BASE_URL}/recruiter-workspace/stages?jobId=${jobId}` : `${API_BASE_URL}/recruiter-workspace/stages`;
+    const res = await fetch(url, { headers: getAuthHeaders() });
+    return handleResponse(res);
+  },
+
+  async movePipelineStage(applicationId: string, newStatus: string, note?: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/pipeline/move`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ applicationId, newStatus, note }),
+    });
+    return handleResponse(res);
+  },
+
+  async bulkMovePipelineStages(applicationIds: string[], newStatus: string, note?: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/pipeline/bulk-move`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ applicationIds, newStatus, note }),
+    });
+    return handleResponse(res);
+  },
+
+  async addCandidateNote(applicationId: string, candidateId: string, content: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/pipeline/notes`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ applicationId, candidateId, content }),
+    });
+    return handleResponse(res);
+  },
+
+  async setCandidateTag(candidateId: string, tag: string, action: 'add' | 'remove'): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/pipeline/tags`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ candidateId, tag, action }),
+    });
+    return handleResponse(res);
+  },
+
+  async generateInterviewKit(jobId: string, candidateId?: string, applicationId?: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/interview-kit/generate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ jobId, candidateId, applicationId }),
+    });
+    return handleResponse(res);
+  },
+
+  async generateOutreachDraft(candidateId: string, jobId: string, tone: string = 'professional'): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/outreach/generate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ candidateId, jobId, tone }),
+    });
+    return handleResponse(res);
+  },
+
+  async approveOutreachDraft(outreachId: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/outreach/approve`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ outreachId }),
+    });
+    return handleResponse(res);
+  },
+
+  async generateRejectionFeedback(applicationId: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/rejection-feedback/generate`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ applicationId }),
+    });
+    return handleResponse(res);
+  },
+
+  async approveRejectionFeedback(feedbackId: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/recruiter-workspace/rejection-feedback/approve`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ feedbackId }),
+    });
+    return handleResponse(res);
+  },
+
+  async getRecruiterWorkspaceAnalytics(jobId?: string): Promise<any> {
+    const url = jobId ? `${API_BASE_URL}/recruiter-workspace/analytics?jobId=${jobId}` : `${API_BASE_URL}/recruiter-workspace/analytics`;
+    const res = await fetch(url, { headers: getAuthHeaders() });
+    return handleResponse(res);
+  },
 };
 
 

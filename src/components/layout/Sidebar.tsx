@@ -93,6 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {
             groupTitle: 'Recruitment & AI Intelligence',
             items: [
+              { id: 'recruiter-workspace', label: 'Recruiter Workspace', icon: <Layers className="w-4 h-4 text-indigo-500" /> },
               { id: 'recruiter-jobs', label: 'Job Postings', icon: <Briefcase className="w-4 h-4" /> },
               { id: 'applicants', label: 'Applicant Pipeline', icon: <Users className="w-4 h-4" /> },
               { id: 'skills-ontology', label: 'Skill Ontology & KB', icon: <BookOpen className="w-4 h-4 text-teal-400" /> },

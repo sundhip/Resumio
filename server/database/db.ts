@@ -96,21 +96,40 @@ export function recalculateCandidateCompletion(candidateProfileId: string): numb
  */
 export function verifyDatabaseIntegrity(): { isValid: boolean; fkViolations: any[]; orphanCounts: Record<string, number> } {
   // Clean orphan records if any exist from aborted test runs
-  try {
-    db.prepare('DELETE FROM resume_parsed_data WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)').run();
-    db.prepare('DELETE FROM resume_parsed_data WHERE resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
-    db.prepare('DELETE FROM resume_screenings WHERE resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
-    db.prepare('DELETE FROM resume_screenings WHERE job_id IS NOT NULL AND job_id NOT IN (SELECT id FROM jobs)').run();
-    db.prepare('DELETE FROM candidate_resumes WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)').run();
-    db.prepare('DELETE FROM job_required_skills WHERE job_id NOT IN (SELECT id FROM jobs)').run();
-    db.prepare('DELETE FROM job_preferred_skills WHERE job_id NOT IN (SELECT id FROM jobs)').run();
-    db.prepare('DELETE FROM applications WHERE resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
-    db.prepare('DELETE FROM applications WHERE job_id NOT IN (SELECT id FROM jobs)').run();
-    db.prepare('DELETE FROM applications WHERE candidate_id NOT IN (SELECT id FROM users)').run();
-    db.prepare('DELETE FROM candidate_profiles WHERE user_id NOT IN (SELECT id FROM users)').run();
-    db.prepare('DELETE FROM recruiter_profiles WHERE user_id NOT IN (SELECT id FROM users)').run();
-    db.prepare('DELETE FROM resume_duplicate_matches WHERE candidate_id NOT IN (SELECT id FROM users) OR matched_candidate_id NOT IN (SELECT id FROM users) OR resume_id NOT IN (SELECT id FROM candidate_resumes) OR matched_resume_id NOT IN (SELECT id FROM candidate_resumes)').run();
-  } catch (e) {}
+  const safeDelete = (sql: string) => {
+    try {
+      db.prepare(sql).run();
+    } catch (e) {}
+  };
+
+  safeDelete('DELETE FROM application_status_history WHERE application_id NOT IN (SELECT id FROM applications)');
+  safeDelete('DELETE FROM candidate_rejection_feedback WHERE candidate_id NOT IN (SELECT id FROM users) OR recruiter_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM outreach_campaigns WHERE recruiter_id NOT IN (SELECT id FROM users) OR candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_notes WHERE candidate_id NOT IN (SELECT id FROM users) OR author_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_tags WHERE candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM saved_searches WHERE user_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_consents WHERE candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM voluntary_demographics WHERE candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM organization_members WHERE user_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM job_access_control WHERE user_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM bulk_upload_batches WHERE recruiter_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM resume_duplicate_matches WHERE candidate_id NOT IN (SELECT id FROM users) OR matched_candidate_id NOT IN (SELECT id FROM users) OR resume_id NOT IN (SELECT id FROM candidate_resumes) OR matched_resume_id NOT IN (SELECT id FROM candidate_resumes)');
+  safeDelete('DELETE FROM applications WHERE resume_id NOT IN (SELECT id FROM candidate_resumes) OR job_id NOT IN (SELECT id FROM jobs) OR candidate_id NOT IN (SELECT id FROM users) OR candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');
+  safeDelete('DELETE FROM resume_screenings WHERE resume_id NOT IN (SELECT id FROM candidate_resumes) OR (job_id IS NOT NULL AND job_id NOT IN (SELECT id FROM jobs))');
+  safeDelete('DELETE FROM resume_parsed_data WHERE resume_id NOT IN (SELECT id FROM candidate_resumes) OR candidate_profile_id NOT IN (SELECT id FROM candidate_profiles) OR candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM candidate_skills WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');
+  safeDelete('DELETE FROM candidate_experience WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');
+  safeDelete('DELETE FROM candidate_education WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');
+  safeDelete('DELETE FROM candidate_projects WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');
+  safeDelete('DELETE FROM candidate_certifications WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');
+  safeDelete('DELETE FROM candidate_resumes WHERE candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');
+  safeDelete('DELETE FROM candidate_profiles WHERE user_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM job_required_skills WHERE job_id NOT IN (SELECT id FROM jobs)');
+  safeDelete('DELETE FROM job_preferred_skills WHERE job_id NOT IN (SELECT id FROM jobs)');
+  safeDelete('DELETE FROM notifications WHERE user_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM audit_logs WHERE actor_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM jobs WHERE recruiter_id NOT IN (SELECT id FROM users) OR recruiter_profile_id NOT IN (SELECT id FROM recruiter_profiles)');
+  safeDelete('DELETE FROM recruiter_profiles WHERE user_id NOT IN (SELECT id FROM users)');
 
   // 1. Run SQLite foreign key check
   const fkViolations = db.prepare('PRAGMA foreign_key_check').all();

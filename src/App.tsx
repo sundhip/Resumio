@@ -33,6 +33,7 @@ import { RecruitmentAnalyticsPage } from './pages/recruiter/RecruitmentAnalytics
 
 // Phase 8 AI Recruitment Intelligence Pages
 import { AICandidateSearchPage } from './pages/recruiter/AICandidateSearchPage';
+import { RecruiterWorkspacePage } from './pages/recruiter/RecruiterWorkspacePage';
 
 // Phase 5 LLM Data Augmentation Research Pipeline Page
 import { ResearchPipelinePage } from './pages/admin/ResearchPipelinePage';
@@ -155,6 +156,10 @@ export const App: React.FC = () => {
 
       case 'recruiter-analytics':
         return <RecruitmentAnalyticsPage onNavigate={handleNavigate} />;
+
+      // Phase 8: Enterprise Recruiter Workspace & Pipeline
+      case 'recruiter-workspace':
+        return <RecruiterWorkspacePage onNavigate={handleNavigate} />;
 
       // Phase 8: Recruiter AI Candidate Search
       case 'recruiter-ai-search':

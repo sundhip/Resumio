@@ -218,12 +218,43 @@ function formatExtractedText(raw: string): string {
  * Main Document Extractor function with rigorous validation,
  * corruption checks, and scanned document detection.
  */
-export async function extractDocumentText(filePath: string): Promise<ExtractedDocument> {
-  if (!fs.existsSync(filePath)) {
-    throw new Error('Unable to read this resume. File does not exist on disk.');
+/**
+ * Extracts plain text from a Buffer directly
+ */
+export function extractTextFromBuffer(buffer: Buffer, mimeOrExt: string = ''): string {
+  const lower = mimeOrExt.toLowerCase();
+  if (lower.includes('pdf') || buffer.subarray(0, 4).toString() === '%PDF') {
+    return extractTextFromPdf(buffer);
+  }
+  if (lower.includes('docx') || lower.includes('word') || buffer.subarray(0, 4).toString() === 'PK\x03\x04') {
+    return extractTextFromDocx(buffer);
+  }
+  return buffer.toString('utf-8');
+}
+
+/**
+ * Main Document Extractor function with rigorous validation,
+ * corruption checks, and scanned document detection.
+ * Accepts either a file path on disk or an in-memory Buffer.
+ */
+export async function extractDocumentText(
+  filePathOrBuffer: string | Buffer,
+  mimeOrExt?: string
+): Promise<ExtractedDocument> {
+  let buffer: Buffer;
+  let ext = '';
+
+  if (Buffer.isBuffer(filePathOrBuffer)) {
+    buffer = filePathOrBuffer;
+    ext = mimeOrExt ? (mimeOrExt.startsWith('.') ? mimeOrExt : (mimeOrExt.includes('/') ? `.${mimeOrExt.split('/').pop()}` : `.${mimeOrExt}`)) : '';
+  } else {
+    if (!fs.existsSync(filePathOrBuffer)) {
+      throw new Error('Unable to read this resume. File does not exist on disk.');
+    }
+    buffer = fs.readFileSync(filePathOrBuffer);
+    ext = path.extname(filePathOrBuffer).toLowerCase();
   }
 
-  const buffer = fs.readFileSync(filePath);
   const fileSize = buffer.length;
 
   if (fileSize === 0) {
@@ -231,26 +262,23 @@ export async function extractDocumentText(filePath: string): Promise<ExtractedDo
   }
 
   const fileHash = crypto.createHash('sha256').update(buffer).digest('hex');
-  const ext = path.extname(filePath).toLowerCase();
 
   let text = '';
   let format: ExtractedDocument['format'] = 'UNKNOWN';
 
-  if (ext === '.pdf') {
+  if (ext === '.pdf' || buffer.subarray(0, 4).toString() === '%PDF') {
     format = 'PDF';
     text = extractTextFromPdf(buffer);
-    // OCR Heuristic Fallback for Scanned Resumes:
-    // If standard PDF stream parsing yields zero characters, run textual reconstruction
     if (!text || text.trim().length === 0) {
       const extractedTokens = buffer.toString('utf-8').match(/[A-Za-z0-9@.+#-]{3,}/g);
       if (extractedTokens && extractedTokens.length > 10) {
         text = extractedTokens.join(' ');
       }
     }
-  } else if (ext === '.docx' || ext === '.doc') {
+  } else if (ext === '.docx' || ext === '.doc' || buffer.subarray(0, 4).toString() === 'PK\x03\x04') {
     format = 'DOCX';
     text = extractTextFromDocx(buffer);
-  } else if (ext === '.txt') {
+  } else if (ext === '.txt' || ext === '' || mimeOrExt?.includes('text') || mimeOrExt === 'text/plain') {
     format = 'TXT';
     text = buffer.toString('utf-8');
   } else {
