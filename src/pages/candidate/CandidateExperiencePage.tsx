@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { api } from '../../services/api';
-import { Card, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
+import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
+import { Pill } from '../../components/kit/Pill';
+import { StatTile } from '../../components/kit/StatTile';
+import { HatchedProgress } from '../../components/kit/HatchedProgress';
+import { Switch } from '../../components/kit/Switch';
 import { ApplyModal } from '../../components/applications/ApplyModal';
 import {
   Sparkles,
   Compass,
   CheckCircle2,
-  AlertCircle,
   ExternalLink,
   ShieldCheck,
   Globe,
@@ -19,15 +21,11 @@ import {
   Download,
   Trash2,
   Lock,
-  Eye,
   BookOpen,
-  ArrowRight,
   Briefcase,
   Building2,
-  MapPin,
-  Clock,
-  Layers,
-  Award,
+  Check,
+  Play,
 } from 'lucide-react';
 
 const GithubIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
@@ -35,6 +33,8 @@ const GithubIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" })
     <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
   </svg>
 );
+
+export type SkillProgressStatus = 'not_started' | 'in_progress' | 'mastered';
 
 interface CandidateExperiencePageProps {
   onNavigate: (path: string, params?: Record<string, any>) => void;
@@ -44,9 +44,23 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
   const { user, logout } = useAuth();
   const { showToast } = useToast();
 
-  const [activeTab, setActiveTab] = useState<'recommendations' | 'roadmap' | 'verification' | 'privacy'>('recommendations');
+  // Active Tab defaults to 'roadmap' (Skill Gap and Roadmap)
+  const [activeTab, setActiveTab] = useState<'roadmap' | 'simulator' | 'recommendations' | 'verification' | 'privacy'>('roadmap');
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [isLoadingDashboard, setIsLoadingDashboard] = useState(true);
+
+  // Skill Gap Progress Tracker state (persisted locally)
+  const [skillProgress, setSkillProgress] = useState<Record<string, SkillProgressStatus>>(() => {
+    try {
+      const saved = localStorage.getItem('resumio_skill_progress');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  // What-If Toggle switch inside roadmap
+  const [showWhatIfInRoadmap, setShowWhatIfInRoadmap] = useState(true);
 
   // Tab 1: Recommendations & Preferences
   const [recommendations, setRecommendations] = useState<any[]>([]);
@@ -125,6 +139,9 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
       const res = await api.getUpskillingRoadmap();
       if (res.success && res.data) {
         setRoadmap(res.data);
+        if (res.data.steps && res.data.steps.length > 0 && !simJobId && recommendations.length > 0) {
+          setSimJobId(recommendations[0].jobId);
+        }
       }
     } catch (err: any) {
       console.warn('Roadmap fetch notice:', err.message);
@@ -152,6 +169,22 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
     loadRoadmap();
     loadConsentsAndLogs();
   }, []);
+
+  // Update Skill Progress Tracker
+  const updateSkillStatus = (skillName: string, status: SkillProgressStatus) => {
+    const updated = { ...skillProgress, [skillName]: status };
+    setSkillProgress(updated);
+    try {
+      localStorage.setItem('resumio_skill_progress', JSON.stringify(updated));
+    } catch (err) {
+      console.error('Failed to save skill progress', err);
+    }
+    showToast(
+      'info',
+      'Progress Updated',
+      `${skillName} marked as ${status === 'mastered' ? 'Mastered' : status === 'in_progress' ? 'In Progress' : 'Not Started'}.`
+    );
+  };
 
   // Handlers
   const handleSavePreferences = async () => {
@@ -192,7 +225,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
       });
       if (res.success && res.data) {
         setSimulationResult(res.data);
-        showToast('success', 'Simulation Complete', `Projected score change: +${res.data.scoreDelta}%`);
+        showToast('success', 'Simulation Complete', `Projected score change: +${res.data.scoreDelta} pts`);
       }
     } catch (err: any) {
       showToast('error', 'Simulation Failed', err.message);
@@ -302,473 +335,521 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
     }
   };
 
+  // Compute skill gap stats
+  const totalSteps = roadmap?.steps?.length || 0;
+  const masteredCount = roadmap?.steps?.filter((s: any) => skillProgress[s.skillName] === 'mastered').length || 0;
+  const inProgressCount = roadmap?.steps?.filter((s: any) => skillProgress[s.skillName] === 'in_progress').length || 0;
+  const progressPercent = totalSteps > 0 ? Math.round((masteredCount / totalSteps) * 100) : 0;
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-16">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-surface-dark-border pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[#E7E7E2] dark:border-white/8 pb-5">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-white flex items-center justify-center font-bold shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1F8FA6] to-[#0D6A7D] text-white flex items-center justify-center font-bold shadow-xs">
               <Compass className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-              Candidate Career Hub & Evidence Verification
-            </h1>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
+                  Skill Gap & Career Roadmap
+                </h1>
+                <Pill variant="micro-status" color="teal">AI Guided</Pill>
+              </div>
+              <p className="mt-0.5 text-xs text-[#5E6460] dark:text-[#9AA7AB] font-medium">
+                Counterfactual upskilling roadmap, ranked score-lift gaps, verified curated resources, and interactive what-if simulator.
+              </p>
+            </div>
           </div>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Explainable job recommendations, counterfactual upskilling roadmaps, GitHub evidence verification, and complete GDPR/CCPA data rights.
-          </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-start sm:self-auto">
           <Button
             variant="secondary"
             size="sm"
-            onClick={handleExportData}
-            isLoading={isExportingData}
-            leftIcon={<Download className="w-3.5 h-3.5" />}
+            onClick={() => onNavigate('jobs')}
+            leftIcon={<Briefcase className="w-3.5 h-3.5" />}
           >
-            Export My Data
+            Explore Jobs
           </Button>
           <Button
             variant="primary"
             size="sm"
-            onClick={() => setActiveTab('privacy')}
-            leftIcon={<ShieldCheck className="w-3.5 h-3.5" />}
+            onClick={() => setActiveTab('simulator')}
+            leftIcon={<Sparkles className="w-3.5 h-3.5" />}
           >
-            Privacy & Rights
+            What-If Simulator
           </Button>
         </div>
       </div>
 
-      {/* Top Overview Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Card className="p-4 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Resume Strength</span>
-            <TrendingUp className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">
-              {dashboardData?.resumeStrength || 75}%
+      {/* FinGlow / Vestmark StatTiles Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatTile
+          label="Target Jobs Analyzed"
+          value={<span className="figure">{roadmap?.totalTargetJobsAnalyzed || recommendations.length || 0}</span>}
+          accentColor="#1F8FA6"
+          hint="Requisitions across active employers"
+        />
+        <StatTile
+          label="Current Average Match"
+          value={<span className="figure">{roadmap?.currentAverageScore || 72}%</span>}
+          accentColor="#F59E0B"
+          hint="Baseline competency alignment"
+        />
+        <StatTile
+          label="Projected Average Match"
+          value={<span className="figure">{roadmap?.projectedAverageScore || 88}%</span>}
+          accentColor="#10B981"
+          hint="Target with roadmap completion"
+        />
+        <StatTile
+          label="Net Projected Lift"
+          value={
+            <span className="figure text-[#1F8FA6]">
+              +{(roadmap?.projectedAverageScore || 88) - (roadmap?.currentAverageScore || 72)} pts
             </span>
-            <Badge variant="success" size="sm">ATS Ready</Badge>
-          </div>
-          <div className="w-full bg-slate-100 dark:bg-surface-dark-bg h-1.5 rounded-full mt-2.5 overflow-hidden">
-            <div
-              className="bg-brand-600 h-1.5 rounded-full"
-              style={{ width: `${dashboardData?.resumeStrength || 75}%` }}
-            />
-          </div>
-        </Card>
-
-        <Card className="p-4 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Verified Skills</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">
-              {dashboardData?.verifiedSkillsCount || 0}
-            </span>
-            <span className="text-xs text-slate-400">of {dashboardData?.skillsCount || 0} claimed</span>
-          </div>
-          <p className="text-[11px] text-slate-500 mt-2">
-            Verified by public GitHub commits
-          </p>
-        </Card>
-
-        <Card className="p-4 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Active Applications</span>
-            <Briefcase className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">
-              {dashboardData?.applications?.length || 0}
-            </span>
-            <Badge variant="info" size="sm">In Review</Badge>
-          </div>
-          <p className="text-[11px] text-slate-500 mt-2">
-            {dashboardData?.upcomingInterviews?.length || 0} upcoming interviews
-          </p>
-        </Card>
-
-        <Card className="p-4 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
-            <span>Profile Access Audit</span>
-            <Eye className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">
-              {profileAccessLogs.length}
-            </span>
-            <span className="text-xs text-slate-400">recruiter views</span>
-          </div>
-          <p className="text-[11px] text-slate-500 mt-2">
-            Full DPDP/GDPR visibility
-          </p>
-        </Card>
+          }
+          accentColor="#1F8FA6"
+          hint="Cumulative ATS match score boost"
+        />
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="flex items-center gap-1 border-b border-slate-200 dark:border-surface-dark-border overflow-x-auto pb-px">
-        <button
-          onClick={() => setActiveTab('recommendations')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-lg transition-colors border-b-2 -mb-px whitespace-nowrap ${
-            activeTab === 'recommendations'
-              ? 'border-brand-600 text-brand-600 dark:text-brand-400 bg-brand-50/50 dark:bg-brand-950/20'
-              : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
-        >
-          <Sparkles className="w-4 h-4" />
-          Job Recommendations & Why ({recommendations.length})
-        </button>
-
+      {/* Navigation Tabs Bar */}
+      <div className="flex items-center gap-1.5 border-b border-[#E7E7E2] dark:border-white/8 overflow-x-auto pb-px scrollbar-none">
         <button
           onClick={() => setActiveTab('roadmap')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-lg transition-colors border-b-2 -mb-px whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition-colors border-b-2 -mb-px whitespace-nowrap cursor-pointer ${
             activeTab === 'roadmap'
-              ? 'border-brand-600 text-brand-600 dark:text-brand-400 bg-brand-50/50 dark:bg-brand-950/20'
-              : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
           }`}
         >
           <TrendingUp className="w-4 h-4" />
-          Upskilling Roadmap & What-If Simulator
+          <span>Skill Gap Roadmap ({totalSteps})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('simulator')}
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition-colors border-b-2 -mb-px whitespace-nowrap cursor-pointer ${
+            activeTab === 'simulator'
+              ? 'border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>What-If Scenario Simulator</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('recommendations')}
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition-colors border-b-2 -mb-px whitespace-nowrap cursor-pointer ${
+            activeTab === 'recommendations'
+              ? 'border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+          }`}
+        >
+          <Briefcase className="w-4 h-4" />
+          <span>Target Jobs & Fit ({recommendations.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('verification')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-lg transition-colors border-b-2 -mb-px whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition-colors border-b-2 -mb-px whitespace-nowrap cursor-pointer ${
             activeTab === 'verification'
-              ? 'border-brand-600 text-brand-600 dark:text-brand-400 bg-brand-50/50 dark:bg-brand-950/20'
-              : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          Evidence & Verification (GitHub / Portfolio)
+          <span>Evidence Verification</span>
         </button>
 
         <button
           onClick={() => setActiveTab('privacy')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-lg transition-colors border-b-2 -mb-px whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-t-xl transition-colors border-b-2 -mb-px whitespace-nowrap cursor-pointer ${
             activeTab === 'privacy'
-              ? 'border-brand-600 text-brand-600 dark:text-brand-400 bg-brand-50/50 dark:bg-brand-950/20'
-              : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'border-[#1F8FA6] text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10'
+              : 'border-transparent text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
           }`}
         >
           <Lock className="w-4 h-4" />
-          Data Rights & Privacy (GDPR / DPDP)
+          <span>Privacy & Consents</span>
         </button>
       </div>
 
-      {/* Tab 1: Explainable Recommendations */}
-      {activeTab === 'recommendations' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                Explainable Job Recommendations
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Transparent ranking computed with zero protected attributes (no gender, age, nationality, photo).
-              </p>
+      {/* Tab 1: Skill Gap Roadmap (Screen 5 Core) */}
+      {activeTab === 'roadmap' && (
+        <div className="space-y-6">
+          {/* Progress Tracker Strip */}
+          <div className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 rounded-2xl p-5 shadow-2xs space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
+                    Roadmap Mastery Tracker
+                  </h3>
+                  <Pill variant="micro-status" color="teal">
+                    <span className="figure">{masteredCount}/{totalSteps}</span> Complete
+                  </Pill>
+                </div>
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5 font-medium">
+                  Mark skills as In Progress or Mastered as you work through verified learning modules.
+                </p>
+              </div>
+
+              {/* What-If Simulator Quick Toggle */}
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-medium text-[#5E6460] dark:text-[#9AA7AB]">
+                  Include What-If Simulator:
+                </span>
+                <Switch
+                  checked={showWhatIfInRoadmap}
+                  onChange={setShowWhatIfInRoadmap}
+                  aria-label="Toggle What-If Simulator preview in roadmap"
+                />
+              </div>
             </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setShowPreferencesEditor(!showPreferencesEditor)}
-              leftIcon={<Sliders className="w-3.5 h-3.5" />}
-            >
-              {showPreferencesEditor ? 'Hide Preferences' : 'Tune Preferences'}
-            </Button>
+
+            {/* HatchedProgress */}
+            <div className="pt-1">
+              <HatchedProgress
+                value={progressPercent}
+                height="h-3"
+                color="teal"
+                striped={true}
+                animated={inProgressCount > 0}
+              />
+              <div className="flex justify-between items-center text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-1.5 font-medium">
+                <span>{masteredCount} Mastered • {inProgressCount} In Progress</span>
+                <span className="figure font-bold text-[#1F8FA6]">{progressPercent}% Gap Closed</span>
+              </div>
+            </div>
           </div>
 
-          {/* Preferences Card */}
-          {showPreferencesEditor && (
-            <Card className="p-4 bg-slate-50 dark:bg-surface-dark-card border-brand-200 dark:border-brand-900/60 space-y-4">
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                Stated Job Search Preferences
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Ranked List of Skills to Learn */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
+                  Ranked Priority Skill Gaps
+                </h3>
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">
+                  Ordered by quantifiable match score gain ($+\Delta S$). Links verified against official ontologies.
+                </p>
+              </div>
+            </div>
+
+            {isLoadingRoadmap ? (
+              <div className="space-y-3 animate-pulse">
+                {[1, 2, 3].map(n => (
+                  <div key={n} className="h-44 rounded-2xl bg-black/5 dark:bg-white/5 border border-[#E7E7E2] dark:border-white/8" />
+                ))}
+              </div>
+            ) : (!roadmap || !roadmap.steps || roadmap.steps.length === 0) ? (
+              <Card padding="lg" className="text-center py-12 space-y-3 border border-[#E7E7E2] dark:border-white/8 rounded-2xl bg-white dark:bg-[#0D1214]">
+                <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
+                <h4 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
+                  No Critical Skill Gaps Detected
+                </h4>
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] max-w-md mx-auto">
+                  Your profile matches 90%+ across active requisitions. Explore open jobs to apply directly.
+                </p>
+                <Button variant="primary" size="sm" onClick={() => onNavigate('jobs')}>
+                  Browse Open Jobs
+                </Button>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {roadmap.steps.map((step: any, idx: number) => {
+                  const currentStatus = skillProgress[step.skillName] || 'not_started';
+
+                  return (
+                    <div
+                      key={step.step || idx}
+                      className={`bg-white dark:bg-[#0D1214] border rounded-2xl p-5 shadow-2xs transition-all duration-200 space-y-4 ${
+                        currentStatus === 'mastered'
+                          ? 'border-emerald-300 dark:border-emerald-800/60 bg-emerald-50/10 dark:bg-emerald-950/10'
+                          : currentStatus === 'in_progress'
+                          ? 'border-[#1F8FA6]/40 dark:border-[#1F8FA6]/30'
+                          : 'border-[#E7E7E2] dark:border-white/8 hover:border-[#1F8FA6]/30'
+                      }`}
+                    >
+                      {/* Top Row: Rank Badge, Title, Points Impact, Status Buttons */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-[#1F8FA6]/10 text-[#1F8FA6] flex items-center justify-center font-extrabold text-xs figure shrink-0">
+                            #{step.step || idx + 1}
+                          </div>
+
+                          <div>
+                            <div className="flex items-center gap-2.5 flex-wrap">
+                              <h4 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
+                                Learn {step.skillName}
+                              </h4>
+                              <Pill variant="micro-status" color="teal">
+                                <span className="figure font-bold">+{step.impactScoreDelta}%</span> Match Lift
+                              </Pill>
+                            </div>
+                            <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB] font-medium">
+                              Est. {step.estimatedHours || 12} hrs • {step.difficulty || 'Intermediate'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Interactive Progress Selector Buttons */}
+                        <div className="flex items-center gap-1.5 bg-black/5 dark:bg-white/5 p-1 rounded-xl border border-[#E7E7E2] dark:border-white/8 self-start sm:self-auto">
+                          <button
+                            type="button"
+                            onClick={() => updateSkillStatus(step.skillName, 'not_started')}
+                            className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
+                              currentStatus === 'not_started'
+                                ? 'bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] shadow-2xs font-semibold'
+                                : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                            }`}
+                          >
+                            Not Started
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateSkillStatus(step.skillName, 'in_progress')}
+                            className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors cursor-pointer flex items-center gap-1 ${
+                              currentStatus === 'in_progress'
+                                ? 'bg-[#1F8FA6] text-white shadow-2xs font-semibold'
+                                : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                            }`}
+                          >
+                            <Play className="w-3 h-3" />
+                            <span>In Progress</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateSkillStatus(step.skillName, 'mastered')}
+                            className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors cursor-pointer flex items-center gap-1 ${
+                              currentStatus === 'mastered'
+                                ? 'bg-emerald-600 text-white shadow-2xs font-semibold'
+                                : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                            }`}
+                          >
+                            <Check className="w-3 h-3" />
+                            <span>Mastered</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
+                        Unlocks higher alignment across <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">{step.jobsImpactedCount || 2} target position(s)</span>
+                        {step.targetJobTitles?.length > 0 && `: ${step.targetJobTitles.slice(0, 3).join(', ')}`}.
+                      </p>
+
+                      {/* Curated Authentic Resources (Rule 2: Zero Hallucinated Links) */}
+                      <div className="pt-3 border-t border-[#E7E7E2] dark:border-white/8 space-y-2">
+                        <span className="text-[10px] font-bold text-[#8C928E] dark:text-[#5F6C70] uppercase tracking-wider block">
+                          Verified Curated Learning Resources
+                        </span>
+                        {step.curatedResources?.length > 0 ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            {step.curatedResources.map((res: any) => (
+                              <a
+                                key={res.id || res.url}
+                                href={res.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="p-3 rounded-xl border border-[#E7E7E2] dark:border-white/8 bg-black/[0.015] dark:bg-white/[0.02] hover:border-[#1F8FA6]/50 hover:bg-[#1F8FA6]/5 transition-all flex items-center justify-between text-xs group cursor-pointer"
+                              >
+                                <div className="min-w-0 pr-2 space-y-0.5">
+                                  <div className="font-semibold text-[#1F8FA6] dark:text-[#5FD3E8] truncate group-hover:underline flex items-center gap-1.5">
+                                    <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                                    <span className="truncate">{res.title}</span>
+                                  </div>
+                                  <div className="text-[11px] text-[#8C928E] dark:text-[#5F6C70] truncate">
+                                    {res.provider || 'Official Documentation'} • {res.resourceType || 'Reference'}
+                                  </div>
+                                </div>
+                                <ExternalLink className="w-3.5 h-3.5 text-[#8C928E] group-hover:text-[#1F8FA6] shrink-0" />
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="p-3 rounded-xl bg-black/[0.015] dark:bg-white/[0.02] border border-dashed border-[#E7E7E2] dark:border-white/10 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex items-center gap-2">
+                            <Compass className="w-4 h-4 text-[#8C928E] shrink-0" />
+                            <span>{step.searchSuggestion || `Search official documentation for ${step.skillName}`}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Optional In-Roadmap What-If Simulator Card */}
+          {showWhatIfInRoadmap && (
+            <div className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 rounded-2xl p-6 shadow-2xs space-y-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#1F8FA6]/10 text-[#1F8FA6] flex items-center justify-center">
+                  <Sparkles className="w-4 h-4" />
+                </div>
                 <div>
-                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                    Work Modes
+                  <h3 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
+                    Interactive What-If Scenario Sandbox
+                  </h3>
+                  <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+                    Simulate how mastering skills alters your match score against any published job opening.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div>
+                  <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1.5">
+                    Target Opportunity
                   </label>
-                  <div className="flex items-center gap-3">
-                    {['Remote', 'Hybrid', 'On-site'].map((mode: any) => (
-                      <label key={mode} className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300">
-                        <input
-                          type="checkbox"
-                          checked={preferences.preferredWorkModes?.includes(mode)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setPreferences({ ...preferences, preferredWorkModes: [...preferences.preferredWorkModes, mode] });
-                            } else {
-                              setPreferences({ ...preferences, preferredWorkModes: preferences.preferredWorkModes.filter((m: string) => m !== mode) });
-                            }
-                          }}
-                          className="rounded border-slate-300 text-brand-600 focus:ring-brand-500"
-                        />
-                        {mode}
-                      </label>
+                  <select
+                    value={simJobId}
+                    onChange={(e) => setSimJobId(e.target.value)}
+                    className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
+                  >
+                    <option value="">Select a target role...</option>
+                    {recommendations.map(r => (
+                      <option key={r.jobId} value={r.jobId}>
+                        {r.jobTitle} ({r.companyName})
+                      </option>
                     ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1.5">
+                    Add Hypothetical Skill
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={simNewSkill}
+                      onChange={(e) => setSimNewSkill(e.target.value)}
+                      placeholder="e.g. Docker, GraphQL"
+                      className="flex-1 text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        if (simNewSkill.trim() && !simSkillsList.includes(simNewSkill.trim())) {
+                          setSimSkillsList([...simSkillsList, simNewSkill.trim()]);
+                          setSimNewSkill('');
+                        }
+                      }}
+                    >
+                      Add
+                    </Button>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                    Minimum Annual Salary ($)
+                  <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1.5">
+                    Extra Experience (Years)
                   </label>
                   <input
                     type="number"
-                    value={preferences.minSalary || ''}
-                    onChange={(e) => setPreferences({ ...preferences, minSalary: e.target.value ? Number(e.target.value) : undefined })}
-                    placeholder="e.g. 90000"
-                    className="w-full text-xs rounded-lg border-slate-300 dark:border-surface-dark-border dark:bg-surface-dark-bg p-2"
+                    min="0"
+                    max="10"
+                    value={simExtraYears}
+                    onChange={(e) => setSimExtraYears(Number(e.target.value))}
+                    className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
-                <Button variant="secondary" size="sm" onClick={() => setShowPreferencesEditor(false)}>
-                  Cancel
-                </Button>
-                <Button variant="primary" size="sm" onClick={handleSavePreferences} isLoading={isSavingPreferences}>
-                  Save Preferences
+              {simSkillsList.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 items-center pt-1">
+                  <span className="text-[11px] font-semibold text-[#8C928E]">Testing skills:</span>
+                  {simSkillsList.map(s => (
+                    <span
+                      key={s}
+                      className="px-2.5 py-0.5 rounded-full text-xs bg-[#1F8FA6]/10 text-[#1F8FA6] border border-[#1F8FA6]/20 flex items-center gap-1 font-medium"
+                    >
+                      {s}
+                      <button
+                        onClick={() => setSimSkillsList(simSkillsList.filter(item => item !== s))}
+                        className="hover:text-rose-600 font-bold ml-1 cursor-pointer"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex justify-end pt-1">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleRunSimulation}
+                  isLoading={isSimulating}
+                  leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+                >
+                  Run What-If Simulation
                 </Button>
               </div>
-            </Card>
-          )}
 
-          {/* Recommendations List */}
-          {recommendations.length === 0 ? (
-            <Card className="p-8 text-center bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-2">
-              <Sparkles className="w-8 h-8 text-slate-400 mx-auto" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                No active job recommendations matching your profile
-              </h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto">
-                Upload or update your skills in the Resume Manager, or expand your location and salary preferences to see new opportunities.
-              </p>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {recommendations.map((rec) => (
-                <Card
-                  key={rec.jobId}
-                  className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border hover:border-brand-300 dark:hover:border-brand-700 transition-all space-y-3"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                          {rec.jobTitle}
-                        </h3>
-                        <Badge variant="primary" size="sm">
-                          {rec.recommendationScore}% Match
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span className="flex items-center gap-1">
-                          <Building2 className="w-3.5 h-3.5" />
-                          {rec.companyName}
-                        </span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5" />
-                          {rec.location} ({rec.workMode})
-                        </span>
-                        {rec.salaryRange && (
-                          <>
-                            <span>•</span>
-                            <span>{rec.salaryRange}</span>
-                          </>
-                        )}
-                      </div>
+              {simulationResult && (
+                <div className="p-4 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 space-y-3 mt-2">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] uppercase tracking-wider">
+                      Simulation Projection: {simulationResult.jobTitle}
+                    </h4>
+                    <Pill variant="micro-status" color="teal">
+                      <span className="figure font-bold">+{simulationResult.scoreDelta} pts</span> Increase
+                    </Pill>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="p-3 rounded-xl bg-white dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/8 text-center">
+                      <div className="text-[10px] text-[#8C928E] uppercase font-bold">Baseline Score</div>
+                      <div className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7] figure">{simulationResult.baseScore}%</div>
                     </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleDismissJob(rec.jobId)}
-                      >
-                        Not Interested
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => setSelectedJobForApply({ id: rec.jobId, title: rec.jobTitle, company_name: rec.companyName, location: rec.location })}
-                        leftIcon={<Sparkles className="w-3.5 h-3.5" />}
-                      >
-                        Preview & Apply
-                      </Button>
+                    <div className="p-3 rounded-xl bg-white dark:bg-[#151D20] border border-emerald-300 dark:border-emerald-800 text-center">
+                      <div className="text-[10px] text-emerald-600 uppercase font-bold">Simulated Score</div>
+                      <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400 figure">{simulationResult.simulatedScore}%</div>
+                    </div>
+                    <div className="p-3 rounded-xl bg-white dark:bg-[#151D20] border border-[#1F8FA6]/30 text-center">
+                      <div className="text-[10px] text-[#1F8FA6] uppercase font-bold">Net Score Lift</div>
+                      <div className="text-lg font-bold text-[#1F8FA6] figure">+{simulationResult.scoreDelta} pts</div>
                     </div>
                   </div>
-
-                  {/* Why this job section */}
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg/60 border border-slate-200/60 dark:border-surface-dark-border/60 text-xs space-y-1.5">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                      Why this recommendation
-                    </span>
-                    <ul className="space-y-1 text-slate-700 dark:text-slate-300">
-                      {rec.reasonsWhy?.map((reason: string, i: number) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                          <span>{reason}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Matched vs Missing Skills Badges */}
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
-                    <span className="font-semibold text-slate-500 text-[11px] mr-1">Skills:</span>
-                    {rec.matchedSkills?.map((skill: string) => (
-                      <span
-                        key={skill}
-                        className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
-                      >
-                        ✓ {skill}
-                      </span>
-                    ))}
-                    {rec.missingSkills?.map((skill: string) => (
-                      <span
-                        key={skill}
-                        className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
-                      >
-                        + {skill}
-                      </span>
-                    ))}
-                  </div>
-                </Card>
-              ))}
+                </div>
+              )}
             </div>
           )}
         </div>
       )}
 
-      {/* Tab 2: Upskilling Roadmap & What-If Simulator */}
-      {activeTab === 'roadmap' && (
+      {/* Tab 2: Dedicated What-If Scenario Simulator View */}
+      {activeTab === 'simulator' && (
         <div className="space-y-6">
-          {/* Upskilling Roadmap Summary */}
-          {roadmap && (
-            <Card className="p-5 bg-gradient-to-r from-brand-50 to-indigo-50/40 dark:from-surface-dark-card dark:to-surface-dark-card border-brand-200 dark:border-surface-dark-border space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                    Counterfactual Upskilling Roadmap
-                  </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">
-                    Aggregated across {roadmap.totalTargetJobsAnalyzed} published target jobs. Missing skills ranked by real match score gain ($+\Delta S$).
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <div className="text-[10px] uppercase font-bold text-slate-400">Current Match</div>
-                    <div className="text-base font-bold text-slate-900 dark:text-white">{roadmap.currentAverageScore}%</div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-brand-600" />
-                  <div className="text-right">
-                    <div className="text-[10px] uppercase font-bold text-emerald-600">Projected Match</div>
-                    <div className="text-base font-bold text-emerald-600 dark:text-emerald-400">{roadmap.projectedAverageScore}%</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Steps List */}
-              <div className="space-y-3 pt-3">
-                {roadmap.steps?.map((step: any) => (
-                  <div
-                    key={step.step}
-                    className="p-4 rounded-xl bg-white dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border space-y-2.5 shadow-xs"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 flex items-center justify-center font-bold text-xs">
-                          {step.step}
-                        </span>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                          Learn {step.skillName}
-                        </h4>
-                        <Badge variant="success" size="sm">
-                          +{step.impactScoreDelta}% Match Impact
-                        </Badge>
-                      </div>
-                      <span className="text-xs text-slate-500">
-                        Est. {step.estimatedHours} hrs • {step.difficulty}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-slate-600 dark:text-slate-400">
-                      Unlocks higher alignment across {step.jobsImpactedCount} target position(s): {step.targetJobTitles?.slice(0, 3).join(', ')}.
-                    </p>
-
-                    {/* Curated Authentic Resources (Truthfulness Guarantee) */}
-                    <div className="pt-2 border-t border-slate-100 dark:border-surface-dark-border space-y-1.5">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                        Curated Learning Resources (No Hallucinated Links)
-                      </span>
-                      {step.curatedResources?.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {step.curatedResources.map((res: any) => (
-                            <a
-                              key={res.id}
-                              href={res.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="p-2.5 rounded-lg border border-slate-200 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-card hover:border-brand-400 flex items-center justify-between text-xs group"
-                            >
-                              <div className="min-w-0 pr-2">
-                                <div className="font-semibold text-brand-600 dark:text-brand-400 truncate group-hover:underline flex items-center gap-1">
-                                  <BookOpen className="w-3.5 h-3.5 shrink-0" />
-                                  <span>{res.title}</span>
-                                </div>
-                                <div className="text-[10px] text-slate-400 truncate">
-                                  {res.provider} • {res.resourceType}
-                                </div>
-                              </div>
-                              <ExternalLink className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                            </a>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-surface-dark-card border border-dashed border-slate-300 dark:border-surface-dark-border text-xs text-slate-500 flex items-center gap-2">
-                          <Compass className="w-4 h-4 text-slate-400 shrink-0" />
-                          <span>{step.searchSuggestion}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Interactive What-If Simulator */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                Interactive What-If Scenario Simulator
+          <div className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 rounded-2xl p-6 shadow-2xs space-y-5">
+            <div className="space-y-1">
+              <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
+                What-If Scenario Simulator
               </h3>
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+                Evaluate hypothetical skills and experience additions against any published job opening using Resumio's explainable deterministic scoring engine.
+              </p>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Test how adding specific evidenced skills or experience years alters your Phase 6 match score for any target job.
-            </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-                  Target Job
+                <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1.5">
+                  Select Target Job
                 </label>
                 <select
                   value={simJobId}
                   onChange={(e) => setSimJobId(e.target.value)}
-                  className="w-full text-xs rounded-lg border-slate-300 dark:border-surface-dark-border dark:bg-surface-dark-bg p-2"
+                  className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                 >
-                  <option value="">Select a job...</option>
+                  <option value="">Select a target role...</option>
                   {recommendations.map(r => (
                     <option key={r.jobId} value={r.jobId}>
                       {r.jobTitle} ({r.companyName})
@@ -778,7 +859,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1.5">
                   Add Hypothetical Skill
                 </label>
                 <div className="flex gap-2">
@@ -786,8 +867,8 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                     type="text"
                     value={simNewSkill}
                     onChange={(e) => setSimNewSkill(e.target.value)}
-                    placeholder="e.g. Docker, GraphQL"
-                    className="flex-1 text-xs rounded-lg border-slate-300 dark:border-surface-dark-border dark:bg-surface-dark-bg p-2"
+                    placeholder="e.g. AWS Lambda, Kubernetes"
+                    className="flex-1 text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                   />
                   <Button
                     variant="secondary"
@@ -805,8 +886,8 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-                  Extra Experience (Years)
+                <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1.5">
+                  Extra Experience Years
                 </label>
                 <input
                   type="number"
@@ -814,20 +895,23 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                   max="10"
                   value={simExtraYears}
                   onChange={(e) => setSimExtraYears(Number(e.target.value))}
-                  className="w-full text-xs rounded-lg border-slate-300 dark:border-surface-dark-border dark:bg-surface-dark-bg p-2"
+                  className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                 />
               </div>
             </div>
 
             {simSkillsList.length > 0 && (
               <div className="flex flex-wrap gap-1.5 items-center">
-                <span className="text-[11px] font-semibold text-slate-400">Hypothetical skills:</span>
+                <span className="text-[11px] font-semibold text-[#8C928E]">Tested skills:</span>
                 {simSkillsList.map(s => (
-                  <span key={s} className="px-2 py-0.5 rounded-full text-xs bg-brand-50 text-brand-700 border border-brand-200 flex items-center gap-1">
+                  <span
+                    key={s}
+                    className="px-2.5 py-0.5 rounded-full text-xs bg-[#1F8FA6]/10 text-[#1F8FA6] border border-[#1F8FA6]/20 flex items-center gap-1 font-medium"
+                  >
                     {s}
                     <button
                       onClick={() => setSimSkillsList(simSkillsList.filter(item => item !== s))}
-                      className="hover:text-rose-600 font-bold ml-1"
+                      className="hover:text-rose-600 font-bold ml-1 cursor-pointer"
                     >
                       ×
                     </button>
@@ -836,65 +920,222 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
               </div>
             )}
 
-            <div className="flex justify-end pt-2">
+            <div className="flex justify-end">
               <Button
                 variant="primary"
-                size="sm"
+                size="md"
                 onClick={handleRunSimulation}
                 isLoading={isSimulating}
-                leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+                leftIcon={<Sparkles className="w-4 h-4" />}
               >
                 Run What-If Simulation
               </Button>
             </div>
 
-            {/* Simulation Results Display */}
             {simulationResult && (
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-surface-dark-bg border border-slate-200 dark:border-surface-dark-border space-y-3 mt-4">
+              <div className="p-5 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] uppercase tracking-wider">
                     Simulation Output: {simulationResult.jobTitle}
                   </h4>
-                  <Badge variant="success" size="md">
-                    +{simulationResult.scoreDelta}% Score Increase
-                  </Badge>
+                  <Pill variant="micro-status" color="teal">
+                    <span className="figure font-bold">+{simulationResult.scoreDelta} pts</span> Increase
+                  </Pill>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <div className="p-3 rounded-lg bg-white dark:bg-surface-dark-card border border-slate-200 text-center">
-                    <div className="text-[10px] text-slate-400 uppercase font-bold">Baseline Score</div>
-                    <div className="text-lg font-bold text-slate-800 dark:text-slate-200">{simulationResult.baseScore}%</div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="p-4 rounded-xl bg-white dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/8 text-center">
+                    <div className="text-[10px] text-[#8C928E] uppercase font-bold">Baseline Score</div>
+                    <div className="text-2xl font-bold text-[#111312] dark:text-[#F2F6F7] figure mt-1">{simulationResult.baseScore}%</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-white dark:bg-surface-dark-card border border-emerald-200 text-center">
+                  <div className="p-4 rounded-xl bg-white dark:bg-[#151D20] border border-emerald-300 dark:border-emerald-800 text-center">
                     <div className="text-[10px] text-emerald-600 uppercase font-bold">Simulated Score</div>
-                    <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{simulationResult.simulatedScore}%</div>
+                    <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 figure mt-1">{simulationResult.simulatedScore}%</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-white dark:bg-surface-dark-card border border-slate-200 text-center col-span-2 sm:col-span-1">
-                    <div className="text-[10px] text-slate-400 uppercase font-bold">Score Delta</div>
-                    <div className="text-lg font-bold text-brand-600">+{simulationResult.scoreDelta} pts</div>
+                  <div className="p-4 rounded-xl bg-white dark:bg-[#151D20] border border-[#1F8FA6]/30 text-center">
+                    <div className="text-[10px] text-[#1F8FA6] uppercase font-bold">Net Score Gain</div>
+                    <div className="text-2xl font-bold text-[#1F8FA6] figure mt-1">+{simulationResult.scoreDelta} pts</div>
                   </div>
                 </div>
               </div>
             )}
-          </Card>
+          </div>
         </div>
       )}
 
-      {/* Tab 3: Evidence & Verification */}
+      {/* Tab 3: Target Jobs & Fit */}
+      {activeTab === 'recommendations' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
+                Recommended Opportunities
+              </h3>
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+                Matched against your current skill ontology and evidenced profile.
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowPreferencesEditor(!showPreferencesEditor)}
+              leftIcon={<Sliders className="w-3.5 h-3.5" />}
+            >
+              Preferences
+            </Button>
+          </div>
+
+          {showPreferencesEditor && (
+            <Card padding="md" className="border border-[#E7E7E2] dark:border-white/8 rounded-2xl bg-white dark:bg-[#0D1214] space-y-4">
+              <h4 className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] uppercase tracking-wider">
+                Opportunity Preferences
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1">
+                    Work Modes
+                  </label>
+                  <div className="flex gap-3">
+                    {['Remote', 'Hybrid', 'On-site'].map(mode => (
+                      <label key={mode} className="flex items-center gap-1.5 text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+                        <input
+                          type="checkbox"
+                          checked={preferences.preferredWorkModes?.includes(mode)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setPreferences({ ...preferences, preferredWorkModes: [...preferences.preferredWorkModes, mode] });
+                            } else {
+                              setPreferences({ ...preferences, preferredWorkModes: preferences.preferredWorkModes.filter((m: string) => m !== mode) });
+                            }
+                          }}
+                        />
+                        {mode}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1">
+                    Minimum Annual Salary ($)
+                  </label>
+                  <input
+                    type="number"
+                    value={preferences.minSalary || ''}
+                    onChange={(e) => setPreferences({ ...preferences, minSalary: e.target.value ? Number(e.target.value) : undefined })}
+                    placeholder="e.g. 100000"
+                    className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] p-2 text-[#111312] dark:text-[#F2F6F7]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button variant="secondary" size="sm" onClick={() => setShowPreferencesEditor(false)}>
+                  Cancel
+                </Button>
+                <Button variant="primary" size="sm" onClick={handleSavePreferences} isLoading={isSavingPreferences}>
+                  Save Preferences
+                </Button>
+              </div>
+            </Card>
+          )}
+
+          {recommendations.length === 0 ? (
+            <Card padding="lg" className="text-center py-12 space-y-2 border border-[#E7E7E2] dark:border-white/8 rounded-2xl bg-white dark:bg-[#0D1214]">
+              <Sparkles className="w-8 h-8 text-[#8C928E] mx-auto" />
+              <h3 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
+                No matching opportunities found
+              </h3>
+              <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] max-w-md mx-auto">
+                Update your skills or adjust preferences to broaden search recommendations.
+              </p>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {recommendations.map((rec) => (
+                <div
+                  key={rec.jobId}
+                  className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 hover:border-[#1F8FA6]/30 rounded-2xl p-5 shadow-2xs space-y-3"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
+                          {rec.jobTitle}
+                        </h4>
+                        <Pill variant="micro-status" color="teal">
+                          <span className="figure">{rec.recommendationScore}%</span> Match
+                        </Pill>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-[#5E6460] dark:text-[#9AA7AB] font-medium">
+                        <span className="flex items-center gap-1 font-semibold text-[#111312] dark:text-[#F2F6F7]">
+                          <Building2 className="w-3.5 h-3.5 text-[#1F8FA6]" />
+                          {rec.companyName}
+                        </span>
+                        <span>•</span>
+                        <span>{rec.location} ({rec.workMode})</span>
+                        {rec.salaryRange && (
+                          <>
+                            <span>•</span>
+                            <span className="font-semibold text-[#1F8FA6] figure">{rec.salaryRange}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Button variant="secondary" size="sm" onClick={() => handleDismissJob(rec.jobId)}>
+                        Dismiss
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => setSelectedJobForApply({ id: rec.jobId, title: rec.jobTitle, company_name: rec.companyName, location: rec.location })}
+                        leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Why this recommendation */}
+                  {rec.reasonsWhy?.length > 0 && (
+                    <div className="p-3 rounded-xl bg-black/[0.015] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-xs space-y-1">
+                      <span className="text-[10px] font-bold text-[#8C928E] uppercase tracking-wider block">
+                        Why this recommendation
+                      </span>
+                      <ul className="space-y-1 text-[#5E6460] dark:text-[#9AA7AB]">
+                        {rec.reasonsWhy.map((reason: string, i: number) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            <span>{reason}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab 4: Evidence & Verifications */}
       {activeTab === 'verification' && (
         <div className="space-y-6">
-          {/* GitHub Verification Card */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          {/* GitHub Verification */}
+          <div className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 rounded-2xl p-6 shadow-2xs space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <GithubIcon className="w-5 h-5 text-slate-900 dark:text-white" />
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+              <div className="flex items-center gap-2.5">
+                <GithubIcon className="w-5 h-5 text-[#111312] dark:text-[#F2F6F7]" />
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                   GitHub Repository Evidence Verification
                 </h3>
               </div>
-              <Badge variant="info" size="sm">Read-Only Public Data</Badge>
+              <Pill variant="micro-status" color="teal">Read-Only Public Data</Pill>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Connect your public GitHub username to match claimed skills against real commits, languages, and stars. Unverifiable claims are presented neutrally without penalty.
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
+              Connect your public GitHub username to match claimed skills against real repository commits, languages, and stars. Unverifiable claims are presented neutrally without penalty.
             </p>
 
             <div className="flex gap-2">
@@ -902,8 +1143,8 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                 type="text"
                 value={githubUsername}
                 onChange={(e) => setGithubUsername(e.target.value)}
-                placeholder="Enter GitHub username (e.g. torvalds)"
-                className="flex-1 text-xs rounded-lg border-slate-300 dark:border-surface-dark-border dark:bg-surface-dark-bg p-2.5"
+                placeholder="Enter GitHub username (e.g. octocat)"
+                className="flex-1 text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
               />
               <Button
                 variant="primary"
@@ -916,106 +1157,65 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
               </Button>
             </div>
 
-            {/* GitHub Verification Results */}
             {githubResult && (
-              <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-surface-dark-border">
+              <div className="space-y-4 pt-4 border-t border-[#E7E7E2] dark:border-white/8">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg text-center">
-                    <div className="text-[10px] text-slate-400 uppercase font-bold">Total Stars</div>
-                    <div className="text-base font-bold text-slate-900 dark:text-white">⭐ {githubResult.totalStars}</div>
+                  <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-center">
+                    <div className="text-[10px] text-[#8C928E] uppercase font-bold">Total Stars</div>
+                    <div className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] figure">⭐ {githubResult.totalStars}</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg text-center">
-                    <div className="text-[10px] text-slate-400 uppercase font-bold">Analyzed Repos</div>
-                    <div className="text-base font-bold text-slate-900 dark:text-white">{githubResult.analyzedReposCount}</div>
+                  <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-center">
+                    <div className="text-[10px] text-[#8C928E] uppercase font-bold">Analyzed Repos</div>
+                    <div className="text-base font-bold text-[#111312] dark:text-[#F2F6F7] figure">{githubResult.analyzedReposCount}</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg text-center">
-                    <div className="text-[10px] text-slate-400 uppercase font-bold">Original Code Ratio</div>
-                    <div className="text-base font-bold text-emerald-600">{Math.round(githubResult.originalReposRatio * 100)}%</div>
+                  <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-center">
+                    <div className="text-[10px] text-[#8C928E] uppercase font-bold">Original Code Ratio</div>
+                    <div className="text-base font-bold text-emerald-600 figure">{Math.round(githubResult.originalReposRatio * 100)}%</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg text-center">
-                    <div className="text-[10px] text-slate-400 uppercase font-bold">Verified Skills</div>
-                    <div className="text-base font-bold text-brand-600">
+                  <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-center">
+                    <div className="text-[10px] text-[#8C928E] uppercase font-bold">Verified Skills</div>
+                    <div className="text-base font-bold text-[#1F8FA6] figure">
                       {githubResult.verifiedSkills.filter((s: any) => s.isVerified).length}
                     </div>
                   </div>
                 </div>
 
-                {/* Neutral Authenticity Notes */}
-                <div className="p-3 rounded-lg bg-slate-50 dark:bg-surface-dark-bg border border-slate-200 text-xs space-y-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Authenticity Observations (Neutral Analysis)
-                  </span>
-                  {githubResult.authenticityNotes?.map((note: string, idx: number) => (
-                    <div key={idx} className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand-500" />
-                      <span>{note}</span>
+                {/* Skill Verification Badges */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                  {githubResult.verifiedSkills?.map((skill: any) => (
+                    <div
+                      key={skill.skillName}
+                      className={`p-3 rounded-xl border text-xs space-y-1 ${
+                        skill.isVerified
+                          ? 'bg-emerald-50/20 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800'
+                          : 'bg-black/[0.02] dark:bg-white/[0.02] border-[#E7E7E2] dark:border-white/8 opacity-75'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">{skill.skillName}</span>
+                        <Pill variant="micro-status" color={skill.isVerified ? 'teal' : 'neutral'}>
+                          {skill.badge}
+                        </Pill>
+                      </div>
                     </div>
                   ))}
                 </div>
-
-                {/* Skill Verification Badges */}
-                <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                    Claimed Skills Verification Evidence
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {githubResult.verifiedSkills?.map((skill: any) => (
-                      <div
-                        key={skill.skillName}
-                        className={`p-3 rounded-lg border text-xs space-y-1.5 ${
-                          skill.isVerified
-                            ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
-                            : 'bg-slate-50 dark:bg-surface-dark-bg border-slate-200 dark:border-surface-dark-border opacity-70'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-slate-900 dark:text-white">{skill.skillName}</span>
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                              skill.isVerified
-                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200'
-                                : 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400'
-                            }`}
-                          >
-                            {skill.badge}
-                          </span>
-                        </div>
-                        {skill.evidenceSources?.length > 0 && (
-                          <div className="text-[11px] text-slate-600 dark:text-slate-400 space-y-0.5">
-                            {skill.evidenceSources.slice(0, 2).map((ev: any, i: number) => (
-                              <a
-                                key={i}
-                                href={ev.repoUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-brand-600 hover:underline flex items-center gap-1 truncate"
-                              >
-                                <ExternalLink className="w-3 h-3 shrink-0" />
-                                <span>{ev.repoName} ({ev.matchedOn})</span>
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             )}
-          </Card>
+          </div>
 
           {/* Portfolio SSRF-Hardened Verification */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
+          <div className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 rounded-2xl p-6 shadow-2xs space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Globe className="w-5 h-5 text-brand-600" />
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+              <div className="flex items-center gap-2.5">
+                <Globe className="w-5 h-5 text-[#1F8FA6]" />
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                   Portfolio Website Verification (SSRF Protected)
                 </h3>
               </div>
-              <Badge variant="success" size="sm">DNS Rebinding Guarded</Badge>
+              <Pill variant="micro-status" color="teal">DNS Guarded</Pill>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
               Fetched through Resumio's SSRF-hardened fetcher. Private IP ranges, AWS metadata endpoints, and DNS rebinding attacks are strictly blocked.
             </p>
 
@@ -1025,7 +1225,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                 value={portfolioUrl}
                 onChange={(e) => setPortfolioUrl(e.target.value)}
                 placeholder="https://yourdomain.com"
-                className="flex-1 text-xs rounded-lg border-slate-300 dark:border-surface-dark-border dark:bg-surface-dark-bg p-2.5"
+                className="flex-1 text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
               />
               <Button
                 variant="primary"
@@ -1037,64 +1237,22 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                 Verify Portfolio
               </Button>
             </div>
-
-            {portfolioResult && (
-              <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-surface-dark-bg border border-slate-200 text-xs space-y-2">
-                <div className="flex items-center justify-between text-slate-700 dark:text-slate-300 font-semibold">
-                  <span>Verified URL: {portfolioResult.portfolioUrl}</span>
-                  <span>{Math.round(portfolioResult.contentLengthBytes / 1024)} KB fetched</span>
-                </div>
-                <div className="p-2.5 rounded bg-white dark:bg-surface-dark-card border border-slate-200 text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed max-h-32 overflow-y-auto">
-                  {portfolioResult.textSnippet || 'Portfolio site verified successfully.'}
-                </div>
-              </div>
-            )}
-          </Card>
-
-          {/* LinkedIn Manual Data Import */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                LinkedIn Profile Data (Manual Candidate Export)
-              </h3>
-              <Badge variant="neutral" size="sm">Zero Web Scraping</Badge>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Resumio adheres to LinkedIn platform rules and never performs unauthorized web scraping. Paste or import your candidate data export summary below.
-            </p>
-            <textarea
-              rows={3}
-              value={linkedinExportText}
-              onChange={(e) => setLinkedinExportText(e.target.value)}
-              placeholder="Paste exported LinkedIn bio or public resume headline..."
-              className="w-full text-xs rounded-lg border-slate-300 dark:border-surface-dark-border dark:bg-surface-dark-bg p-2.5"
-            />
-            <div className="flex justify-end">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleSaveLinkedinExport}
-                isLoading={isSavingLinkedin}
-              >
-                Import LinkedIn Bio
-              </Button>
-            </div>
-          </Card>
+          </div>
         </div>
       )}
 
-      {/* Tab 4: Privacy, Consent & GDPR / DPDP Data Rights */}
+      {/* Tab 5: Privacy, Consents & GDPR Rights */}
       {activeTab === 'privacy' && (
         <div className="space-y-6">
           {/* Data Portability (GDPR Art 20) */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 rounded-2xl p-6 shadow-2xs space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
                   Data Portability & Export (GDPR Art. 20 / CCPA / DPDP)
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Download a complete, machine-readable JSON package containing all profile data, applications, resumes, verifications, and audit logs.
+                <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+                  Download a complete, machine-readable JSON archive containing all profile data, applications, resumes, verifications, and audit logs.
                 </p>
               </div>
               <Button
@@ -1107,140 +1265,82 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                 Download My Archive
               </Button>
             </div>
-          </Card>
+          </div>
 
           {/* Privacy Consents Toggles */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+          <div className="bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/8 rounded-2xl p-6 shadow-2xs space-y-4">
+            <h3 className="text-base font-bold text-[#111312] dark:text-[#F2F6F7]">
               Data Retention & Usage Consents
             </h3>
             <div className="space-y-3">
-              <label className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 dark:border-surface-dark-border cursor-pointer hover:bg-slate-50 dark:hover:bg-surface-dark-bg">
+              <label className="flex items-start gap-3 p-3.5 rounded-xl border border-[#E7E7E2] dark:border-white/8 cursor-pointer hover:bg-black/[0.015] dark:hover:bg-white/[0.02]">
                 <input
                   type="checkbox"
                   checked={consents.talentPoolInclusion}
                   onChange={(e) => handleSaveConsents({ ...consents, talentPoolInclusion: e.target.checked })}
-                  className="mt-1 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                  className="mt-1 rounded border-slate-300 text-[#1F8FA6] focus:ring-[#1F8FA6]"
                 />
                 <div>
-                  <span className="text-xs font-bold text-slate-900 dark:text-white block">
+                  <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block">
                     Talent Pool Inclusion (Recommended)
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                  <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
                     Allows verified hiring partners to discover your profile for matching open opportunities.
                   </span>
                 </div>
               </label>
 
-              <label className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 dark:border-surface-dark-border cursor-pointer hover:bg-slate-50 dark:hover:bg-surface-dark-bg">
+              <label className="flex items-start gap-3 p-3.5 rounded-xl border border-[#E7E7E2] dark:border-white/8 cursor-pointer hover:bg-black/[0.015] dark:hover:bg-white/[0.02]">
                 <input
                   type="checkbox"
                   checked={consents.trainingDataInclusion}
                   onChange={(e) => handleSaveConsents({ ...consents, trainingDataInclusion: e.target.checked })}
-                  className="mt-1 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                  className="mt-1 rounded border-slate-300 text-[#1F8FA6] focus:ring-[#1F8FA6]"
                 />
                 <div>
-                  <span className="text-xs font-bold text-slate-900 dark:text-white block">
+                  <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block">
                     Anonymized AI Model Training (Opt-In)
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400">
-                    Contribute anonymized, de-identified skill embeddings to improve matching models. All PII is permanently stripped before training.
+                  <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+                    Contribute anonymized skill vectors to train offline matching models. All PII is permanently stripped before training.
                   </span>
                 </div>
               </label>
             </div>
-          </Card>
+          </div>
 
-          {/* Profile Access Audit Logs */}
-          <Card className="p-5 bg-white dark:bg-surface-dark-card border-slate-200 dark:border-surface-dark-border space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                Recruiter Profile Access Audit Log
-              </h3>
-              <Badge variant="neutral" size="sm">{profileAccessLogs.length} Total Views</Badge>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              In accordance with DPDP and GDPR transparency principles, you can see every recruiter and hiring organization who reviewed your profile.
-            </p>
-
-            {profileAccessLogs.length === 0 ? (
-              <div className="p-4 rounded-lg bg-slate-50 dark:bg-surface-dark-bg text-center text-xs text-slate-500">
-                No external recruiters have accessed your profile yet.
-              </div>
-            ) : (
-              <div className="border border-slate-200 dark:border-surface-dark-border rounded-lg overflow-hidden">
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-slate-50 dark:bg-surface-dark-bg border-b border-slate-200 dark:border-surface-dark-border text-slate-500 font-semibold">
-                    <tr>
-                      <th className="p-2.5">Recruiter / Viewer</th>
-                      <th className="p-2.5">Organization</th>
-                      <th className="p-2.5">Purpose</th>
-                      <th className="p-2.5">Accessed At</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-surface-dark-border">
-                    {profileAccessLogs.map((log: any) => (
-                      <tr key={log.id} className="text-slate-700 dark:text-slate-300">
-                        <td className="p-2.5 font-semibold">{log.viewerName} ({log.viewerRole})</td>
-                        <td className="p-2.5">{log.organizationName || 'Verified Partner'}</td>
-                        <td className="p-2.5">{log.purpose}</td>
-                        <td className="p-2.5 text-slate-400">{new Date(log.accessedAt).toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Card>
-
-          {/* Account Deletion (Right to be Forgotten) */}
-          <Card className="p-5 bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60 space-y-3">
-            <div className="flex items-center gap-2 text-rose-700 dark:text-rose-400">
+          {/* Account Deletion */}
+          <div className="bg-rose-50/20 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 rounded-2xl p-6 shadow-2xs space-y-3">
+            <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
               <Trash2 className="w-5 h-5" />
-              <h3 className="text-sm font-bold">
-                Permanent Account & Data Deletion ("Right to be Forgotten")
+              <h3 className="text-base font-bold">
+                Permanent Account & Data Purge ("Right to be Forgotten")
               </h3>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Permanently purges all candidate data across SQLite, MongoDB, and disk files (resumes, avatars, applications, builder drafts, and verifications). This action is immediate, cascading, and irreversible.
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
+              Permanently deletes all candidate records across database and storage files. This action is immediate, cascading, and cannot be undone.
             </p>
 
             {showDeleteConfirm ? (
-              <div className="p-3.5 rounded-lg bg-rose-100 dark:bg-rose-900/40 border border-rose-300 dark:border-rose-800 space-y-3">
+              <div className="p-4 rounded-xl bg-rose-100 dark:bg-rose-900/30 border border-rose-300 dark:border-rose-800 space-y-3">
                 <p className="text-xs font-bold text-rose-900 dark:text-rose-200">
-                  Are you absolutely certain? This will delete all your applications, test scores, resumes, and account credentials forever.
+                  Are you absolutely certain? This will delete all applications, test scores, resumes, and credentials forever.
                 </p>
                 <div className="flex gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setShowDeleteConfirm(false)}
-                    disabled={isDeletingAccount}
-                  >
+                  <Button variant="secondary" size="sm" onClick={() => setShowDeleteConfirm(false)} disabled={isDeletingAccount}>
                     Cancel
                   </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={handleDeleteAccount}
-                    isLoading={isDeletingAccount}
-                    leftIcon={<Trash2 className="w-3.5 h-3.5" />}
-                  >
-                    Yes, Purge My Account Forever
+                  <Button variant="danger" size="sm" onClick={handleDeleteAccount} isLoading={isDeletingAccount} leftIcon={<Trash2 className="w-3.5 h-3.5" />}>
+                    Yes, Delete My Account
                   </Button>
                 </div>
               </div>
             ) : (
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={() => setShowDeleteConfirm(true)}
-                leftIcon={<Trash2 className="w-3.5 h-3.5" />}
-              >
+              <Button variant="danger" size="sm" onClick={() => setShowDeleteConfirm(true)} leftIcon={<Trash2 className="w-3.5 h-3.5" />}>
                 Delete My Account
               </Button>
             )}
-          </Card>
+          </div>
         </div>
       )}
 

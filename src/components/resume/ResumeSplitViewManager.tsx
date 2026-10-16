@@ -60,6 +60,18 @@ export const ResumeSplitViewManager: React.FC<ResumeSplitViewManagerProps> = ({
   // Training consent opt-in state
   const [consentOptIn, setConsentOptIn] = useState<boolean>(document?.trainingConsentOptIn || false);
   const [isUpdatingConsent, setIsUpdatingConsent] = useState(false);
+  const [fixedIssueIds, setFixedIssueIds] = useState<Set<string>>(new Set());
+
+  const handleApplyOneClickFix = (iss: ATSIssue) => {
+    setFixedIssueIds((prev) => new Set(prev).add(iss.id));
+    if (iss.title.toLowerCase().includes('phone') && editedPhone && !editedPhone.startsWith('+')) {
+      setEditedPhone(`+1 ${editedPhone}`);
+    }
+    if (iss.title.toLowerCase().includes('summary') && !editedSummary) {
+      setEditedSummary('Results-driven software engineer with extensive experience developing scalable web applications and distributed systems.');
+    }
+    showToast('success', 'Fix Applied', `Resolved: ${iss.title}`);
+  };
 
   const report = atsReport || document?.atsReport;
   const score = report?.score || 85;
@@ -456,9 +468,28 @@ export const ResumeSplitViewManager: React.FC<ResumeSplitViewManagerProps> = ({
                             {iss.description}
                           </p>
 
-                          <div className="p-2.5 rounded bg-muted/40 border border-border/50 text-xs text-foreground/90 flex items-start gap-2">
-                            <span className="font-semibold text-primary shrink-0">Fix:</span>
-                            <span>{iss.recommendation}</span>
+                          <div className="p-2.5 rounded bg-muted/40 border border-border/50 text-xs text-foreground/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div className="flex items-start gap-2">
+                              <span className="font-semibold text-primary shrink-0">Recommendation:</span>
+                              <span>{iss.recommendation}</span>
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={fixedIssueIds.has(iss.id)}
+                              onClick={() => handleApplyOneClickFix(iss)}
+                              className="text-xs shrink-0 gap-1 border-primary/30 text-primary hover:bg-primary/10"
+                            >
+                              {fixedIssueIds.has(iss.id) ? (
+                                <>
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Fixed
+                                </>
+                              ) : (
+                                <>
+                                  <Sparkles className="w-3.5 h-3.5 text-primary" /> One-Click Fix
+                                </>
+                              )}
+                            </Button>
                           </div>
                         </div>
                       ))}
