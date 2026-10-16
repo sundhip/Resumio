@@ -231,6 +231,9 @@ export const Dialog: React.FC<DialogProps> = ({
   );
 };
 
+export { Dialog as Modal };
+export type { DialogProps as ModalProps };
+
 // ==========================================
 // 5. Drawer (Slide-out panel)
 // ==========================================

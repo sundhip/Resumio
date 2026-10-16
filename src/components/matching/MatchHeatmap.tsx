@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { generateResumeMatchHeatmap, HeatmapSpan, HeatmapMatchedSkill } from '../../../packages/shared/src/matchHeatmap';
+import { generateResumeMatchHeatmap, type HeatmapSpan, type HeatmapMatchedSkill } from '../../../packages/shared/src/matchHeatmap';
 import { Badge } from '../ui/Badge';
 import { Card } from '../ui/Card';
 import { Info, CheckCircle2, AlertTriangle, Filter, Sparkles } from 'lucide-react';

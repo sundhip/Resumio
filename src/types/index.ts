@@ -1131,6 +1131,36 @@ export interface TalentIntelligenceROI {
   qualityOfHireProjection: number;
 }
 
+export interface FunnelStageItem {
+  stage: string;
+  count: number;
+  conversionPct: number;
+  dropoffPct: number;
+}
+
+export interface TimeInStageItem {
+  stage: string;
+  days: number;
+  benchmarkDays: number;
+  label?: string;
+}
+
+export interface ScoreVsOutcomeItem {
+  scoreBand: string;
+  count: number;
+  shortlistRate: number;
+  interviewRate: number;
+  offerRate: number;
+}
+
+export interface SourcingChannelItem {
+  channel: string;
+  count: number;
+  percentage: number;
+  avgScore: number;
+  hireYield: number;
+}
+
 export interface RecruitmentAnalyticsData {
   overview: AnalyticsOverview;
   statusDistribution: StatusDistributionItem[];
@@ -1139,6 +1169,10 @@ export interface RecruitmentAnalyticsData {
   interviewMetrics: InterviewMetrics;
   jobs: JobAnalyticsSummary[];
   talentIntelligence?: TalentIntelligenceROI;
+  funnel?: FunnelStageItem[];
+  timeInStage?: TimeInStageItem[];
+  scoreVsOutcome?: ScoreVsOutcomeItem[];
+  sourceBreakdown?: SourcingChannelItem[];
 }
 
 
