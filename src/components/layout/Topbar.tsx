@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
-import { Dropdown } from '../ui/Dropdown';
-import { SearchInput } from '../ui/Input';
 import { NotificationsMenu } from '../shared/NotificationsMenu';
 import {
+  Button,
+  IconButton,
+  Pill,
+} from '../kit';
+import {
   Menu,
-  Sun,
-  Moon,
+  Search,
+  Filter,
+  Download,
+  Calendar,
   ChevronDown,
   User,
   Settings,
   LogOut,
-  Palette,
+  Sliders,
+  Check,
 } from 'lucide-react';
 
 interface TopbarProps {
@@ -29,209 +34,249 @@ export const Topbar: React.FC<TopbarProps> = ({
   onNavigate,
 }) => {
   const { user, role, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close user dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const firstName = (user?.name || (role === 'recruiter' ? 'Sarah' : 'Alex')).split(' ')[0];
 
   const getSectionTitle = (id: string) => {
     switch (id) {
       case 'dashboard':
-        return role === 'recruiter' ? 'Recruiter Dashboard' : role === 'admin' ? 'Admin Platform Center' : 'Candidate Dashboard';
-      case 'profile':
-        return 'Candidate Profile Management';
-      case 'resume':
-        return 'Candidate Resume Manager';
-      case 'jobs':
-        return 'Explore Job Opportunities';
-      case 'recommendations':
-        return 'Job Recommendations';
-      case 'applications':
-        return 'My Applications';
-      case 'interviews':
-        return 'My Scheduled Interviews';
-      case 'recruiter-jobs':
-        return 'Job Postings Management';
-      case 'create-job':
-        return 'Create New Job Posting';
-      case 'edit-job':
-        return 'Edit Job Posting';
+        return role === 'recruiter' ? 'Command Center' : role === 'admin' ? 'System Overview' : 'Candidate Dashboard';
+      case 'recruiter-workspace':
       case 'applicants':
       case 'job-applicants':
-        return 'Applicant Pipeline & Ranking';
+        return 'Talent Pipeline & Kanban';
+      case 'recruiter-jobs':
+        return 'Job Postings & Requisitions';
+      case 'create-job':
+        return 'Create Requisition';
+      case 'recruiter-ai-search':
+        return 'AI Candidate Search';
       case 'recruiter-interviews':
-        return 'Recruitment Interviews Hub';
+      case 'interviews':
+        return 'Interview Hub & Schedule';
       case 'recruiter-analytics':
         return 'Recruitment Analytics & Insights';
+      case 'jobs':
+        return 'Explore Opportunities';
+      case 'candidate-experience':
+        return 'Career Hub & Evidence Verification';
+      case 'applications':
+        return 'My Applications';
+      case 'resume':
+      case 'resume-builder':
+        return 'ATS Resume Studio';
+      case 'profile':
+        return 'Candidate Profile';
       case 'company-profile':
-        return 'Company & Recruiter Profile';
+        return 'Company & Organization Profile';
       case 'admin-users':
-        return 'User Accounts Management';
+        return 'Organizations & User Management';
+      case 'research-pipeline':
+        return 'ModelOps AI Research Registry';
+      case 'skills-ontology':
+        return 'Skill Ontology & Knowledge Base';
+      case 'platform-integrations':
+        return 'Platform & API Hub';
+      case 'public-benchmark':
+        return 'Public Model Benchmark';
+      case 'dev-design-system':
+        return 'Design System Catalog';
+      case 'dev-reference-match':
+        return 'Reference Match Fidelity';
       case 'settings':
-        return 'Account & Security Settings';
-      case 'design-system':
-        return 'Design System & Component Showcase';
+        return 'Settings & Security';
       default:
         return 'Dashboard';
     }
   };
 
-  const userMenuItems = [
-    {
-      id: 'profile-nav',
-      label: role === 'recruiter' ? 'Company Profile' : role === 'admin' ? 'User Accounts' : 'My Profile',
-      icon: <User className="w-4 h-4 text-slate-400" />,
-      onClick: () => onNavigate(role === 'recruiter' ? 'company-profile' : role === 'admin' ? 'admin-users' : 'profile'),
-    },
-    {
-      id: 'settings',
-      label: 'Account Settings',
-      icon: <Settings className="w-4 h-4 text-slate-400" />,
-      onClick: () => onNavigate('settings'),
-    },
-    {
-      id: 'design-system',
-      label: 'Design System Library',
-      icon: <Palette className="w-4 h-4 text-brand-500" />,
-      rightBadge: (
-        <span className="text-[10px] px-1.5 py-0.2 rounded bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold">
-          UI Kit
-        </span>
-      ),
-      onClick: () => onNavigate('design-system'),
-    },
-    {
-      id: 'logout-div',
-      label: '',
-      divider: true,
-    },
-    {
-      id: 'logout',
-      label: 'Log out',
-      icon: <LogOut className="w-4 h-4 text-rose-500" />,
-      destructive: true,
-      onClick: () => logout(),
-    },
-  ];
+  const handleExportClick = () => {
+    const reportData = {
+      timestamp: new Date().toISOString(),
+      section: currentSection,
+      role: role,
+      status: 'verified',
+    };
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `resumio-${currentSection}-report-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-white/90 dark:bg-surface-dark-bg/90 backdrop-blur-md border-b border-slate-200/80 dark:border-surface-dark-border px-4 sm:px-6 flex items-center justify-between gap-4 transition-colors">
-      {/* Left Area: Mobile menu trigger & Breadcrumb / Title */}
-      <div className="flex items-center gap-3 min-w-0">
-        <button
-          onClick={onOpenMobileSidebar}
-          className="lg:hidden p-2 rounded-control text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 font-medium">
-            <span>Resumio</span>
-            <span>/</span>
-            <span className="capitalize">{role}</span>
-            <span>/</span>
-          </div>
-          <h1 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 truncate">
-            {getSectionTitle(currentSection)}
-          </h1>
-        </div>
-      </div>
-
-      {/* Right Area: Search, Theme, Notifications, User Avatar */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        {/* Search trigger button for Command Palette */}
-        <div className="w-44 sm:w-64 md:w-80 cursor-pointer" onClick={onOpenSearch}>
-          <SearchInput
-            readOnly
-            placeholder={
-              role === 'recruiter'
-                ? 'Search candidates, skills, jobs...'
-                : 'Search jobs, companies...'
-            }
-            className="cursor-pointer pointer-events-none"
-          />
-        </div>
-
-        {/* Design System Quick Access */}
-        <button
-          onClick={() => onNavigate('design-system')}
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-semibold bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/60 dark:hover:bg-brand-900/80 text-brand-700 dark:text-brand-300 border border-brand-200/70 dark:border-brand-800/60 transition-colors"
-          title="Explore Resumio Design System Showcase"
-        >
-          <Palette className="w-3.5 h-3.5" />
-          <span>UI Showcase</span>
-        </button>
-
-        {/* Theme 3-Mode Selector (Light, Dark, System) */}
-        <div className="flex items-center p-0.5 rounded-control bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+    <header className="sticky top-0 z-30 w-full bg-white/90 dark:bg-[#050708]/90 backdrop-blur-md border-b border-[#E7E7E2] dark:border-white/6 px-4 sm:px-6 py-3 transition-colors">
+      <div className="flex items-center justify-between gap-4">
+        {/* Left Side: Greeting & Page Title */}
+        <div className="flex items-center gap-3 min-w-0">
           <button
-            onClick={() => setTheme('light')}
-            className={`p-1.5 rounded text-xs transition-all ${
-              theme === 'light'
-                ? 'bg-white text-amber-500 shadow-sm'
-                : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-            }`}
-            title="Light Theme"
+            type="button"
+            onClick={onOpenMobileSidebar}
+            className="lg:hidden p-2 rounded-full text-[#5E6460] dark:text-[#9AA7AB] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
+            aria-label="Open sidebar navigation"
           >
-            <Sun className="w-3.5 h-3.5" />
+            <Menu className="w-5 h-5" />
           </button>
-          <button
-            onClick={() => setTheme('dark')}
-            className={`p-1.5 rounded text-xs transition-all ${
-              theme === 'dark'
-                ? 'bg-slate-900 text-teal-300 shadow-sm'
-                : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-            }`}
-            title="Dark Theme"
-          >
-            <Moon className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={() => setTheme('system')}
-            className={`p-1.5 rounded text-xs transition-all ${
-              theme === 'system'
-                ? 'bg-teal-500 text-slate-950 shadow-sm font-bold'
-                : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-            }`}
-            title="System Theme (Sync with OS)"
-          >
-            <span className="text-[10px] uppercase font-mono px-0.5">Sys</span>
-          </button>
-        </div>
 
-        {/* Notifications Dropdown */}
-        <NotificationsMenu onNavigate={onNavigate} />
-
-        {/* User Profile Dropdown Menu */}
-        <Dropdown
-          align="right"
-          width="md"
-          items={userMenuItems}
-          trigger={
-            <div className="flex items-center gap-2.5 p-1 pl-1.5 rounded-control hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors select-none group">
-              <div className="relative">
-                <img
-                  src={
-                    user?.avatar ||
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-                  }
-                  alt={user?.name || 'User'}
-                  className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200 dark:ring-surface-dark-border group-hover:ring-brand-500 transition-all"
-                />
-                <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-surface-dark-sidebar" />
-              </div>
-
-              <div className="hidden xl:flex flex-col text-left">
-                <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate max-w-[110px]">
-                  {user?.name || 'Rahul Kumar'}
-                </span>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500 capitalize">
-                  {role}
-                </span>
-              </div>
-
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-sm">
+              {firstName.slice(0, 2).toUpperCase()}
             </div>
-          }
-        />
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#5E6460] dark:text-[#9AA7AB] tracking-wide">
+                Hello, {firstName} 👋
+              </div>
+              <h1 className="text-lg sm:text-xl font-bold tracking-tight text-[#111312] dark:text-[#F2F6F7] truncate leading-tight">
+                {getSectionTitle(currentSection)}
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        {/* Middle: Command Palette Trigger Button (Ctrl/Cmd+K) */}
+        <div className="hidden md:flex flex-1 max-w-md mx-4">
+          <button
+            type="button"
+            onClick={onOpenSearch}
+            className="w-full h-9 px-3.5 rounded-full bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#8C928E] dark:text-[#5F6C70] flex items-center justify-between hover:border-[#1F8FA6]/50 dark:hover:border-[#1F8FA6]/50 transition-colors cursor-pointer select-none"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5 text-[#5E6460] dark:text-[#9AA7AB]" />
+              <span>Search candidates, jobs, skills...</span>
+            </div>
+            <kbd className="px-1.5 py-0.5 rounded bg-white dark:bg-white/10 text-[10px] font-mono text-[#5E6460] dark:text-[#9AA7AB] border border-[#E7E7E2] dark:border-white/10 shadow-xs">
+              ⌘K
+            </kbd>
+          </button>
+        </div>
+
+        {/* Right Side Controls */}
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
+          {/* Quick Search on mobile */}
+          <button
+            type="button"
+            onClick={onOpenSearch}
+            className="md:hidden p-2 rounded-full text-[#5E6460] dark:text-[#9AA7AB] hover:bg-black/5 dark:hover:bg-white/5"
+            aria-label="Search"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
+          {/* Date Range Pill */}
+          <div className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs font-medium text-[#5E6460] dark:text-[#9AA7AB]">
+            <Calendar className="w-3.5 h-3.5 text-[#1F8FA6]" />
+            <span className="figure">Oct 1 – Oct 31, 2026</span>
+          </div>
+
+          {/* Export Report CTA */}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleExportClick}
+            leadingIcon={<Download />}
+            className="hidden sm:inline-flex text-xs"
+          >
+            Export
+          </Button>
+
+          {/* Notifications Menu with unread dot */}
+          <NotificationsMenu onNavigate={onNavigate} />
+
+          {/* User Quick Dropdown */}
+          <div className="relative" ref={userMenuRef}>
+            <button
+              type="button"
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              className="flex items-center gap-1.5 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer focus:outline-none"
+              aria-label="User profile menu"
+            >
+              <div className="w-8 h-8 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                {firstName.slice(0, 2).toUpperCase()}
+              </div>
+              <ChevronDown className="w-3.5 h-3.5 text-[#8C928E] dark:text-[#5F6C70]" />
+            </button>
+
+            {isUserMenuOpen && (
+              <div className="absolute right-0 mt-2 w-56 rounded-[18px] bg-white dark:bg-[#111719] border border-[#E7E7E2] dark:border-white/10 shadow-[0_12px_32px_rgba(17,19,18,0.12)] p-2 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="px-3 py-2 border-b border-[#E7E7E2] dark:border-white/10 mb-1">
+                  <div className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
+                    {user?.name || 'Alex Chen'}
+                  </div>
+                  <div className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] truncate">
+                    {user?.email || 'alex@resumio.ai'}
+                  </div>
+                </div>
+
+                <div className="space-y-0.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onNavigate(role === 'recruiter' ? 'company-profile' : 'profile');
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-xs font-medium text-[#111312] dark:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer text-left"
+                  >
+                    <User className="w-3.5 h-3.5 text-[#5E6460] dark:text-[#9AA7AB]" />
+                    <span>{role === 'recruiter' ? 'Company Profile' : 'Candidate Profile'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onNavigate('settings');
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-xs font-medium text-[#111312] dark:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer text-left"
+                  >
+                    <Settings className="w-3.5 h-3.5 text-[#5E6460] dark:text-[#9AA7AB]" />
+                    <span>Account Settings</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onNavigate('dev-design-system');
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-xs font-medium text-[#1F8FA6] dark:text-[#5FD3E8] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer text-left"
+                  >
+                    <Sliders className="w-3.5 h-3.5" />
+                    <span>Design System</span>
+                  </button>
+
+                  <div className="pt-1 mt-1 border-t border-[#E7E7E2] dark:border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        logout();
+                        setIsUserMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-xs font-medium text-[#F2677A] hover:bg-[#F2677A]/10 cursor-pointer text-left"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Log Out</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );

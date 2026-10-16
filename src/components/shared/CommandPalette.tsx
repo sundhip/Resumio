@@ -118,10 +118,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       />
 
       {/* Palette Box */}
-      <div className="relative w-full max-w-xl rounded-card bg-white dark:bg-surface-dark-card border border-slate-200 dark:border-surface-dark-border shadow-dropdown-dark z-10 overflow-hidden animate-fade-in">
+      <div className="relative w-full max-w-xl rounded-[24px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.25)] z-10 overflow-hidden animate-fade-in">
         {/* Search header */}
-        <div className="flex items-center px-4 py-3 border-b border-slate-100 dark:border-surface-dark-border gap-3">
-          <Search className="w-5 h-5 text-slate-400 dark:text-slate-500 shrink-0" />
+        <div className="flex items-center px-4 py-3 border-b border-[#E7E7E2] dark:border-white/10 gap-3">
+          <Search className="w-5 h-5 text-[#8C928E] dark:text-[#5F6C70] shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -132,9 +132,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             }}
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search candidates, skills, jobs..."
-            className="w-full bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
+            className="w-full bg-transparent text-sm text-[#111312] dark:text-[#F2F6F7] placeholder:text-[#8C928E] dark:placeholder:text-[#5F6C70] focus:outline-none"
           />
-          <kbd className="px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-slate-100 dark:bg-surface-dark-bg rounded border border-slate-200 dark:border-surface-dark-border">
+          <kbd className="px-1.5 py-0.5 text-[10px] font-semibold text-[#8C928E] bg-[#F4F4F1] dark:bg-white/10 rounded border border-[#E7E7E2] dark:border-white/10">
             ESC
           </kbd>
         </div>
@@ -142,7 +142,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         {/* Results list */}
         <div className="max-h-80 overflow-y-auto p-2 divide-y divide-transparent">
           {filteredItems.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-400 dark:text-slate-500">
+            <div className="p-8 text-center text-xs text-[#8C928E] dark:text-[#5F6C70]">
               No results found for "{query}"
             </div>
           ) : (
@@ -157,10 +157,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   }}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={clsx(
-                    'flex items-center justify-between px-3 py-2.5 rounded-control cursor-pointer text-xs sm:text-sm transition-colors select-none',
+                    'flex items-center justify-between px-3 py-2.5 rounded-[12px] cursor-pointer text-xs sm:text-sm transition-colors select-none',
                     isSelected
-                      ? 'bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 font-medium'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-surface-dark-hover'
+                      ? 'bg-[#1F8FA6]/15 text-[#1F8FA6] dark:text-[#5FD3E8] font-semibold'
+                      : 'text-[#111312] dark:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5'
                   )}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -168,10 +168,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <span className="truncate">{item.title}</span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-2">
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-surface-dark-bg text-slate-500 dark:text-slate-400 font-medium">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#F4F4F1] dark:bg-white/10 text-[#5E6460] dark:text-[#9AA7AB] font-medium">
                       {item.category}
                     </span>
-                    {isSelected && <ArrowRight className="w-3.5 h-3.5 text-brand-500" />}
+                    {isSelected && <ArrowRight className="w-3.5 h-3.5 text-[#1F8FA6] dark:text-[#5FD3E8]" />}
                   </div>
                 </div>
               );
@@ -180,13 +180,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-4 py-2 bg-slate-50/70 dark:bg-surface-dark-bg/60 border-t border-slate-100 dark:border-surface-dark-border flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
+        <div className="px-4 py-2 bg-[#FAFAF8] dark:bg-[#080B0C] border-t border-[#E7E7E2] dark:border-white/10 flex items-center justify-between text-[11px] text-[#8C928E] dark:text-[#5F6C70]">
           <div className="flex items-center gap-3">
             <span>↑↓ Navigate</span>
             <span>↵ Select</span>
             <span>esc Close</span>
           </div>
-          <span className="text-brand-600 dark:text-brand-400 font-medium">Resumio AI Core</span>
+          <span className="text-[#1F8FA6] dark:text-[#5FD3E8] font-semibold">Resumio AI Core</span>
         </div>
       </div>
     </div>

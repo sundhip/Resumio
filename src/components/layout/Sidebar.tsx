@@ -1,24 +1,36 @@
-import React from 'react';
-import { clsx } from 'clsx';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import type { Role } from '../../types';
 import {
+  SidebarItem,
+  SidebarSectionLabel,
+  Pill,
+} from '../kit';
+import {
   LayoutDashboard,
-  User,
-  Settings,
-  Users,
-  Building2,
-  X,
-  LogOut,
-  FileText,
   Briefcase,
-  Sparkles,
   Send,
   Calendar,
+  Compass,
+  Sparkles,
+  Settings,
+  Users,
+  Layers,
+  Search,
   TrendingUp,
+  Building2,
   Database,
   BookOpen,
-  Compass,
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
+  Sun,
+  Moon,
+  Laptop,
+  Eye,
+  Sliders,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,18 +40,6 @@ interface SidebarProps {
   onCloseMobile?: () => void;
 }
 
-interface NavItem {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  badge?: string | number;
-}
-
-interface NavGroup {
-  groupTitle: string;
-  items: NavItem[];
-}
-
 export const Sidebar: React.FC<SidebarProps> = ({
   activePath,
   onNavigate,
@@ -47,117 +47,50 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile,
 }) => {
   const { user, role, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
-  const getNavGroups = (currentRole: Role | null): NavGroup[] => {
+  // Streamlined Information Architecture (R0 Flow Audit: max 6-7 items per role)
+  const getNavItems = (currentRole: Role | null) => {
     switch (currentRole) {
       case 'candidate':
         return [
-          {
-            groupTitle: 'Overview',
-            items: [
-              { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-            ],
-          },
-          {
-            groupTitle: 'Opportunities',
-            items: [
-              { id: 'jobs', label: 'Explore Jobs', icon: <Briefcase className="w-4 h-4" /> },
-              { id: 'candidate-experience', label: 'Career Hub & Evidence', icon: <Compass className="w-4 h-4 text-emerald-500" /> },
-              { id: 'recommendations', label: 'Recommendations', icon: <Sparkles className="w-4 h-4" /> },
-              { id: 'applications', label: 'My Applications', icon: <Send className="w-4 h-4" /> },
-              { id: 'interviews', label: 'My Interviews', icon: <Calendar className="w-4 h-4" /> },
-            ],
-          },
-          {
-            groupTitle: 'Profile & Resume',
-            items: [
-              { id: 'profile', label: 'My Profile', icon: <User className="w-4 h-4" /> },
-              { id: 'resume', label: 'Resume Manager', icon: <FileText className="w-4 h-4" /> },
-              { id: 'resume-builder', label: 'ATS Resume Studio', icon: <Sparkles className="w-4 h-4 text-brand-500" /> },
-            ],
-          },
-          {
-            groupTitle: 'System',
-            items: [
-              { id: 'settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
-            ],
-          },
+          { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard /> },
+          { id: 'jobs', label: 'Explore Jobs', icon: <Briefcase /> },
+          { id: 'candidate-experience', label: 'Career Hub & Evidence', icon: <Compass />, badge: 'New' },
+          { id: 'applications', label: 'My Applications', icon: <Send /> },
+          { id: 'resume-builder', label: 'Resume Studio', icon: <Sparkles /> },
+          { id: 'interviews', label: 'Interview Hub', icon: <Calendar /> },
         ];
 
       case 'recruiter':
         return [
-          {
-            groupTitle: 'Overview',
-            items: [
-              { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-            ],
-          },
-          {
-            groupTitle: 'Recruitment & AI Intelligence',
-            items: [
-              { id: 'recruiter-workspace', label: 'Recruiter Workspace', icon: <Layers className="w-4 h-4 text-indigo-500" /> },
-              { id: 'recruiter-jobs', label: 'Job Postings', icon: <Briefcase className="w-4 h-4" /> },
-              { id: 'applicants', label: 'Applicant Pipeline', icon: <Users className="w-4 h-4" /> },
-              { id: 'skills-ontology', label: 'Skill Ontology & KB', icon: <BookOpen className="w-4 h-4 text-teal-400" /> },
-              { id: 'match-lab', label: 'Match Lab Simulator', icon: <Sparkles className="w-4 h-4 text-teal-400" /> },
-              { id: 'recruiter-ai-search', label: 'AI Candidate Search', icon: <Sparkles className="w-4 h-4 text-purple-500" /> },
-              { id: 'recruiter-interviews', label: 'Interviews', icon: <Calendar className="w-4 h-4" /> },
-              { id: 'recruiter-analytics', label: 'Analytics & Reports', icon: <TrendingUp className="w-4 h-4" /> },
-            ],
-          },
-          {
-            groupTitle: 'Organization',
-            items: [
-              { id: 'company-profile', label: 'Company Profile', icon: <Building2 className="w-4 h-4" /> },
-            ],
-          },
-          {
-            groupTitle: 'System',
-            items: [
-              { id: 'settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
-              { id: 'platform-integrations', label: 'Platform & API Hub', icon: <Layers className="w-4 h-4 text-indigo-400" /> },
-              { id: 'public-benchmark', label: 'ML Benchmark', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
-              { id: 'dev-design-system', label: 'Design System', icon: <Layers className="w-4 h-4 text-teal-500" /> },
-            ],
-          },
+          { id: 'dashboard', label: 'Command Center', icon: <LayoutDashboard /> },
+          { id: 'recruiter-workspace', label: 'Talent Pipeline', icon: <Layers />, badge: 'Active' },
+          { id: 'recruiter-jobs', label: 'Job Postings', icon: <Briefcase /> },
+          { id: 'recruiter-ai-search', label: 'Talent Search', icon: <Search /> },
+          { id: 'recruiter-interviews', label: 'Interview Hub', icon: <Calendar /> },
+          { id: 'recruiter-analytics', label: 'Analytics & EEOC', icon: <TrendingUp /> },
         ];
 
       case 'admin':
-        return [
-          {
-            groupTitle: 'Overview',
-            items: [
-              { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-            ],
-          },
-          {
-            groupTitle: 'Platform & Research',
-            items: [
-              { id: 'admin-users', label: 'User Accounts', icon: <Users className="w-4 h-4" /> },
-              { id: 'platform-integrations', label: 'Platform & API Hub', icon: <Layers className="w-4 h-4 text-indigo-400" /> },
-              { id: 'public-benchmark', label: 'ML Benchmark', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
-              { id: 'skills-ontology', label: 'Skill Ontology & KB', icon: <BookOpen className="w-4 h-4 text-teal-400" /> },
-              { id: 'research-pipeline', label: 'Research Pipeline (AI)', icon: <Database className="w-4 h-4 text-purple-500" /> },
-            ],
-          },
-          {
-            groupTitle: 'System',
-            items: [
-              { id: 'settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
-            ],
-          },
-        ];
-
       default:
-        return [];
+        return [
+          { id: 'dashboard', label: 'System Overview', icon: <LayoutDashboard /> },
+          { id: 'admin-users', label: 'Organizations & Users', icon: <Users /> },
+          { id: 'research-pipeline', label: 'ModelOps AI Registry', icon: <Database /> },
+          { id: 'skills-ontology', label: 'Skill Taxonomy & KB', icon: <BookOpen /> },
+          { id: 'platform-integrations', label: 'Platform & Webhooks', icon: <Layers /> },
+          { id: 'public-benchmark', label: 'Public Benchmark', icon: <TrendingUp /> },
+        ];
     }
   };
 
-  const navGroups = getNavGroups(role);
+  const navItems = getNavItems(role);
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      {/* Mobile backdrop */}
       {isOpenMobile && (
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs lg:hidden"
@@ -165,136 +98,197 @@ export const Sidebar: React.FC<SidebarProps> = ({
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Main Sidebar Shell */}
       <aside
-        className={clsx(
-          'fixed top-0 bottom-0 left-0 z-40 w-60 flex flex-col',
-          'bg-surface-light-sidebar dark:bg-surface-dark-sidebar',
-          'border-r border-slate-200/80 dark:border-surface-dark-border',
-          'transition-transform duration-200 ease-in-out',
-          'lg:translate-x-0',
-          isOpenMobile ? 'translate-x-0' : '-translate-x-full'
-        )}
+        className={`fixed top-0 bottom-0 left-0 z-40 flex flex-col bg-white dark:bg-[#080B0C] border-r border-[#E7E7E2] dark:border-white/6 transition-all duration-300 ease-in-out ${
+          isCollapsed ? 'w-[72px]' : 'w-[248px]'
+        } ${
+          isOpenMobile ? 'translate-x-0 !w-[248px]' : '-translate-x-full lg:translate-x-0'
+        }`}
       >
-        {/* Top Logo / Brand */}
-        <div className="h-16 flex items-center justify-between px-5 border-b border-slate-100 dark:border-surface-dark-border shrink-0">
+        {/* Brand Header */}
+        <div className="h-16 flex items-center justify-between px-4 border-b border-[#E7E7E2] dark:border-white/6 shrink-0">
           <div
             onClick={() => onNavigate('dashboard')}
-            className="flex items-center gap-2.5 cursor-pointer group"
+            className="flex items-center gap-2.5 cursor-pointer select-none group"
           >
-            <div className="w-8 h-8 rounded-control bg-gradient-to-tr from-brand-700 via-brand-600 to-indigo-500 flex items-center justify-center text-white font-bold text-base shadow-sm group-hover:shadow-glow-purple transition-all">
+            <div className="w-8 h-8 rounded-full bg-[#1F8FA6] flex items-center justify-center text-white font-extrabold text-sm shadow-[0_2px_12px_rgba(43,179,201,0.4)] flex-shrink-0">
               R
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-base text-slate-900 dark:text-white tracking-tight">
-                  Resumio
-                </span>
-                <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
-                  AI
+            {!isCollapsed && (
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-base tracking-tight text-[#111312] dark:text-[#F2F6F7]">
+                    Resumio
+                  </span>
+                  <Pill variant="micro-status" color="teal">ATS</Pill>
+                </div>
+                <span className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] -mt-0.5">
+                  Production Intelligence
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 -mt-0.5 font-medium">
-                AI Screening Platform
-              </p>
-            </div>
+            )}
           </div>
 
-          {/* Close button on mobile */}
+          {/* Collapse/Expand Toggle (Desktop only) */}
           <button
-            onClick={onCloseMobile}
-            className="lg:hidden p-1.5 rounded-control text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            type="button"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="hidden lg:flex w-7 h-7 rounded-full items-center justify-center text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors"
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <X className="w-5 h-5" />
+            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         </div>
 
-        {/* Navigation Group Items */}
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-          {navGroups.map((group, gIdx) => (
-            <div key={gIdx} className="space-y-1">
-              <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
-                {group.groupTitle}
-              </p>
-              {group.items.map((item) => {
-                const isActive = activePath === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      onNavigate(item.id);
-                      onCloseMobile?.();
-                    }}
-                    className={clsx(
-                      'w-full h-10 px-3 rounded-control flex items-center justify-between text-xs sm:text-sm font-medium transition-all duration-150 text-left select-none relative group',
-                      isActive
-                        ? 'bg-brand-50/80 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 font-semibold shadow-xs active-pill-indicator'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-surface-dark-hover'
-                    )}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span
-                        className={clsx(
-                          'transition-colors shrink-0',
-                          isActive
-                            ? 'text-brand-600 dark:text-brand-400'
-                            : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
-                        )}
-                      >
-                        {item.icon}
-                      </span>
-                      <span className="truncate">{item.label}</span>
-                    </div>
-
-                    {item.badge && (
-                      <span
-                        className={clsx(
-                          'text-[10px] px-1.5 py-0.2 rounded-full font-semibold shrink-0',
-                          isActive
-                            ? 'bg-brand-200/70 dark:bg-brand-900 text-brand-800 dark:text-brand-200'
-                            : 'bg-slate-100 dark:bg-surface-dark-border text-slate-500 dark:text-slate-400'
-                        )}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+        {/* Scrollable Navigation Area */}
+        <div className="flex-1 overflow-y-auto px-2.5 py-4 space-y-4">
+          {/* NAVIGATION SECTION */}
+          <div>
+            <SidebarSectionLabel collapsed={isCollapsed}>Navigation</SidebarSectionLabel>
+            <div className="space-y-1">
+              {navItems.map((item) => (
+                <SidebarItem
+                  key={item.id}
+                  icon={item.icon}
+                  label={item.label}
+                  active={activePath === item.id}
+                  badge={item.badge}
+                  collapsed={isCollapsed}
+                  onClick={() => {
+                    onNavigate(item.id);
+                    onCloseMobile?.();
+                  }}
+                />
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* ACCOUNT & TOOLS SECTION */}
+          <div>
+            <SidebarSectionLabel collapsed={isCollapsed}>Account</SidebarSectionLabel>
+            <div className="space-y-1">
+              <SidebarItem
+                icon={<Settings />}
+                label={role === 'recruiter' ? 'Organization Settings' : 'Settings & Privacy'}
+                active={activePath === 'settings' || activePath === 'company-profile'}
+                collapsed={isCollapsed}
+                onClick={() => {
+                  onNavigate(role === 'recruiter' ? 'company-profile' : 'settings');
+                  onCloseMobile?.();
+                }}
+              />
+              <SidebarItem
+                icon={<Sliders />}
+                label="Design System Showcase"
+                active={activePath === 'dev-design-system'}
+                collapsed={isCollapsed}
+                onClick={() => {
+                  onNavigate('dev-design-system');
+                  onCloseMobile?.();
+                }}
+              />
+              <SidebarItem
+                icon={<Eye />}
+                label="Fidelity Verification"
+                active={activePath === 'dev-reference-match'}
+                collapsed={isCollapsed}
+                onClick={() => {
+                  onNavigate('dev-reference-match');
+                  onCloseMobile?.();
+                }}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* User Session Footer */}
-        <div className="p-3 border-t border-slate-100 dark:border-surface-dark-border bg-slate-50/50 dark:bg-surface-dark-bg/50 shrink-0">
-          <div className="p-2.5 rounded-control bg-white dark:bg-surface-dark-card border border-slate-200/80 dark:border-surface-dark-border/80">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                Logged in as
-              </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/60">
-                {role}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between gap-2">
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
-                  {user?.name || 'User'}
-                </p>
-                <p className="text-[10px] text-slate-400 truncate">
-                  {user?.email}
-                </p>
-              </div>
-
+        {/* Bottom Panel: Theme Switcher & User Profile */}
+        <div className="p-3 border-t border-[#E7E7E2] dark:border-white/6 bg-[#FAFAF8] dark:bg-[#050708] shrink-0 space-y-3">
+          {/* 3-Mode Theme Control */}
+          {!isCollapsed ? (
+            <div className="flex items-center justify-between p-1 rounded-full bg-[#E9E9E5] dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10">
               <button
-                onClick={logout}
-                title="Log out"
-                className="p-1.5 rounded-control text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-surface-dark-hover transition-colors shrink-0"
+                type="button"
+                onClick={() => setTheme('light')}
+                className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
+                  theme === 'light'
+                    ? 'bg-white text-[#111312] shadow-sm'
+                    : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312]'
+                }`}
+                title="Light Theme (Paper)"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <Sun className="w-3.5 h-3.5" /> Light
+              </button>
+              <button
+                type="button"
+                onClick={() => setTheme('dark')}
+                className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-[#1F8FA6] text-white shadow-[0_2px_8px_rgba(43,179,201,0.35)]'
+                    : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312]'
+                }`}
+                title="Dark Theme (Obsidian)"
+              >
+                <Moon className="w-3.5 h-3.5" /> Dark
+              </button>
+              <button
+                type="button"
+                onClick={() => setTheme('system')}
+                className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
+                  theme === 'system'
+                    ? 'bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] shadow-sm'
+                    : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312]'
+                }`}
+                title="System OS Theme"
+              >
+                <Laptop className="w-3.5 h-3.5" /> Auto
               </button>
             </div>
+          ) : (
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="w-9 h-9 rounded-full flex items-center justify-center text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7] bg-[#E9E9E5] dark:bg-white/10"
+                title={`Toggle theme (Current: ${theme})`}
+              >
+                {theme === 'dark' ? <Moon className="w-4 h-4 text-[#5FD3E8]" /> : <Sun className="w-4 h-4 text-[#F29B4B]" />}
+              </button>
+            </div>
+          )}
+
+          {/* User Session Row */}
+          <div className="flex items-center justify-between gap-2 p-1.5 rounded-[12px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/6">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-sm">
+                {(user?.name || 'User')
+                  .split(' ')
+                  .map((p) => p[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()}
+              </div>
+
+              {!isCollapsed && (
+                <div className="truncate">
+                  <div className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] truncate">
+                    {user?.name || 'Alex Chen'}
+                  </div>
+                  <div className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] capitalize">
+                    {role || 'candidate'}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={logout}
+              className="p-1.5 rounded-full text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#F2677A] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors"
+              title="Log out"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </aside>
