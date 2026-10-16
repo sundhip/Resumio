@@ -3,87 +3,87 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Brand Primary Accents */
-  --color-brand-50: #f5f3ff;
-  --color-brand-100: #ede9fe;
-  --color-brand-200: #ddd6fe;
-  --color-brand-300: #c4b5fd;
-  --color-brand-400: #a78bfa;
-  --color-brand-500: #8b5cf6;
-  --color-brand-600: #7c3aed;
-  --color-brand-700: #6d28d9;
-  --color-brand-800: #5b21b6;
-  --color-brand-900: #4c1d95;
-  --color-brand-950: #2e1065;
+  /* Brand Accent */
+  --color-accent-teal: #1F8FA6;
+  --color-accent-teal-hover: #2BB3C9;
+  --color-accent-teal-glow: rgba(43, 179, 201, 0.35);
 
-  /* FinGlow-inspired Neon Teals & Accents for Dark Dashboard */
-  --color-teal-glow: #06b6d4;
-  --color-teal-glow-bright: #22d3ee;
-  --color-emerald-glow: #10b981;
-  --color-amber-glow: #f59e0b;
-  --color-rose-glow: #f43f5e;
+  /* Category Accents (Used sparingly: thin bars, dots, chips, charts) */
+  --color-cat-pink: #D98BE8;
+  --color-cat-yellow: #F2C94C;
+  --color-cat-green: #7ED957;
+  --color-cat-aqua: #5FD3E8;
+  --color-cat-orange: #F29B4B;
 
-  /* Dark Theme Surfaces (Near-black teal/slate tint depth) */
-  --color-surface-dark-canvas: #080B11;
-  --color-surface-dark-bg: #0B0F19;
-  --color-surface-dark-sidebar: #0D121E;
-  --color-surface-dark-card: #131A2B;
-  --color-surface-dark-raised: #1A233A;
-  --color-surface-dark-overlay: #212C48;
-  --color-surface-dark-hover: #1E273E;
-  --color-surface-dark-border: #1F2A44;
-  --color-surface-dark-border-subtle: #172137;
-  --color-surface-dark-muted: #8E9BB5;
-  --color-surface-dark-text: #F1F5F9;
-  --color-surface-dark-input: #0E1424;
+  /* Semantic Colors */
+  --color-semantic-success: #4ADE80;
+  --color-semantic-warning: #F5B544;
+  --color-semantic-danger: #F2677A;
+  --color-semantic-info: #5FD3E8;
 
-  /* Vestmark-inspired Light Theme Surfaces (Warm clean grey & hairlines) */
-  --color-surface-light-canvas: #F8F9FA;
-  --color-surface-light-bg: #F8F9FA;
-  --color-surface-light-sidebar: #FFFFFF;
-  --color-surface-light-card: #FFFFFF;
-  --color-surface-light-raised: #F1F3F5;
-  --color-surface-light-overlay: #E9ECEF;
-  --color-surface-light-hover: #F1F5F9;
-  --color-surface-light-border: #E5E7EB;
-  --color-surface-light-border-subtle: #F3F4F6;
-  --color-surface-light-muted: #64748B;
-  --color-surface-light-text: #0F172A;
-  --color-surface-light-input: #FFFFFF;
+  /* DARK THEME - OBSIDIAN (Must read as BLACKISH, not grey, not navy, not slate) */
+  --color-obsidian-canvas: #050708;
+  --color-obsidian-sidebar: #080B0C;
+  --color-obsidian-card: #0C1113;
+  --color-obsidian-card-raised: #111719;
+  --color-obsidian-border: rgba(255, 255, 255, 0.06);
+  --color-obsidian-border-strong: rgba(255, 255, 255, 0.10);
+  --color-obsidian-text: #F2F6F7;
+  --color-obsidian-text-secondary: #9AA7AB;
+  --color-obsidian-text-tertiary: #5F6C70;
+
+  /* LIGHT THEME - PAPER (Calm, airy, premium) */
+  --color-paper-outer-canvas: #E9E9E5;
+  --color-paper-surface: #F4F4F1;
+  --color-paper-card: #FFFFFF;
+  --color-paper-card-muted: #F6F6F3;
+  --color-paper-border: #E7E7E2;
+  --color-paper-text: #111312;
+  --color-paper-text-secondary: #5E6460;
+  --color-paper-text-tertiary: #8C928E;
+  --color-paper-btn-ink: #111312;
+
+  /* Delta Pills & Chips */
+  --color-pill-green-bg: #E3F5EA;
+  --color-pill-green-text: #15803D;
+  --color-chip-info-bg: #E6EEFF;
+  --color-chip-info-text: #2F5BEA;
 
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Space Grotesk', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Border Radii */
-  --radius-control: 8px;
-  --radius-card: 14px;
-  --radius-bento: 18px;
-  --radius-modal: 20px;
+  /* Radii per Design Contract */
+  --radius-control: 12px;
+  --radius-card: 20px;
+  --radius-hero-card: 24px;
   --radius-pill: 9999px;
 
-  /* Subtle Shadows & Soft Glows */
-  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-  --shadow-card-light: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-card-dark: 0 8px 30px rgba(0, 0, 0, 0.5);
-  --shadow-glow-teal: 0 0 25px -4px rgba(6, 182, 212, 0.35);
-  --shadow-glow-purple: 0 0 25px -4px rgba(124, 58, 237, 0.3);
+  /* Shadows */
+  --shadow-paper: 0 1px 2px rgba(17, 19, 18, 0.04), 0 8px 24px rgba(17, 19, 18, 0.05);
+  --shadow-obsidian-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 :root {
-  --canvas-bg: #F8F9FA;
-  --canvas-text: #0F172A;
-  --border-hairline: #E5E7EB;
+  --canvas-bg: #F4F4F1;
+  --canvas-outer: #E9E9E5;
+  --canvas-text: #111312;
+  --canvas-text-muted: #5E6460;
+  --border-hairline: #E7E7E2;
   --card-surface: #FFFFFF;
-  --card-raised: #F1F3F5;
+  --card-raised: #F6F6F3;
+  --brand-accent: #1F8FA6;
 }
 
 html.dark {
-  --canvas-bg: #080B11;
-  --canvas-text: #F1F5F9;
-  --border-hairline: #1F2A44;
-  --card-surface: #131A2B;
-  --card-raised: #1A233A;
+  --canvas-bg: #050708;
+  --canvas-outer: #050708;
+  --canvas-text: #F2F6F7;
+  --canvas-text-muted: #9AA7AB;
+  --border-hairline: rgba(255, 255, 255, 0.06);
+  --card-surface: #0C1113;
+  --card-raised: #111719;
+  --brand-accent: #1F8FA6;
 }
 
 body {
@@ -95,10 +95,43 @@ body {
   overflow-x: hidden;
 }
 
-/* Monospace Numerals for FinGlow/Vestmark KPI accuracy */
+/* Dark Obsidian Canvas Teal Glow */
+html.dark body {
+  background-image: radial-gradient(circle at 100% 0%, rgba(43, 179, 201, 0.10) 0%, transparent 60%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Monospace / Tabular Numerals for big numbers and KPI accuracy */
 .font-numeral {
   font-family: var(--font-mono);
   font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Feature Card Gradient (The Teal Hero Card) */
+.bg-feature-teal {
+  background: linear-gradient(135deg, #1B8197 0%, #176F83 100%);
+}
+
+/* Health Gradient (#D98BE8 > #5FD3E8 > #7ED957 > #F2C94C) */
+.bg-gradient-health {
+  background: linear-gradient(90deg, #D98BE8 0%, #5FD3E8 33%, #7ED957 66%, #F2C94C 100%);
+}
+
+/* Hatched progress bar */
+.progress-hatched {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.15) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+/* Card inner top highlight */
+.card-highlight {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* Custom delicate scrollbar */
@@ -114,27 +147,11 @@ body {
   border-radius: 9999px;
 }
 html.dark ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #111719;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-/* Hatched progress bar inspired by FinGlow reference */
-.progress-hatched {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgba(255, 255, 255, 0.15),
-    rgba(255, 255, 255, 0.15) 8px,
-    transparent 8px,
-    transparent 16px
-  );
-}
-
-/* Gradient Health Bar */
-.bg-gradient-health {
-  background: linear-gradient(90deg, #ef4444 0%, #f59e0b 35%, #10b981 75%, #06b6d4 100%);
+  background: #1F8FA6;
 }
