@@ -42,6 +42,10 @@ import { ResearchPipelinePage } from './pages/admin/ResearchPipelinePage';
 // Phase 4 Skill Ontology & Knowledge Base Page
 import { SkillOntologyPage } from './pages/admin/SkillOntologyPage';
 
+// Phase 10 Platform, Integrations & Benchmark Pages
+import { PlatformIntegrationsPage } from './pages/recruiter/PlatformIntegrationsPage';
+import { BenchmarkPage } from './pages/public/BenchmarkPage';
+
 export const App: React.FC = () => {
   const { isAuthenticated, role, isLoading } = useAuth();
   const [currentPath, setCurrentPath] = useState<string>('dashboard');
@@ -193,6 +197,17 @@ export const App: React.FC = () => {
 
       case 'match-lab':
         return <MatchLabPage />;
+
+      // Phase 10: Platform Integrations & Public Benchmark
+      case 'platform-integrations':
+      case 'platform':
+      case 'integrations':
+        return <PlatformIntegrationsPage onNavigate={handleNavigate} />;
+
+      case 'public-benchmark':
+      case 'benchmark':
+      case 'benchmarks':
+        return <BenchmarkPage onNavigate={handleNavigate} />;
 
       case 'dev-design-system':
       case 'design-system':

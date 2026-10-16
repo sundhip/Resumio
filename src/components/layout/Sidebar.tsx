@@ -115,6 +115,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             groupTitle: 'System',
             items: [
               { id: 'settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
+              { id: 'platform-integrations', label: 'Platform & API Hub', icon: <Layers className="w-4 h-4 text-indigo-400" /> },
+              { id: 'public-benchmark', label: 'ML Benchmark', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
               { id: 'dev-design-system', label: 'Design System', icon: <Layers className="w-4 h-4 text-teal-500" /> },
             ],
           },
@@ -132,6 +134,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             groupTitle: 'Platform & Research',
             items: [
               { id: 'admin-users', label: 'User Accounts', icon: <Users className="w-4 h-4" /> },
+              { id: 'platform-integrations', label: 'Platform & API Hub', icon: <Layers className="w-4 h-4 text-indigo-400" /> },
+              { id: 'public-benchmark', label: 'ML Benchmark', icon: <TrendingUp className="w-4 h-4 text-emerald-400" /> },
               { id: 'skills-ontology', label: 'Skill Ontology & KB', icon: <BookOpen className="w-4 h-4 text-teal-400" /> },
               { id: 'research-pipeline', label: 'Research Pipeline (AI)', icon: <Database className="w-4 h-4 text-purple-500" /> },
             ],

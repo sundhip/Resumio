@@ -21,6 +21,8 @@ import { skillsRouter } from './routes/skills';
 import { resumeOptimizerRouter } from './routes/resumeOptimizer';
 import { recruiterWorkspaceRouter } from './routes/recruiterWorkspace';
 import { candidateExperienceRouter } from './routes/candidateExperience';
+import { publicApiRouter } from './routes/publicApi';
+import { platformRouter } from './routes/platformIntegrations';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -82,6 +84,8 @@ app.use('/api/skills', skillsRouter);
 app.use('/api/optimizer', resumeOptimizerRouter);
 app.use('/api/recruiter-workspace', recruiterWorkspaceRouter);
 app.use('/api/candidate-experience', candidateExperienceRouter);
+app.use('/api/v1/public', publicApiRouter);
+app.use('/api/platform', platformRouter);
 
 // 3.1 Real-Time Server-Sent Events (SSE) Event Stream & Presence Collaboration
 app.get('/api/events/stream', async (req, res) => {

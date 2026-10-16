@@ -117,6 +117,10 @@ export function verifyDatabaseIntegrity(): { isValid: boolean; fkViolations: any
   safeDelete('DELETE FROM candidate_data_retention_consents WHERE candidate_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM organization_members WHERE user_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM job_access_control WHERE user_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM api_key_usage WHERE api_key_id NOT IN (SELECT id FROM api_keys)');
+  safeDelete('DELETE FROM api_keys WHERE user_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM webhook_deliveries WHERE webhook_id NOT IN (SELECT id FROM webhook_subscriptions)');
+  safeDelete('DELETE FROM webhook_subscriptions WHERE user_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM bulk_upload_batches WHERE recruiter_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM resume_duplicate_matches WHERE candidate_id NOT IN (SELECT id FROM users) OR matched_candidate_id NOT IN (SELECT id FROM users) OR resume_id NOT IN (SELECT id FROM candidate_resumes) OR matched_resume_id NOT IN (SELECT id FROM candidate_resumes)');
   safeDelete('DELETE FROM applications WHERE resume_id NOT IN (SELECT id FROM candidate_resumes) OR job_id NOT IN (SELECT id FROM jobs) OR candidate_id NOT IN (SELECT id FROM users) OR candidate_profile_id NOT IN (SELECT id FROM candidate_profiles)');

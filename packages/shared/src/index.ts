@@ -88,3 +88,10 @@ export const ProblemDetailsSchema = z.object({
   })).optional(),
 });
 export type ProblemDetails = z.infer<typeof ProblemDetailsSchema>;
+
+// Phase 10 Platform, Intelligence & Heatmap Exports
+export * from './multilingual.js';
+export * from './jdIntelligence.js';
+export * from './matchHeatmap.js';
+export * from './benchmarkData.js';
+

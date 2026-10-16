@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1049281,
+    "name": "Senior Full Stack Engineer (Node.js & React)",
+    "requisition_id": "ENG-2026-081",
+    "notes": "Remote position in India or APAC timezones",
+    "status": "open",
+    "departments": [
+      {
+        "id": 8102,
+        "name": "Engineering"
+      }
+    ],
+    "offices": [
+      {
+        "id": 4012,
+        "name": "Chennai, India"
+      }
+    ],
+    "opened_at": "2026-09-01T08:00:00.000Z",
+    "created_at": "2026-09-01T07:45:00.000Z",
+    "custom_fields": {
+      "employment_type": "Full-time",
+      "work_mode": "Remote",
+      "required_skills": "TypeScript, React, Node.js, PostgreSQL",
+      "min_experience_years": 4
+    }
+  },
+  {
+    "id": 1049282,
+    "name": "Staff ML Platform Engineer",
+    "requisition_id": "ML-2026-014",
+    "notes": "Core AI Infrastructure and inference pipeline optimization",
+    "status": "open",
+    "departments": [
+      {
+        "id": 8104,
+        "name": "Machine Learning"
+      }
+    ],
+    "offices": [
+      {
+        "id": 4012,
+        "name": "Remote"
+      }
+    ],
+    "opened_at": "2026-09-15T09:00:00.000Z",
+    "created_at": "2026-09-15T08:30:00.000Z",
+    "custom_fields": {
+      "employment_type": "Full-time",
+      "work_mode": "Remote",
+      "required_skills": "Python, PyTorch, Kubernetes, Docker, Ray",
+      "min_experience_years": 6
+    }
+  }
+]
