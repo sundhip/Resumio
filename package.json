@@ -1,7 +1,7 @@
 {
   "name": "resumio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "workspaces": [
     "apps/*",
@@ -13,6 +13,7 @@
     "dev:frontend": "vite",
     "dev:backend": "tsx server/index.ts",
     "seed": "tsx server/scripts/seed-db.ts",
+    "seed:demo": "tsx server/scripts/seed-synthetic-demo.ts",
     "migrate:mongo": "tsx server/scripts/migrate-sqlite-to-mongo.ts",
     "test:mongo": "tsx server/test-mongodb.ts",
     "test:persistence": "tsx server/scripts/verify-atlas-persistence.ts",

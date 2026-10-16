@@ -25,6 +25,7 @@ const testSuites = [
   { name: 'Phase 10 - Platform, Integrations & Differentiating Features', file: 'server/test-phase10-platform.ts' },
   { name: 'Phase 11 - Production Hardening, Security, Privacy & Operations', file: 'server/test-phase11-production-hardening.ts' },
   { name: 'Phase 11 - Full-System Integration & Smoke Validation', file: 'server/test-phase11-smoke.ts' },
+  { name: 'Phase 12 - Launch Readiness, Onboarding & Release', file: 'server/test-phase12-launch-readiness.ts' },
 ];
 
 async function isServerRunning(): Promise<boolean> {
