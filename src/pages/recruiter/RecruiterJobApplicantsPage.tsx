@@ -22,6 +22,7 @@ import {
 import { CandidateMatchReportModal } from '../../components/matching/CandidateMatchReportModal';
 import { CandidateCompareModal, type CompareCandidateData } from '../../components/matching/CandidateCompareModal';
 import { ScheduleInterviewModal } from '../../components/interviews/ScheduleInterviewModal';
+import { ProductTourCallout } from '../../components/onboarding/ProductTourCallout';
 import type {
   RankedApplicantItem,
   RecruiterPipelineStats,
@@ -326,6 +327,15 @@ export const RecruiterJobApplicantsPage: React.FC<RecruiterJobApplicantsPageProp
           </Button>
         </div>
       </div>
+
+      {/* Product Tour Callout on First Visit */}
+      <ProductTourCallout
+        tourKey="recruiter_pipeline"
+        title="Welcome to your Hiring Pipeline"
+        description="Review applicants across review stages with explainable Match Fit scoring. Click any candidate to inspect underlying evidence spans, or toggle Blind Mode to conceal candidate demographics for unbiased evaluation."
+        tipText="Toggle between Table and Kanban view anytime, or select multiple candidates to run side-by-side matrix comparisons."
+        onExploreMore={() => window.dispatchEvent(new CustomEvent('resumio_trigger_tour'))}
+      />
 
       {/* 2. Top Toolbar: Search, NL Chips, Filters, Saved Views, and Density Switcher */}
       <Card variant="default" padding="sm" className="space-y-3">

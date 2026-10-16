@@ -18,6 +18,7 @@ import {
   LogOut,
   Sliders,
   Check,
+  HelpCircle,
 } from 'lucide-react';
 
 interface TopbarProps {
@@ -245,6 +246,18 @@ export const Topbar: React.FC<TopbarProps> = ({
                   >
                     <Settings className="w-3.5 h-3.5 text-[#5E6460] dark:text-[#9AA7AB]" />
                     <span>Account Settings</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('resumio_trigger_tour'));
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-xs font-medium text-[#111312] dark:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer text-left"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-[#1F8FA6]" />
+                    <span>Product Tour & Guide</span>
                   </button>
 
                   <button

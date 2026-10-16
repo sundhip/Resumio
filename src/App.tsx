@@ -46,6 +46,11 @@ import { PlatformIntegrationsPage } from './pages/recruiter/PlatformIntegrations
 import { BenchmarkPage } from './pages/public/BenchmarkPage';
 import { DesignSystemCatalogPage } from './pages/dev/DesignSystemCatalogPage';
 import { ReferenceMatchPage } from './pages/dev/ReferenceMatchPage';
+import { LandingPage } from './pages/public/LandingPage';
+import { HowScoringWorksPage } from './pages/public/HowScoringWorksPage';
+import { PrivacyPolicyPage } from './pages/legal/PrivacyPolicyPage';
+import { TermsPage } from './pages/legal/TermsPage';
+import { AIUsePage } from './pages/legal/AIUsePage';
 
 export const App: React.FC = () => {
   const { isAuthenticated, role, isLoading } = useAuth();
@@ -60,13 +65,19 @@ export const App: React.FC = () => {
       if (path === 'dev/design-system' || path === 'dev-design-system') return 'dev-design-system';
       if (path === 'dev/reference-match' || path === 'dev-reference-match') return 'dev-reference-match';
       if (path === 'benchmark' || path === 'public-benchmark') return 'public-benchmark';
+      if (path === 'how-scoring-works') return 'how-scoring-works';
+      if (path === 'privacy' || path === 'privacy-policy') return 'privacy';
+      if (path === 'terms' || path === 'terms-of-service') return 'terms';
+      if (path === 'ai-use' || path === 'ai-governance') return 'ai-use';
+      if (path === 'auth' || path === 'login' || path === 'signup') return 'auth';
+      if (path === 'landing') return 'landing';
 
       const hash = window.location.hash.replace(/^#\/?/, '');
       if (hash) return hash.replace('/', '-');
     } catch {
       // fallback
     }
-    return 'dashboard';
+    return 'landing';
   };
 
   const [currentPath, setCurrentPath] = useState<string>(getInitialPath);
@@ -95,12 +106,56 @@ export const App: React.FC = () => {
     );
   }
 
-  // Allow direct dev route access even if not authenticated
-  const isDevRoute = currentPath === 'dev-design-system' || currentPath === 'dev-reference-match' || currentPath === 'public-benchmark';
+  // Handle unauthenticated routes
+  if (!isAuthenticated) {
+    if (currentPath === 'auth') {
+      return (
+        <AuthPage
+          onNavigate={handleNavigate}
+          initialRole={navigationParams.role}
+          initialMode={navigationParams.mode}
+        />
+      );
+    }
+    if (currentPath === 'how-scoring-works') {
+      return <HowScoringWorksPage onNavigate={handleNavigate} />;
+    }
+    if (currentPath === 'privacy') {
+      return <PrivacyPolicyPage onNavigate={handleNavigate} />;
+    }
+    if (currentPath === 'terms') {
+      return <TermsPage onNavigate={handleNavigate} />;
+    }
+    if (currentPath === 'ai-use') {
+      return <AIUsePage onNavigate={handleNavigate} />;
+    }
+    if (currentPath === 'public-benchmark' || currentPath === 'benchmark') {
+      return <BenchmarkPage onNavigate={handleNavigate} />;
+    }
+    if (currentPath === 'dev-design-system') {
+      return <DesignSystemCatalogPage />;
+    }
+    if (currentPath === 'dev-reference-match') {
+      return <ReferenceMatchPage />;
+    }
+    return <LandingPage onNavigate={handleNavigate} />;
+  }
 
-  // If user is not authenticated and not visiting a dev route, show unified Phase 1 Auth Page
-  if (!isAuthenticated && !isDevRoute) {
-    return <AuthPage />;
+  // Handle standalone public pages when authenticated
+  if (currentPath === 'landing') {
+    return <LandingPage onNavigate={handleNavigate} />;
+  }
+  if (currentPath === 'how-scoring-works') {
+    return <HowScoringWorksPage onNavigate={handleNavigate} />;
+  }
+  if (currentPath === 'privacy') {
+    return <PrivacyPolicyPage onNavigate={handleNavigate} />;
+  }
+  if (currentPath === 'terms') {
+    return <TermsPage onNavigate={handleNavigate} />;
+  }
+  if (currentPath === 'ai-use') {
+    return <AIUsePage onNavigate={handleNavigate} />;
   }
 
   // Render active page within AppLayout

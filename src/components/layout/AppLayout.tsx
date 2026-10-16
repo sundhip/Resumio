@@ -14,6 +14,7 @@ import {
   Database,
   Menu,
 } from 'lucide-react';
+import { OnboardingTourModal } from '../onboarding/OnboardingTourModal';
 
 interface AppLayoutProps {
   currentPath: string;
@@ -29,6 +30,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const { role } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isTourOpen, setIsTourOpen] = useState(false);
 
   // Global Ctrl/Cmd + K shortcut listener
   useEffect(() => {
@@ -41,6 +43,20 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // First-run tour trigger and event listener
+  useEffect(() => {
+    if (role) {
+      const isDone = localStorage.getItem(`resumio_onboarded_${role}`);
+      if (!isDone) {
+        setIsTourOpen(true);
+      }
+    }
+
+    const handleTriggerTour = () => setIsTourOpen(true);
+    window.addEventListener('resumio_trigger_tour', handleTriggerTour);
+    return () => window.removeEventListener('resumio_trigger_tour', handleTriggerTour);
+  }, [role]);
 
   // Mobile Bottom Tab Bar items per role
   const getMobileTabs = () => {
@@ -140,6 +156,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}
+        onNavigate={onNavigate}
+      />
+
+      {/* Onboarding Tour Modal */}
+      <OnboardingTourModal
+        role={role || 'candidate'}
+        isOpen={isTourOpen}
+        onClose={() => setIsTourOpen(false)}
         onNavigate={onNavigate}
       />
     </div>

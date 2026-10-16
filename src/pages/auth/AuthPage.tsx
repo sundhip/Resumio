@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useToast } from '../../context/ToastContext';
-import { Input } from '../../components/ui/Input';
-import { Button } from '../../components/ui/Button';
-import { Modal } from '../../components/ui/Modal';
+import { Button } from '../../components/kit/Button';
+import { Pill } from '../../components/kit/Pill';
+import { ScoreRing } from '../../components/kit/ScoreRing';
+import { HealthBar } from '../../components/kit/HealthBar';
+import { Modal } from '../../components/kit/Overlays';
 import {
   User,
   Building2,
@@ -17,17 +19,31 @@ import {
   AlertCircle,
   Sparkles,
   ShieldCheck,
+  Eye,
+  EyeOff,
+  ArrowLeft,
   KeyRound,
+  Shield,
 } from 'lucide-react';
 
-export const AuthPage: React.FC = () => {
-  const { login, adminLogin, registerCandidate, registerRecruiter, googleAuth, isLoading } = useAuth();
+interface AuthPageProps {
+  onNavigate?: (route: string, params?: Record<string, any>) => void;
+  initialRole?: 'candidate' | 'recruiter' | 'admin';
+  initialMode?: 'login' | 'register';
+}
+
+export const AuthPage: React.FC<AuthPageProps> = ({
+  onNavigate,
+  initialRole = 'candidate',
+  initialMode = 'login',
+}) => {
+  const { login, adminLogin, registerCandidate, registerRecruiter, isLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { showToast } = useToast();
 
   // Mode & Role State
-  const [roleMode, setRoleMode] = useState<'candidate' | 'recruiter' | 'admin'>('candidate');
-  const [isRegistering, setIsRegistering] = useState<boolean>(false);
+  const [roleMode, setRoleMode] = useState<'candidate' | 'recruiter' | 'admin'>(initialRole);
+  const [isRegistering, setIsRegistering] = useState<boolean>(initialMode === 'register');
 
   // Form Fields
   const [fullName, setFullName] = useState('');
@@ -37,7 +53,11 @@ export const AuthPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
 
-  // Error & Status
+  // Password Visibility Toggle
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Status & Error
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -45,19 +65,30 @@ export const AuthPage: React.FC = () => {
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
 
-  // Google Auth Modal State
-  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
-  const [googleEmail, setGoogleEmail] = useState('');
-  const [googleName, setGoogleName] = useState('');
-  const [googleCompanyName, setGoogleCompanyName] = useState('');
+  // Password Strength Calculation
+  const calculatePasswordStrength = (pass: string): { score: number; label: string; color: string } => {
+    if (!pass) return { score: 0, label: 'Not entered', color: 'bg-slate-200 dark:bg-white/10' };
+    let score = 0;
+    if (pass.length >= 8) score += 25;
+    if (/[A-Z]/.test(pass)) score += 25;
+    if (/[0-9]/.test(pass)) score += 25;
+    if (/[^A-Za-z0-9]/.test(pass)) score += 25;
 
-  const handleRoleChange = (newRole: 'candidate' | 'recruiter' | 'admin') => {
-    setRoleMode(newRole);
+    if (score <= 25) return { score, label: 'Weak', color: 'bg-rose-500' };
+    if (score <= 50) return { score, label: 'Fair', color: 'bg-amber-500' };
+    if (score <= 75) return { score, label: 'Good', color: 'bg-blue-500' };
+    return { score, label: 'Strong', color: 'bg-emerald-500' };
+  };
+
+  const passwordStrength = calculatePasswordStrength(password);
+
+  const handleRoleSelect = (role: 'candidate' | 'recruiter' | 'admin') => {
+    setRoleMode(role);
     setErrorMessage(null);
-    if (newRole === 'admin') {
+    if (role === 'admin') {
       setIsRegistering(false);
-      setEmail('admin@resumio.ai');
-      setPassword('AdminPass123!');
+      setEmail('admin.demo@resumio.local');
+      setPassword('DemoPass123!');
     } else {
       setEmail('');
       setPassword('');
@@ -69,17 +100,16 @@ export const AuthPage: React.FC = () => {
     setIsRegistering(false);
     setErrorMessage(null);
     let demoEmail = '';
-    let demoPassword = '';
+    let demoPassword = 'DemoPass123!';
+
     if (role === 'admin') {
-      demoEmail = 'admin@resumio.ai';
-      demoPassword = 'AdminPass123!';
+      demoEmail = 'admin.demo@resumio.local';
     } else if (role === 'recruiter') {
-      demoEmail = 'recruiter@resumio.demo';
-      demoPassword = 'Recruiter@123';
+      demoEmail = 'recruiter.demo@resumio.local';
     } else {
-      demoEmail = 'candidate@resumio.demo';
-      demoPassword = 'Candidate@123';
+      demoEmail = 'candidate.demo@resumio.local';
     }
+
     setEmail(demoEmail);
     setPassword(demoPassword);
 
@@ -94,569 +124,544 @@ export const AuthPage: React.FC = () => {
           showToast('success', `${role === 'candidate' ? 'Candidate' : 'Recruiter'} Portal Loaded`, `Signed in as ${demoEmail}.`);
         }
       } catch (err: any) {
-        setErrorMessage(err.message || 'Demo login failed. Make sure server is running.');
+        setErrorMessage(err.message || 'Demo login failed. Ensure test server is running.');
       } finally {
         setIsSubmitting(false);
       }
     }
   };
 
-  const handleGoogleClick = () => {
-    setErrorMessage(null);
-    setGoogleEmail('');
-    setGoogleName('');
-    setGoogleCompanyName(companyName || '');
-    setIsGoogleModalOpen(true);
-  };
-
-  const handleGoogleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-
-    if (!googleEmail.trim()) {
-      setErrorMessage('Please enter a valid Google email address.');
-      return;
-    }
-
-    if (roleMode === 'recruiter' && !googleCompanyName.trim()) {
-      setErrorMessage('Company Name is required for Recruiter Google Sign-In.');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      await googleAuth({
-        userInfo: {
-          sub: `google_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
-          email: googleEmail.trim(),
-          name: googleName.trim() || googleEmail.trim().split('@')[0],
-          picture: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-        },
-        role: roleMode === 'recruiter' ? 'recruiter' : 'candidate',
-        companyName: googleCompanyName.trim() || undefined,
-      });
-
-      setIsGoogleModalOpen(false);
-      showToast('success', 'Google Sign-In successful!', `Authenticated as ${googleEmail.trim()}`);
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Google authentication failed. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    setIsSubmitting(true);
 
-    try {
-      if (roleMode === 'admin') {
-        await adminLogin(email, password);
-        showToast('success', 'Welcome Admin!', 'Platform management console loaded.');
+    // Validation
+    if (!email.trim() || !password) {
+      setErrorMessage('Please enter both your email address and password.');
+      return;
+    }
+
+    if (isRegistering) {
+      if (!fullName.trim()) {
+        setErrorMessage('Please provide your full legal or professional name.');
         return;
       }
+      if (roleMode === 'recruiter' && !companyName.trim()) {
+        setErrorMessage('Please provide your hiring organization or company name.');
+        return;
+      }
+      if (password.length < 8) {
+        setErrorMessage('Password must contain at least 8 characters.');
+        return;
+      }
+      if (password !== confirmPassword) {
+        setErrorMessage('Passwords do not match. Please re-enter your password.');
+        return;
+      }
+    }
 
-      if (isRegistering) {
-        if (password !== confirmPassword) {
-          setErrorMessage('Passwords do not match.');
-          setIsSubmitting(false);
-          return;
-        }
-
-        if (password.length < 8) {
-          setErrorMessage('Password must be at least 8 characters.');
-          setIsSubmitting(false);
-          return;
-        }
-
-        if (roleMode === 'candidate') {
-          await registerCandidate({ fullName, email, password, confirmPassword });
-          showToast('success', 'Account created!', 'Welcome to Resumio Candidate Portal.');
-        } else if (roleMode === 'recruiter') {
-          if (!companyName.trim()) {
-            setErrorMessage('Company name is required for recruiter registration.');
-            setIsSubmitting(false);
-            return;
-          }
-          await registerRecruiter({ fullName, email, companyName, password, confirmPassword });
-          showToast('success', 'Recruiter account created!', 'Welcome to Resumio Recruiter Portal.');
+    setIsSubmitting(true);
+    try {
+      if (roleMode === 'admin') {
+        await adminLogin(email.trim(), password);
+        showToast('success', 'Administrator Session Active', 'Signed in with system privileges.');
+      } else if (isRegistering) {
+        if (roleMode === 'recruiter') {
+          await registerRecruiter({
+            email: email.trim(),
+            password,
+            fullName: fullName.trim(),
+            companyName: companyName.trim(),
+          });
+          showToast('success', 'Recruiter Account Created', 'Welcome to Resumio Hiring Workspace.');
+        } else {
+          await registerCandidate({
+            email: email.trim(),
+            password,
+            fullName: fullName.trim(),
+          });
+          showToast('success', 'Candidate Account Created', 'Welcome to Resumio Career Hub.');
         }
       } else {
-        await login(email, password);
-        showToast('success', 'Sign in successful!', `Welcome back to Resumio.`);
+        await login(email.trim(), password);
+        showToast('success', 'Session Authenticated', `Signed in as ${email.trim()}.`);
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Authentication failed. Please check your credentials.');
+      setErrorMessage(err.message || 'Authentication failed. Please verify your credentials.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleForgotPasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!forgotEmail) return;
-    setIsForgotPasswordOpen(false);
-    showToast('info', 'Password Reset Email Sent', `Instructions to reset your password have been sent to ${forgotEmail}.`);
-    setForgotEmail('');
-  };
-
   return (
-    <div className="min-h-screen w-full flex bg-surface-light-bg dark:bg-surface-dark-bg text-slate-900 dark:text-slate-100 transition-colors">
-      {/* Left Brand Visual Hero (Desktop) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-950 via-[#0f1220] to-[#1c1538] text-white p-12 flex-col justify-between relative overflow-hidden border-r border-slate-800/80">
-        <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-600/20 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-indigo-600/20 blur-3xl pointer-events-none" />
-
-        {/* Brand Header */}
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="w-10 h-10 rounded-control bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white font-bold text-lg shadow-glow-purple">
+    <div className="min-h-screen bg-[#F4F4F1] dark:bg-[#050708] text-[#111312] dark:text-[#F2F6F7] flex flex-col justify-center transition-colors">
+      {/* Top Bar with Logo & Navigation */}
+      <header className="h-16 px-6 sm:px-10 flex items-center justify-between border-b border-[#E7E7E2] dark:border-white/8 shrink-0">
+        <div
+          onClick={() => onNavigate ? onNavigate('landing') : undefined}
+          className="flex items-center gap-2.5 cursor-pointer select-none group"
+        >
+          <div className="w-8 h-8 rounded-full bg-[#1F8FA6] flex items-center justify-center text-white font-extrabold text-sm shadow-[0_2px_12px_rgba(43,179,201,0.4)]">
             R
           </div>
-          <div>
-            <span className="font-bold text-xl tracking-tight text-white">Resumio</span>
-            <span className="text-[10px] ml-2 font-semibold px-2 py-0.5 rounded bg-brand-500/20 text-brand-300 border border-brand-500/30">
-              Phase 1
+          <div className="flex items-center gap-1.5">
+            <span className="font-extrabold text-base tracking-tight text-[#111312] dark:text-[#F2F6F7]">
+              Resumio
             </span>
+            <Pill variant="micro-status" color="teal">Authentication</Pill>
           </div>
         </div>
 
-        {/* Central Graphic */}
-        <div className="relative z-10 space-y-6 max-w-md my-auto py-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-900/60 border border-brand-500/30 text-brand-300">
-            <Sparkles className="w-3.5 h-3.5 text-brand-400" />
-            AI Resume Screening & Recruitment Platform
-          </div>
-
-          <h1 className="text-4xl font-extrabold tracking-tight leading-tight text-white">
-            Hire Smarter. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-indigo-300">
-              Match Better.
-            </span>
-          </h1>
-
-          <p className="text-slate-300 text-sm leading-relaxed">
-            Phase 1 establishes core authentication, role-based security, candidate profile management, recruiter workspace, and production Google OAuth account linking.
-          </p>
-
-          <div className="space-y-3 pt-2">
-            {[
-              'Persistent database user storage & bcrypt hashing',
-              'Google OAuth sign-in & real user account creation',
-              'Role-isolated protected candidate, recruiter & admin portals',
-            ].map((item, idx) => (
-              <div key={idx} className="flex items-center gap-3 text-xs text-slate-200">
-                <CheckCircle2 className="w-4 h-4 text-brand-400 shrink-0" />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Hero Footer */}
-        <div className="relative z-10 text-xs text-slate-400 flex items-center justify-between">
-          <span>© 2026 Resumio Technologies Inc.</span>
-          <span className="flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Production User Security
-          </span>
-        </div>
-      </div>
-
-      {/* Right Form Area */}
-      <div className="flex-1 flex flex-col justify-between p-6 sm:p-10 lg:p-12 max-w-xl mx-auto w-full">
-        {/* Top Header with Theme Switcher */}
-        <div className="flex items-center justify-between pb-4">
-          <div className="lg:hidden flex items-center gap-2">
-            <div className="w-8 h-8 rounded-control bg-brand-600 flex items-center justify-center text-white font-bold">
-              R
-            </div>
-            <span className="font-bold text-base text-slate-900 dark:text-white">Resumio</span>
-          </div>
-
+        <div className="flex items-center gap-3">
+          {onNavigate && (
+            <button
+              onClick={() => onNavigate('landing')}
+              className="text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7] flex items-center gap-1 cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Landing</span>
+            </button>
+          )}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-control text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-hover ml-auto transition-colors"
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+            className="p-2 rounded-xl text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            aria-label="Toggle theme"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
           </button>
         </div>
+      </header>
 
-        {/* Center Auth Card */}
-        <div className="space-y-5 my-auto">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {roleMode === 'admin'
-                ? 'Admin Security Console'
-                : isRegistering
-                ? `Create ${roleMode === 'candidate' ? 'Candidate' : 'Recruiter'} Account`
-                : `Welcome to Resumio`}
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-              {roleMode === 'admin'
-                ? 'Platform administrator authentication'
-                : isRegistering
-                ? 'Register your account to access your recruitment workspace'
-                : 'Sign in to access your role-specific dashboard and profile'}
+      {/* Main Split Layout: Form Left, Brand Visual Right */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 max-w-7xl w-full mx-auto p-4 sm:p-8 gap-8 items-center">
+        {/* Form Column */}
+        <div className="max-w-md w-full mx-auto space-y-6">
+          {/* Header Title */}
+          <div className="space-y-1.5">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111312] dark:text-[#F2F6F7] tracking-tight">
+              {isRegistering ? 'Create Your Account' : 'Welcome to Resumio'}
+            </h1>
+            <p className="text-xs sm:text-sm text-[#5E6460] dark:text-[#9AA7AB] font-medium">
+              {isRegistering
+                ? 'Join Resumio for explainable, ATS-guided talent matching.'
+                : 'Sign in to access your recruitment pipelines or candidate career hub.'}
             </p>
           </div>
 
-          {/* Role Switcher Cards */}
-          <div className="grid grid-cols-3 gap-2">
+          {/* Mode Segmented Switcher (Sign In vs Register) */}
+          <div className="flex bg-black/5 dark:bg-white/5 p-1 rounded-xl border border-[#E7E7E2] dark:border-white/8">
             <button
               type="button"
-              onClick={() => handleRoleChange('candidate')}
-              className={`p-2.5 rounded-card border text-left transition-all ${
-                roleMode === 'candidate'
-                  ? 'border-brand-600 bg-brand-50/70 dark:bg-brand-950/60 shadow-xs'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-slate-50 dark:hover:bg-surface-dark-hover'
+              onClick={() => {
+                setIsRegistering(false);
+                setErrorMessage(null);
+              }}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                !isRegistering
+                  ? 'bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] shadow-2xs'
+                  : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
               }`}
             >
-              <User className="w-4 h-4 text-brand-600 dark:text-brand-400 mb-1" />
-              <p className="text-xs font-bold text-slate-900 dark:text-white">Candidate</p>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Job seeker</p>
+              Sign In
             </button>
-
             <button
               type="button"
-              onClick={() => handleRoleChange('recruiter')}
-              className={`p-2.5 rounded-card border text-left transition-all ${
-                roleMode === 'recruiter'
-                  ? 'border-brand-600 bg-brand-50/70 dark:bg-brand-950/60 shadow-xs'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-slate-50 dark:hover:bg-surface-dark-hover'
+              onClick={() => {
+                setIsRegistering(true);
+                setErrorMessage(null);
+              }}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                isRegistering
+                  ? 'bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] shadow-2xs'
+                  : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
               }`}
             >
-              <Building2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mb-1" />
-              <p className="text-xs font-bold text-slate-900 dark:text-white">Recruiter</p>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Employer</p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleRoleChange('admin')}
-              className={`p-2.5 rounded-card border text-left transition-all ${
-                roleMode === 'admin'
-                  ? 'border-brand-600 bg-brand-50/70 dark:bg-brand-950/60 shadow-xs'
-                  : 'border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-slate-50 dark:hover:bg-surface-dark-hover'
-              }`}
-            >
-              <KeyRound className="w-4 h-4 text-amber-600 dark:text-amber-400 mb-1" />
-              <p className="text-xs font-bold text-slate-900 dark:text-white">Admin</p>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Platform</p>
+              Create Account
             </button>
           </div>
 
-          {/* Quick Demo Pre-fill helper */}
-          <div className="p-3 rounded-card bg-slate-50 dark:bg-surface-dark-card/60 border border-slate-200/80 dark:border-surface-dark-border text-xs flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 uppercase tracking-wide">
-                <Sparkles className="w-3.5 h-3.5 text-brand-500 animate-pulse" /> 1-Click Instant Demo Login:
-              </span>
-              <span className="text-[10px] text-slate-400">No typing needed</span>
+          {/* Role Chooser as Two Large Cards */}
+          <div className="space-y-2">
+            <span className="text-[11px] font-bold text-[#8C928E] dark:text-[#5F6C70] uppercase tracking-wider block">
+              Select Your Role
+            </span>
+            <div className="grid grid-cols-2 gap-3">
+              {/* Candidate Card */}
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('candidate')}
+                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+                  roleMode === 'candidate'
+                    ? 'border-[#1F8FA6] bg-[#1F8FA6]/10 ring-2 ring-[#1F8FA6]/20'
+                    : 'border-[#E7E7E2] dark:border-white/8 bg-white dark:bg-[#0D1214] hover:border-[#1F8FA6]/30'
+                }`}
+              >
+                <div className="w-8 h-8 rounded-xl bg-[#1F8FA6]/15 text-[#1F8FA6] flex items-center justify-center font-bold">
+                  <User className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
+                    Candidate
+                  </div>
+                  <div className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] mt-0.5 leading-tight">
+                    Job seeker & resume builder
+                  </div>
+                </div>
+              </button>
+
+              {/* Recruiter Card */}
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('recruiter')}
+                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+                  roleMode === 'recruiter'
+                    ? 'border-[#1F8FA6] bg-[#1F8FA6]/10 ring-2 ring-[#1F8FA6]/20'
+                    : 'border-[#E7E7E2] dark:border-white/8 bg-white dark:bg-[#0D1214] hover:border-[#1F8FA6]/30'
+                }`}
+              >
+                <div className="w-8 h-8 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+                  <Building2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
+                    Recruiter
+                  </div>
+                  <div className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] mt-0.5 leading-tight">
+                    Hiring team & pipeline review
+                  </div>
+                </div>
+              </button>
             </div>
-            <div className="grid grid-cols-3 gap-1.5">
+
+            {/* Subtle Administrator Option */}
+            <div className="flex justify-end pt-0.5">
               <button
                 type="button"
-                onClick={() => handleFillDemo('candidate', true)}
-                disabled={isSubmitting || isLoading}
-                className="py-1.5 px-2 rounded-control text-xs font-semibold bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 dark:bg-brand-950/60 dark:text-brand-300 dark:border-brand-800 dark:hover:bg-brand-900 transition-all flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
+                onClick={() => handleRoleSelect('admin')}
+                className={`text-[11px] font-semibold transition-colors cursor-pointer flex items-center gap-1 ${
+                  roleMode === 'admin'
+                    ? 'text-[#1F8FA6] dark:text-[#5FD3E8] underline'
+                    : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                }`}
               >
-                <span>Candidate</span>
-                <ArrowRight className="w-3 h-3 shrink-0" />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleFillDemo('recruiter', true)}
-                disabled={isSubmitting || isLoading}
-                className="py-1.5 px-2 rounded-control text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800 dark:hover:bg-indigo-900 transition-all flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
-              >
-                <span>Recruiter</span>
-                <ArrowRight className="w-3 h-3 shrink-0" />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleFillDemo('admin', true)}
-                disabled={isSubmitting || isLoading}
-                className="py-1.5 px-2 rounded-control text-xs font-semibold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 dark:hover:bg-amber-900 transition-all flex items-center justify-center gap-1 shadow-xs disabled:opacity-60"
-              >
-                <span>Admin</span>
-                <ArrowRight className="w-3 h-3 shrink-0" />
+                <Shield className="w-3 h-3" />
+                <span>Platform Administrator Console</span>
               </button>
             </div>
           </div>
 
-          {/* Google Authentication Button */}
-          {roleMode !== 'admin' && (
-            <div className="space-y-3 pt-1">
-              <button
-                type="button"
-                onClick={handleGoogleClick}
-                disabled={isSubmitting || isLoading}
-                className="w-full py-2.5 px-4 rounded-control border border-slate-200 dark:border-surface-dark-border bg-white dark:bg-surface-dark-card hover:bg-slate-50 dark:hover:bg-surface-dark-hover text-slate-700 dark:text-slate-200 font-semibold text-sm flex items-center justify-center gap-3 transition-colors shadow-xs"
-              >
-                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                  />
-                </svg>
-                <span>Continue with Google</span>
-              </button>
-
-              <div className="relative flex items-center justify-center my-2">
-                <div className="border-t border-slate-200 dark:border-surface-dark-border w-full" />
-                <span className="bg-surface-light-bg dark:bg-surface-dark-bg px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider shrink-0">
-                  Or continue with email
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Error Banner */}
+          {/* Error Message Alert */}
           {errorMessage && (
-            <div className="p-3 rounded-control bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2 animate-fade-in">
-              <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
-              <span>{errorMessage}</span>
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-300 dark:border-rose-800 flex items-start gap-2.5 text-xs text-rose-800 dark:text-rose-200">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <p className="leading-relaxed">{errorMessage}</p>
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+          {/* Main Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             {isRegistering && (
-              <Input
-                label="Full Name"
-                placeholder="e.g. Alex Morgan"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                leftIcon={<User className="w-4 h-4" />}
-                required
-              />
+              <div>
+                <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="e.g. Maya Lin"
+                  className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
+                />
+              </div>
             )}
 
             {isRegistering && roleMode === 'recruiter' && (
-              <Input
-                label="Company Name"
-                placeholder="e.g. CloudScale Technologies"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                leftIcon={<Building2 className="w-4 h-4" />}
-                required
-              />
+              <div>
+                <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1">
+                  Hiring Organization / Company
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="e.g. Stripe, Acme Corp"
+                  className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
+                />
+              </div>
             )}
 
-            <Input
-              label="Email Address"
-              type="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              leftIcon={<Mail className="w-4 h-4" />}
-              required
-            />
+            <div>
+              <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1">
+                Email Address
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@domain.com"
+                  className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 pl-9 outline-none focus:border-[#1F8FA6]"
+                />
+                <Mail className="w-4 h-4 text-[#8C928E] absolute left-3 top-3 pointer-events-none" />
+              </div>
+            </div>
 
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <label className="text-[13px] font-medium text-slate-700 dark:text-slate-300">
+            {/* Password with Visibility Toggle & Strength Meter */}
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]">
                   Password
                 </label>
                 {!isRegistering && (
                   <button
                     type="button"
                     onClick={() => setIsForgotPasswordOpen(true)}
-                    className="text-xs text-brand-600 dark:text-brand-400 hover:underline font-medium"
+                    className="text-[11px] font-semibold text-[#1F8FA6] dark:text-[#5FD3E8] hover:underline cursor-pointer"
                   >
-                    Forgot password?
+                    Forgot Password?
                   </button>
                 )}
               </div>
-              <Input
-                type="password"
-                placeholder={isRegistering ? 'Min 8 characters' : '••••••••'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                leftIcon={<Lock className="w-4 h-4" />}
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 pl-9 pr-10 outline-none focus:border-[#1F8FA6]"
+                />
+                <Lock className="w-4 h-4 text-[#8C928E] absolute left-3 top-3 pointer-events-none" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-1.5 text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7] absolute right-2.5 top-2 cursor-pointer"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* Password Strength Meter (if registering) */}
+              {isRegistering && password.length > 0 && (
+                <div className="space-y-1.5 pt-2">
+                  <div className="flex justify-between text-[11px] font-medium">
+                    <span className="text-[#5E6460] dark:text-[#9AA7AB]">Password Strength:</span>
+                    <span className="font-bold text-[#111312] dark:text-[#F2F6F7]">{passwordStrength.label}</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full bg-black/5 dark:bg-white/10 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${passwordStrength.color}`}
+                      style={{ width: `${passwordStrength.score}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-[#8C928E] dark:text-[#5F6C70] block">
+                    Use 8+ characters with uppercase, numbers, and symbols.
+                  </span>
+                </div>
+              )}
             </div>
 
+            {/* Confirm Password (if registering) */}
             {isRegistering && (
-              <Input
-                label="Confirm Password"
-                type="password"
-                placeholder="Repeat password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                leftIcon={<Lock className="w-4 h-4" />}
-                required
-              />
+              <div>
+                <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 pl-9 pr-10 outline-none focus:border-[#1F8FA6]"
+                  />
+                  <Lock className="w-4 h-4 text-[#8C928E] absolute left-3 top-3 pointer-events-none" />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="p-1.5 text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7] absolute right-2.5 top-2 cursor-pointer"
+                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
             )}
 
             {!isRegistering && (
-              <div className="flex items-center gap-2 pt-1">
+              <label className="flex items-center gap-2 text-xs text-[#5E6460] dark:text-[#9AA7AB] cursor-pointer">
                 <input
                   type="checkbox"
-                  id="remember-me"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                  className="rounded border-slate-300 text-[#1F8FA6] focus:ring-[#1F8FA6]"
                 />
-                <label htmlFor="remember-me" className="text-xs text-slate-600 dark:text-slate-400 select-none">
-                  Remember me on this device
-                </label>
-              </div>
+                <span>Remember this workstation for 30 days</span>
+              </label>
             )}
 
             <Button
               type="submit"
               variant="primary"
-              className="w-full"
               size="lg"
               isLoading={isSubmitting || isLoading}
-              rightIcon={<ArrowRight className="w-4 h-4" />}
+              className="w-full"
             >
-              {roleMode === 'admin'
-                ? 'Sign In to Admin Console'
-                : isRegistering
-                ? `Create ${roleMode === 'candidate' ? 'Candidate' : 'Recruiter'} Account`
-                : `Sign In as ${roleMode === 'candidate' ? 'Candidate' : 'Recruiter'}`}
+              {isRegistering
+                ? `Create ${roleMode === 'recruiter' ? 'Recruiter' : 'Candidate'} Account`
+                : `Sign In to ${roleMode === 'admin' ? 'Admin Console' : roleMode === 'recruiter' ? 'Recruiter Portal' : 'Candidate Portal'}`}
             </Button>
           </form>
 
-          {/* Toggle between Register and Login (Candidate & Recruiter only) */}
-          {roleMode !== 'admin' && (
-            <div className="text-center text-xs text-slate-500 dark:text-slate-400 pt-1">
-              {isRegistering ? (
-                <>
-                  Already have an account?{' '}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsRegistering(false);
-                      setErrorMessage(null);
-                    }}
-                    className="text-brand-600 dark:text-brand-400 font-semibold hover:underline"
-                  >
-                    Sign in
-                  </button>
-                </>
-              ) : (
-                <>
-                  Don't have an account yet?{' '}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsRegistering(true);
-                      setErrorMessage(null);
-                    }}
-                    className="text-brand-600 dark:text-brand-400 font-semibold hover:underline"
-                  >
-                    Create {roleMode} account
-                  </button>
-                </>
-              )}
+          {/* One-Click Instant Demo Login Strip */}
+          <div className="pt-2 border-t border-[#E7E7E2] dark:border-white/8 space-y-2.5">
+            <span className="text-[10px] font-bold text-[#8C928E] dark:text-[#5F6C70] uppercase tracking-wider block text-center">
+              1-Click Instant Demo Access (Pre-Seeded)
+            </span>
+            <div className="grid grid-cols-3 gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => handleFillDemo('candidate', true)}
+                className="text-[11px] px-2 py-1.5"
+              >
+                Candidate Demo
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => handleFillDemo('recruiter', true)}
+                className="text-[11px] px-2 py-1.5"
+              >
+                Recruiter Demo
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => handleFillDemo('admin', true)}
+                className="text-[11px] px-2 py-1.5"
+              >
+                Admin Demo
+              </Button>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="text-center text-[11px] text-slate-400 pt-6">
-          Resumio AI Recruitment Platform • Real Account System & Google Auth
+        {/* Brand Visual Column (Right) */}
+        <div className="hidden lg:flex flex-col justify-center items-center relative p-8">
+          {/* Subtle teal radial glow background */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] bg-[#1F8FA6]/15 rounded-full blur-[100px] pointer-events-none -z-10" />
+
+          <div className="w-full max-w-md bg-white dark:bg-[#0D1214] border border-[#E7E7E2] dark:border-white/10 rounded-2xl p-6 shadow-2xl space-y-5">
+            {/* Live Component Preview */}
+            <div className="flex items-center justify-between pb-3 border-b border-[#E7E7E2] dark:border-white/8">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#1F8FA6]/10 text-[#1F8FA6] flex items-center justify-center font-bold text-xs">
+                  AI
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">
+                    Deterministic Match Engine
+                  </h4>
+                  <span className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB]">
+                    Offline Ready • 42ms Latency
+                  </span>
+                </div>
+              </div>
+              <Pill variant="micro-status" color="teal">Active</Pill>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <ScoreRing
+                score={94}
+                size={76}
+                strokeWidth={6}
+                color="teal"
+                label="Fit"
+              />
+              <div className="space-y-1 flex-1">
+                <div className="flex justify-between text-xs font-semibold">
+                  <span className="text-[#111312] dark:text-[#F2F6F7]">Skill Overlap</span>
+                  <span className="figure text-[#1F8FA6] font-bold">6/6 (98%)</span>
+                </div>
+                <HealthBar current={98} target={100} height="h-2" color="teal" />
+                <span className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] block mt-1">
+                  Traceable evidence span verified at line 42.
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-2 border-t border-[#E7E7E2] dark:border-white/8 text-xs text-[#5E6460] dark:text-[#9AA7AB]">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <span>Zero automated rejections; humans make every hire decision.</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <span>Demographic markers strictly excluded from evaluation models.</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <span>Argon2id password hashing & encrypted session persistence.</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Google Authentication Modal */}
-      <Modal
-        isOpen={isGoogleModalOpen}
-        onClose={() => setIsGoogleModalOpen(false)}
-        title="Google Account Authentication"
-        description={`Sign in or create a ${roleMode === 'recruiter' ? 'Recruiter' : 'Candidate'} account using Google.`}
-        size="sm"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setIsGoogleModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleGoogleSubmit} isLoading={isSubmitting}>
-              Continue with Google
-            </Button>
-          </>
-        }
-      >
-        <form onSubmit={handleGoogleSubmit} className="space-y-3.5">
-          <Input
-            label="Google Email Address"
-            type="email"
-            placeholder="user@gmail.com"
-            value={googleEmail}
-            onChange={(e) => setGoogleEmail(e.target.value)}
-            leftIcon={<Mail className="w-4 h-4" />}
-            required
-          />
-
-          <Input
-            label="Full Name (Optional)"
-            placeholder="e.g. Alex Morgan"
-            value={googleName}
-            onChange={(e) => setGoogleName(e.target.value)}
-            leftIcon={<User className="w-4 h-4" />}
-          />
-
-          {roleMode === 'recruiter' && (
-            <Input
-              label="Company Name"
-              placeholder="e.g. TalentCorp Inc."
-              value={googleCompanyName}
-              onChange={(e) => setGoogleCompanyName(e.target.value)}
-              leftIcon={<Building2 className="w-4 h-4" />}
-              required
-            />
-          )}
-        </form>
-      </Modal>
-
       {/* Forgot Password Modal */}
-      <Modal
-        isOpen={isForgotPasswordOpen}
-        onClose={() => setIsForgotPasswordOpen(false)}
-        title="Reset Account Password"
-        description="Enter the email address associated with your Resumio account to receive password reset instructions."
-        size="sm"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setIsForgotPasswordOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleForgotPasswordSubmit}>
-              Send Reset Link
-            </Button>
-          </>
-        }
-      >
-        <form onSubmit={handleForgotPasswordSubmit} className="space-y-3">
-          <Input
-            label="Account Email"
-            type="email"
-            placeholder="you@company.com"
-            value={forgotEmail}
-            onChange={(e) => setForgotEmail(e.target.value)}
-            leftIcon={<Mail className="w-4 h-4" />}
-            required
-          />
-        </form>
-      </Modal>
+      {isForgotPasswordOpen && (
+        <Modal
+          isOpen={isForgotPasswordOpen}
+          onClose={() => setIsForgotPasswordOpen(false)}
+          title="Reset Your Password"
+        >
+          <div className="space-y-4 pt-2">
+            <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
+              Enter your registered email address. We will generate a secure reset token or guide you through k-anonymity recovery.
+            </p>
+            <div>
+              <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7] block mb-1">
+                Registered Email
+              </label>
+              <input
+                type="email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="you@domain.com"
+                className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsForgotPasswordOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  showToast('info', 'Reset Link Dispatched', `Password instructions sent to ${forgotEmail || email || 'registered email'}.`);
+                  setIsForgotPasswordOpen(false);
+                }}
+              >
+                Send Recovery Instructions
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

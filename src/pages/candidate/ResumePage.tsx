@@ -20,6 +20,7 @@ import { ApplicationScreeningCard } from '../../components/screening/Application
 import { DuplicateResumeBadge } from '../../components/resume/DuplicateResumeBadge';
 import { ResumeImprovementModal } from '../../components/resume/ResumeImprovementModal';
 import { ResumeSplitViewManager } from '../../components/resume/ResumeSplitViewManager';
+import { ProductTourCallout } from '../../components/onboarding/ProductTourCallout';
 import type {
   CandidateResume,
   ParsedResumeData,
@@ -349,6 +350,15 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
           />
         </div>
       </div>
+
+      {/* Product Tour Callout on First Visit */}
+      <ProductTourCallout
+        tourKey="candidate_resume_inspector"
+        title="Welcome to your Resume Manager & Split Inspector"
+        description="Verify how Applicant Tracking Systems (ATS) parse your resume into structured skills and experience. Every percentage and score is traceable directly to evidence spans extracted from your document."
+        tipText="Toggle Split View to inspect parsed fields side-by-side with your original PDF, or use ATS Resume Studio to optimize your bullet points."
+        onExploreMore={() => window.dispatchEvent(new CustomEvent('resumio_trigger_tour'))}
+      />
 
       {errorMessage && (
         <div className="p-4 rounded-[12px] bg-rose-500/10 border border-rose-500/20 flex items-start gap-3 text-xs text-rose-500">
