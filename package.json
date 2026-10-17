@@ -57,7 +57,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^1.44.0",
     "mongodb": "^7.7.0",
-    "mongoose": "^9.11.1",
+    "mongoose": "^9.11.2",
     "multer": "^2.3.0",
     "postcss": "^8.5.28",
     "react": "^19.2.8",
