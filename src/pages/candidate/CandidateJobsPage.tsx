@@ -402,7 +402,7 @@ export const CandidateJobsPage: React.FC<CandidateJobsPageProps> = ({ onNavigate
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Job Cards List (5 Cols) */}
         <div className="lg:col-span-5 space-y-3">
-          <div className="flex items-center justify-between px-1 text-xs text-[#8C928E] dark:text-[#5F6C70] font-semibold">
+          <div className="flex items-center justify-between px-1 text-xs text-[#5E6460] dark:text-[#9AA7AB] font-semibold">
             <span>
               Showing <span className="figure font-bold text-[#111312] dark:text-[#F2F6F7]">{jobs.length}</span> of{' '}
               <span className="figure font-bold">{totalCount}</span> roles

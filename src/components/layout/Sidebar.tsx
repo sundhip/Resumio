@@ -224,7 +224,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => setTheme('dark')}
                 className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
                   theme === 'dark'
-                    ? 'bg-[#1F8FA6] text-white shadow-[0_2px_8px_rgba(43,179,201,0.35)]'
+                    ? 'bg-[#167A8C] text-white shadow-[0_2px_8px_rgba(22,122,140,0.35)]'
                     : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312]'
                 }`}
                 title="Dark Theme (Obsidian)"
@@ -260,7 +260,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* User Session Row */}
           <div className="flex items-center justify-between gap-2 p-1.5 rounded-[12px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/6">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-sm">
+              <div className="w-8 h-8 rounded-full bg-[#167A8C] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-sm">
                 {(user?.name || 'User')
                   .split(' ')
                   .map((p) => p[0])

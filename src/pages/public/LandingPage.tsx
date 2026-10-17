@@ -262,7 +262,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               {/* Verified Skill Chips & Evidence Span Preview */}
               <div className="pt-2 border-t border-[#E7E7E2] dark:border-white/8 space-y-3">
                 <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                  <span className="text-[11px] font-bold text-[#8C928E] dark:text-[#5F6C70] uppercase mr-1">
+                  <span className="text-[11px] font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase mr-1">
                     Verified Competencies:
                   </span>
                   <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
@@ -280,7 +280,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 </div>
 
                 <div className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-xs space-y-1">
-                  <div className="flex items-center justify-between text-[10px] font-bold text-[#8C928E] uppercase tracking-wider">
+                  <div className="flex items-center justify-between text-[10px] font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider">
                     <span>Evidence Span (Resume Line 42)</span>
                     <span className="text-emerald-600 dark:text-emerald-400">Exact Verification</span>
                   </div>
@@ -393,6 +393,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   max="100"
                   value={skillsWeight}
                   onChange={(e) => setSkillsWeight(Number(e.target.value))}
+                  aria-label="Required Skills Weight"
                   className="w-full accent-[#1F8FA6] cursor-pointer"
                 />
                 <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
@@ -414,6 +415,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   max="100"
                   value={experienceWeight}
                   onChange={(e) => setExperienceWeight(Number(e.target.value))}
+                  aria-label="Experience Seniority Weight"
                   className="w-full accent-[#1F8FA6] cursor-pointer"
                 />
                 <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
@@ -435,6 +437,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   max="100"
                   value={semanticWeight}
                   onChange={(e) => setSemanticWeight(Number(e.target.value))}
+                  aria-label="Domain & Semantic Relevance Weight"
                   className="w-full accent-[#1F8FA6] cursor-pointer"
                 />
                 <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
@@ -653,7 +656,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </table>
             </div>
             <div className="p-3 bg-black/[0.015] dark:bg-white/[0.015] border-t border-[#E7E7E2] dark:border-white/8 flex items-center justify-between text-xs px-5">
-              <span className="text-[#8C928E] dark:text-[#5F6C70]">
+              <span className="text-[#5E6460] dark:text-[#9AA7AB]">
                 All metrics verified via test harness in Phase 5 benchmarks.
               </span>
               <button

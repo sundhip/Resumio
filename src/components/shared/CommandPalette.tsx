@@ -121,7 +121,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       <div className="relative w-full max-w-xl rounded-[24px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.25)] z-10 overflow-hidden animate-fade-in">
         {/* Search header */}
         <div className="flex items-center px-4 py-3 border-b border-[#E7E7E2] dark:border-white/10 gap-3">
-          <Search className="w-5 h-5 text-[#8C928E] dark:text-[#5F6C70] shrink-0" />
+          <Search className="w-5 h-5 text-[#5E6460] dark:text-[#9AA7AB] shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -132,9 +132,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             }}
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search candidates, skills, jobs..."
-            className="w-full bg-transparent text-sm text-[#111312] dark:text-[#F2F6F7] placeholder:text-[#8C928E] dark:placeholder:text-[#5F6C70] focus:outline-none"
+            aria-label="Search commands, candidates, skills, and jobs"
+            className="w-full bg-transparent text-sm text-[#111312] dark:text-[#F2F6F7] placeholder:text-[#5E6460] dark:placeholder:text-[#9AA7AB] focus:outline-none"
           />
-          <kbd className="px-1.5 py-0.5 text-[10px] font-semibold text-[#8C928E] bg-[#F4F4F1] dark:bg-white/10 rounded border border-[#E7E7E2] dark:border-white/10">
+          <kbd className="px-1.5 py-0.5 text-[10px] font-semibold text-[#5E6460] dark:text-[#9AA7AB] bg-[#F4F4F1] dark:bg-white/10 rounded border border-[#E7E7E2] dark:border-white/10">
             ESC
           </kbd>
         </div>

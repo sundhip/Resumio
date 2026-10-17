@@ -291,7 +291,7 @@ export const ApplicationsPage: React.FC<ApplicationsPageProps> = ({ onNavigate }
                 <span
                   className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold figure ${
                     isSelected
-                      ? 'bg-white/20 text-white'
+                      ? 'bg-white text-[#111312]'
                       : 'bg-black/10 dark:bg-white/10 text-[#5E6460] dark:text-[#9AA7AB]'
                   }`}
                 >

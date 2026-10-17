@@ -62,7 +62,7 @@ export async function seedSyntheticDemoDataset() {
   const userIds: Record<string, string> = {};
 
   for (const [key, creds] of Object.entries(DEMO_CREDENTIALS)) {
-    const userId = `usr_demo_${key}_${crypto.randomUUID().slice(0, 8)}`;
+    const userId = `usr_demo_${key}`;
     userIds[key] = userId;
 
     db.prepare(`

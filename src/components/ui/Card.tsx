@@ -19,13 +19,13 @@ export const Card: React.FC<CardProps> = ({
 
   const variantStyles = {
     default:
-      'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border text-[#111312] dark:text-[#F2F6F7] shadow-card dark:shadow-card-dark',
+      'bg-white dark:bg-[#0C1113] border-[#E7E7E2] dark:border-white/6 text-[#111312] dark:text-[#F2F6F7] shadow-card dark:shadow-none',
     elevated:
-      'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border/80 text-[#111312] dark:text-[#F2F6F7] shadow-dropdown dark:shadow-dropdown-dark',
+      'bg-white dark:bg-[#111719] border-[#E7E7E2] dark:border-white/10 text-[#111312] dark:text-[#F2F6F7] shadow-dropdown dark:shadow-none',
     glass:
-      'bg-white/80 dark:bg-surface-dark-card/80 backdrop-blur-md border-[#E7E7E2]/80 dark:border-surface-dark-border/80 text-[#111312] dark:text-[#F2F6F7]',
+      'bg-white/80 dark:bg-[#0C1113]/80 backdrop-blur-md border-[#E7E7E2]/80 dark:border-white/10 text-[#111312] dark:text-[#F2F6F7]',
     interactive:
-      'bg-white dark:bg-surface-dark-card border-[#E7E7E2] dark:border-surface-dark-border hover:border-brand-300 dark:hover:border-brand-600/50 hover:shadow-card dark:hover:shadow-glow-purple cursor-pointer',
+      'bg-white dark:bg-[#0C1113] border-[#E7E7E2] dark:border-white/6 hover:border-brand-300 dark:hover:border-white/15 hover:shadow-card dark:hover:shadow-glow-purple cursor-pointer',
   };
 
   const paddingStyles = {
@@ -51,7 +51,7 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={twMerge(clsx('flex items-center justify-between pb-4 mb-4 border-b border-[#EFEFEA] dark:border-surface-dark-border', className))} {...props}>
+    <div className={twMerge(clsx('flex items-center justify-between pb-4 mb-4 border-b border-[#EFEFEA] dark:border-white/6', className))} {...props}>
       {children}
     </div>
   );

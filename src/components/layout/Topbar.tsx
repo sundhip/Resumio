@@ -135,7 +135,7 @@ export const Topbar: React.FC<TopbarProps> = ({
           </button>
 
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-sm">
+            <div className="w-9 h-9 rounded-full bg-[#167A8C] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-sm">
               {firstName.slice(0, 2).toUpperCase()}
             </div>
             <div className="min-w-0">
@@ -154,7 +154,7 @@ export const Topbar: React.FC<TopbarProps> = ({
           <button
             type="button"
             onClick={onOpenSearch}
-            className="w-full h-9 px-3.5 rounded-full bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#8C928E] dark:text-[#5F6C70] flex items-center justify-between hover:border-[#1F8FA6]/50 dark:hover:border-[#1F8FA6]/50 transition-colors cursor-pointer select-none"
+            className="w-full h-9 px-3.5 rounded-full bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex items-center justify-between hover:border-[#1F8FA6]/50 dark:hover:border-[#1F8FA6]/50 transition-colors cursor-pointer select-none"
           >
             <div className="flex items-center gap-2">
               <Search className="w-3.5 h-3.5 text-[#5E6460] dark:text-[#9AA7AB]" />
@@ -204,12 +204,15 @@ export const Topbar: React.FC<TopbarProps> = ({
               type="button"
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               className="flex items-center gap-1.5 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer focus:outline-none"
-              aria-label="User profile menu"
+              aria-label={`${firstName.slice(0, 2).toUpperCase()} - User profile menu`}
             >
-              <div className="w-8 h-8 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-xs shadow-sm">
+              <div
+                aria-hidden="true"
+                className="w-8 h-8 rounded-full bg-[#167A8C] text-white flex items-center justify-center font-bold text-xs shadow-sm"
+              >
                 {firstName.slice(0, 2).toUpperCase()}
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-[#8C928E] dark:text-[#5F6C70]" />
+              <ChevronDown className="w-3.5 h-3.5 text-[#5E6460] dark:text-[#9AA7AB]" />
             </button>
 
             {isUserMenuOpen && (

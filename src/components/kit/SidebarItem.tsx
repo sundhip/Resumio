@@ -22,7 +22,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   className = '',
 }) => {
   const activeClasses = active
-    ? 'bg-[#1F8FA6] text-white font-medium shadow-[0_4px_16px_rgba(43,179,201,0.35)]'
+    ? 'bg-[#167A8C] text-white font-medium shadow-[0_4px_16px_rgba(22,122,140,0.35)]'
     : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5';
 
   return (
@@ -44,8 +44,8 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         <span
           className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
             active
-              ? 'bg-white/20 text-white'
-              : 'bg-[#1F8FA6]/15 text-[#1F8FA6] dark:bg-[#1F8FA6]/30 dark:text-[#5FD3E8]'
+              ? 'bg-white text-[#111312]'
+              : 'bg-[#167A8C]/15 text-[#167A8C] dark:bg-[#167A8C]/30 dark:text-[#5FD3E8]'
           }`}
         >
           {badge}

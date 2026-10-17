@@ -223,6 +223,10 @@ export interface ToastMessage {
   type: 'success' | 'error' | 'info' | 'warning';
   message: string;
   description?: string;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 export interface NotificationItem {

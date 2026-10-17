@@ -69,7 +69,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
   >('leaderboard');
 
   // Multi-Tenancy & Org
-  const [currentOrg] = useState({ id: 'org_resumio_demo', name: 'Acme Global Technologies' });
+  const [currentOrg] = useState({
+    id: user?.orgId || 'org_synthetic_cloudscale_demo',
+    name: user?.company || 'CloudScale Technologies',
+  });
   const [isBlindMode, setIsBlindMode] = useState<boolean>(false);
 
   // 1. Leaderboard & Virtualization State
@@ -83,6 +86,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [isColumnChooserOpen, setIsColumnChooserOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const [candidateToReject, setCandidateToReject] = useState<LeaderboardApplicantItem | null>(null);
+  const [rejectionReason, setRejectionReason] = useState<string>('');
+  const [mobileKanbanStage, setMobileKanbanStage] = useState<string>('Applied');
 
   // 2. Bulk Upload State
   const [isUploading, setIsUploading] = useState(false);
@@ -128,7 +135,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
     setIsLoadingApplicants(true);
     try {
       const res = await api.getWorkspaceLeaderboard({
-        organizationId: currentOrg.id,
+        organizationId: currentOrg.id || user?.orgId || 'org_synthetic_cloudscale_demo',
         scoreBand: scoreBandFilter,
         search: searchFilter,
         limit: '500',
@@ -169,14 +176,57 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
         e.preventDefault();
         setIsBlindMode((prev) => !prev);
         showToast('info', 'Blind Screening', isBlindMode ? 'Standard mode restored.' : 'EEOC Blind mode active: Names & institutions redacted.');
-      } else if (e.key === 'c' && selectedApplicantIds.length >= 2) {
+      } else if (e.key.toLowerCase() === 'j' || e.key === 'ArrowDown') {
         e.preventDefault();
-        handleRunComparison();
+        setFocusedIndex((prev) => Math.min(prev + 1, Math.max(0, applicants.length - 1)));
+      } else if (e.key.toLowerCase() === 'k' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        setFocusedIndex((prev) => Math.max(prev - 1, 0));
+      } else if (e.key.toLowerCase() === 'x') {
+        e.preventDefault();
+        const candidate = applicants[focusedIndex];
+        if (candidate) {
+          setSelectedApplicantIds((prev) =>
+            prev.includes(candidate.id) ? prev.filter((id) => id !== candidate.id) : [...prev, candidate.id]
+          );
+        }
+      } else if (e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        const candidate = applicants[focusedIndex];
+        if (candidate) {
+          handleStageMove(candidate.id, 'Shortlisted');
+        }
+      } else if (e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        if (selectedApplicantIds.length >= 2) {
+          handleRunComparison();
+        } else {
+          const candidate = applicants[focusedIndex];
+          if (candidate) {
+            setSelectedApplicantIds((prev) =>
+              prev.includes(candidate.id) ? prev.filter((id) => id !== candidate.id) : [...prev, candidate.id]
+            );
+            showToast('info', 'Comparison Selection', `Added ${isBlindMode ? candidate.redactedName : candidate.fullName} to comparison.`);
+          }
+        }
+      } else if (e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        const candidate = applicants[focusedIndex];
+        if (candidate) {
+          setCandidateToReject(candidate);
+        }
+      } else if (e.key.toLowerCase() === 'm') {
+        e.preventDefault();
+        const candidate = applicants[focusedIndex];
+        if (candidate) {
+          const next = candidate.pipelineStage === 'Applied' ? 'Screening' : candidate.pipelineStage === 'Screening' ? 'Shortlisted' : 'Shortlisted';
+          handleStageMove(candidate.id, next);
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedApplicantIds, isBlindMode]);
+  }, [selectedApplicantIds, isBlindMode, applicants, focusedIndex]);
 
   // Virtual window calculation
   const virtualWindow = useMemo(() => {
@@ -262,16 +312,44 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
     }
   };
 
-  // Pipeline Stage Move Handler
+  // Pipeline Stage Move Handler with Optimistic UI & Undo
   const handleStageMove = async (appId: string, newStage: string) => {
-    try {
-      const res = await api.movePipelineStage(appId, newStage, `Moved to ${newStage} via Recruiter Workspace`);
-      if (res.success) {
-        showToast('success', 'Stage Updated', `Applicant moved from ${res.previousStatus} to ${res.newStatus}.`);
-        loadLeaderboard();
+    const previousApplicants = [...applicants];
+    const targetApp = applicants.find((a) => a.id === appId);
+    if (!targetApp) return;
+    const oldStage = targetApp.pipelineStage;
+
+    // 1. Optimistic Update
+    setApplicants((prev) =>
+      prev.map((a) => (a.id === appId ? { ...a, pipelineStage: newStage } : a))
+    );
+
+    // 2. Show Toast with Undo action!
+    showToast(
+      'success',
+      'Stage Updated',
+      `Moved candidate from ${oldStage} to ${newStage}.`,
+      {
+        label: 'Undo',
+        onClick: async () => {
+          setApplicants(previousApplicants);
+          try {
+            await api.movePipelineStage(appId, oldStage, `Reverted move back to ${oldStage}`);
+            showToast('info', 'Reverted', `Candidate returned to ${oldStage}.`);
+          } catch {
+            showToast('error', 'Undo Failed', 'Could not revert pipeline stage.');
+          }
+        },
       }
+    );
+
+    // 3. API Sync
+    try {
+      await api.movePipelineStage(appId, newStage, `Moved to ${newStage} via Recruiter Workspace`);
     } catch (err: any) {
-      showToast('error', 'Update Failed', err.message);
+      // Rollback on failure
+      setApplicants(previousApplicants);
+      showToast('error', 'Update Failed', `Reverted to ${oldStage}: ${err.message}`);
     }
   };
 
@@ -344,6 +422,16 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
     } catch (err: any) {
       showToast('error', 'Send Failed', err.message);
     }
+  };
+
+  const handleConfirmRejection = async () => {
+    if (!candidateToReject) return;
+    const appId = candidateToReject.id;
+    const candidateName = isBlindMode ? candidateToReject.redactedName : candidateToReject.fullName;
+    setCandidateToReject(null);
+    setRejectionReason('');
+    await handleStageMove(appId, 'Rejected');
+    showToast('info', 'Rejection Logged', `Recorded human-reviewed decision for ${candidateName}.`);
   };
 
   return (
@@ -533,6 +621,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                     if (e.target.checked) setSelectedApplicantIds(applicants.map((a) => a.id));
                     else setSelectedApplicantIds([]);
                   }}
+                  aria-label="Select all applicants"
                   className="rounded text-[#1F8FA6] focus:ring-[#1F8FA6]/40"
                 />
                 <span>#</span>
@@ -562,12 +651,16 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                       const absoluteIndex = virtualWindow.startIndex + idx;
                       const isSelected = selectedApplicantIds.includes(applicant.id);
 
+                      const isFocused = absoluteIndex === focusedIndex;
                       return (
                         <div
                           key={applicant.id}
-                          className={`grid grid-cols-12 gap-3 px-4 py-3.5 items-center transition-colors text-sm ${
-                            isSelected
-                              ? 'bg-[#1F8FA6]/10/60 dark:bg-indigo-950/30'
+                          onClick={() => setFocusedIndex(absoluteIndex)}
+                          className={`grid grid-cols-12 gap-3 px-4 py-3.5 items-center transition-colors text-sm cursor-pointer ${
+                            isFocused
+                              ? 'ring-2 ring-inset ring-[#1F8FA6] bg-[#1F8FA6]/10 dark:bg-[#1F8FA6]/15'
+                              : isSelected
+                              ? 'bg-[#1F8FA6]/10 dark:bg-white/5'
                               : 'hover:bg-[#F4F4F1] dark:hover:bg-white/5'
                           }`}
                           style={{ height: '64px' }}
@@ -581,9 +674,10 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                                 if (e.target.checked) setSelectedApplicantIds([...selectedApplicantIds, applicant.id]);
                                 else setSelectedApplicantIds(selectedApplicantIds.filter((id) => id !== applicant.id));
                               }}
+                              aria-label={`Select applicant ${isBlindMode ? applicant.redactedName : applicant.fullName}`}
                               className="rounded text-[#1F8FA6] focus:ring-[#1F8FA6]/40"
                             />
-                            <span className="text-xs text-[#8A928D] dark:text-[#657378]">{absoluteIndex + 1}</span>
+                            <span className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">{absoluteIndex + 1}</span>
                           </div>
 
                           {/* Candidate Identity (Respects Blind Mode) */}
@@ -621,7 +715,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                               </span>
                             ))}
                             {applicant.matchedSkills.length > 3 && (
-                              <span className="text-[10px] text-[#8A928D] dark:text-[#657378] self-center">+{applicant.matchedSkills.length - 3}</span>
+                              <span className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] self-center">+{applicant.matchedSkills.length - 3}</span>
                             )}
                           </div>
 
@@ -630,6 +724,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                             <select
                               value={applicant.pipelineStage}
                               onChange={(e) => handleStageMove(applicant.id, e.target.value)}
+                              aria-label={`Pipeline stage for ${isBlindMode ? applicant.redactedName : applicant.fullName}`}
                               className="text-xs rounded-lg border border-[#E7E7E2] dark:border-white/6 bg-white dark:bg-[#111719] px-2 py-1 text-[#111312] dark:text-[#F2F6F7] focus:ring-1 focus:ring-[#1F8FA6]/40"
                             >
                               <option value="Applied">Applied</option>
@@ -644,25 +739,40 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                           {/* Quick Actions */}
                           <div className="col-span-2 flex items-center justify-end gap-1.5">
                             <button
-                              onClick={() => handleGenerateInterviewKit(applicant.id)}
-                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#1F8FA6] hover:bg-[#1F8FA6]/10 dark:hover:bg-white/5"
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleGenerateInterviewKit(applicant.id);
+                              }}
+                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#1F8FA6] hover:bg-[#1F8FA6]/10 dark:hover:bg-white/5 min-h-[36px] min-w-[36px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F8FA6]"
                               title="Generate Tailored Interview Kit"
+                              aria-label={`Generate interview kit for ${isBlindMode ? applicant.redactedName : applicant.fullName}`}
                             >
                               <Sparkles className="w-4 h-4" />
                             </button>
                             <button
-                              onClick={() => handleGenerateOutreach(applicant.candidateId)}
-                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#1F8FA6] hover:bg-[#1F8FA6]/10 dark:hover:bg-white/5"
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleGenerateOutreach(applicant.candidateId);
+                              }}
+                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#1F8FA6] hover:bg-[#1F8FA6]/10 dark:hover:bg-white/5 min-h-[36px] min-w-[36px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F8FA6]"
                               title="Draft Grounded Outreach"
+                              aria-label={`Draft outreach message for ${isBlindMode ? applicant.redactedName : applicant.fullName}`}
                             >
                               <Mail className="w-4 h-4" />
                             </button>
                             <button
-                              onClick={() => handleGenerateFeedback(applicant.id)}
-                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-white/5"
-                              title="Draft Constructive Feedback"
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setCandidateToReject(applicant);
+                              }}
+                              className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-white/5 min-h-[36px] min-w-[36px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                              title="Reject Candidate"
+                              aria-label={`Reject ${isBlindMode ? applicant.redactedName : applicant.fullName}`}
                             >
-                              <HelpCircle className="w-4 h-4" />
+                              <XCircle className="w-4 h-4 text-rose-500" />
                             </button>
                           </div>
                         </div>
@@ -676,7 +786,7 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
             {/* Footer Summary */}
             <div className="px-4 py-3 bg-[#F4F4F1] dark:bg-[#0C1113] border-t border-[#E7E7E2] dark:border-white/8 text-xs text-[#5E6460] dark:text-[#9AA7AB] flex justify-between items-center">
               <span>Showing {virtualWindow.visibleItems.length} of {applicants.length} virtualized rows</span>
-              <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">Press '?' for keyboard shortcuts | 'b' for blind screening</span>
+              <span className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">Press '?' for keyboard shortcuts | 'b' for blind screening</span>
             </div>
           </Card>
         </div>
@@ -986,11 +1096,84 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
       {/* ========================================================= */}
       {activeTab === 'pipeline' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 overflow-x-auto pb-4">
+          {/* Mobile Stage Switcher (<= 768px): zero horizontal scroll */}
+          <div className="md:hidden flex items-center gap-1.5 p-1 rounded-xl bg-[#E9E9E5] dark:bg-[#111719] border border-[#E7E7E2] dark:border-white/8">
+            {['Applied', 'Screening', 'Shortlisted', 'Rejected'].map((stage) => {
+              const count = applicants.filter((a) => a.pipelineStage === stage).length;
+              const isActive = mobileKanbanStage === stage;
+              return (
+                <button
+                  key={stage}
+                  type="button"
+                  onClick={() => setMobileKanbanStage(stage)}
+                  className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all min-h-[44px] flex flex-col items-center justify-center cursor-pointer ${
+                    isActive
+                      ? 'bg-white dark:bg-[#0C1113] text-[#111312] dark:text-[#F2F6F7] shadow-sm'
+                      : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                  }`}
+                  aria-pressed={isActive}
+                >
+                  <span>{stage}</span>
+                  <span className="text-[10px] opacity-75 font-mono">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Mobile Card List for Selected Stage */}
+          <div className="md:hidden space-y-3">
+            {applicants
+              .filter((a) => a.pipelineStage === mobileKanbanStage)
+              .map((app) => (
+                <Card key={app.id} className="p-4 bg-white dark:bg-[#0C1113] shadow-sm border border-[#E7E7E2] dark:border-white/8 space-y-2.5">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-bold text-sm text-[#111312] dark:text-[#F2F6F7]">
+                        {isBlindMode ? app.redactedName : app.fullName}
+                      </h4>
+                      <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB]">{app.headline}</p>
+                    </div>
+                    <span className="text-sm font-bold text-[#1F8FA6] dark:text-[#5FD3E8] figure">{app.matchScore}%</span>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-[#EFEFEA] dark:border-white/6 text-xs">
+                    <span className="text-[#8A928D] dark:text-[#657378]">{app.appliedAt.slice(0, 10)}</span>
+                    <div className="flex items-center gap-2">
+                      {mobileKanbanStage !== 'Applied' && (
+                        <button
+                          type="button"
+                          onClick={() => handleStageMove(app.id, mobileKanbanStage === 'Screening' ? 'Applied' : mobileKanbanStage === 'Shortlisted' ? 'Screening' : 'Shortlisted')}
+                          className="px-2.5 py-1.5 rounded-lg border border-[#E7E7E2] dark:border-white/10 text-[#5E6460] dark:text-[#9AA7AB] min-h-[44px] flex items-center justify-center font-medium cursor-pointer"
+                        >
+                          ← Previous
+                        </button>
+                      )}
+                      {mobileKanbanStage !== 'Rejected' && (
+                        <button
+                          type="button"
+                          onClick={() => handleStageMove(app.id, mobileKanbanStage === 'Applied' ? 'Screening' : 'Shortlisted')}
+                          className="px-3 py-1.5 rounded-lg bg-[#167A8C] text-white min-h-[44px] flex items-center gap-1 font-semibold cursor-pointer shadow-sm"
+                        >
+                          Advance →
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            {applicants.filter((a) => a.pipelineStage === mobileKanbanStage).length === 0 && (
+              <div className="py-12 text-center text-xs text-[#8A928D] dark:text-[#657378]">
+                No candidates currently in {mobileKanbanStage} stage.
+              </div>
+            )}
+          </div>
+
+          {/* Desktop 4-Column Kanban Board (>= 768px) */}
+          <div className="hidden md:grid md:grid-cols-4 gap-4 pb-4">
             {['Applied', 'Screening', 'Shortlisted', 'Rejected'].map((colStage) => {
               const inStage = applicants.filter((a) => a.pipelineStage === colStage);
               return (
-                <div key={colStage} className="bg-[#E9E9E5] dark:bg-[#0C1113] rounded-xl p-3 border border-[#E7E7E2] dark:border-white/8 flex flex-col min-w-[260px]">
+                <div key={colStage} className="bg-[#E9E9E5] dark:bg-[#0C1113] rounded-xl p-3 border border-[#E7E7E2] dark:border-white/8 flex flex-col">
                   <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E7E7E2] dark:border-white/8">
                     <span className="font-bold text-xs uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">{colStage}</span>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-[#DCDCD7] dark:bg-[#111719] font-semibold">{inStage.length}</span>
@@ -1003,14 +1186,15 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
                           <span className="font-semibold text-xs text-[#111312] dark:text-[#F2F6F7] truncate">
                             {isBlindMode ? app.redactedName : app.fullName}
                           </span>
-                          <span className="text-xs font-bold text-[#1F8FA6] dark:text-[#5FD3E8]">{app.matchScore}%</span>
+                          <span className="text-xs font-bold text-[#1F8FA6] dark:text-[#5FD3E8] figure">{app.matchScore}%</span>
                         </div>
                         <div className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mb-2 truncate">{app.headline}</div>
 
                         <div className="flex justify-between items-center pt-2 border-t border-[#EFEFEA] dark:border-white/6 text-[10px]">
                           <button
+                            type="button"
                             onClick={() => handleStageMove(app.id, colStage === 'Applied' ? 'Screening' : 'Shortlisted')}
-                            className="text-[#1F8FA6] dark:text-[#5FD3E8] hover:underline flex items-center gap-0.5"
+                            className="text-[#1F8FA6] dark:text-[#5FD3E8] hover:underline flex items-center gap-0.5 cursor-pointer py-1"
                           >
                             Advance <ArrowRight className="w-3 h-3" />
                           </button>
@@ -1227,6 +1411,56 @@ export const RecruiterWorkspacePage: React.FC<RecruiterWorkspacePageProps> = ({ 
           </Card>
         </div>
       )}
+
+      {/* Rejection Confirmation Modal (Error Prevention & Human Decision Support) */}
+      <Modal
+        isOpen={Boolean(candidateToReject)}
+        onClose={() => {
+          setCandidateToReject(null);
+          setRejectionReason('');
+        }}
+        title="Confirm Candidate Rejection"
+      >
+        <div className="space-y-4 text-sm">
+          <p className="text-[#5E6460] dark:text-[#9AA7AB]">
+            Are you sure you want to reject <strong className="text-[#111312] dark:text-[#F2F6F7]">{candidateToReject ? (isBlindMode ? candidateToReject.redactedName : candidateToReject.fullName) : ''}</strong>?
+            In Resumio, every reject decision is made by a human recruiter and can be undone within 6 seconds.
+          </p>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]">
+              Reason / Feedback Note (Optional)
+            </label>
+            <textarea
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder="e.g. Lacks required distributed systems experience in production..."
+              rows={3}
+              className="w-full px-3 py-2 text-xs rounded-xl bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#1F8FA6] text-[#111312] dark:text-[#F2F6F7] placeholder-[#8A928D]"
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2 border-t border-[#E7E7E2] dark:border-white/8">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setCandidateToReject(null);
+                setRejectionReason('');
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleConfirmRejection}
+            >
+              Confirm Rejection
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Keyboard Shortcuts Reference Modal */}
       <Modal

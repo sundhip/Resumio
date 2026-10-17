@@ -564,8 +564,9 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({ onNaviga
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            <div className="md:col-span-5 flex justify-center">
+            <div className="md:col-span-5 flex justify-center w-full">
               <MiniCalendar
+                className="w-full"
                 highlightedDates={interviewDates}
                 selectedDate={interviewDates[0] || new Date()}
               />

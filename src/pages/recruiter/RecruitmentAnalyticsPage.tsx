@@ -269,7 +269,7 @@ export const RecruitmentAnalyticsPage: React.FC<RecruitmentAnalyticsPageProps> =
                   <div>
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
                       Talent Intelligence & Predictive Hiring ROI
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#1F8FA6] text-white font-bold uppercase tracking-wider">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#167A8C] text-white font-bold uppercase tracking-wider">
                         Executive Suite
                       </span>
                     </h3>

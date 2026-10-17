@@ -70,7 +70,7 @@ export const StatTile: React.FC<StatTileProps> = ({
             {delta.value}
           </span>
           {delta.period && (
-            <span className="text-[#8C928E] dark:text-[#5F6C70]">{delta.period}</span>
+            <span className="text-[#5E6460] dark:text-[#9AA7AB]">{delta.period}</span>
           )}
         </div>
       )}

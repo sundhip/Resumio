@@ -128,7 +128,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
               className={`flex-1 flex flex-col items-center justify-center py-1 transition-colors cursor-pointer select-none ${
                 isActive
                   ? 'text-[#1F8FA6] dark:text-[#5FD3E8] font-bold'
-                  : 'text-[#8C928E] dark:text-[#5F6C70] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                  : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
               }`}
             >
               <div className={`p-1 rounded-full ${isActive ? 'bg-[#1F8FA6]/15 text-[#1F8FA6] dark:text-[#5FD3E8]' : ''}`}>
@@ -143,7 +143,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(true)}
-          className="flex-1 flex flex-col items-center justify-center py-1 text-[#8C928E] dark:text-[#5F6C70] hover:text-[#111312] dark:hover:text-[#F2F6F7] cursor-pointer"
+          className="flex-1 flex flex-col items-center justify-center py-1 text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7] cursor-pointer"
         >
           <div className="p-1">
             <Menu className="w-5 h-5" />

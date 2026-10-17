@@ -36,9 +36,9 @@ export const Button: React.FC<ButtonProps> = ({
     primary:
       'bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-sm dark:shadow-glow-purple border border-brand-500/30',
     secondary:
-      'bg-white dark:bg-surface-dark-card hover:bg-[#F4F4F1] dark:hover:bg-surface-dark-hover text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border shadow-subtle',
+      'bg-white dark:bg-[#111719] hover:bg-[#F4F4F1] dark:hover:bg-white/5 text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/10 shadow-subtle',
     ghost:
-      'bg-transparent hover:bg-[#E9E9E5] dark:hover:bg-surface-dark-hover text-[#111312] dark:text-[#F2F6F7]',
+      'bg-transparent hover:bg-[#E9E9E5] dark:hover:bg-white/5 text-[#111312] dark:text-[#F2F6F7]',
     destructive:
       'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-900/50',
     outline:

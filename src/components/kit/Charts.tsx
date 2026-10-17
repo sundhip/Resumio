@@ -53,7 +53,7 @@ export const AreaChart: React.FC<AreaChartProps> = ({
         <span className="figure text-3xl font-extrabold text-[#1F8FA6] dark:text-[#5FD3E8] mt-1">
           {single.value}
         </span>
-        <span className="text-[11px] text-[#8C928E] dark:text-[#5F6C70] mt-1">
+        <span className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-1">
           Single baseline observation recorded
         </span>
       </div>
@@ -149,7 +149,8 @@ export const AreaChart: React.FC<AreaChartProps> = ({
           <svg
             viewBox={`0 0 ${chartWidth} ${height}`}
             className="w-full h-auto overflow-visible select-none"
-            aria-hidden="true"
+            role="img"
+            aria-label={`${title} trend visualization`}
           >
             <defs>
               <linearGradient id="areaGradientTeal" x1="0" y1="0" x2="0" y2="1">
@@ -208,21 +209,8 @@ export const AreaChart: React.FC<AreaChartProps> = ({
               return (
                 <g
                   key={i}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`${pt.label}: ${pt.value}`}
-                  className="cursor-pointer focus:outline-none"
+                  className="cursor-pointer"
                   onMouseEnter={() => setHoverIndex(i)}
-                  onFocus={() => setHoverIndex(i)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'ArrowRight') {
-                      e.preventDefault();
-                      setHoverIndex((i + 1) % points.length);
-                    } else if (e.key === 'ArrowLeft') {
-                      e.preventDefault();
-                      setHoverIndex((i - 1 + points.length) % points.length);
-                    }
-                  }}
                 >
                   {isHovered && (
                     <line
@@ -254,7 +242,7 @@ export const AreaChart: React.FC<AreaChartProps> = ({
           </svg>
 
           {/* X-axis labels */}
-          <div className="flex justify-between px-6 pt-2 text-[11px] font-medium text-[#8C928E] dark:text-[#5F6C70]">
+          <div className="flex justify-between px-6 pt-2 text-[11px] font-medium text-[#5E6460] dark:text-[#9AA7AB]">
             {data.map((d, i) => (
               <span key={i}>{d.label}</span>
             ))}

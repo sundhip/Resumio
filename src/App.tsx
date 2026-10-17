@@ -1,56 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { useAuth } from './context/AuthContext';
 import { AppLayout } from './components/layout/AppLayout';
-import { AuthPage } from './pages/auth/AuthPage';
-import { CandidateDashboard } from './pages/candidate/CandidateDashboard';
-import { RecruiterDashboard } from './pages/recruiter/RecruiterDashboard';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { CandidateProfilePage } from './pages/candidate/CandidateProfilePage';
-import { ResumePage } from './pages/candidate/ResumePage';
-import { ResumeBuilderPage } from './pages/candidate/ResumeBuilderPage';
-import { CompanyProfilePage } from './pages/recruiter/CompanyProfilePage';
-import { SettingsPage } from './pages/settings/SettingsPage';
-import { ComponentShowcase } from './pages/design-system/ComponentShowcase';
-import { MatchLabPage } from './pages/MatchLabPage';
+
+// Route Code Splitting via React.lazy
+const AuthPage = lazy(() => import('./pages/auth/AuthPage').then(m => ({ default: m.AuthPage })));
+const CandidateDashboard = lazy(() => import('./pages/candidate/CandidateDashboard').then(m => ({ default: m.CandidateDashboard })));
+const RecruiterDashboard = lazy(() => import('./pages/recruiter/RecruiterDashboard').then(m => ({ default: m.RecruiterDashboard })));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
+const CandidateProfilePage = lazy(() => import('./pages/candidate/CandidateProfilePage').then(m => ({ default: m.CandidateProfilePage })));
+const ResumePage = lazy(() => import('./pages/candidate/ResumePage').then(m => ({ default: m.ResumePage })));
+const ResumeBuilderPage = lazy(() => import('./pages/candidate/ResumeBuilderPage').then(m => ({ default: m.ResumeBuilderPage })));
+const CompanyProfilePage = lazy(() => import('./pages/recruiter/CompanyProfilePage').then(m => ({ default: m.CompanyProfilePage })));
+const SettingsPage = lazy(() => import('./pages/settings/SettingsPage').then(m => ({ default: m.SettingsPage })));
+const ComponentShowcase = lazy(() => import('./pages/design-system/ComponentShowcase').then(m => ({ default: m.ComponentShowcase })));
+const MatchLabPage = lazy(() => import('./pages/MatchLabPage').then(m => ({ default: m.MatchLabPage })));
 
 // Phase 3 Job Management & Discovery Pages
-import { RecruiterJobsPage } from './pages/recruiter/RecruiterJobsPage';
-import { CreateJobPage } from './pages/recruiter/CreateJobPage';
-import { EditJobPage } from './pages/recruiter/EditJobPage';
-import { CandidateJobsPage } from './pages/candidate/CandidateJobsPage';
-import { JobDetailsPage } from './pages/candidate/JobDetailsPage';
-import { RecommendationsPage } from './pages/candidate/RecommendationsPage';
-import { CandidateExperiencePage } from './pages/candidate/CandidateExperiencePage';
+const RecruiterJobsPage = lazy(() => import('./pages/recruiter/RecruiterJobsPage').then(m => ({ default: m.RecruiterJobsPage })));
+const CreateJobPage = lazy(() => import('./pages/recruiter/CreateJobPage').then(m => ({ default: m.CreateJobPage })));
+const EditJobPage = lazy(() => import('./pages/recruiter/EditJobPage').then(m => ({ default: m.EditJobPage })));
+const CandidateJobsPage = lazy(() => import('./pages/candidate/CandidateJobsPage').then(m => ({ default: m.CandidateJobsPage })));
+const JobDetailsPage = lazy(() => import('./pages/candidate/JobDetailsPage').then(m => ({ default: m.JobDetailsPage })));
+const RecommendationsPage = lazy(() => import('./pages/candidate/RecommendationsPage').then(m => ({ default: m.RecommendationsPage })));
+const CandidateExperiencePage = lazy(() => import('./pages/candidate/CandidateExperiencePage').then(m => ({ default: m.CandidateExperiencePage })));
 
 // Phase 4 Job Applications & Recruitment Pipeline Pages
-import { ApplicationsPage } from './pages/candidate/ApplicationsPage';
-import { RecruiterJobApplicantsPage } from './pages/recruiter/RecruiterJobApplicantsPage';
+const ApplicationsPage = lazy(() => import('./pages/candidate/ApplicationsPage').then(m => ({ default: m.ApplicationsPage })));
+const RecruiterJobApplicantsPage = lazy(() => import('./pages/recruiter/RecruiterJobApplicantsPage').then(m => ({ default: m.RecruiterJobApplicantsPage })));
 
 // Phase 7 Interviews & Analytics Pages
-import { CandidateInterviewsPage } from './pages/candidate/CandidateInterviewsPage';
-import { RecruiterInterviewsPage } from './pages/recruiter/RecruiterInterviewsPage';
-import { RecruitmentAnalyticsPage } from './pages/recruiter/RecruitmentAnalyticsPage';
+const CandidateInterviewsPage = lazy(() => import('./pages/candidate/CandidateInterviewsPage').then(m => ({ default: m.CandidateInterviewsPage })));
+const RecruiterInterviewsPage = lazy(() => import('./pages/recruiter/RecruiterInterviewsPage').then(m => ({ default: m.RecruiterInterviewsPage })));
+const RecruitmentAnalyticsPage = lazy(() => import('./pages/recruiter/RecruitmentAnalyticsPage').then(m => ({ default: m.RecruitmentAnalyticsPage })));
 
 // Phase 8 AI Recruitment Intelligence Pages
-import { AICandidateSearchPage } from './pages/recruiter/AICandidateSearchPage';
-import { RecruiterWorkspacePage } from './pages/recruiter/RecruiterWorkspacePage';
+const AICandidateSearchPage = lazy(() => import('./pages/recruiter/AICandidateSearchPage').then(m => ({ default: m.AICandidateSearchPage })));
+const RecruiterWorkspacePage = lazy(() => import('./pages/recruiter/RecruiterWorkspacePage').then(m => ({ default: m.RecruiterWorkspacePage })));
 
 // Phase 5 LLM Data Augmentation Research Pipeline Page
-import { ResearchPipelinePage } from './pages/admin/ResearchPipelinePage';
+const ResearchPipelinePage = lazy(() => import('./pages/admin/ResearchPipelinePage').then(m => ({ default: m.ResearchPipelinePage })));
 
 // Phase 4 Skill Ontology & Knowledge Base Page
-import { SkillOntologyPage } from './pages/admin/SkillOntologyPage';
+const SkillOntologyPage = lazy(() => import('./pages/admin/SkillOntologyPage').then(m => ({ default: m.SkillOntologyPage })));
 
 // Phase 10 Platform, Integrations & Benchmark Pages
-import { PlatformIntegrationsPage } from './pages/recruiter/PlatformIntegrationsPage';
-import { BenchmarkPage } from './pages/public/BenchmarkPage';
-import { DesignSystemCatalogPage } from './pages/dev/DesignSystemCatalogPage';
-import { ReferenceMatchPage } from './pages/dev/ReferenceMatchPage';
-import { LandingPage } from './pages/public/LandingPage';
-import { HowScoringWorksPage } from './pages/public/HowScoringWorksPage';
-import { PrivacyPolicyPage } from './pages/legal/PrivacyPolicyPage';
-import { TermsPage } from './pages/legal/TermsPage';
-import { AIUsePage } from './pages/legal/AIUsePage';
+const PlatformIntegrationsPage = lazy(() => import('./pages/recruiter/PlatformIntegrationsPage').then(m => ({ default: m.PlatformIntegrationsPage })));
+const BenchmarkPage = lazy(() => import('./pages/public/BenchmarkPage').then(m => ({ default: m.BenchmarkPage })));
+const DesignSystemCatalogPage = lazy(() => import('./pages/dev/DesignSystemCatalogPage').then(m => ({ default: m.DesignSystemCatalogPage })));
+const ReferenceMatchPage = lazy(() => import('./pages/dev/ReferenceMatchPage').then(m => ({ default: m.ReferenceMatchPage })));
+const LandingPage = lazy(() => import('./pages/public/LandingPage').then(m => ({ default: m.LandingPage })));
+const HowScoringWorksPage = lazy(() => import('./pages/public/HowScoringWorksPage').then(m => ({ default: m.HowScoringWorksPage })));
+const PrivacyPolicyPage = lazy(() => import('./pages/legal/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
+const TermsPage = lazy(() => import('./pages/legal/TermsPage').then(m => ({ default: m.TermsPage })));
+const AIUsePage = lazy(() => import('./pages/legal/AIUsePage').then(m => ({ default: m.AIUsePage })));
+
+const RouteLoadingFallback = () => (
+  <div className="w-full min-h-[400px] flex flex-col items-center justify-center space-y-4" role="status" aria-live="polite">
+    <div className="w-10 h-10 rounded-xl bg-[#1F8FA6] animate-pulse flex items-center justify-center text-white font-bold text-lg shadow-[0_4px_16px_rgba(43,179,201,0.35)]">
+      R
+    </div>
+    <span className="sr-only">Loading Resumio view...</span>
+  </div>
+);
 
 export const App: React.FC = () => {
   const { isAuthenticated, role, isLoading } = useAuth();
@@ -61,7 +72,7 @@ export const App: React.FC = () => {
       const qRoute = searchParams.get('route');
       if (qRoute) return qRoute;
 
-      const path = window.location.pathname.replace(/^\//, '');
+      const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
       if (path === 'dev/design-system' || path === 'dev-design-system') return 'dev-design-system';
       if (path === 'dev/reference-match' || path === 'dev-reference-match') return 'dev-reference-match';
       if (path === 'benchmark' || path === 'public-benchmark') return 'public-benchmark';
@@ -70,10 +81,17 @@ export const App: React.FC = () => {
       if (path === 'terms' || path === 'terms-of-service') return 'terms';
       if (path === 'ai-use' || path === 'ai-governance') return 'ai-use';
       if (path === 'auth' || path === 'login' || path === 'signup') return 'auth';
+      if (path === 'recruiter/workspace' || path === 'recruiter-workspace') return 'recruiter-workspace';
+      if (path === 'candidate/dashboard' || path === 'recruiter/dashboard') return 'dashboard';
+      if (path === 'candidate/resume' || path === 'resume') return 'resume';
+      if (path === 'candidate/recommendations') return 'candidate-experience';
+      if (path === 'jobs' || path === 'recruiter/jobs') return path === 'jobs' ? 'jobs' : 'recruiter-jobs';
+      if (path === 'settings') return 'settings';
       if (path === 'landing') return 'landing';
 
       const hash = window.location.hash.replace(/^#\/?/, '');
       if (hash) return hash.replace('/', '-');
+      if (path) return path.replace(/\//g, '-');
     } catch {
       // fallback
     }
@@ -99,63 +117,69 @@ export const App: React.FC = () => {
         <div className="w-12 h-12 rounded-2xl bg-[#1F8FA6] flex items-center justify-center text-white font-bold text-xl shadow-[0_4px_16px_rgba(43,179,201,0.35)] animate-pulse">
           R
         </div>
-        <p className="mt-4 text-xs font-semibold text-[#5E6460] dark:text-[#9AA7AB] tracking-wider uppercase">
-          Initializing Resumio...
-        </p>
+        <p className="text-xs text-[#5E6460] dark:text-[#9AA7AB] mt-3 font-medium">Initializing Resumio...</p>
       </div>
     );
   }
 
   // Handle unauthenticated routes
   if (!isAuthenticated) {
-    if (currentPath === 'auth') {
-      return (
-        <AuthPage
-          onNavigate={handleNavigate}
-          initialRole={navigationParams.role}
-          initialMode={navigationParams.mode}
-        />
-      );
-    }
-    if (currentPath === 'how-scoring-works') {
-      return <HowScoringWorksPage onNavigate={handleNavigate} />;
-    }
-    if (currentPath === 'privacy') {
-      return <PrivacyPolicyPage onNavigate={handleNavigate} />;
-    }
-    if (currentPath === 'terms') {
-      return <TermsPage onNavigate={handleNavigate} />;
-    }
-    if (currentPath === 'ai-use') {
-      return <AIUsePage onNavigate={handleNavigate} />;
-    }
-    if (currentPath === 'public-benchmark' || currentPath === 'benchmark') {
-      return <BenchmarkPage onNavigate={handleNavigate} />;
-    }
-    if (currentPath === 'dev-design-system') {
-      return <DesignSystemCatalogPage />;
-    }
-    if (currentPath === 'dev-reference-match') {
-      return <ReferenceMatchPage />;
-    }
-    return <LandingPage onNavigate={handleNavigate} />;
+    return (
+      <Suspense fallback={<RouteLoadingFallback />}>
+        {(() => {
+          if (currentPath === 'auth') {
+            return (
+              <AuthPage
+                onNavigate={handleNavigate}
+                initialRole={navigationParams.role}
+                initialMode={navigationParams.mode}
+              />
+            );
+          }
+          if (currentPath === 'how-scoring-works') {
+            return <HowScoringWorksPage onNavigate={handleNavigate} />;
+          }
+          if (currentPath === 'privacy') {
+            return <PrivacyPolicyPage onNavigate={handleNavigate} />;
+          }
+          if (currentPath === 'terms') {
+            return <TermsPage onNavigate={handleNavigate} />;
+          }
+          if (currentPath === 'ai-use') {
+            return <AIUsePage onNavigate={handleNavigate} />;
+          }
+          if (currentPath === 'public-benchmark' || currentPath === 'benchmark') {
+            return <BenchmarkPage onNavigate={handleNavigate} />;
+          }
+          if (currentPath === 'dev-design-system') {
+            return <DesignSystemCatalogPage />;
+          }
+          if (currentPath === 'dev-reference-match') {
+            return <ReferenceMatchPage />;
+          }
+          return <LandingPage onNavigate={handleNavigate} />;
+        })()}
+      </Suspense>
+    );
   }
 
   // Handle standalone public pages when authenticated
-  if (currentPath === 'landing') {
-    return <LandingPage onNavigate={handleNavigate} />;
-  }
-  if (currentPath === 'how-scoring-works') {
-    return <HowScoringWorksPage onNavigate={handleNavigate} />;
-  }
-  if (currentPath === 'privacy') {
-    return <PrivacyPolicyPage onNavigate={handleNavigate} />;
-  }
-  if (currentPath === 'terms') {
-    return <TermsPage onNavigate={handleNavigate} />;
-  }
-  if (currentPath === 'ai-use') {
-    return <AIUsePage onNavigate={handleNavigate} />;
+  if (
+    currentPath === 'landing' ||
+    currentPath === 'how-scoring-works' ||
+    currentPath === 'privacy' ||
+    currentPath === 'terms' ||
+    currentPath === 'ai-use'
+  ) {
+    return (
+      <Suspense fallback={<RouteLoadingFallback />}>
+        {currentPath === 'landing' && <LandingPage onNavigate={handleNavigate} />}
+        {currentPath === 'how-scoring-works' && <HowScoringWorksPage onNavigate={handleNavigate} />}
+        {currentPath === 'privacy' && <PrivacyPolicyPage onNavigate={handleNavigate} />}
+        {currentPath === 'terms' && <TermsPage onNavigate={handleNavigate} />}
+        {currentPath === 'ai-use' && <AIUsePage onNavigate={handleNavigate} />}
+      </Suspense>
+    );
   }
 
   // Render active page within AppLayout
@@ -309,7 +333,9 @@ export const App: React.FC = () => {
 
   return (
     <AppLayout currentPath={currentPath} onNavigate={handleNavigate}>
-      {renderCurrentPage()}
+      <Suspense fallback={<RouteLoadingFallback />}>
+        {renderCurrentPage()}
+      </Suspense>
     </AppLayout>
   );
 };

@@ -124,12 +124,13 @@ recruiterWorkspaceRouter.get(
         SELECT 
           a.id as application_id, a.candidate_id, a.candidate_profile_id, a.job_id, a.status as pipeline_stage, a.applied_at, a.resume_id,
           cp.full_name, cp.location, cp.headline, u.email,
-          rpd.skills_json, rpd.experience_years_detected,
+          rpd.skills_json, COALESCE(rs.experience_years_detected, 4) as experience_years_detected,
           m.match_score, m.matching_details_json, m.required_skills_matched_json, m.required_skills_missing_json
         FROM applications a
         JOIN candidate_profiles cp ON a.candidate_profile_id = cp.id
         JOIN users u ON a.candidate_id = u.id
         LEFT JOIN resume_parsed_data rpd ON a.resume_id = rpd.resume_id
+        LEFT JOIN resume_screenings rs ON a.resume_id = rs.resume_id
         LEFT JOIN resume_job_matches m ON a.id = m.application_id
         WHERE 1=1
       `;
@@ -283,11 +284,12 @@ recruiterWorkspaceRouter.post(
       for (const appId of applicationIds) {
         const app = db.prepare(`
           SELECT a.id, a.candidate_id, cp.full_name, cp.location, cp.headline,
-                 rpd.skills_json, rpd.experience_years_detected,
+                 rpd.skills_json, COALESCE(rs.experience_years_detected, 4) as experience_years_detected,
                  m.match_score
           FROM applications a
           JOIN candidate_profiles cp ON a.candidate_profile_id = cp.id
           LEFT JOIN resume_parsed_data rpd ON a.resume_id = rpd.resume_id
+          LEFT JOIN resume_screenings rs ON a.resume_id = rs.resume_id
           LEFT JOIN resume_job_matches m ON a.id = m.application_id
           WHERE a.id = ?
         `).get(appId) as any;

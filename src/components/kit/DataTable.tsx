@@ -83,7 +83,7 @@ export function DataTable<T extends Record<string, any>>({
                   <div className={`inline-flex items-center gap-1.5 ${col.align === 'right' ? 'justify-end' : ''}`}>
                     <span>{col.header}</span>
                     {col.sortable && (
-                      <span className="text-[#8C928E] dark:text-[#5F6C70]">
+                      <span className="text-[#5E6460] dark:text-[#9AA7AB]">
                         {isSorted ? (
                           sortOrder === 'asc' ? '↑' : '↓'
                         ) : (
@@ -166,7 +166,7 @@ export const StatusProgressChip: React.FC<StatusCellData> = ({
         <Pill variant="micro-status" color={color} dot>
           {label}
         </Pill>
-        <span className="figure text-[10px] font-semibold text-[#8C928E] dark:text-[#5F6C70]">
+        <span className="figure text-[10px] font-semibold text-[#5E6460] dark:text-[#9AA7AB]">
           {progressPct}%
         </span>
       </div>

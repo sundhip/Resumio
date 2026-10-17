@@ -17,7 +17,7 @@ export const SidebarSectionLabel: React.FC<SidebarSectionLabelProps> = ({
 
   return (
     <div
-      className={`px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8C928E] dark:text-[#5F6C70] select-none ${className}`}
+      className={`px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#5E6460] dark:text-[#9AA7AB] select-none ${className}`}
     >
       {children}
     </div>

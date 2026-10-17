@@ -31,11 +31,11 @@ export const Button: React.FC<ButtonProps> = ({
   switch (variant) {
     case 'primary':
       variantClasses =
-        'bg-[#111312] text-white hover:bg-black dark:bg-[#1F8FA6] dark:text-white dark:hover:bg-[#2BB3C9] dark:shadow-[0_4px_16px_rgba(43,179,201,0.35)] shadow-sm';
+        'bg-[#111312] text-white hover:bg-black dark:bg-[#167A8C] dark:text-white dark:hover:bg-[#1F8FA6] dark:shadow-[0_4px_16px_rgba(22,122,140,0.35)] shadow-sm';
       break;
     case 'teal':
       variantClasses =
-        'bg-[#1F8FA6] text-white hover:bg-[#2BB3C9] shadow-[0_4px_16px_rgba(43,179,201,0.35)]';
+        'bg-[#167A8C] text-white hover:bg-[#1F8FA6] shadow-[0_4px_16px_rgba(22,122,140,0.35)]';
       break;
     case 'secondary':
       variantClasses =
@@ -55,7 +55,7 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       type="button"
       disabled={disabled || isLoading}
-      className={`inline-flex items-center justify-center font-medium transition-all duration-150 cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${variantClasses} ${className}`}
+      className={`inline-flex items-center justify-center font-medium transition-all duration-150 cursor-pointer select-none min-h-[44px] sm:min-h-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F8FA6] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#050708] disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${variantClasses} ${className}`}
       {...props}
     >
       {isLoading ? (

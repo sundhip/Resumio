@@ -222,7 +222,7 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
       {insight && (
         <div className="p-3.5 rounded-[16px] bg-[#1F8FA6]/10 dark:bg-[#1F8FA6]/15 border border-[#1F8FA6]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-stagger-2">
           <div className="flex items-center gap-2.5">
-            <span className="p-1.5 rounded-lg bg-[#1F8FA6] text-white flex items-center justify-center">
+            <span className="p-1.5 rounded-lg bg-[#167A8C] text-white flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </span>
             <div>
@@ -455,7 +455,7 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onNaviga
         <Card className="border-[#1F8FA6]/30 shadow-[0_8px_32px_rgba(31,143,166,0.08)] animate-stagger-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-start gap-4">
-              <div className="w-14 h-14 rounded-full bg-[#1F8FA6] text-white flex items-center justify-center font-bold text-lg shadow-md flex-shrink-0">
+              <div className="w-14 h-14 rounded-full bg-[#167A8C] text-white flex items-center justify-center font-bold text-lg shadow-md flex-shrink-0">
                 {topCandidate.candidateName
                   .split(' ')
                   .map((p) => p[0])

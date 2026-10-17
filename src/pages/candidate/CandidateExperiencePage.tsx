@@ -710,6 +710,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                   <select
                     value={simJobId}
                     onChange={(e) => setSimJobId(e.target.value)}
+                    aria-label="Target Opportunity"
                     className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                   >
                     <option value="">Select a target role...</option>
@@ -731,6 +732,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                       value={simNewSkill}
                       onChange={(e) => setSimNewSkill(e.target.value)}
                       placeholder="e.g. Docker, GraphQL"
+                      aria-label="Add Hypothetical Skill"
                       className="flex-1 text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                     />
                     <Button
@@ -758,6 +760,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                     max="10"
                     value={simExtraYears}
                     onChange={(e) => setSimExtraYears(Number(e.target.value))}
+                    aria-label="Extra Experience (Years)"
                     className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                   />
                 </div>
@@ -847,6 +850,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                 <select
                   value={simJobId}
                   onChange={(e) => setSimJobId(e.target.value)}
+                  aria-label="Select Target Job"
                   className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                 >
                   <option value="">Select a target role...</option>
@@ -868,6 +872,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                     value={simNewSkill}
                     onChange={(e) => setSimNewSkill(e.target.value)}
                     placeholder="e.g. AWS Lambda, Kubernetes"
+                    aria-label="Hypothetical Skill"
                     className="flex-1 text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                   />
                   <Button
@@ -895,6 +900,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                   max="10"
                   value={simExtraYears}
                   onChange={(e) => setSimExtraYears(Number(e.target.value))}
+                  aria-label="Extra Experience Years"
                   className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                 />
               </div>

@@ -171,9 +171,46 @@ export const Dialog: React.FC<DialogProps> = ({
   footer,
   size = 'md',
 }) => {
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      // Focus dialog panel for screen readers
+      requestAnimationFrame(() => {
+        dialogRef.current?.focus();
+      });
+    } else if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape' && isOpen) onClose();
+      if (!isOpen) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      // Focus trapping
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -193,14 +230,17 @@ export const Dialog: React.FC<DialogProps> = ({
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal Dialog Content */}
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        className={`relative w-full ${sizeClasses} rounded-[24px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.25)] p-6 z-10`}
+        tabIndex={-1}
+        className={`relative w-full ${sizeClasses} rounded-[24px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.25)] p-6 z-10 focus:outline-none`}
       >
         <div className="flex items-start justify-between mb-4">
           <div>
@@ -214,7 +254,7 @@ export const Dialog: React.FC<DialogProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-[#8C928E] hover:text-[#111312] dark:text-[#5F6C70] dark:hover:text-[#F2F6F7] cursor-pointer"
+            className="text-[#8C928E] hover:text-[#111312] dark:text-[#5F6C70] dark:hover:text-[#F2F6F7] p-1.5 rounded-lg transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F8FA6]"
             aria-label="Close dialog"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,7 +275,7 @@ export { Dialog as Modal };
 export type { DialogProps as ModalProps };
 
 // ==========================================
-// 5. Drawer (Slide-out panel)
+// 5. Drawer (Slide-out panel on desktop, Bottom Sheet on mobile)
 // ==========================================
 
 export interface DrawerProps {
@@ -253,9 +293,45 @@ export const Drawer: React.FC<DrawerProps> = ({
   children,
   width = 'max-w-md',
 }) => {
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      requestAnimationFrame(() => {
+        drawerRef.current?.focus();
+      });
+    } else if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape' && isOpen) onClose();
+      if (!isOpen) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      // Focus trapping
+      if (e.key === 'Tab' && drawerRef.current) {
+        const focusables = drawerRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -264,25 +340,32 @@ export const Drawer: React.FC<DrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex items-end md:items-stretch md:justify-end">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
 
-      {/* Drawer Body */}
+      {/* Drawer Body (Mobile: Bottom Sheet, Desktop: Side Drawer) */}
       <div
+        ref={drawerRef}
         role="dialog"
         aria-modal="true"
-        className={`relative w-full ${width} h-full bg-white dark:bg-[#0C1113] border-l border-[#E7E7E2] dark:border-white/10 shadow-2xl p-6 flex flex-col z-10`}
+        aria-labelledby="drawer-title"
+        tabIndex={-1}
+        className={`relative w-full md:${width} h-[85vh] md:h-full rounded-t-[24px] md:rounded-none bg-white dark:bg-[#0C1113] border-t md:border-t-0 md:border-l border-[#E7E7E2] dark:border-white/10 shadow-2xl p-6 flex flex-col z-10 focus:outline-none animate-page-enter`}
       >
+        {/* Mobile drag handle indicator */}
+        <div className="w-12 h-1.5 rounded-full bg-[#D4D6D2] dark:bg-white/20 mx-auto mb-3 md:hidden shrink-0" aria-hidden="true" />
+
         <div className="flex items-center justify-between pb-4 border-b border-[#E7E7E2] dark:border-white/10">
-          <h3 className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">{title}</h3>
+          <h3 id="drawer-title" className="text-lg font-bold text-[#111312] dark:text-[#F2F6F7]">{title}</h3>
           <button
             type="button"
             onClick={onClose}
-            className="text-[#8C928E] hover:text-[#111312] dark:text-[#5F6C70] dark:hover:text-[#F2F6F7] cursor-pointer"
+            className="text-[#5E6460] hover:text-[#111312] dark:text-[#9AA7AB] dark:hover:text-[#F2F6F7] p-1.5 rounded-lg transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F8FA6]"
             aria-label="Close drawer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

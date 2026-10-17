@@ -259,7 +259,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 !isRegistering
                   ? 'bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] shadow-2xs'
-                  : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                  : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
               }`}
             >
               Sign In
@@ -273,7 +273,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                 isRegistering
                   ? 'bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] shadow-2xs'
-                  : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                  : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
               }`}
             >
               Create Account
@@ -282,7 +282,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
           {/* Role Chooser as Two Large Cards */}
           <div className="space-y-2">
-            <span className="text-[11px] font-bold text-[#8C928E] dark:text-[#5F6C70] uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider block">
               Select Your Role
             </span>
             <div className="grid grid-cols-2 gap-3">
@@ -341,7 +341,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 className={`text-[11px] font-semibold transition-colors cursor-pointer flex items-center gap-1 ${
                   roleMode === 'admin'
                     ? 'text-[#1F8FA6] dark:text-[#5FD3E8] underline'
-                    : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                    : 'text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
                 }`}
               >
                 <Shield className="w-3 h-3" />
@@ -458,7 +458,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       style={{ width: `${passwordStrength.score}%` }}
                     />
                   </div>
-                  <span className="text-[10px] text-[#8C928E] dark:text-[#5F6C70] block">
+                  <span className="text-[10px] text-[#5E6460] dark:text-[#9AA7AB] block">
                     Use 8+ characters with uppercase, numbers, and symbols.
                   </span>
                 </div>
@@ -484,7 +484,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="p-1.5 text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7] absolute right-2.5 top-2 cursor-pointer"
+                    className="p-1.5 text-[#5E6460] dark:text-[#9AA7AB] hover:text-[#111312] dark:hover:text-[#F2F6F7] absolute right-2.5 top-2 cursor-pointer"
                     aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
                   >
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -520,7 +520,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
           {/* One-Click Instant Demo Login Strip */}
           <div className="pt-2 border-t border-[#E7E7E2] dark:border-white/8 space-y-2.5">
-            <span className="text-[10px] font-bold text-[#8C928E] dark:text-[#5F6C70] uppercase tracking-wider block text-center">
+            <span className="text-[10px] font-bold text-[#5E6460] dark:text-[#9AA7AB] uppercase tracking-wider block text-center">
               1-Click Instant Demo Access (Pre-Seeded)
             </span>
             <div className="grid grid-cols-3 gap-2">

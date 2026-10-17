@@ -49,16 +49,16 @@ export const MiniCalendar: React.FC<MiniCalendarProps> = ({
   };
 
   return (
-    <div className={`p-4 rounded-[20px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/6 ${className}`}>
+    <div className={`w-full max-w-[340px] p-4 rounded-[20px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/6 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
           {monthName} {year}
         </span>
-        <div className="flex items-center gap-1 text-[#8C928E] dark:text-[#5F6C70]">
+        <div className="flex items-center gap-1.5 text-[#8C928E] dark:text-[#5F6C70]">
           <button
             type="button"
-            className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
+            className="w-9 h-9 min-h-[36px] min-w-[36px] rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
             aria-label="Previous month"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@ export const MiniCalendar: React.FC<MiniCalendarProps> = ({
           </button>
           <button
             type="button"
-            className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
+            className="w-9 h-9 min-h-[36px] min-w-[36px] rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer"
             aria-label="Next month"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,10 +90,10 @@ export const MiniCalendar: React.FC<MiniCalendarProps> = ({
       </div>
 
       {/* Day cells */}
-      <div className="grid grid-cols-7 gap-1 text-center">
+      <div className="grid grid-cols-7 gap-1.5 text-center">
         {/* Leading empty spaces */}
         {Array.from({ length: startDayOfWeek }).map((_, i) => (
-          <div key={`empty-${i}`} className="h-8" />
+          <div key={`empty-${i}`} className="h-11 min-h-[44px] min-w-[36px] w-full" />
         ))}
 
         {/* Calendar days */}
@@ -108,9 +108,9 @@ export const MiniCalendar: React.FC<MiniCalendarProps> = ({
               type="button"
               aria-label={`October ${day}, 2026`}
               onClick={() => handleDayClick(day)}
-              className={`h-8 rounded-full flex flex-col items-center justify-center relative text-xs font-medium transition-colors cursor-pointer focus:outline-none ${
+              className={`h-11 min-h-[44px] min-w-[36px] w-full rounded-xl flex flex-col items-center justify-center relative text-xs font-medium transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F8FA6] ${
                 isSelected
-                  ? 'bg-[#1F8FA6] text-white font-bold shadow-[0_2px_8px_rgba(43,179,201,0.35)]'
+                  ? 'bg-[#167A8C] text-white font-bold shadow-sm'
                   : 'text-[#111312] dark:text-[#F2F6F7] hover:bg-black/5 dark:hover:bg-white/5'
               }`}
             >

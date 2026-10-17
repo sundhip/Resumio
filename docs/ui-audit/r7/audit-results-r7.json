@@ -1,0 +1,342 @@
+{
+  "axeViolationsTotal": 0,
+  "axeCriticalSerious": 0,
+  "axeScreenResults": {
+    "01_landing_page": {
+      "title": "Landing Page",
+      "passes": 25,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "02_auth_split": {
+      "title": "Auth Split Page",
+      "passes": 21,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "03_candidate_dashboard": {
+      "title": "Candidate Dashboard",
+      "passes": 20,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "04_recruiter_dashboard": {
+      "title": "Recruiter Dashboard",
+      "passes": 25,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "05_jobs_list": {
+      "title": "Jobs List",
+      "passes": 24,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "06_applicant_pipeline": {
+      "title": "Applicant Pipeline & Leaderboard",
+      "passes": 24,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "07_resume_split": {
+      "title": "Resume Split Inspector",
+      "passes": 20,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "08_career_skills_hub": {
+      "title": "Candidate Career Hub",
+      "passes": 23,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "09_ml_benchmark": {
+      "title": "Public ML Benchmark",
+      "passes": 23,
+      "violations": [],
+      "criticalSeriousCount": 0
+    },
+    "10_settings_security": {
+      "title": "Settings & Security",
+      "passes": 23,
+      "violations": [],
+      "criticalSeriousCount": 0
+    }
+  },
+  "keyboardShortcutsPassed": true,
+  "errorPreventionPassed": true,
+  "undoToastPassed": true,
+  "responsiveResults": {
+    "mobile_small_360": {
+      "width": 360,
+      "height": 740,
+      "screens": {
+        "01_landing_page": {
+          "hasOverflow": true,
+          "rootWidth": 365,
+          "windowWidth": 360,
+          "touchTargets": {
+            "totalButtons": 17,
+            "undersizedCount": 0
+          }
+        },
+        "03_candidate_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 360,
+          "windowWidth": 360,
+          "touchTargets": {
+            "totalButtons": 71,
+            "undersizedCount": 4
+          }
+        },
+        "04_recruiter_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 360,
+          "windowWidth": 360,
+          "touchTargets": {
+            "totalButtons": 66,
+            "undersizedCount": 7
+          }
+        },
+        "06_applicant_pipeline": {
+          "hasOverflow": false,
+          "rootWidth": 360,
+          "windowWidth": 360,
+          "touchTargets": {
+            "totalButtons": 93,
+            "undersizedCount": 4
+          }
+        }
+      }
+    },
+    "mobile_standard_390": {
+      "width": 390,
+      "height": 844,
+      "screens": {
+        "01_landing_page": {
+          "hasOverflow": false,
+          "rootWidth": 390,
+          "windowWidth": 390,
+          "touchTargets": {
+            "totalButtons": 17,
+            "undersizedCount": 0
+          }
+        },
+        "03_candidate_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 390,
+          "windowWidth": 390,
+          "touchTargets": {
+            "totalButtons": 71,
+            "undersizedCount": 4
+          }
+        },
+        "04_recruiter_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 390,
+          "windowWidth": 390,
+          "touchTargets": {
+            "totalButtons": 66,
+            "undersizedCount": 7
+          }
+        },
+        "06_applicant_pipeline": {
+          "hasOverflow": false,
+          "rootWidth": 390,
+          "windowWidth": 390,
+          "touchTargets": {
+            "totalButtons": 93,
+            "undersizedCount": 4
+          }
+        }
+      }
+    },
+    "tablet_portrait_768": {
+      "width": 768,
+      "height": 1024,
+      "screens": {
+        "01_landing_page": {
+          "hasOverflow": false,
+          "rootWidth": 768,
+          "windowWidth": 768,
+          "touchTargets": {
+            "totalButtons": 17,
+            "undersizedCount": 2
+          }
+        },
+        "03_candidate_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 768,
+          "windowWidth": 768,
+          "touchTargets": {
+            "totalButtons": 71,
+            "undersizedCount": 4
+          }
+        },
+        "04_recruiter_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 768,
+          "windowWidth": 768,
+          "touchTargets": {
+            "totalButtons": 66,
+            "undersizedCount": 7
+          }
+        },
+        "06_applicant_pipeline": {
+          "hasOverflow": false,
+          "rootWidth": 768,
+          "windowWidth": 768,
+          "touchTargets": {
+            "totalButtons": 93,
+            "undersizedCount": 9
+          }
+        }
+      }
+    },
+    "tablet_landscape_1024": {
+      "width": 1024,
+      "height": 768,
+      "screens": {
+        "01_landing_page": {
+          "hasOverflow": false,
+          "rootWidth": 1024,
+          "windowWidth": 1024,
+          "touchTargets": {
+            "totalButtons": 17,
+            "undersizedCount": 6
+          }
+        },
+        "03_candidate_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 1024,
+          "windowWidth": 1024,
+          "touchTargets": {
+            "totalButtons": 71,
+            "undersizedCount": 5
+          }
+        },
+        "04_recruiter_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 1024,
+          "windowWidth": 1024,
+          "touchTargets": {
+            "totalButtons": 66,
+            "undersizedCount": 8
+          }
+        },
+        "06_applicant_pipeline": {
+          "hasOverflow": false,
+          "rootWidth": 1024,
+          "windowWidth": 1024,
+          "touchTargets": {
+            "totalButtons": 93,
+            "undersizedCount": 10
+          }
+        }
+      }
+    },
+    "desktop_standard_1440": {
+      "width": 1440,
+      "height": 900,
+      "screens": {
+        "01_landing_page": {
+          "hasOverflow": false,
+          "rootWidth": 1440,
+          "windowWidth": 1440,
+          "touchTargets": {
+            "totalButtons": 17,
+            "undersizedCount": 8
+          }
+        },
+        "03_candidate_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 1440,
+          "windowWidth": 1440,
+          "touchTargets": {
+            "totalButtons": 71,
+            "undersizedCount": 5
+          }
+        },
+        "04_recruiter_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 1440,
+          "windowWidth": 1440,
+          "touchTargets": {
+            "totalButtons": 66,
+            "undersizedCount": 8
+          }
+        },
+        "06_applicant_pipeline": {
+          "hasOverflow": false,
+          "rootWidth": 1440,
+          "windowWidth": 1440,
+          "touchTargets": {
+            "totalButtons": 93,
+            "undersizedCount": 10
+          }
+        }
+      }
+    },
+    "desktop_fhd_1920": {
+      "width": 1920,
+      "height": 1080,
+      "screens": {
+        "01_landing_page": {
+          "hasOverflow": false,
+          "rootWidth": 1920,
+          "windowWidth": 1920,
+          "touchTargets": {
+            "totalButtons": 17,
+            "undersizedCount": 8
+          }
+        },
+        "03_candidate_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 1920,
+          "windowWidth": 1920,
+          "touchTargets": {
+            "totalButtons": 71,
+            "undersizedCount": 5
+          }
+        },
+        "04_recruiter_dashboard": {
+          "hasOverflow": false,
+          "rootWidth": 1920,
+          "windowWidth": 1920,
+          "touchTargets": {
+            "totalButtons": 66,
+            "undersizedCount": 8
+          }
+        },
+        "06_applicant_pipeline": {
+          "hasOverflow": false,
+          "rootWidth": 1920,
+          "windowWidth": 1920,
+          "touchTargets": {
+            "totalButtons": 93,
+            "undersizedCount": 10
+          }
+        }
+      }
+    }
+  },
+  "fiveSecondTestResults": {
+    "recruiter_workspace": {
+      "primaryAnchor": "Enterprise Recruiter Workspace + Candidate Leaderboard with Match Scores",
+      "verified": true,
+      "details": {
+        "heading": "Talent Pipeline & Kanban",
+        "hasLeaderboard": true,
+        "metricBadges": 1
+      }
+    },
+    "candidate_dashboard": {
+      "primaryAnchor": "Welcome Back Candidate + Active Application Pipeline + ATS Health Indicator",
+      "verified": true,
+      "details": {
+        "heading": "Candidate Dashboard",
+        "cardCount": 56
+      }
+    }
+  }
+}
