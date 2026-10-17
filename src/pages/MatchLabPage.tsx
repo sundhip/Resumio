@@ -10,6 +10,7 @@ import {
   Stepper,
   SegmentedControl,
 } from '../components/kit';
+import { Badge } from '../components/ui/Badge';
 import type {
   CandidateScoringInputV2,
   JobScoringInputV2,
@@ -621,8 +622,8 @@ export const MatchLabPage: React.FC = () => {
                 onClick={() => applyPreset(preset)}
                 className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-all ${
                   selectedPreset === preset
-                    ? 'bg-[#111312] dark:bg-[#0C1113] dark:bg-white text-white dark:text-slate-950 shadow-sm'
-                    : 'bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/6 hover:border-slate-400'
+                    ? 'bg-[#111312] dark:bg-white text-white dark:text-[#050708] shadow-sm'
+                    : 'bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/10 hover:border-[#1F8FA6]'
                 }`}
               >
                 {preset.replace('_', ' / ')}

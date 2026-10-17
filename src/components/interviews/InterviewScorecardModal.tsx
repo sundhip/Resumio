@@ -136,7 +136,7 @@ export const InterviewScorecardModal: React.FC<InterviewScorecardModalProps> = (
             className={`flex-1 py-1 text-xs font-semibold rounded transition-colors ${
               value >= star
                 ? 'bg-amber-500 text-white shadow-xs'
-                : 'bg-[#DCDCD7] dark:bg-surface-dark-card text-[#5E6460] dark:text-[#9AA7AB] hover:bg-slate-300'
+                : 'bg-[#DCDCD7] dark:bg-surface-dark-card text-[#5E6460] dark:text-[#9AA7AB] hover:bg-[#E7E7E2] dark:hover:bg-white/10'
             }`}
           >
             {star}

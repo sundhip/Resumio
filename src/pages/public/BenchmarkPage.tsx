@@ -44,8 +44,8 @@ export const BenchmarkPage: React.FC<BenchmarkPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Reproducibility Command Badge */}
-        <div className="bg-[#111312] dark:bg-[#0C1113] dark:bg-black text-[#DCDCD7] dark:text-[#C5D0D3] p-3 rounded-xl border border-slate-700/60 font-mono text-xs max-w-md">
-          <div className="flex items-center justify-between text-[#9AA7AB] pb-1 mb-1 border-b border-slate-800">
+        <div className="bg-[#111312] dark:bg-[#0C1113] text-[#F2F6F7] p-3 rounded-xl border border-[#E7E7E2] dark:border-white/10 font-mono text-xs max-w-md">
+          <div className="flex items-center justify-between text-[#9AA7AB] pb-1 mb-1 border-b border-[#E7E7E2] dark:border-white/10">
             <span className="flex items-center gap-1.5">
               <Terminal className="w-3.5 h-3.5 text-emerald-400" /> Exact Reproducibility Command
             </span>

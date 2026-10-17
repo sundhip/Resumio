@@ -67,7 +67,7 @@ export const ApplicationStatusBadge: React.FC<ApplicationStatusBadgeProps> = ({
           bg: 'bg-[#E9E9E5] dark:bg-surface-dark-input',
           text: 'text-[#5E6460] dark:text-[#9AA7AB]',
           border: 'border-[#E7E7E2] dark:border-surface-dark-border',
-          dot: 'bg-slate-400',
+          dot: 'bg-[#5E6460] dark:bg-[#9AA7AB]',
           icon: <RotateCcw className="w-3 h-3" />,
         };
       default:
@@ -76,7 +76,7 @@ export const ApplicationStatusBadge: React.FC<ApplicationStatusBadgeProps> = ({
           bg: 'bg-[#E9E9E5] dark:bg-surface-dark-input',
           text: 'text-[#111312] dark:text-[#F2F6F7]',
           border: 'border-[#E7E7E2] dark:border-surface-dark-border',
-          dot: 'bg-slate-400',
+          dot: 'bg-[#5E6460] dark:bg-[#9AA7AB]',
           icon: <Clock className="w-3 h-3" />,
         };
     }

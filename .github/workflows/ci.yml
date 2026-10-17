@@ -34,11 +34,30 @@ jobs:
       - name: Fast Lint (Oxlint)
         run: npx oxlint --quiet
 
-      - name: Run Master Test Suite (17 Suites)
+      - name: Design Token Compliance Check
+        run: npm run check:tokens
+
+      - name: i18n & Microcopy Integrity Check
+        run: npm run check:i18n
+
+      - name: Run Master Test Suite (25 Suites)
         run: npm test
 
       - name: Frontend Build Check
         run: npm run build
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Visual Regression Test Suite
+        run: npm run test:visual
+
+      - name: Upload Visual Audit Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-snapshots
+          path: docs/ui-audit/r8/
 
       - name: Validate ML Service Syntax
         run: |

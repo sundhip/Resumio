@@ -6,6 +6,8 @@
 [![Database](https://img.shields.io/badge/Database-SQLite%20%7C%20PostgreSQL%2Bpgvector-336791.svg)]()
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38b2ac.svg)](https://tailwindcss.com/)
 [![WCAG](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-success.svg)]()
+[![Visual Regression](https://img.shields.io/badge/Playwright%20Visual%20Regression-48%2F48%20Passed-success.svg)]()
+[![Tokens](https://img.shields.io/badge/Design%20Tokens-100%25%20Compliant-success.svg)]()
 [![Release](https://img.shields.io/badge/Version-v1.0.0-green.svg)](file:///C:/Users/sundhip/.gemini/antigravity/scratch/Resumio/CHANGELOG.md)
 [![License](https://img.shields.io/badge/License-Proprietary-orange.svg)]()
 
@@ -13,18 +15,34 @@
 
 ---
 
+## 🎨 Design System: Obsidian & Paper Themes
+
+Resumio's interface is built on two rigorously audited themes adhering to [WCAG 2.2 AA accessibility](file:///C:/Users/sundhip/.gemini/antigravity/scratch/Resumio/docs/design/README.md) and 100% custom token compliance:
+
+| Obsidian (Dark Theme — `#050708` Canvas) | Paper (Light Theme — `#F4F4F1` Canvas) |
+| :---: | :---: |
+| ![Recruiter Dashboard Dark](./docs/ui-audit/r8/baseline/04_recruiter_dashboard_dark_1440.png) | ![Recruiter Dashboard Light](./docs/ui-audit/r8/baseline/04_recruiter_dashboard_light_1440.png) |
+| *Recruiter Dashboard (Dark Obsidian)* | *Recruiter Dashboard (Light Paper)* |
+| ![Applicant Pipeline Dark](./docs/ui-audit/r8/baseline/06_applicant_pipeline_dark_1440.png) | ![Applicant Pipeline Light](./docs/ui-audit/r8/baseline/06_applicant_pipeline_light_1440.png) |
+| *Applicant Pipeline Leaderboard (Dark)* | *Applicant Pipeline Leaderboard (Light)* |
+
+*Explore full design system documentation, token contracts, and motion curves in [docs/design/README.md](file:///C:/Users/sundhip/.gemini/antigravity/scratch/Resumio/docs/design/README.md).*
+
+---
+
 ## 📑 Table of Contents
 1. [Core Architectural Pillars](#-core-architectural-pillars)
-2. [Benchmark Results: Resumio Scorer V2 vs. Resume-Matcher](#-benchmark-results-resumio-scorer-v2-vs-resume-matcher)
-3. [System Architecture](#-system-architecture)
-4. [One-Command Quickstart](#-one-command-quickstart)
-5. [Configuration & Environment Variables](#-configuration--environment-variables)
-6. [Role User Guides](#-role-user-guides)
-7. [Model Cards & Data Cards Index](#-model-cards--data-cards-index)
-8. [Public API & Webhook Reference](#-public-api--webhook-reference)
-9. [Operational Runbooks](#-operational-runbooks)
-10. [Honest Limitations & Boundaries](#-honest-limitations--boundaries)
-11. [Governance, Security & Legal](#-governance-security--legal)
+2. [Design System & Visual Experience](#-design-system-obsidian--paper-themes)
+3. [Benchmark Results: Resumio Scorer V2 vs. Resume-Matcher](#-benchmark-results-resumio-scorer-v2-vs-resume-matcher)
+4. [System Architecture](#-system-architecture)
+5. [One-Command Quickstart](#-one-command-quickstart)
+6. [Configuration & Environment Variables](#-configuration--environment-variables)
+7. [Role User Guides](#-role-user-guides)
+8. [Model Cards & Data Cards Index](#-model-cards--data-cards-index)
+9. [Public API & Webhook Reference](#-public-api--webhook-reference)
+10. [Operational Runbooks](#-operational-runbooks)
+11. [Honest Limitations & Boundaries](#-honest-limitations--boundaries)
+12. [Governance, Security & Legal](#-governance-security--legal)
 
 ---
 

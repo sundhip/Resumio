@@ -43,7 +43,7 @@ export const StatTile: React.FC<StatTileProps> = ({
   return (
     <div
       className={twMerge(
-        'group relative flex flex-col justify-between p-4 sm:p-5 rounded-card bg-surface-light-card dark:bg-surface-dark-card border border-surface-light-border dark:border-surface-dark-border shadow-subtle hover:border-[#DCDCD7] dark:hover:border-slate-700 transition-all duration-200',
+        'group relative flex flex-col justify-between p-4 sm:p-5 rounded-card bg-surface-light-card dark:bg-surface-dark-card border border-surface-light-border dark:border-surface-dark-border shadow-subtle hover:border-[#DCDCD7] dark:hover:border-white/20 transition-all duration-200',
         className
       )}
     >

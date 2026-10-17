@@ -174,7 +174,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           />
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
+            <label className="text-[13px] font-semibold text-[#5E6460] dark:text-[#9AA7AB] block">
               Project Description & Architectural Details
             </label>
             <textarea
@@ -182,7 +182,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe the problem solved, architectural choices, scale, performance improvements, and outcomes..."
-              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all resize-y min-h-[100px]"
+              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-white dark:bg-[#0C1113] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 focus:border-[#1F8FA6] transition-all resize-y min-h-[100px]"
             />
           </div>
         </div>

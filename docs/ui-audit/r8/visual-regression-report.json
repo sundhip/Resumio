@@ -1,0 +1,344 @@
+{
+  "timestamp": "2026-10-17T05:45:32.814Z",
+  "totalSnapshotsEvaluated": 48,
+  "passedCount": 48,
+  "failedCount": 0,
+  "results": [
+    {
+      "screenId": "01_landing_page",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "01_landing_page_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "01_landing_page",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "01_landing_page_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "01_landing_page",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "01_landing_page_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "01_landing_page",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "01_landing_page_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "02_auth_split",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "02_auth_split_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "02_auth_split",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "02_auth_split_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "02_auth_split",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "02_auth_split_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "02_auth_split",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "02_auth_split_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "03_candidate_dashboard",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "03_candidate_dashboard_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "03_candidate_dashboard",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "03_candidate_dashboard_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "03_candidate_dashboard",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "03_candidate_dashboard_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "03_candidate_dashboard",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "03_candidate_dashboard_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "04_recruiter_dashboard",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "04_recruiter_dashboard_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "04_recruiter_dashboard",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "04_recruiter_dashboard_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "04_recruiter_dashboard",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "04_recruiter_dashboard_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "04_recruiter_dashboard",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "04_recruiter_dashboard_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "05_jobs_list",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "05_jobs_list_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "05_jobs_list",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "05_jobs_list_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "05_jobs_list",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "05_jobs_list_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "05_jobs_list",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "05_jobs_list_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "06_applicant_pipeline",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "06_applicant_pipeline_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "06_applicant_pipeline",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "06_applicant_pipeline_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "06_applicant_pipeline",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "06_applicant_pipeline_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "06_applicant_pipeline",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "06_applicant_pipeline_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "07_resume_split",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "07_resume_split_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "07_resume_split",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "07_resume_split_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "07_resume_split",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "07_resume_split_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "07_resume_split",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "07_resume_split_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "08_career_skills_hub",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "08_career_skills_hub_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "08_career_skills_hub",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "08_career_skills_hub_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "08_career_skills_hub",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "08_career_skills_hub_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "08_career_skills_hub",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "08_career_skills_hub_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "09_ml_benchmark",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "09_ml_benchmark_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "09_ml_benchmark",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "09_ml_benchmark_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "09_ml_benchmark",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "09_ml_benchmark_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "09_ml_benchmark",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "09_ml_benchmark_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "10_settings_security",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "10_settings_security_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "10_settings_security",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "10_settings_security_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "10_settings_security",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "10_settings_security_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "10_settings_security",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "10_settings_security_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "11_match_lab",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "11_match_lab_dark_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "11_match_lab",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "11_match_lab_dark_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "11_match_lab",
+      "theme": "light",
+      "viewport": "1440",
+      "filename": "11_match_lab_light_1440.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "11_match_lab",
+      "theme": "light",
+      "viewport": "390",
+      "filename": "11_match_lab_light_390.png",
+      "status": "baseline-created"
+    },
+    {
+      "screenId": "state_modal_shortcuts",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "state_modal_shortcuts_dark_1440.png",
+      "status": "passed"
+    },
+    {
+      "screenId": "state_modal_rejection",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "state_modal_rejection_dark_1440.png",
+      "status": "passed"
+    },
+    {
+      "screenId": "state_command_palette",
+      "theme": "dark",
+      "viewport": "1440",
+      "filename": "state_command_palette_dark_1440.png",
+      "status": "passed"
+    },
+    {
+      "screenId": "state_mobile_drawer",
+      "theme": "dark",
+      "viewport": "390",
+      "filename": "state_mobile_drawer_dark_390.png",
+      "status": "passed"
+    }
+  ]
+}

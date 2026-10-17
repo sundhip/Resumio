@@ -198,11 +198,11 @@ export const EducationModal: React.FC<EducationModalProps> = ({
                 setCurrentlyStudying(e.target.checked);
                 if (e.target.checked) setEndDate('');
               }}
-              className="rounded border-slate-700 bg-[#0d101d] text-brand-600 focus:ring-brand-500/40 w-4 h-4 cursor-pointer"
+              className="rounded border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#0C1113] text-[#1F8FA6] focus:ring-[#1F8FA6]/40 w-4 h-4 cursor-pointer"
             />
             <label
               htmlFor="currently-studying-chk"
-              className="text-xs text-[#8A928D] dark:text-[#9AA7AB] select-none font-medium cursor-pointer"
+              className="text-xs text-[#5E6460] dark:text-[#9AA7AB] select-none font-medium cursor-pointer"
             >
               I currently study here
             </label>
@@ -214,12 +214,12 @@ export const EducationModal: React.FC<EducationModalProps> = ({
               placeholder="e.g. CGPA: 8.7 / 10 or 3.8 GPA"
               value={gradeOrGpa}
               onChange={(e) => setGradeOrGpa(e.target.value)}
-              leftIcon={<Award className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
+              leftIcon={<Award className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />}
             />
           </div>
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
+            <label className="text-[13px] font-semibold text-[#5E6460] dark:text-[#9AA7AB] block">
               Description & Highlights (Optional)
             </label>
             <textarea
@@ -227,7 +227,7 @@ export const EducationModal: React.FC<EducationModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Major focus areas, coursework, honors, or thesis topics..."
-              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all resize-y min-h-[100px]"
+              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-white dark:bg-[#0C1113] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 focus:border-[#1F8FA6] transition-all resize-y min-h-[100px]"
             />
           </div>
         </div>

@@ -82,7 +82,7 @@ export const MatchHeatmap: React.FC<MatchHeatmapProps> = ({
       <div className="mt-4 relative">
         {/* Floating Tooltip Callout */}
         {activeTooltipSpan && (
-          <div className="mb-4 p-3 bg-[#111312] dark:bg-[#0C1113] text-white rounded-lg shadow-xl border border-slate-700 text-xs animate-in fade-in duration-150">
+          <div className="mb-4 p-3 bg-[#111312] dark:bg-[#0C1113] text-white rounded-lg shadow-xl border border-[#E7E7E2] dark:border-white/10 text-xs animate-in fade-in duration-150">
             <div className="flex items-center justify-between gap-2 mb-1">
               <span className="font-bold flex items-center gap-1.5">
                 {activeTooltipSpan.category === 'strong_evidence' ? (

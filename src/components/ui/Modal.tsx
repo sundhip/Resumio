@@ -54,7 +54,7 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Dark semi-transparent backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/80 dark:bg-black/85 backdrop-blur-md transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-black/60 dark:bg-black/85 backdrop-blur-md transition-opacity animate-fade-in"
         onClick={onClose}
       />
 
@@ -64,7 +64,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           className={twMerge(
             clsx(
-              'pointer-events-auto relative w-full max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)] rounded-xl bg-white dark:bg-[#121624] border border-[#E7E7E2] dark:border-white/8 shadow-2xl z-10 flex flex-col overflow-hidden animate-fade-in text-left my-auto shrink-0',
+              'pointer-events-auto relative w-full max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3rem)] rounded-xl bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 shadow-2xl z-10 flex flex-col overflow-hidden animate-fade-in text-left my-auto shrink-0',
               sizeStyles[size],
               className
             )

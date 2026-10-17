@@ -614,12 +614,12 @@ export const PlatformIntegrationsPage: React.FC<{ onNavigate?: (path: string) =>
             {/* Delivery Logs Modal/Drawer View */}
             {deliveryLogs.length > 0 && (
               <div className="mt-4 p-4 rounded-lg bg-[#111312] dark:bg-[#0C1113] text-[#DCDCD7] dark:text-[#C5D0D3] text-xs font-mono space-y-2">
-                <div className="font-bold text-white flex items-center justify-between pb-2 border-b border-slate-800">
+                <div className="font-bold text-white flex items-center justify-between pb-2 border-b border-[#E7E7E2] dark:border-white/10">
                   <span>Recent Webhook Deliveries (HMAC Signed)</span>
                   <button onClick={() => setDeliveryLogs([])} className="text-[#8A928D] dark:text-[#657378] hover:text-white">✕</button>
                 </div>
                 {deliveryLogs.map((log) => (
-                  <div key={log.id} className="flex items-center justify-between py-1 border-b border-slate-800 text-[11px]">
+                  <div key={log.id} className="flex items-center justify-between py-1 border-b border-[#E7E7E2] dark:border-white/10 text-[11px]">
                     <span className="text-[#8A928D] dark:text-[#657378]">{log.event_type}</span>
                     <span className={log.status === 'delivered' ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
                       {log.status.toUpperCase()} (HTTP {log.http_status || 'ERR'})

@@ -115,14 +115,14 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
       {quickInputOpen && (
         <form
           onSubmit={handleAddSubmit}
-          className="p-3.5 rounded-xl bg-[#0d101d] border border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 animate-fade-in"
+          className="p-3.5 rounded-xl bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 animate-fade-in"
         >
           <input
             type="text"
             placeholder="Type skill name (e.g. TypeScript, React, Python)..."
             value={skillName}
             onChange={(e) => setSkillName(e.target.value)}
-            className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-[#121624] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+            className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 focus:border-[#1F8FA6] transition-all"
             autoFocus
             required
           />
@@ -130,12 +130,12 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
           <select
             value={proficiency}
             onChange={(e) => setProficiency(e.target.value as SkillProficiency)}
-            className="px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-[#121624] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+            className="px-3.5 py-2.5 text-xs sm:text-sm rounded-lg bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 focus:border-[#1F8FA6] transition-all"
           >
-            <option value="Beginner" className="bg-[#121624] text-slate-100">Beginner</option>
-            <option value="Intermediate" className="bg-[#121624] text-slate-100">Intermediate</option>
-            <option value="Advanced" className="bg-[#121624] text-slate-100">Advanced</option>
-            <option value="Expert" className="bg-[#121624] text-slate-100">Expert</option>
+            <option value="Beginner" className="bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7]">Beginner</option>
+            <option value="Intermediate" className="bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7]">Intermediate</option>
+            <option value="Advanced" className="bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7]">Advanced</option>
+            <option value="Expert" className="bg-white dark:bg-[#111719] text-[#111312] dark:text-[#F2F6F7]">Expert</option>
           </select>
 
           <Button variant="primary" size="sm" type="submit" isLoading={isAdding}>
@@ -233,8 +233,8 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
                 onClick={() => setEditProficiency(level)}
                 className={`p-3 rounded-xl text-left border text-xs font-semibold transition-all ${
                   editProficiency === level
-                    ? 'border-brand-500 bg-brand-950/40 text-brand-300 shadow-sm ring-1 ring-brand-500/50'
-                    : 'border-slate-800 bg-[#0d101d] text-[#8A928D] dark:text-[#9AA7AB] hover:bg-[#121624]'
+                    ? 'border-[#1F8FA6] bg-[#1F8FA6]/10 text-[#1F8FA6] dark:text-[#5FD3E8] shadow-sm ring-1 ring-[#1F8FA6]/50'
+                    : 'border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#0C1113] text-[#5E6460] dark:text-[#9AA7AB] hover:bg-[#F4F4F1] dark:hover:bg-[#111719]'
                 }`}
               >
                 {level}

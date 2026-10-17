@@ -97,3 +97,67 @@
 2. **Dataset Management Tab:** View the 33-sample benchmark dataset across Frontend, Backend, DevOps, and Security domains.
 3. **Comparative Experiments Tab:** Review baseline vs. augmented text classification metrics (Macro-F1, Confusion Matrix).
 4. **Matching & IR Ranking Benchmarks Tab:** Inspect Information Retrieval ranking metrics ($\text{MRR} = 1.0$, $\text{NDCG}@3 = 1.0$) and engine latency distributions ($< 1.0\text{ms}$).
+
+---
+
+## 4. Power User Keyboard Shortcuts & Command Palette
+
+Resumio features complete keyboard-driven navigation across all recruiter and candidate views.
+
+### 4.1 Keybinding Cheat Sheet
+| Shortcut | Context | Action |
+| :--- | :--- | :--- |
+| `?` | Global | Opens the **Keyboard Shortcuts Reference Dialog**. |
+| `Ctrl + K` / `Cmd + K` | Global | Opens the spotlight **Command Palette** to jump to any page, job, or candidate. |
+| `J` / `K` | Applicant Pipeline | Selects the next / previous candidate row in the virtualized pipeline table. |
+| `S` | Applicant Pipeline | Toggles shortlist status for the actively focused candidate. |
+| `C` | Applicant Pipeline | Adds / removes the focused candidate to the comparison drawer. |
+| `R` | Applicant Pipeline | Opens the **Reject Confirmation Modal** with reason selection and 6s undo grace period. |
+| `/` | Searchable Views | Focuses the primary search input box. |
+| `Escape` | Modals / Overlays | Closes active modal, drawer, or search flyout with focus restoration. |
+
+---
+
+## 5. Blind Screening & Anti-Bias Protections
+
+To uphold EU AI Act High-Risk AI compliance (Annex III) and EEOC non-discrimination guidelines:
+
+### 5.1 Blind Screening Mode
+1. In the Applicant Pipeline (`/recruiter/workspace`), toggle the **Blind Screening** switch in the top toolbar.
+2. When active, all candidate identifying attributes are obfuscated:
+   - Candidate names are masked as pseudonymous IDs (e.g., *Candidate #C-8492*).
+   - Profile photos, avatar initials, and social links are concealed.
+   - Educational institution names are generalized (e.g., *Accredited University*).
+3. Decisions remain strictly focused on demonstrable skills, experience depth, and verified technical evidence.
+
+### 5.2 Algorithmic Fairness Guarantee
+- Scoring algorithms categorically exclude protected demographic variables (age, gender, ethnicity, disability, religion, institution prestige).
+- Counterfactual name-swapping regression tests verify zero delta ($\Delta = 0.00$) variance in computed match scores.
+
+---
+
+## 6. Match Lab & What-If Simulation
+
+Recruiters and talent leaders can test, calibrate, and simulate scoring weights without modifying production applicant records:
+
+1. Navigate to **Match Lab** (`/recruiter/match-lab`).
+2. **Adjust Scoring Weights**: Use interactive sliders to customize weights across:
+   - Required Skills Match ($30\%\text{--}60\%$)
+   - Preferred Skills Bonus ($10\%\text{--}25\%$)
+   - Experience Depth ($10\%\text{--}30\%$)
+   - Title Relevance ($5\%\text{--}15\%$)
+   - Education & Credentials ($5\%\text{--}15\%$)
+3. **Run What-If Counterfactuals**: Add or remove hypothetical skills to see instant recalculations of candidate scores and radar chart shapes.
+4. **Deterministic Offline Verification**: Inspect the exact formula and mathematical provenance for every score point.
+
+---
+
+## 7. Themes, Export & Print Views
+
+### 7.1 Theme Selection
+- Click the Theme switcher in the navigation bar to toggle between **Dark (Obsidian)**, **Light (Paper)**, or **System Mode**.
+- In System Mode, theme changes from your OS take effect immediately without requiring page reloads or layout shift.
+
+### 7.2 Clean Print & PDF Export
+- Navigate to any **Match Report** or **Candidate Comparison** screen and press `Ctrl + P` (or click **Export Report**).
+- An optimized print stylesheet automatically removes navigation sidebars, controls, and animations, rendering a publication-grade white-and-ink report suitable for hiring committee review.

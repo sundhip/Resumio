@@ -152,28 +152,28 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         )}
 
         {/* Profile Photo Section */}
-        <div className="p-4 rounded-xl bg-[#0d101d] border border-slate-800/90 flex items-center justify-between gap-4">
+        <div className="p-4 rounded-xl bg-[#F4F4F1] dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             {photoUrl ? (
               <img
                 src={photoUrl}
                 alt="Profile Avatar"
-                className="w-14 h-14 rounded-full object-cover ring-2 ring-brand-500/30"
+                className="w-14 h-14 rounded-full object-cover ring-2 ring-[#1F8FA6]/30"
               />
             ) : (
-              <div className="w-14 h-14 rounded-full bg-[#1e273e] text-[#DCDCD7] dark:text-[#C5D0D3] font-bold text-base flex items-center justify-center border border-slate-700">
+              <div className="w-14 h-14 rounded-full bg-[#1F8FA6]/10 text-[#1F8FA6] dark:text-[#5FD3E8] font-bold text-base flex items-center justify-center border border-[#1F8FA6]/20">
                 {(fullName || 'Candidate').slice(0, 2).toUpperCase()}
               </div>
             )}
             <div>
-              <p className="text-xs font-bold text-white">Profile Photo</p>
-              <p className="text-[11px] text-[#8A928D] dark:text-[#657378] mt-0.5">JPG, PNG or WEBP (Max 5MB)</p>
+              <p className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">Profile Photo</p>
+              <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] mt-0.5">JPG, PNG or WEBP (Max 5MB)</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="cursor-pointer inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#1a2035] hover:bg-[#222943] border border-slate-700 text-[#DCDCD7] dark:text-[#C5D0D3] transition-colors shadow-xs">
-              <Camera className="w-3.5 h-3.5 text-brand-400" />
+            <label className="cursor-pointer inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-[#111719] hover:bg-[#E7E7E2] dark:hover:bg-white/10 border border-[#E7E7E2] dark:border-white/10 text-[#111312] dark:text-[#F2F6F7] transition-colors shadow-xs">
+              <Camera className="w-3.5 h-3.5 text-[#1F8FA6]" />
               <span>{isUploadingPhoto ? 'Uploading...' : 'Upload Photo'}</span>
               <input
                 type="file"
@@ -190,7 +190,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 onClick={handleRemovePhoto}
                 disabled={isUploadingPhoto}
                 title="Remove photo"
-                className="p-1.5 rounded-lg text-[#8A928D] dark:text-[#657378] hover:text-rose-400 hover:bg-slate-800/60 transition-colors"
+                className="p-1.5 rounded-lg text-[#5E6460] dark:text-[#9AA7AB] hover:text-rose-400 hover:bg-[#E7E7E2] dark:hover:bg-white/10 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -205,7 +205,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. Rahul Kumar"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            leftIcon={<User className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
+            leftIcon={<User className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />}
             required
           />
 
@@ -214,7 +214,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. Senior Full Stack Developer"
             value={headline}
             onChange={(e) => setHeadline(e.target.value)}
-            leftIcon={<Briefcase className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
+            leftIcon={<Briefcase className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />}
             helperText="Appears directly under your name"
           />
 
@@ -223,7 +223,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. +91 98765 43210"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            leftIcon={<Phone className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
+            leftIcon={<Phone className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />}
           />
 
           <Input
@@ -231,12 +231,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             placeholder="e.g. Chennai, India"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            leftIcon={<MapPin className="w-4 h-4 text-[#8A928D] dark:text-[#657378]" />}
+            leftIcon={<MapPin className="w-4 h-4 text-[#5E6460] dark:text-[#9AA7AB]" />}
           />
 
           {/* Full-width Professional Summary Textarea */}
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-[13px] font-semibold text-[#8A928D] dark:text-[#9AA7AB] block">
+            <label className="text-[13px] font-semibold text-[#5E6460] dark:text-[#9AA7AB] block">
               Professional Summary
             </label>
             <textarea
@@ -244,7 +244,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Tell recruiters about your professional background, strengths and career goals."
-              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-[#0d101d] text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all resize-y min-h-[100px]"
+              className="w-full p-3.5 text-xs sm:text-sm rounded-lg bg-white dark:bg-[#0C1113] text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 focus:border-[#1F8FA6] transition-all resize-y min-h-[100px]"
             />
             <p className="text-[11px] text-[#8A928D] dark:text-[#657378]">
               Write a comprehensive overview of your focus areas and technical domains.

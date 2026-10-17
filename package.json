@@ -29,6 +29,8 @@
     "test:design-system": "tsx scripts/test-design-system.ts",
     "test:r2": "tsx scripts/test-dashboards-r2.ts",
     "test:r5": "tsx scripts/test-landing-auth-r5.ts",
+    "test:visual": "tsx scripts/test-visual-regression.ts",
+    "test:visual:update": "tsx scripts/test-visual-regression.ts --update-snapshots",
     "audit:ui": "tsx scripts/ui-audit.ts",
     "preview": "vite preview",
     "ml:pipeline": "python ml/scripts/run_pipeline.py",

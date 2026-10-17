@@ -641,7 +641,7 @@ export const ApplicationsPage: React.FC<ApplicationsPageProps> = ({ onNavigate }
                                   ? 'bg-[#1F8FA6]'
                                   : isTerminal && step <= currentStepIdx
                                   ? app.status === 'Withdrawn'
-                                    ? 'bg-slate-400'
+                                    ? 'bg-[#5E6460] dark:bg-[#9AA7AB]'
                                     : 'bg-rose-400'
                                   : 'bg-[#E7E7E2] dark:bg-white/10'
                               }`}
