@@ -76,7 +76,7 @@ export const App: React.FC = () => {
       if (path === 'dev/design-system' || path === 'dev-design-system') return 'dev-design-system';
       if (path === 'dev/reference-match' || path === 'dev-reference-match') return 'dev-reference-match';
       if (path === 'benchmark' || path === 'public-benchmark') return 'public-benchmark';
-      if (path === 'how-scoring-works') return 'how-scoring-works';
+      if (path === 'how-scoring-works' || path === 'methodology' || path === 'scoring-methodology') return 'how-scoring-works';
       if (path === 'privacy' || path === 'privacy-policy') return 'privacy';
       if (path === 'terms' || path === 'terms-of-service') return 'terms';
       if (path === 'ai-use' || path === 'ai-governance') return 'ai-use';
@@ -319,6 +319,20 @@ export const App: React.FC = () => {
       case 'dev-reference-match':
       case 'reference-match':
         return <ReferenceMatchPage />;
+
+      case 'how-scoring-works':
+      case 'methodology':
+      case 'scoring-methodology':
+        return <HowScoringWorksPage onNavigate={handleNavigate} />;
+
+      case 'privacy':
+        return <PrivacyPolicyPage onNavigate={handleNavigate} />;
+
+      case 'terms':
+        return <TermsPage onNavigate={handleNavigate} />;
+
+      case 'ai-use':
+        return <AIUsePage onNavigate={handleNavigate} />;
 
       default:
         if (role === 'admin') {

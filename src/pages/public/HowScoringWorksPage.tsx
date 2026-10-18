@@ -69,7 +69,7 @@ export const HowScoringWorksPage: React.FC<HowScoringWorksPageProps> = ({ onNavi
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
             <div className="p-4 rounded-xl bg-black/[0.015] dark:bg-white/[0.015] border border-[#E7E7E2] dark:border-white/8 space-y-1.5">
               <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block">
-                Required Skills ($S_{skills}$)
+                Required Skills (S_skills)
               </span>
               <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
                 Binary and tiered overlap against mandatory qualifiers. Preferred skills provide incremental points without disqualifying candidates.
@@ -78,7 +78,7 @@ export const HowScoringWorksPage: React.FC<HowScoringWorksPageProps> = ({ onNavi
 
             <div className="p-4 rounded-xl bg-black/[0.015] dark:bg-white/[0.015] border border-[#E7E7E2] dark:border-white/8 space-y-1.5">
               <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block">
-                Experience Seniority ($S_{exp}$)
+                Experience Seniority (S_exp)
               </span>
               <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
                 Calculated chronologically across verified employment roles. Career breaks are handled neutrally without penalty.
@@ -87,7 +87,7 @@ export const HowScoringWorksPage: React.FC<HowScoringWorksPageProps> = ({ onNavi
 
             <div className="p-4 rounded-xl bg-black/[0.015] dark:bg-white/[0.015] border border-[#E7E7E2] dark:border-white/8 space-y-1.5">
               <span className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] block">
-                Semantic Requisition ($S_{semantic}$)
+                Semantic Requisition (S_semantic)
               </span>
               <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB] leading-relaxed">
                 Dense vector alignment evaluating domain architecture context (e.g. distributed systems, microservices) using Gemini or offline BM25.

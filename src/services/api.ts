@@ -374,6 +374,57 @@ export const api = {
     return handleResponse(res);
   },
 
+  // Multi-Resume Management
+  async getCandidateResumes(): Promise<{ success: boolean; resumes: any[] }> {
+    const res = await fetch(`${API_BASE_URL}/candidate/resumes`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async activateCandidateResume(id: string): Promise<{ success: boolean; message: string; activeResumeId: string; completion: number }> {
+    const res = await fetch(`${API_BASE_URL}/candidate/resumes/${id}/activate`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async deleteCandidateResumeById(id: string): Promise<{ success: boolean; message: string; completion: number }> {
+    const res = await fetch(`${API_BASE_URL}/candidate/resumes/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  async saveResumeFromBuilder(payload: any): Promise<{ success: boolean; message: string; resume: any; completion: number }> {
+    const res = await fetch(`${API_BASE_URL}/candidate/resumes/from-builder`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload),
+    });
+    return handleResponse(res);
+  },
+
+  getResumePreviewUrlById(id: string): string {
+    const token = localStorage.getItem('resumio_token');
+    return `${API_BASE_URL}/candidate/resumes/${id}/preview?token=${token}`;
+  },
+
+  async uploadResume(formData: FormData): Promise<any> {
+    const token = localStorage.getItem('resumio_token');
+    const res = await fetch(`${API_BASE_URL}/candidate/resume/upload`, {
+      method: 'POST',
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: formData,
+    });
+    return handleResponse(res);
+  },
+
   uploadResumeWithProgress(file: File, onProgress?: (percent: number) => void): Promise<{ success: boolean; message: string; resume: import('../types').CandidateResume; completion: number; jobId?: string; jobStatus?: string }> {
     return new Promise((resolve, reject) => {
       const token = localStorage.getItem('resumio_token');
@@ -421,9 +472,12 @@ export const api = {
     return handleResponse(res);
   },
 
-  async downloadResume(): Promise<void> {
+  async downloadResume(id?: string): Promise<void> {
     const token = localStorage.getItem('resumio_token');
-    const res = await fetch(`${API_BASE_URL}/candidate/resume/download`, {
+    const endpoint = id
+      ? `${API_BASE_URL}/candidate/resumes/${id}/preview`
+      : `${API_BASE_URL}/candidate/resume/download`;
+    const res = await fetch(endpoint, {
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },

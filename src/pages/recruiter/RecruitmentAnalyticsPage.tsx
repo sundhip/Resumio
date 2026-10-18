@@ -9,6 +9,7 @@ import {
   SegmentedControl,
 } from '../../components/kit';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { Donut } from '../../components/kit/Charts';
 import { api } from '../../services/api';
 import type {
   RecruitmentAnalyticsData,
@@ -648,34 +649,75 @@ export const RecruitmentAnalyticsPage: React.FC<RecruitmentAnalyticsPageProps> =
                 </div>
               </div>
 
-              {/* Sourcing Channel Bars with Quality Metrics */}
-              <div className="space-y-3 pt-1">
-                {defaultSourceBreakdown.map((src) => (
-                  <div key={src.channel} className="space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-[#111312] dark:text-[#F2F6F7]">
-                        {src.channel}
-                      </span>
-                      <div className="flex items-center gap-3">
-                        <span className="figure text-[11px] text-[#5FD3E8] font-bold">
-                          {src.avgScore}% avg match
-                        </span>
-                        <span className="figure text-[11px] text-[#7ED957] font-semibold">
-                          {src.hireYield}% hire yield
-                        </span>
-                        <span className="figure font-bold text-[#111312] dark:text-[#F2F6F7]">
-                          {src.percentage}%
-                        </span>
+              {/* Sourcing Channel Donut and Quality Metrics Infodynamics */}
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 pt-2 items-center">
+                {/* SVG Donut Chart */}
+                <div className="sm:col-span-5 flex flex-col items-center justify-center">
+                  <Donut
+                    segments={defaultSourceBreakdown.map((src) => ({
+                      label: src.channel,
+                      value: src.percentage,
+                      colorHex:
+                        src.channel === 'Direct Career Page'
+                          ? '#1F8FA6'
+                          : src.channel === 'LinkedIn Syndication'
+                          ? '#5FD3E8'
+                          : src.channel === 'Employee Referral'
+                          ? '#7ED957'
+                          : '#F2C94C',
+                    }))}
+                    size={150}
+                    strokeWidth={18}
+                    centerLabel="Sources"
+                    title="Sourcing Channels Breakdown"
+                  />
+                </div>
+
+                {/* Sourcing Channel Bars with Quality Metrics */}
+                <div className="sm:col-span-7 space-y-3">
+                  {defaultSourceBreakdown.map((src) => {
+                    const barColor =
+                      src.channel === 'Direct Career Page'
+                        ? 'bg-[#1F8FA6]'
+                        : src.channel === 'LinkedIn Syndication'
+                        ? 'bg-[#5FD3E8]'
+                        : src.channel === 'Employee Referral'
+                        ? 'bg-[#7ED957]'
+                        : 'bg-[#F2C94C]';
+
+                    return (
+                      <div key={src.channel} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span
+                              className={`w-2 h-2 rounded-full shrink-0 ${barColor}`}
+                            />
+                            <span className="font-semibold text-[#111312] dark:text-[#F2F6F7] truncate">
+                              {src.channel}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2.5 shrink-0">
+                            <span className="figure text-[11px] text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">
+                              {src.avgScore}% match
+                            </span>
+                            <span className="figure text-[11px] text-[#7ED957] font-semibold">
+                              {src.hireYield}% yield
+                            </span>
+                            <span className="figure font-bold text-[#111312] dark:text-[#F2F6F7]">
+                              {src.percentage}%
+                            </span>
+                          </div>
+                        </div>
+                        <div className="w-full h-2 rounded-[6px] bg-[#E7E7E2]/60 dark:bg-white/5 overflow-hidden">
+                          <div
+                            className={`h-full rounded-[6px] transition-all duration-500 ${barColor}`}
+                            style={{ width: `${src.percentage}%` }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="w-full h-3 rounded-[6px] bg-[#E7E7E2]/60 dark:bg-white/5 overflow-hidden">
-                      <div
-                        className="h-full rounded-[6px] transition-all duration-500 bg-[#1F8FA6]"
-                        style={{ width: `${src.percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                    );
+                  })}
+                </div>
               </div>
             </Card>
           </div>

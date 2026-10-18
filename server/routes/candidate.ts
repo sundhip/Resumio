@@ -1159,6 +1159,237 @@ router.get('/resume', (req: AuthRequest, res: Response): void => {
   }
 });
 
+// Get All Resumes for Candidate (Multi-Version Management)
+router.get('/resumes', (req: AuthRequest, res: Response): void => {
+  try {
+    const profile = getCandidateProfile(req.user!.id);
+    if (!profile) {
+      res.status(404).json({ success: false, message: 'Candidate profile not found.' });
+      return;
+    }
+
+    const resumes = db.prepare(`
+      SELECT r.id, r.original_filename, r.file_type, r.file_size, r.is_active, r.created_at, r.updated_at,
+             p.status as parsedStatus,
+             s.completeness_score as completenessScore
+      FROM candidate_resumes r
+      LEFT JOIN resume_parsed_data p ON p.resume_id = r.id
+      LEFT JOIN resume_screenings s ON s.resume_id = r.id AND s.application_id IS NULL
+      WHERE r.candidate_profile_id = ?
+      ORDER BY r.is_active DESC, r.created_at DESC
+    `).all(profile.id) as any[];
+
+    res.json({
+      success: true,
+      resumes: resumes.map((r) => ({
+        ...r,
+        parsedStatus: r.parsedStatus || 'Not Processed',
+        completenessScore: r.completenessScore ?? 85,
+      })),
+    });
+  } catch (err: any) {
+    console.error('Fetch all resumes error:', err);
+    res.status(500).json({ success: false, message: 'Unable to fetch resumes.' });
+  }
+});
+
+// Activate a Specific Resume Version
+router.put('/resumes/:id/activate', (req: AuthRequest, res: Response): void => {
+  try {
+    const profile = getCandidateProfile(req.user!.id);
+    const resumeId = req.params.id;
+
+    const resume = db.prepare('SELECT id FROM candidate_resumes WHERE id = ? AND candidate_profile_id = ?').get(resumeId, profile.id);
+    if (!resume) {
+      res.status(404).json({ success: false, message: 'Resume not found.' });
+      return;
+    }
+
+    const setTx = db.transaction(() => {
+      db.prepare('UPDATE candidate_resumes SET is_active = 0, updated_at = datetime(\'now\') WHERE candidate_profile_id = ?').run(profile.id);
+      db.prepare('UPDATE candidate_resumes SET is_active = 1, updated_at = datetime(\'now\') WHERE id = ?').run(resumeId);
+    });
+    setTx();
+
+    const completion = recalculateCandidateCompletion(profile.id);
+    res.json({
+      success: true,
+      message: 'Resume activated successfully.',
+      activeResumeId: resumeId,
+      completion,
+    });
+  } catch (err: any) {
+    console.error('Activate resume error:', err);
+    res.status(500).json({ success: false, message: 'Failed to activate resume.' });
+  }
+});
+
+// Save Resume Directly from Resume Studio / Builder
+router.post('/resumes/from-builder', async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const profile = getCandidateProfile(req.user!.id);
+    if (!profile) {
+      res.status(404).json({ success: false, message: 'Candidate profile not found.' });
+      return;
+    }
+
+    const {
+      templateId = 'modern_clean',
+      title = 'Custom Builder Resume',
+      personal = {},
+      summary = '',
+      experience = [],
+      skills = {},
+      education = [],
+      projects = [],
+      certifications = [],
+      languages = [],
+      achievements = [],
+      setAsActive = true,
+    } = req.body;
+
+    const resumeId = crypto.randomUUID();
+    const cleanTitle =
+      (personal.fullName ? `${personal.fullName.replace(/[^a-zA-Z0-9]/g, '_')}_` : '') +
+      (title ? title.replace(/[^a-zA-Z0-9]/g, '_') : 'Resume') +
+      '.pdf';
+    const storedFilename = `builder_${profile.id}_${Date.now()}_${crypto.randomBytes(4).toString('hex')}.pdf`;
+    const filePath = path.resolve(resumeUploadDir, storedFilename);
+
+    // Extract all skills
+    const allSkills: string[] = [
+      ...(Array.isArray(skills?.languages) ? skills.languages : []),
+      ...(Array.isArray(skills?.frameworks) ? skills.frameworks : []),
+      ...(Array.isArray(skills?.tools) ? skills.tools : []),
+      ...(Array.isArray(skills?.softSkills) ? skills.softSkills : []),
+    ];
+
+    // Format plain-text document
+    const rawLines: string[] = [
+      personal.fullName || profile.full_name || 'Candidate',
+      personal.headline || '',
+      `Email: ${personal.email || ''} | Phone: ${personal.phone || ''} | Location: ${personal.location || ''}`,
+      '',
+      'PROFESSIONAL SUMMARY',
+      summary,
+      '',
+      'WORK EXPERIENCE',
+      ...experience.map(
+        (e: any) =>
+          `${e.role} at ${e.company} (${e.startDate} - ${e.endDate || 'Present'})\n` +
+          (e.bullets || []).map((b: string) => `• ${b}`).join('\n')
+      ),
+      '',
+      'TECHNICAL SKILLS',
+      allSkills.join(', '),
+      '',
+      'EDUCATION',
+      ...education.map((ed: any) => `${ed.degree} - ${ed.institution} (${ed.graduationYear || ''})`),
+      '',
+      'PROJECTS',
+      ...projects.map(
+        (pr: any) =>
+          `${pr.name}: ${(pr.technologies || []).join(', ')}\n` +
+          (pr.bullets || []).map((b: string) => `• ${b}`).join('\n')
+      ),
+      '',
+      'CERTIFICATIONS',
+      ...certifications.map((c: any) => `${c.name} (${c.issuer || c.issuing_organization || ''})`),
+      '',
+      'LANGUAGES',
+      ...languages.map((l: any) => `${l.language || l.name}: ${l.proficiency || ''}`),
+      '',
+      'ACHIEVEMENTS',
+      ...(Array.isArray(achievements) ? achievements : []).map((a: string) => `• ${a}`),
+    ];
+
+    const rawText = rawLines.join('\n');
+    fs.writeFileSync(filePath, rawText, 'utf8');
+
+    if (setAsActive) {
+      db.prepare('UPDATE candidate_resumes SET is_active = 0 WHERE candidate_profile_id = ?').run(profile.id);
+    }
+
+    db.prepare(`
+      INSERT INTO candidate_resumes (
+        id, candidate_profile_id, original_filename, stored_filename, file_type, file_size, is_active
+      ) VALUES (?, ?, ?, ?, 'PDF', ?, ?)
+    `).run(
+      resumeId,
+      profile.id,
+      cleanTitle,
+      storedFilename,
+      Buffer.byteLength(rawText),
+      setAsActive ? 1 : 0
+    );
+
+    // Save parsed data
+    const fileHash = crypto.createHash('sha256').update(rawText).digest('hex');
+    db.prepare(`
+      INSERT OR REPLACE INTO resume_parsed_data (
+        id, resume_id, candidate_id, candidate_profile_id, file_hash, parser_version,
+        status, raw_text, candidate_name, email, phone, location, headline, summary,
+        skills_json, education_json, experience_json, projects_json, certifications_json
+      ) VALUES (?, ?, ?, ?, ?, 'builder-1.0', 'Processed', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      crypto.randomUUID(),
+      resumeId,
+      req.user!.id,
+      profile.id,
+      fileHash,
+      rawText,
+      personal.fullName || '',
+      personal.email || '',
+      personal.phone || '',
+      personal.location || '',
+      personal.headline || '',
+      summary,
+      JSON.stringify(allSkills),
+      JSON.stringify(education),
+      JSON.stringify(experience),
+      JSON.stringify(projects),
+      JSON.stringify(certifications)
+    );
+
+    // Baseline screening score
+    const completenessScore = Math.min(
+      98,
+      72 + (allSkills.length > 5 ? 10 : 5) + (experience.length > 0 ? 10 : 0) + (education.length > 0 ? 5 : 0)
+    );
+    db.prepare(`
+      INSERT INTO resume_screenings (
+        id, resume_id, is_duplicate, completeness_score, feedback_json
+      ) VALUES (?, ?, 0, ?, ?)
+    `).run(
+      crypto.randomUUID(),
+      resumeId,
+      completenessScore,
+      JSON.stringify({ notes: `Created via Resume Studio template: ${templateId}` })
+    );
+
+    const completion = recalculateCandidateCompletion(profile.id);
+
+    const newResume = db.prepare(`
+      SELECT id, original_filename, file_type, file_size, is_active, created_at, updated_at 
+      FROM candidate_resumes WHERE id = ?
+    `).get(resumeId) as any;
+
+    res.status(201).json({
+      success: true,
+      message: 'Resume saved and added to Resume Manager successfully!',
+      resume: {
+        ...newResume,
+        parsedStatus: 'Processed',
+        completenessScore,
+      },
+      completion,
+    });
+  } catch (err: any) {
+    console.error('Save builder resume error:', err);
+    res.status(500).json({ success: false, message: 'Failed to save resume to Resume Manager.' });
+  }
+});
+
 // Upload or Replace Resume (PDF/DOCX)
 const handleResumeUpload = (req: AuthRequest, res: Response): void => {
   resumeUpload.single('resume')(req as any, res as any, async (err: any) => {
@@ -1350,8 +1581,57 @@ router.delete('/resume', (req: AuthRequest, res: Response): void => {
   }
 });
 
-// Candidate Career Copilot: Google XYZ Bullet Point Rewriter
-router.post('/candidate/resume/rewrite-bullet', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
+// Delete Specific Resume by ID
+router.delete('/resumes/:id', (req: AuthRequest, res: Response): void => {
+  try {
+    const profile = getCandidateProfile(req.user!.id);
+    const resume = db.prepare(`
+      SELECT * FROM candidate_resumes 
+      WHERE id = ? AND candidate_profile_id = ?
+    `).get(req.params.id, profile.id) as any;
+
+    if (!resume) {
+      res.status(404).json({ success: false, message: 'Resume not found.' });
+      return;
+    }
+
+    // Check if referenced by applications
+    const refCount = (db.prepare('SELECT COUNT(*) as count FROM applications WHERE resume_id = ?').get(resume.id) as any)?.count || 0;
+
+    if (refCount > 0) {
+      db.prepare('UPDATE candidate_resumes SET is_active = 0, updated_at = datetime(\'now\') WHERE id = ?').run(resume.id);
+    } else {
+      const filePath = path.join(resumeUploadDir, resume.stored_filename);
+      if (fs.existsSync(filePath)) {
+        try { fs.unlinkSync(filePath); } catch {}
+      }
+      db.prepare('DELETE FROM resume_parsed_data WHERE resume_id = ?').run(resume.id);
+      db.prepare('DELETE FROM resume_screenings WHERE resume_id = ?').run(resume.id);
+      db.prepare('DELETE FROM candidate_resumes WHERE id = ?').run(resume.id);
+    }
+
+    // If deleted resume was active, set the most recent resume as active
+    if (resume.is_active === 1) {
+      const remaining = db.prepare('SELECT id FROM candidate_resumes WHERE candidate_profile_id = ? ORDER BY created_at DESC LIMIT 1').get(profile.id) as any;
+      if (remaining) {
+        db.prepare('UPDATE candidate_resumes SET is_active = 1, updated_at = datetime(\'now\') WHERE id = ?').run(remaining.id);
+      }
+    }
+
+    const completion = recalculateCandidateCompletion(profile.id);
+
+    res.json({
+      success: true,
+      message: 'Resume deleted successfully.',
+      completion,
+    });
+  } catch (err: any) {
+    console.error('Delete resume by ID error:', err);
+    res.status(500).json({ success: false, message: 'Unable to delete resume.' });
+  }
+});
+
+const handleBulletRewrite = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { bullet, contextSkill } = req.body;
     if (!bullet || !bullet.trim()) {
@@ -1369,7 +1649,11 @@ router.post('/candidate/resume/rewrite-bullet', authenticateToken, async (req: A
   } catch (err: any) {
     res.status(500).json({ success: false, message: err.message });
   }
-});
+};
+
+// Candidate Career Copilot: Google XYZ Bullet Point Rewriter
+router.post('/resume/rewrite-bullet', authenticateToken, handleBulletRewrite);
+router.post('/candidate/resume/rewrite-bullet', authenticateToken, handleBulletRewrite);
 
 export default router;
 

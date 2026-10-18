@@ -233,28 +233,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 </div>
 
                 <div className="md:col-span-2 space-y-3.5">
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold">
                       <span className="text-[#111312] dark:text-[#F2F6F7]">Required Skills Match</span>
-                      <span className="figure text-[#1F8FA6] font-bold">6/6 Matched (96%)</span>
+                      <span className="figure text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">6/6 Matched (96%)</span>
                     </div>
-                    <HealthBar current={96} target={100} height="h-2" color="teal" />
+                    <HealthBar value={96} showMarker={false} showValueLabel={false} height={8} />
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold">
                       <span className="text-[#111312] dark:text-[#F2F6F7]">Relevant Experience Level</span>
-                      <span className="figure text-[#1F8FA6] font-bold">5.5 yrs / 4 yrs req. (92%)</span>
+                      <span className="figure text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">5.5 yrs / 4 yrs req. (92%)</span>
                     </div>
-                    <HealthBar current={92} target={100} height="h-2" color="teal" />
+                    <HealthBar value={92} showMarker={false} showValueLabel={false} height={8} />
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold">
                       <span className="text-[#111312] dark:text-[#F2F6F7]">Domain & Architecture Alignment</span>
-                      <span className="figure text-[#1F8FA6] font-bold">High Density (88%)</span>
+                      <span className="figure text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">High Density (88%)</span>
                     </div>
-                    <HealthBar current={88} target={100} height="h-2" color="teal" />
+                    <HealthBar value={88} showMarker={false} showValueLabel={false} height={8} />
                   </div>
                 </div>
               </div>
@@ -385,7 +385,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   <span className="text-[#111312] dark:text-[#F2F6F7]">
                     Required Skills Weight ({Math.round(normalizedSkills * 100)}%)
                   </span>
-                  <span className="figure text-[#5E6460] dark:text-[#9AA7AB]">{skillsWeight} pts</span>
+                  <span className="figure text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">{skillsWeight} pts</span>
                 </div>
                 <input
                   type="range"
@@ -394,7 +394,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   value={skillsWeight}
                   onChange={(e) => setSkillsWeight(Number(e.target.value))}
                   aria-label="Required Skills Weight"
-                  className="w-full accent-[#1F8FA6] cursor-pointer"
+                  className="resumio-slider w-full cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #1F8FA6 0%, #1F8FA6 ${Math.round(((skillsWeight - 10) / 90) * 100)}%, rgba(125, 125, 125, 0.2) ${Math.round(((skillsWeight - 10) / 90) * 100)}%, rgba(125, 125, 125, 0.2) 100%)`
+                  }}
                 />
                 <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                   Candidate has 6/6 required skills matched (94% baseline score).
@@ -407,7 +410,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   <span className="text-[#111312] dark:text-[#F2F6F7]">
                     Experience Seniority Weight ({Math.round(normalizedExp * 100)}%)
                   </span>
-                  <span className="figure text-[#5E6460] dark:text-[#9AA7AB]">{experienceWeight} pts</span>
+                  <span className="figure text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">{experienceWeight} pts</span>
                 </div>
                 <input
                   type="range"
@@ -416,7 +419,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   value={experienceWeight}
                   onChange={(e) => setExperienceWeight(Number(e.target.value))}
                   aria-label="Experience Seniority Weight"
-                  className="w-full accent-[#1F8FA6] cursor-pointer"
+                  className="resumio-slider w-full cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #1F8FA6 0%, #1F8FA6 ${Math.round(((experienceWeight - 10) / 90) * 100)}%, rgba(125, 125, 125, 0.2) ${Math.round(((experienceWeight - 10) / 90) * 100)}%, rgba(125, 125, 125, 0.2) 100%)`
+                  }}
                 />
                 <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                   Candidate has 5.5 years relevant distributed systems experience (85% baseline score).
@@ -429,7 +435,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   <span className="text-[#111312] dark:text-[#F2F6F7]">
                     Domain & Semantic Relevance Weight ({Math.round(normalizedSemantic * 100)}%)
                   </span>
-                  <span className="figure text-[#5E6460] dark:text-[#9AA7AB]">{semanticWeight} pts</span>
+                  <span className="figure text-[#1F8FA6] dark:text-[#5FD3E8] font-bold">{semanticWeight} pts</span>
                 </div>
                 <input
                   type="range"
@@ -438,7 +444,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   value={semanticWeight}
                   onChange={(e) => setSemanticWeight(Number(e.target.value))}
                   aria-label="Domain & Semantic Relevance Weight"
-                  className="w-full accent-[#1F8FA6] cursor-pointer"
+                  className="resumio-slider w-full cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #1F8FA6 0%, #1F8FA6 ${Math.round(((semanticWeight - 10) / 90) * 100)}%, rgba(125, 125, 125, 0.2) ${Math.round(((semanticWeight - 10) / 90) * 100)}%, rgba(125, 125, 125, 0.2) 100%)`
+                  }}
                 />
                 <p className="text-[11px] text-[#5E6460] dark:text-[#9AA7AB]">
                   High domain similarity across cloud consensus and infrastructure projects (88% baseline).
@@ -446,10 +455,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-xs flex items-center justify-between">
-              <span className="text-[#5E6460] dark:text-[#9AA7AB]">
-                Deterministic Formula: $S = \sum w_i \cdot s_i / \sum w_i$
-              </span>
+            <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E7E7E2] dark:border-white/8 text-xs flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-[#5E6460] dark:text-[#9AA7AB]">Deterministic Formula:</span>
+                <code className="font-mono text-xs px-2 py-0.5 rounded bg-black/[0.04] dark:bg-white/[0.06] text-[#1F8FA6] dark:text-[#5FD3E8] font-semibold">
+                  S = Σ(wᵢ · sᵢ) / Σ(wᵢ)
+                </code>
+              </div>
               <button
                 type="button"
                 onClick={() => onNavigate('how-scoring-works')}
