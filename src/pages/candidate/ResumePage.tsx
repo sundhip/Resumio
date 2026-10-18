@@ -371,8 +371,8 @@ export const ResumePage: React.FC<ResumePageProps> = ({ onNavigate }) => {
       {/* 2. Resume Cards Grid (Version Name, Parse Status, ATS Score, Strength Score, Active Toggle) */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-pulse">
-          <div className="h-44 rounded-[16px] bg-[#E7E7E2]/50 dark:bg-[#151D20]" />
-          <div className="h-44 rounded-[16px] bg-[#E7E7E2]/50 dark:bg-[#151D20]" />
+          <div className="h-44 rounded-[16px] bg-[#E7E7E2]/50 dark:bg-[#0C1113]" />
+          <div className="h-44 rounded-[16px] bg-[#E7E7E2]/50 dark:bg-[#0C1113]" />
         </div>
       ) : resumeList.length === 0 ? (
         <EmptyState

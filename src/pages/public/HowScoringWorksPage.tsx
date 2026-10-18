@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/kit/Button';
 import { Pill } from '../../components/kit/Pill';
 import {
@@ -20,6 +21,8 @@ interface HowScoringWorksPageProps {
 }
 
 export const HowScoringWorksPage: React.FC<HowScoringWorksPageProps> = ({ onNavigate }) => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="min-h-screen bg-[#F4F4F1] dark:bg-[#050708] text-[#111312] dark:text-[#F2F6F7] transition-colors py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-10">
@@ -28,10 +31,10 @@ export const HowScoringWorksPage: React.FC<HowScoringWorksPageProps> = ({ onNavi
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => onNavigate('landing')}
+            onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
             leftIcon={<ArrowLeft className="w-4 h-4" />}
           >
-            Back to Home
+            {isAuthenticated ? 'Back to Dashboard' : 'Back to Home'}
           </Button>
 
           <div className="space-y-2">

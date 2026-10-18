@@ -31,6 +31,8 @@ import {
   Eye,
   Sliders,
   ShieldCheck,
+  FileText,
+  User,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -57,9 +59,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return [
           { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard /> },
           { id: 'jobs', label: 'Explore Jobs', icon: <Briefcase /> },
-          { id: 'candidate-experience', label: 'Career Hub & Evidence', icon: <Compass />, badge: 'New' },
-          { id: 'applications', label: 'My Applications', icon: <Send /> },
+          { id: 'resume', label: 'Resume Manager', icon: <FileText />, badge: 'Active' },
           { id: 'resume-builder', label: 'Resume Studio', icon: <Sparkles /> },
+          { id: 'applications', label: 'My Applications', icon: <Send /> },
+          { id: 'candidate-experience', label: 'Career Hub & Evidence', icon: <Compass /> },
+          { id: 'profile', label: 'Candidate Profile', icon: <User /> },
           { id: 'interviews', label: 'Interview Hub', icon: <Calendar /> },
         ];
 
@@ -175,26 +179,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 collapsed={isCollapsed}
                 onClick={() => {
                   onNavigate(role === 'recruiter' ? 'company-profile' : 'settings');
-                  onCloseMobile?.();
-                }}
-              />
-              <SidebarItem
-                icon={<Sliders />}
-                label="Design System Showcase"
-                active={activePath === 'dev-design-system'}
-                collapsed={isCollapsed}
-                onClick={() => {
-                  onNavigate('dev-design-system');
-                  onCloseMobile?.();
-                }}
-              />
-              <SidebarItem
-                icon={<Eye />}
-                label="Fidelity Verification"
-                active={activePath === 'dev-reference-match'}
-                collapsed={isCollapsed}
-                onClick={() => {
-                  onNavigate('dev-reference-match');
                   onCloseMobile?.();
                 }}
               />

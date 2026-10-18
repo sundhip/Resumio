@@ -756,6 +756,26 @@ export const api = {
     return handleResponse(res);
   },
 
+  async submitJobApplication(data: {
+    jobId?: string;
+    job_id?: string;
+    resumeId?: string;
+    resume_id?: string;
+    coverLetter?: string;
+    cover_letter?: string;
+  }): Promise<{
+    success: boolean;
+    message: string;
+    applicationId: string;
+  }> {
+    const payload = {
+      jobId: data.jobId || data.job_id || '',
+      resumeId: data.resumeId || data.resume_id || '',
+      coverLetter: data.coverLetter || data.cover_letter || '',
+    };
+    return this.applyToJob(payload);
+  },
+
   async checkJobApplication(jobId: string): Promise<{
     success: boolean;
     hasApplied: boolean;

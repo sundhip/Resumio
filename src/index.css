@@ -32,6 +32,15 @@
   --color-obsidian-text-secondary: #9AA7AB;
   --color-obsidian-text-tertiary: #5F6C70;
 
+  /* Universal Surface Tokens for Dark & Light Compatibility */
+  --color-surface-dark-card: #0C1113;
+  --color-surface-dark-border: rgba(255, 255, 255, 0.08);
+  --color-surface-dark-bg: #050708;
+  --color-surface-dark-input: #080B0C;
+  --color-surface-light-card: #FFFFFF;
+  --color-border-light-primary: #E7E7E2;
+  --color-border-dark-primary: rgba(255, 255, 255, 0.08);
+
   /* LIGHT THEME - PAPER (Calm, airy, premium) */
   --color-paper-outer-canvas: #E9E9E5;
   --color-paper-surface: #F4F4F1;

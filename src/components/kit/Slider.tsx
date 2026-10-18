@@ -39,16 +39,6 @@ export const Slider: React.FC<SliderProps> = ({
       )}
 
       <div className="relative flex items-center w-full h-6">
-        {/* Track Background */}
-        <div className="w-full h-2 rounded-full bg-[#E7E7E2] dark:bg-white/10 relative overflow-hidden pointer-events-none">
-          {/* Active Fill */}
-          <div
-            className="h-full bg-[#1F8FA6] rounded-full transition-all duration-75"
-            style={{ width: `${percentage}%` }}
-          />
-        </div>
-
-        {/* Real Range Input Overlay */}
         <input
           type="range"
           aria-label={label || 'Slider control'}
@@ -57,16 +47,11 @@ export const Slider: React.FC<SliderProps> = ({
           step={step}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="absolute w-full h-6 opacity-0 cursor-pointer z-10"
+          className="w-full h-2 rounded-full appearance-none cursor-pointer bg-[#E7E7E2] dark:bg-white/10 accent-[#1F8FA6] focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 transition-all [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white dark:[&::-webkit-slider-thumb]:bg-[#0C1113] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#1F8FA6] [&::-webkit-slider-thumb]:shadow-[0_2px_6px_rgba(0,0,0,0.3)] [&::-webkit-slider-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white dark:[&::-moz-range-thumb]:bg-[#0C1113] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#1F8FA6]"
+          style={{
+            background: `linear-gradient(to right, #1F8FA6 0%, #1F8FA6 ${percentage}%, rgba(120,130,135,0.2) ${percentage}%, rgba(120,130,135,0.2) 100%)`
+          }}
         />
-
-        {/* Visual Thumb Pin */}
-        <div
-          className="absolute pointer-events-none -translate-x-1/2 transition-all duration-75"
-          style={{ left: `${percentage}%` }}
-        >
-          <div className="w-4 h-4 rounded-full bg-white dark:bg-[#111719] border-2 border-[#1F8FA6] shadow-[0_2px_6px_rgba(0,0,0,0.25)]" />
-        </div>
       </div>
 
       <div className="mt-1 flex justify-between text-[10px] text-[#8C928E] dark:text-[#5F6C70]">

@@ -36,14 +36,6 @@ export const Slider: React.FC<SliderProps> = ({
       </div>
 
       <div className="relative flex items-center h-5 w-full">
-        {/* Track fill */}
-        <div className="absolute left-0 right-0 h-1.5 rounded-full bg-[#DCDCD7] dark:bg-[#111719] pointer-events-none">
-          <div
-            className="h-full rounded-full bg-teal-500 dark:bg-teal-400 transition-all duration-75"
-            style={{ width: `${percentage}%` }}
-          />
-        </div>
-
         <input
           type="range"
           min={min}
@@ -51,14 +43,11 @@ export const Slider: React.FC<SliderProps> = ({
           step={step}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="absolute w-full h-5 opacity-0 cursor-pointer z-10"
+          className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-[#DCDCD7] dark:bg-white/10 accent-[#1F8FA6] focus:outline-none focus:ring-2 focus:ring-[#1F8FA6]/40 transition-all [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white dark:[&::-webkit-slider-thumb]:bg-[#0C1113] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#1F8FA6] [&::-webkit-slider-thumb]:shadow-[0_2px_6px_rgba(0,0,0,0.3)] [&::-webkit-slider-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white dark:[&::-moz-range-thumb]:bg-[#0C1113] [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#1F8FA6]"
+          style={{
+            background: `linear-gradient(to right, #1F8FA6 0%, #1F8FA6 ${percentage}%, rgba(120,130,135,0.2) ${percentage}%, rgba(120,130,135,0.2) 100%)`
+          }}
           {...props}
-        />
-
-        {/* Custom thumb */}
-        <div
-          className="absolute w-4 h-4 rounded-full bg-white dark:bg-teal-300 border-2 border-teal-500 dark:border-teal-400 shadow-md pointer-events-none transition-all duration-75 transform -translate-x-1/2"
-          style={{ left: `${percentage}%` }}
         />
       </div>
     </div>

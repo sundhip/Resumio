@@ -70,11 +70,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       action: () => toggleTheme(),
     },
     {
-      id: 'design-sys',
-      title: 'Open Design System Showcase',
-      category: 'Design System',
-      icon: <Palette className="w-4 h-4 text-purple-500" />,
-      action: () => onNavigate('design-system'),
+      id: 'resume-mgr',
+      title: 'Open Resume Manager & Versions',
+      category: 'Navigation',
+      icon: <FileText className="w-4 h-4 text-[#1F8FA6]" />,
+      action: () => onNavigate('resume'),
     },
   ];
 

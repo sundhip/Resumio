@@ -74,6 +74,7 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
     'achievements',
   ]);
   const [activeSectionId, setActiveSectionId] = useState<string>('personal');
+  const [editorMode, setEditorMode] = useState<'single' | 'all'>('single');
 
   // "Tailor to Job" Side Panel State
   const [isTailorPanelOpen, setIsTailorPanelOpen] = useState(false);
@@ -390,6 +391,143 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
     }
   };
 
+  const handleAddExperience = () => {
+    setResumeData({
+      ...resumeData,
+      experience: [
+        ...resumeData.experience,
+        {
+          company: 'New Enterprise Corp',
+          role: 'Full Stack Engineer',
+          location: 'Remote',
+          startDate: '2023-01',
+          endDate: 'Present',
+          isCurrent: true,
+          bullets: ['Engineered scalable microservices and delivered high-impact features.'],
+        },
+      ],
+    });
+    showToast('✓ Added new work experience entry!');
+  };
+
+  const handleRemoveExperience = (idx: number) => {
+    const updated = [...resumeData.experience];
+    updated.splice(idx, 1);
+    setResumeData({ ...resumeData, experience: updated });
+    showToast('Removed experience entry.');
+  };
+
+  const handleAddExperienceBullet = (expIdx: number) => {
+    const updated = [...resumeData.experience];
+    updated[expIdx].bullets.push('Accomplished [X] delivering [Y%] metric gain by engineering [Z].');
+    setResumeData({ ...resumeData, experience: updated });
+  };
+
+  const handleRemoveExperienceBullet = (expIdx: number, bIdx: number) => {
+    const updated = [...resumeData.experience];
+    updated[expIdx].bullets.splice(bIdx, 1);
+    setResumeData({ ...resumeData, experience: updated });
+  };
+
+  const handleAddEducation = () => {
+    setResumeData({
+      ...resumeData,
+      education: [
+        ...resumeData.education,
+        {
+          institution: 'University / Institute Name',
+          degree: 'B.S. in Computer Science',
+          location: 'Location',
+          graduationYear: '2023',
+          gpa: '3.8 / 4.0',
+        },
+      ],
+    });
+    showToast('✓ Added education record!');
+  };
+
+  const handleRemoveEducation = (idx: number) => {
+    const updated = [...resumeData.education];
+    updated.splice(idx, 1);
+    setResumeData({ ...resumeData, education: updated });
+  };
+
+  const handleAddProject = () => {
+    setResumeData({
+      ...resumeData,
+      projects: [
+        ...resumeData.projects,
+        {
+          name: 'New Cloud Project',
+          role: 'Lead Architect',
+          technologies: ['React', 'TypeScript', 'Node.js'],
+          url: 'https://github.com/demo/project',
+          bullets: ['Architected high-throughput service with 99.99% uptime.'],
+        },
+      ],
+    });
+    showToast('✓ Added project record!');
+  };
+
+  const handleRemoveProject = (idx: number) => {
+    const updated = [...resumeData.projects];
+    updated.splice(idx, 1);
+    setResumeData({ ...resumeData, projects: updated });
+  };
+
+  const handleAddProjectBullet = (projIdx: number) => {
+    const updated = [...resumeData.projects];
+    updated[projIdx].bullets.push('Designed and scaled architectural components.');
+    setResumeData({ ...resumeData, projects: updated });
+  };
+
+  const handleRemoveProjectBullet = (projIdx: number, bIdx: number) => {
+    const updated = [...resumeData.projects];
+    updated[projIdx].bullets.splice(bIdx, 1);
+    setResumeData({ ...resumeData, projects: updated });
+  };
+
+  const handleAddCertification = () => {
+    setResumeData({
+      ...resumeData,
+      certifications: [
+        ...(resumeData.certifications || []),
+        {
+          name: 'AWS Certified Solutions Architect',
+          issuer: 'Amazon Web Services',
+          issueDate: '2023-06',
+          credentialId: 'AWS-987654',
+        },
+      ],
+    });
+    showToast('✓ Added certification!');
+  };
+
+  const handleAddLanguage = () => {
+    setResumeData({
+      ...resumeData,
+      languages: [
+        ...(resumeData.languages || []),
+        { name: 'German', proficiency: 'Professional Working' },
+      ],
+    });
+    showToast('✓ Added language!');
+  };
+
+  const handleRemoveCertification = (idx: number) => {
+    const updated = [...(resumeData.certifications || [])];
+    updated.splice(idx, 1);
+    setResumeData({ ...resumeData, certifications: updated });
+    showToast('✓ Removed certification');
+  };
+
+  const handleRemoveLanguage = (idx: number) => {
+    const updated = [...(resumeData.languages || [])];
+    updated.splice(idx, 1);
+    setResumeData({ ...resumeData, languages: updated });
+    showToast('✓ Removed language');
+  };
+
   const sectionMetadata: Record<string, { label: string; icon: React.ReactNode }> = {
     personal: { label: 'Contact & Header', icon: <FileText className="w-4 h-4" /> },
     summary: { label: 'Professional Summary', icon: <Edit3 className="w-4 h-4" /> },
@@ -419,6 +557,681 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
       impactPoints: '+6 pts',
     },
   ];
+
+  const renderSectionContent = (secId: string) => {
+    if (secId === 'personal') {
+      return (
+        <div className="space-y-3 text-xs">
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              value={resumeData.personal.fullName}
+              onChange={(e) =>
+                setResumeData({
+                  ...resumeData,
+                  personal: { ...resumeData.personal, fullName: e.target.value },
+                })
+              }
+              className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7] focus:border-[#1F8FA6] outline-none"
+            />
+          </div>
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Professional Headline
+            </label>
+            <input
+              type="text"
+              value={resumeData.personal.headline}
+              onChange={(e) =>
+                setResumeData({
+                  ...resumeData,
+                  personal: { ...resumeData.personal, headline: e.target.value },
+                })
+              }
+              className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7] focus:border-[#1F8FA6] outline-none"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                value={resumeData.personal.email}
+                onChange={(e) =>
+                  setResumeData({
+                    ...resumeData,
+                    personal: { ...resumeData.personal, email: e.target.value },
+                  })
+                }
+                className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7] focus:border-[#1F8FA6] outline-none"
+              />
+            </div>
+            <div>
+              <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+                Phone
+              </label>
+              <input
+                type="text"
+                value={resumeData.personal.phone}
+                onChange={(e) =>
+                  setResumeData({
+                    ...resumeData,
+                    personal: { ...resumeData.personal, phone: e.target.value },
+                  })
+                }
+                className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7] focus:border-[#1F8FA6] outline-none"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Location
+            </label>
+            <input
+              type="text"
+              value={resumeData.personal.location}
+              onChange={(e) =>
+                setResumeData({
+                  ...resumeData,
+                  personal: { ...resumeData.personal, location: e.target.value },
+                })
+              }
+              className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7] focus:border-[#1F8FA6] outline-none"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (secId === 'summary') {
+      return (
+        <div className="space-y-3 text-xs">
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Executive Summary
+            </label>
+            <textarea
+              rows={5}
+              value={resumeData.summary}
+              onChange={(e) => setResumeData({ ...resumeData, summary: e.target.value })}
+              className="w-full p-3 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs leading-relaxed text-[#111312] dark:text-[#F2F6F7] focus:border-[#1F8FA6] outline-none"
+            />
+            <div className="flex justify-between text-[10px] text-[#8C928E] mt-1">
+              <span>Target: 3-4 concise, metric-grounded sentences</span>
+              <span>{resumeData.summary.split(/\s+/).filter(Boolean).length} words</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (secId === 'experience') {
+      return (
+        <div className="space-y-4 text-xs">
+          {resumeData.experience.map((exp: any, idx: number) => (
+            <div
+              key={idx}
+              className="p-3.5 rounded-[12px] bg-[#FAF9F5] dark:bg-[#0D1316] border border-[#E7E7E2] dark:border-white/10 space-y-3"
+            >
+              <div className="flex items-center justify-between font-bold text-[#111312] dark:text-[#F2F6F7]">
+                <span className="flex items-center gap-1.5">
+                  <Briefcase className="w-3.5 h-3.5 text-[#1F8FA6]" />
+                  <span>Role #{idx + 1}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveExperience(idx)}
+                  className="p-1 text-rose-500 hover:text-rose-600 cursor-pointer flex items-center gap-1 text-[11px] font-medium"
+                  title="Remove this role"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[#8C928E] text-[10px] uppercase font-bold block mb-1">Job Title</label>
+                  <input
+                    type="text"
+                    value={exp.role}
+                    onChange={(e) => {
+                      const updated = [...resumeData.experience];
+                      updated[idx].role = e.target.value;
+                      setResumeData({ ...resumeData, experience: updated });
+                    }}
+                    placeholder="e.g. Senior Software Engineer"
+                    className="w-full px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#8C928E] text-[10px] uppercase font-bold block mb-1">Company</label>
+                  <input
+                    type="text"
+                    value={exp.company}
+                    onChange={(e) => {
+                      const updated = [...resumeData.experience];
+                      updated[idx].company = e.target.value;
+                      setResumeData({ ...resumeData, experience: updated });
+                    }}
+                    placeholder="e.g. Acme Corp"
+                    className="w-full px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[#8C928E] text-[10px] uppercase font-bold block mb-1">Start Date</label>
+                  <input
+                    type="text"
+                    value={exp.startDate}
+                    onChange={(e) => {
+                      const updated = [...resumeData.experience];
+                      updated[idx].startDate = e.target.value;
+                      setResumeData({ ...resumeData, experience: updated });
+                    }}
+                    placeholder="YYYY-MM"
+                    className="w-full px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#8C928E] text-[10px] uppercase font-bold block mb-1">End Date</label>
+                  <input
+                    type="text"
+                    value={exp.endDate}
+                    onChange={(e) => {
+                      const updated = [...resumeData.experience];
+                      updated[idx].endDate = e.target.value;
+                      setResumeData({ ...resumeData, experience: updated });
+                    }}
+                    placeholder="YYYY-MM or Present"
+                    className="w-full px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#8C928E] uppercase block">
+                    Quantified Bullets (Google XYZ: Accomplished [X] by [Y] resulting in [Z])
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleAddExperienceBullet(idx)}
+                    className="text-[#1F8FA6] dark:text-[#5FD3E8] hover:underline text-[11px] font-semibold cursor-pointer flex items-center gap-1"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Add Bullet</span>
+                  </button>
+                </div>
+                {exp.bullets.map((b: string, bIdx: number) => (
+                  <div key={bIdx} className="flex items-start gap-1.5">
+                    <span className="text-[#1F8FA6] mt-2 font-bold">•</span>
+                    <textarea
+                      rows={2}
+                      value={b}
+                      onChange={(e) => {
+                        const updated = [...resumeData.experience];
+                        updated[idx].bullets[bIdx] = e.target.value;
+                        setResumeData({ ...resumeData, experience: updated });
+                      }}
+                      className="flex-1 p-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                    />
+                    <div className="flex flex-col gap-1 mt-1">
+                      <button
+                        type="button"
+                        title="Enhance with Google XYZ metrics"
+                        onClick={() => handleEnhanceBullet(idx, bIdx)}
+                        className="p-1.5 rounded-[6px] hover:bg-[#1F8FA6]/10 text-[#1F8FA6] dark:text-[#5FD3E8] transition-colors cursor-pointer shrink-0"
+                      >
+                        <Wand2 className="w-3.5 h-3.5" />
+                      </button>
+                      {exp.bullets.length > 1 && (
+                        <button
+                          type="button"
+                          title="Remove bullet"
+                          onClick={() => handleRemoveExperienceBullet(idx, bIdx)}
+                          className="p-1.5 rounded-[6px] hover:bg-rose-500/10 text-rose-400 hover:text-rose-500 transition-colors cursor-pointer shrink-0"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAddExperience}
+            icon={<Plus className="w-3.5 h-3.5" />}
+            className="w-full text-xs"
+          >
+            Add Work Experience Role
+          </Button>
+        </div>
+      );
+    }
+
+    if (secId === 'skills') {
+      return (
+        <div className="space-y-3 text-xs">
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Programming Languages
+            </label>
+            <input
+              type="text"
+              value={resumeData.skills.languages.join(', ')}
+              onChange={(e) =>
+                setResumeData({
+                  ...resumeData,
+                  skills: {
+                    ...resumeData.skills,
+                    languages: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                  },
+                })
+              }
+              className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+            />
+          </div>
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Frameworks & Libraries
+            </label>
+            <input
+              type="text"
+              value={resumeData.skills.frameworks.join(', ')}
+              onChange={(e) =>
+                setResumeData({
+                  ...resumeData,
+                  skills: {
+                    ...resumeData.skills,
+                    frameworks: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                  },
+                })
+              }
+              className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+            />
+          </div>
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Infrastructure & Tools
+            </label>
+            <input
+              type="text"
+              value={resumeData.skills.tools.join(', ')}
+              onChange={(e) =>
+                setResumeData({
+                  ...resumeData,
+                  skills: {
+                    ...resumeData.skills,
+                    tools: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                  },
+                })
+              }
+              className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+            />
+          </div>
+          <div>
+            <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+              Core Competencies & Soft Skills
+            </label>
+            <input
+              type="text"
+              value={(resumeData.skills.softSkills || []).join(', ')}
+              onChange={(e) =>
+                setResumeData({
+                  ...resumeData,
+                  skills: {
+                    ...resumeData.skills,
+                    softSkills: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
+                  },
+                })
+              }
+              className="w-full px-3 py-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (secId === 'education') {
+      return (
+        <div className="space-y-4 text-xs">
+          {resumeData.education.map((edu: any, idx: number) => (
+            <div key={idx} className="p-3.5 rounded-[12px] bg-[#FAF9F5] dark:bg-[#0D1316] border border-[#E7E7E2] dark:border-white/10 space-y-2.5">
+              <div className="flex items-center justify-between font-bold text-[#111312] dark:text-[#F2F6F7]">
+                <span className="flex items-center gap-1.5">
+                  <GraduationCap className="w-3.5 h-3.5 text-[#1F8FA6]" />
+                  <span>Degree #{idx + 1}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveEducation(idx)}
+                  className="p-1 text-rose-500 hover:text-rose-600 cursor-pointer flex items-center gap-1 text-[11px] font-medium"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove</span>
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="text"
+                  value={edu.degree}
+                  onChange={(e) => {
+                    const updated = [...resumeData.education];
+                    updated[idx].degree = e.target.value;
+                    setResumeData({ ...resumeData, education: updated });
+                  }}
+                  placeholder="Degree (e.g. B.S. in Computer Science)"
+                  className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+                <input
+                  type="text"
+                  value={edu.institution}
+                  onChange={(e) => {
+                    const updated = [...resumeData.education];
+                    updated[idx].institution = e.target.value;
+                    setResumeData({ ...resumeData, education: updated });
+                  }}
+                  placeholder="University / College"
+                  className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="text"
+                  value={edu.graduationYear}
+                  onChange={(e) => {
+                    const updated = [...resumeData.education];
+                    updated[idx].graduationYear = e.target.value;
+                    setResumeData({ ...resumeData, education: updated });
+                  }}
+                  placeholder="Graduation Year (e.g. 2020)"
+                  className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+                <input
+                  type="text"
+                  value={edu.gpa || ''}
+                  onChange={(e) => {
+                    const updated = [...resumeData.education];
+                    updated[idx].gpa = e.target.value;
+                    setResumeData({ ...resumeData, education: updated });
+                  }}
+                  placeholder="GPA (optional)"
+                  className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+              </div>
+            </div>
+          ))}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAddEducation}
+            icon={<Plus className="w-3.5 h-3.5" />}
+            className="w-full text-xs"
+          >
+            Add Degree / Education
+          </Button>
+        </div>
+      );
+    }
+
+    if (secId === 'projects') {
+      return (
+        <div className="space-y-4 text-xs">
+          {resumeData.projects.map((proj: any, idx: number) => (
+            <div key={idx} className="p-3.5 rounded-[12px] bg-[#FAF9F5] dark:bg-[#0D1316] border border-[#E7E7E2] dark:border-white/10 space-y-2.5">
+              <div className="flex items-center justify-between font-bold text-[#111312] dark:text-[#F2F6F7]">
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#1F8FA6]" />
+                  <span>Project #{idx + 1}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveProject(idx)}
+                  className="p-1 text-rose-500 hover:text-rose-600 cursor-pointer flex items-center gap-1 text-[11px] font-medium"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove</span>
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="text"
+                  value={proj.name}
+                  onChange={(e) => {
+                    const updated = [...resumeData.projects];
+                    updated[idx].name = e.target.value;
+                    setResumeData({ ...resumeData, projects: updated });
+                  }}
+                  placeholder="Project Name"
+                  className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+                <input
+                  type="text"
+                  value={proj.technologies.join(', ')}
+                  onChange={(e) => {
+                    const updated = [...resumeData.projects];
+                    updated[idx].technologies = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
+                    setResumeData({ ...resumeData, projects: updated });
+                  }}
+                  placeholder="Tech Stack (comma separated)"
+                  className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#8C928E] uppercase">Project Bullets</span>
+                  <button
+                    type="button"
+                    onClick={() => handleAddProjectBullet(idx)}
+                    className="text-[#1F8FA6] dark:text-[#5FD3E8] hover:underline text-[11px] font-semibold cursor-pointer flex items-center gap-1"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Add Bullet</span>
+                  </button>
+                </div>
+                {proj.bullets.map((b: string, bIdx: number) => (
+                  <div key={bIdx} className="flex items-start gap-1.5">
+                    <span className="text-[#1F8FA6] mt-2 font-bold">•</span>
+                    <textarea
+                      rows={2}
+                      value={b}
+                      onChange={(e) => {
+                        const updated = [...resumeData.projects];
+                        updated[idx].bullets[bIdx] = e.target.value;
+                        setResumeData({ ...resumeData, projects: updated });
+                      }}
+                      className="flex-1 p-2 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                    />
+                    {proj.bullets.length > 1 && (
+                      <button
+                        type="button"
+                        title="Remove bullet"
+                        onClick={() => handleRemoveProjectBullet(idx, bIdx)}
+                        className="p-1.5 rounded-[6px] hover:bg-rose-500/10 text-rose-400 hover:text-rose-500 transition-colors cursor-pointer shrink-0 mt-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAddProject}
+            icon={<Plus className="w-3.5 h-3.5" />}
+            className="w-full text-xs"
+          >
+            Add Project Record
+          </Button>
+        </div>
+      );
+    }
+
+    if (secId === 'certifications') {
+      return (
+        <div className="space-y-4 text-xs">
+          {(resumeData.certifications || []).map((cert: any, idx: number) => (
+            <div key={idx} className="p-3.5 rounded-[12px] bg-[#FAF9F5] dark:bg-[#0D1316] border border-[#E7E7E2] dark:border-white/10 space-y-2.5">
+              <div className="flex justify-between items-center font-bold">
+                <span className="text-[#111312] dark:text-[#F2F6F7] flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#1F8FA6]" />
+                  <span>Certification #{idx + 1}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveCertification(idx)}
+                  className="p-1 text-rose-500 hover:text-rose-600 cursor-pointer flex items-center gap-1 text-[11px] font-medium"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove</span>
+                </button>
+              </div>
+              <input
+                type="text"
+                value={cert.name}
+                onChange={(e) => {
+                  const updated = [...(resumeData.certifications || [])];
+                  updated[idx].name = e.target.value;
+                  setResumeData({ ...resumeData, certifications: updated });
+                }}
+                placeholder="Certification Title (e.g. AWS Certified Solutions Architect)"
+                className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="text"
+                  value={cert.issuer}
+                  onChange={(e) => {
+                    const updated = [...(resumeData.certifications || [])];
+                    updated[idx].issuer = e.target.value;
+                    setResumeData({ ...resumeData, certifications: updated });
+                  }}
+                  placeholder="Issuing Org (e.g. AWS, CNCF)"
+                  className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+                <input
+                  type="text"
+                  value={cert.issueDate}
+                  onChange={(e) => {
+                    const updated = [...(resumeData.certifications || [])];
+                    updated[idx].issueDate = e.target.value;
+                    setResumeData({ ...resumeData, certifications: updated });
+                  }}
+                  placeholder="Issue Date (YYYY-MM)"
+                  className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+                />
+              </div>
+            </div>
+          ))}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAddCertification}
+            icon={<Plus className="w-3.5 h-3.5" />}
+            className="w-full text-xs"
+          >
+            Add Certification
+          </Button>
+        </div>
+      );
+    }
+
+    if (secId === 'languages') {
+      return (
+        <div className="space-y-4 text-xs">
+          {(resumeData.languages || []).map((lang: any, idx: number) => (
+            <div key={idx} className="p-3.5 rounded-[12px] bg-[#FAF9F5] dark:bg-[#0D1316] border border-[#E7E7E2] dark:border-white/10 flex items-center gap-2">
+              <input
+                type="text"
+                value={lang.language || lang.name}
+                onChange={(e) => {
+                  const updated = [...(resumeData.languages || [])];
+                  updated[idx].language = e.target.value;
+                  updated[idx].name = e.target.value;
+                  setResumeData({ ...resumeData, languages: updated });
+                }}
+                placeholder="Language (e.g. English, German)"
+                className="flex-1 px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+              />
+              <select
+                value={lang.proficiency}
+                onChange={(e) => {
+                  const updated = [...(resumeData.languages || [])];
+                  updated[idx].proficiency = e.target.value;
+                  setResumeData({ ...resumeData, languages: updated });
+                }}
+                className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
+              >
+                <option value="Native">Native</option>
+                <option value="Fluent">Fluent</option>
+                <option value="Professional Working">Professional Working</option>
+                <option value="Conversational">Conversational</option>
+              </select>
+              <button
+                type="button"
+                onClick={() => handleRemoveLanguage(idx)}
+                className="p-1 text-rose-500 hover:text-rose-600 cursor-pointer"
+                title="Remove language"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAddLanguage}
+            icon={<Plus className="w-3.5 h-3.5" />}
+            className="w-full text-xs"
+          >
+            Add Language
+          </Button>
+        </div>
+      );
+    }
+
+    if (secId === 'achievements') {
+      return (
+        <div className="space-y-3 text-xs">
+          <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
+            Honors & Awards (One per line)
+          </label>
+          <textarea
+            rows={5}
+            value={resumeData.achievements.join('\n')}
+            onChange={(e) =>
+              setResumeData({
+                ...resumeData,
+                achievements: e.target.value.split('\n').filter(Boolean),
+              })
+            }
+            placeholder="Honors & awards (one per line)"
+            className="w-full p-3 rounded-[8px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7] focus:border-[#1F8FA6] outline-none"
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className="w-full space-y-5 pb-16">
@@ -516,7 +1329,7 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
                     className={`flex items-center justify-between p-2.5 rounded-[10px] text-xs font-semibold transition-all cursor-pointer border ${
                       isActive
                         ? 'bg-[#1F8FA6]/10 text-[#1F8FA6] dark:text-[#5FD3E8] border-[#1F8FA6]/30 shadow-xs'
-                        : 'bg-[#FAF9F5] dark:bg-[#151D20] text-[#5E6460] dark:text-[#9AA7AB] border-[#E7E7E2] dark:border-white/10 hover:border-[#DCDCD7] dark:hover:border-white/20'
+                        : 'bg-[#FAF9F5] dark:bg-[#080B0C] text-[#5E6460] dark:text-[#9AA7AB] border-[#E7E7E2] dark:border-white/10 hover:border-[#DCDCD7] dark:hover:border-white/20'
                     }`}
                   >
                     <div className="flex items-center gap-2 min-w-0">
@@ -572,473 +1385,121 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
         {/* PANE 2: Active Section Editor - 4 Cols */}
         <div className="lg:col-span-4 space-y-4">
           <Card padding="md" className="space-y-4 bg-white dark:bg-[#0C1113] border-[#E7E7E2] dark:border-white/10 shadow-subtle max-h-[820px] overflow-y-auto">
-            <div className="flex items-center justify-between pb-2 border-b border-[#E7E7E2] dark:border-white/10">
-              <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-[8px] bg-[#1F8FA6]/10 text-[#1F8FA6]">
-                  {sectionMetadata[activeSectionId]?.icon}
-                </span>
-                <h3 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
-                  {sectionMetadata[activeSectionId]?.label} Editor
-                </h3>
-              </div>
-              <span className="text-[10px] text-[#7ED957] font-semibold flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> Live Synced
-              </span>
-            </div>
-
-            {/* Editor: Personal & Contact */}
-            {activeSectionId === 'personal' && (
-              <div className="space-y-3 text-xs">
-                <div>
-                  <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={resumeData.personal.fullName}
-                    onChange={(e) =>
-                      setResumeData({
-                        ...resumeData,
-                        personal: { ...resumeData.personal, fullName: e.target.value },
-                      })
-                    }
-                    className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                  />
-                </div>
-                <div>
-                  <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                    Professional Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={resumeData.personal.headline}
-                    onChange={(e) =>
-                      setResumeData({
-                        ...resumeData,
-                        personal: { ...resumeData.personal, headline: e.target.value },
-                      })
-                    }
-                    className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
+            {/* Header with Mode Switcher & Quick Navigation */}
+            <div className="space-y-3 pb-3 border-b border-[#E7E7E2] dark:border-white/10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="p-1.5 rounded-[8px] bg-[#1F8FA6]/10 text-[#1F8FA6]">
+                    {sectionMetadata[activeSectionId]?.icon}
+                  </span>
                   <div>
-                    <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={resumeData.personal.email}
-                      onChange={(e) =>
-                        setResumeData({
-                          ...resumeData,
-                          personal: { ...resumeData.personal, email: e.target.value },
-                        })
-                      }
-                      className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                      Phone
-                    </label>
-                    <input
-                      type="text"
-                      value={resumeData.personal.phone}
-                      onChange={(e) =>
-                        setResumeData({
-                          ...resumeData,
-                          personal: { ...resumeData.personal, phone: e.target.value },
-                        })
-                      }
-                      className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    value={resumeData.personal.location}
-                    onChange={(e) =>
-                      setResumeData({
-                        ...resumeData,
-                        personal: { ...resumeData.personal, location: e.target.value },
-                      })
-                    }
-                    className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Editor: Summary */}
-            {activeSectionId === 'summary' && (
-              <div className="space-y-3 text-xs">
-                <div>
-                  <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                    Executive Summary
-                  </label>
-                  <textarea
-                    rows={6}
-                    value={resumeData.summary}
-                    onChange={(e) => setResumeData({ ...resumeData, summary: e.target.value })}
-                    className="w-full p-3 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs leading-relaxed text-[#111312] dark:text-[#F2F6F7]"
-                  />
-                  <div className="flex justify-between text-[10px] text-[#8C928E] mt-1">
-                    <span>Target: 3-4 concise, metric-grounded sentences</span>
-                    <span>{resumeData.summary.split(/\s+/).filter(Boolean).length} words</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Editor: Experience */}
-            {activeSectionId === 'experience' && (
-              <div className="space-y-3 text-xs">
-                {resumeData.experience.map((exp: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="p-3 rounded-[12px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 space-y-2.5"
-                  >
-                    <div className="flex items-center justify-between font-bold text-[#111312] dark:text-[#F2F6F7]">
-                      <span>Role #{idx + 1}</span>
-                      <span className="text-[11px] text-[#8C928E]">{exp.startDate} – {exp.endDate}</span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        value={exp.role}
-                        onChange={(e) => {
-                          const updated = [...resumeData.experience];
-                          updated[idx].role = e.target.value;
-                          setResumeData({ ...resumeData, experience: updated });
-                        }}
-                        placeholder="Job Title"
-                        className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                      />
-                      <input
-                        type="text"
-                        value={exp.company}
-                        onChange={(e) => {
-                          const updated = [...resumeData.experience];
-                          updated[idx].company = e.target.value;
-                          setResumeData({ ...resumeData, experience: updated });
-                        }}
-                        placeholder="Company"
-                        className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <span className="text-[10px] font-bold text-[#8C928E] uppercase block">
-                        Quantified XYZ Bullets
-                      </span>
-                      {exp.bullets.map((b: string, bIdx: number) => (
-                        <div key={bIdx} className="flex items-start gap-1.5">
-                          <span className="text-[#1F8FA6] mt-1">•</span>
-                          <textarea
-                            rows={2}
-                            value={b}
-                            onChange={(e) => {
-                              const updated = [...resumeData.experience];
-                              updated[idx].bullets[bIdx] = e.target.value;
-                              setResumeData({ ...resumeData, experience: updated });
-                            }}
-                            className="flex-1 p-2 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                          />
-                          <button
-                            type="button"
-                            title="Enhance with Google XYZ metrics"
-                            onClick={() => handleEnhanceBullet(idx, bIdx)}
-                            className="p-1.5 rounded-[6px] hover:bg-[#1F8FA6]/10 text-[#1F8FA6] dark:text-[#5FD3E8] transition-colors cursor-pointer shrink-0 mt-1"
-                          >
-                            <Wand2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      ))}
+                    <h3 className="text-sm font-bold text-[#111312] dark:text-[#F2F6F7]">
+                      {editorMode === 'all' ? 'All Resume Sections' : `${sectionMetadata[activeSectionId]?.label} Editor`}
+                    </h3>
+                    <div className="text-[10px] text-[#8C928E]">
+                      {editorMode === 'all' ? 'Continuous Document Editing' : 'Single Section Focus Mode'}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {/* Editor: Technical Skills */}
-            {activeSectionId === 'skills' && (
-              <div className="space-y-3 text-xs">
-                <div>
-                  <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                    Programming Languages
-                  </label>
-                  <input
-                    type="text"
-                    value={resumeData.skills.languages.join(', ')}
-                    onChange={(e) =>
-                      setResumeData({
-                        ...resumeData,
-                        skills: {
-                          ...resumeData.skills,
-                          languages: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
-                        },
-                      })
-                    }
-                    className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                  />
                 </div>
-                <div>
-                  <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                    Frameworks & Libraries
-                  </label>
-                  <input
-                    type="text"
-                    value={resumeData.skills.frameworks.join(', ')}
-                    onChange={(e) =>
-                      setResumeData({
-                        ...resumeData,
-                        skills: {
-                          ...resumeData.skills,
-                          frameworks: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
-                        },
-                      })
-                    }
-                    className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                  />
-                </div>
-                <div>
-                  <label className="text-[#8C928E] uppercase font-bold text-[10px] block mb-1">
-                    Infrastructure & Tools
-                  </label>
-                  <input
-                    type="text"
-                    value={resumeData.skills.tools.join(', ')}
-                    onChange={(e) =>
-                      setResumeData({
-                        ...resumeData,
-                        skills: {
-                          ...resumeData.skills,
-                          tools: e.target.value.split(',').map((s) => s.trim()).filter(Boolean),
-                        },
-                      })
-                    }
-                    className="w-full px-3 py-1.5 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                  />
-                </div>
-              </div>
-            )}
 
-            {/* Editor: Education */}
-            {activeSectionId === 'education' && (
-              <div className="space-y-3 text-xs">
-                {resumeData.education.map((edu: any, idx: number) => (
-                  <div key={idx} className="p-3 rounded-[12px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 space-y-2">
-                    <input
-                      type="text"
-                      value={edu.degree}
-                      onChange={(e) => {
-                        const updated = [...resumeData.education];
-                        updated[idx].degree = e.target.value;
-                        setResumeData({ ...resumeData, education: updated });
-                      }}
-                      placeholder="Degree"
-                      className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                    <input
-                      type="text"
-                      value={edu.institution}
-                      onChange={(e) => {
-                        const updated = [...resumeData.education];
-                        updated[idx].institution = e.target.value;
-                        setResumeData({ ...resumeData, education: updated });
-                      }}
-                      placeholder="University"
-                      className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Editor: Projects */}
-            {activeSectionId === 'projects' && (
-              <div className="space-y-3 text-xs">
-                {resumeData.projects.map((proj: any, idx: number) => (
-                  <div key={idx} className="p-3 rounded-[12px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 space-y-2">
-                    <input
-                      type="text"
-                      value={proj.name}
-                      onChange={(e) => {
-                        const updated = [...resumeData.projects];
-                        updated[idx].name = e.target.value;
-                        setResumeData({ ...resumeData, projects: updated });
-                      }}
-                      placeholder="Project Name"
-                      className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                    <textarea
-                      rows={2}
-                      value={proj.bullets.join('\n')}
-                      onChange={(e) => {
-                        const updated = [...resumeData.projects];
-                        updated[idx].bullets = e.target.value.split('\n');
-                        setResumeData({ ...resumeData, projects: updated });
-                      }}
-                      placeholder="Bullets (one per line)"
-                      className="w-full p-2.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Editor: Certifications */}
-            {activeSectionId === 'certifications' && (
-              <div className="space-y-3 text-xs">
-                {(resumeData.certifications || []).map((cert: any, idx: number) => (
-                  <div key={idx} className="p-3 rounded-[12px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 space-y-2">
-                    <div className="flex justify-between items-center font-bold">
-                      <span className="text-[#111312] dark:text-[#F2F6F7]">Certification #{idx + 1}</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = [...(resumeData.certifications || [])];
-                          updated.splice(idx, 1);
-                          setResumeData({ ...resumeData, certifications: updated });
-                        }}
-                        className="text-rose-500 hover:text-rose-600 text-[11px] font-semibold cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      value={cert.name}
-                      onChange={(e) => {
-                        const updated = [...(resumeData.certifications || [])];
-                        updated[idx].name = e.target.value;
-                        setResumeData({ ...resumeData, certifications: updated });
-                      }}
-                      placeholder="Certification Title (e.g. AWS Certified Solutions Architect)"
-                      className="w-full px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        value={cert.issuer}
-                        onChange={(e) => {
-                          const updated = [...(resumeData.certifications || [])];
-                          updated[idx].issuer = e.target.value;
-                          setResumeData({ ...resumeData, certifications: updated });
-                        }}
-                        placeholder="Issuing Org (e.g. AWS, CNCF)"
-                        className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                      />
-                      <input
-                        type="text"
-                        value={cert.issueDate}
-                        onChange={(e) => {
-                          const updated = [...(resumeData.certifications || [])];
-                          updated[idx].issueDate = e.target.value;
-                          setResumeData({ ...resumeData, certifications: updated });
-                        }}
-                        placeholder="Issue Date (YYYY-MM)"
-                        className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                      />
-                    </div>
-                  </div>
-                ))}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const updated = [...(resumeData.certifications || [])];
-                    updated.push({ name: '', issuer: '', issueDate: '', credentialId: '' });
-                    setResumeData({ ...resumeData, certifications: updated });
-                  }}
-                  icon={<Plus className="w-3.5 h-3.5" />}
-                  className="w-full text-xs"
-                >
-                  Add Certification
-                </Button>
-              </div>
-            )}
-
-            {/* Editor: Languages */}
-            {activeSectionId === 'languages' && (
-              <div className="space-y-3 text-xs">
-                {(resumeData.languages || []).map((lang: any, idx: number) => (
-                  <div key={idx} className="p-3 rounded-[12px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={lang.language}
-                      onChange={(e) => {
-                        const updated = [...(resumeData.languages || [])];
-                        updated[idx].language = e.target.value;
-                        setResumeData({ ...resumeData, languages: updated });
-                      }}
-                      placeholder="Language (e.g. English, German)"
-                      className="flex-1 px-3 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    />
-                    <select
-                      value={lang.proficiency}
-                      onChange={(e) => {
-                        const updated = [...(resumeData.languages || [])];
-                        updated[idx].proficiency = e.target.value;
-                        setResumeData({ ...resumeData, languages: updated });
-                      }}
-                      className="px-2.5 py-1.5 rounded-[8px] bg-white dark:bg-[#0C1113] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                    >
-                      <option value="Native">Native</option>
-                      <option value="Fluent">Fluent</option>
-                      <option value="Professional Working">Professional Working</option>
-                      <option value="Conversational">Conversational</option>
-                    </select>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center rounded-[8px] bg-[#FAF9F5] dark:bg-[#080B0C] p-0.5 border border-[#E7E7E2] dark:border-white/10 text-[10px] font-semibold">
                     <button
                       type="button"
-                      onClick={() => {
-                        const updated = [...(resumeData.languages || [])];
-                        updated.splice(idx, 1);
-                        setResumeData({ ...resumeData, languages: updated });
-                      }}
-                      className="p-1 text-rose-500 hover:text-rose-600 cursor-pointer"
+                      onClick={() => setEditorMode('single')}
+                      className={`px-2 py-1 rounded-[6px] transition-all cursor-pointer ${
+                        editorMode === 'single'
+                          ? 'bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] shadow-xs'
+                          : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                      }`}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      Focus
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditorMode('all')}
+                      className={`px-2 py-1 rounded-[6px] transition-all cursor-pointer ${
+                        editorMode === 'all'
+                          ? 'bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] shadow-xs'
+                          : 'text-[#8C928E] hover:text-[#111312] dark:hover:text-[#F2F6F7]'
+                      }`}
+                    >
+                      All Sections
                     </button>
                   </div>
-                ))}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const updated = [...(resumeData.languages || [])];
-                    updated.push({ language: '', proficiency: 'Professional Working' });
-                    setResumeData({ ...resumeData, languages: updated });
-                  }}
-                  icon={<Plus className="w-3.5 h-3.5" />}
-                  className="w-full text-xs"
-                >
-                  Add Language
-                </Button>
-              </div>
-            )}
 
-            {/* Editor: Achievements */}
-            {activeSectionId === 'achievements' && (
-              <div className="space-y-2 text-xs">
-                <textarea
-                  rows={4}
-                  value={resumeData.achievements.join('\n')}
-                  onChange={(e) =>
-                    setResumeData({
-                      ...resumeData,
-                      achievements: e.target.value.split('\n').filter(Boolean),
-                    })
-                  }
-                  placeholder="Honors & awards (one per line)"
-                  className="w-full p-3 rounded-[8px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs text-[#111312] dark:text-[#F2F6F7]"
-                />
+                  <span className="text-[10px] text-[#7ED957] font-semibold flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Live
+                  </span>
+                </div>
+              </div>
+
+              {/* Quick Section Jump Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]">
+                {sectionOrder.map((secId) => {
+                  const meta = sectionMetadata[secId] || { label: secId };
+                  const isCurrent = activeSectionId === secId;
+                  return (
+                    <button
+                      key={secId}
+                      type="button"
+                      onClick={() => {
+                        setActiveSectionId(secId);
+                        if (editorMode === 'all') {
+                          const el = document.getElementById(`editor-section-${secId}`);
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className={`px-2.5 py-1 rounded-full whitespace-nowrap text-[11px] font-medium transition-colors cursor-pointer border ${
+                        isCurrent
+                          ? 'bg-[#1F8FA6] text-white border-[#1F8FA6]'
+                          : 'bg-[#FAF9F5] dark:bg-[#080B0C] text-[#5E6460] dark:text-[#9AA7AB] border-[#E7E7E2] dark:border-white/10 hover:border-[#1F8FA6]/50'
+                      }`}
+                    >
+                      {meta.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Editor Content: Either single section or all sections sequentially */}
+            {editorMode === 'single' ? (
+              renderSectionContent(activeSectionId)
+            ) : (
+              <div className="space-y-6">
+                {sectionOrder.map((secId) => {
+                  const meta = sectionMetadata[secId] || { label: secId };
+                  return (
+                    <div
+                      key={secId}
+                      id={`editor-section-${secId}`}
+                      className="space-y-2.5 pt-3 border-t first:pt-0 first:border-0 border-[#E7E7E2] dark:border-white/10"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="p-1 rounded-[6px] bg-[#1F8FA6]/10 text-[#1F8FA6]">
+                            {meta.icon}
+                          </span>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7]">
+                            {meta.label}
+                          </h4>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveSectionId(secId);
+                            setEditorMode('single');
+                          }}
+                          className="text-[10px] font-semibold text-[#1F8FA6] dark:text-[#5FD3E8] hover:underline cursor-pointer"
+                        >
+                          Focus This
+                        </button>
+                      </div>
+                      {renderSectionContent(secId)}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </Card>
@@ -1065,7 +1526,7 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
                     className={`p-2.5 rounded-[10px] text-left border transition-all ${
                       selectedTemplate === tpl.id
                         ? 'bg-[#1F8FA6]/10 border-[#1F8FA6] ring-1 ring-[#1F8FA6]'
-                        : 'bg-[#FAF9F5] dark:bg-[#151D20] border-[#E7E7E2] dark:border-white/10 hover:border-[#DCDCD7]'
+                        : 'bg-[#FAF9F5] dark:bg-[#080B0C] border-[#E7E7E2] dark:border-white/10 hover:border-[#DCDCD7]'
                     }`}
                   >
                     <div className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7]">{tpl.label}</div>
@@ -1079,17 +1540,17 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
             <div
               className={
                 selectedTemplate === 'classic_ats'
-                  ? 'p-8 rounded-[14px] bg-[#FFFFFF] border-2 border-[#111312] shadow-sm max-h-[660px] overflow-y-auto space-y-4 text-xs font-serif text-[#111312]'
+                  ? 'p-8 rounded-[14px] bg-white dark:bg-[#070B0D] border-2 border-[#111312] dark:border-white/20 shadow-sm max-h-[660px] overflow-y-auto space-y-4 text-xs font-serif text-[#111312] dark:text-[#F2F6F7]'
                   : selectedTemplate === 'technical_compact'
                   ? 'p-5 rounded-[14px] bg-[#F4F4F1] dark:bg-[#070B0D] border border-[#1F8FA6]/30 shadow-subtle max-h-[660px] overflow-y-auto space-y-3 text-[11px] font-sans text-[#111312] dark:text-[#F2F6F7]'
-                  : 'p-6 rounded-[14px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 shadow-inner max-h-[660px] overflow-y-auto space-y-4 text-xs font-sans text-[#111312] dark:text-[#F2F6F7]'
+                  : 'p-6 rounded-[14px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 shadow-sm max-h-[660px] overflow-y-auto space-y-4 text-xs font-sans text-[#111312] dark:text-[#F2F6F7]'
               }
             >
               {/* Render Sections in Dynamic Section Order */}
               {sectionOrder.map((secId) => {
                 const headingClass =
                   selectedTemplate === 'classic_ats'
-                    ? 'font-serif text-xs font-bold uppercase tracking-wider text-[#111312] border-b border-[#111312] pb-0.5'
+                    ? 'font-serif text-xs font-bold uppercase tracking-wider text-[#111312] dark:text-[#F2F6F7] border-b border-[#111312] dark:border-white/20 pb-0.5'
                     : selectedTemplate === 'technical_compact'
                     ? 'font-mono text-[10px] font-bold uppercase tracking-widest text-[#1F8FA6] dark:text-[#5FD3E8] bg-[#1F8FA6]/10 px-2 py-0.5 rounded inline-block'
                     : 'font-sans font-bold uppercase tracking-wider text-[11px] text-[#1F8FA6] dark:text-[#5FD3E8] border-b border-[#E7E7E2] dark:border-white/10 pb-0.5';
@@ -1097,14 +1558,14 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
                 if (secId === 'personal') {
                   if (selectedTemplate === 'classic_ats') {
                     return (
-                      <div key="personal" className="text-center pb-3 border-b-2 border-[#111312] space-y-1">
-                        <h2 className="text-xl font-bold font-serif uppercase tracking-widest text-[#111312]">
+                      <div key="personal" className="text-center pb-3 border-b-2 border-[#111312] dark:border-white/20 space-y-1">
+                        <h2 className="text-xl font-bold font-serif uppercase tracking-widest text-[#111312] dark:text-[#F2F6F7]">
                           {resumeData.personal.fullName}
                         </h2>
-                        <div className="text-xs font-serif italic text-[#333333]">
+                        <div className="text-xs font-serif italic text-[#5E6460] dark:text-[#9AA7AB]">
                           {resumeData.personal.headline}
                         </div>
-                        <div className="text-[11px] font-serif text-[#555555] flex justify-center gap-2 flex-wrap">
+                        <div className="text-[11px] font-serif text-[#8C928E] dark:text-[#9AA7AB] flex justify-center gap-2 flex-wrap">
                           <span>{resumeData.personal.email}</span>
                           <span>•</span>
                           <span>{resumeData.personal.phone}</span>
@@ -1303,7 +1764,7 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
             <select
               value={selectedTargetJobId}
               onChange={(e) => setSelectedTargetJobId(e.target.value)}
-              className="w-full px-3 py-2 rounded-[10px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]"
+              className="w-full px-3 py-2 rounded-[10px] bg-white dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 text-xs font-semibold text-[#111312] dark:text-[#F2F6F7]"
             >
               {targetJobOptions.map((j) => (
                 <option key={j.id} value={j.id}>
@@ -1314,7 +1775,7 @@ export const ResumeBuilderPage: React.FC<{ onNavigate?: (path: string) => void }
           </div>
 
           {/* Target Job Info Card */}
-          <div className="p-3.5 rounded-[12px] bg-[#FAF9F5] dark:bg-[#151D20] border border-[#E7E7E2] dark:border-white/10 space-y-1">
+          <div className="p-3.5 rounded-[12px] bg-[#FAF9F5] dark:bg-[#080B0C] border border-[#E7E7E2] dark:border-white/10 space-y-1">
             <div className="font-bold text-sm text-[#111312] dark:text-[#F2F6F7]">
               {targetJob.title}
             </div>

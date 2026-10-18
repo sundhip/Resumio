@@ -26,11 +26,14 @@ applicationsRouter.post('/candidate/applications', authenticateToken, async (req
       return res.status(403).json({ success: false, message: 'Only candidates can submit job applications.' });
     }
 
-    const { jobId, resumeId, coverLetter } = req.body;
-    if (!jobId || !jobId.trim()) {
+    const jobId = String(req.body.jobId || req.body.job_id || '').trim();
+    const resumeId = String(req.body.resumeId || req.body.resume_id || '').trim();
+    const coverLetter = String(req.body.coverLetter || req.body.cover_letter || '');
+
+    if (!jobId) {
       return res.status(400).json({ success: false, message: 'Job ID is required.' });
     }
-    if (!resumeId || !resumeId.trim()) {
+    if (!resumeId) {
       return res.status(400).json({ success: false, message: 'Please select a resume for this application.' });
     }
 
