@@ -11,6 +11,7 @@ import {
   Sun,
   Palette,
   ArrowRight,
+  FileText,
 } from 'lucide-react';
 
 interface CommandPaletteProps {
