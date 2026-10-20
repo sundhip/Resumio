@@ -357,7 +357,7 @@ export async function processResumeAndScreen(
 
     // 6. Execute Duplicate Resume Detection (Phase 8 Feature 34)
     try {
-      DuplicateResumeService.detectDuplicates(resumeId, candidateId, fileHash, extracted.text);
+      DuplicateResumeService.detectDuplicates(resumeId, candidateId, fileHash, extractedText);
     } catch (dupErr) {
       console.error('Duplicate detection non-fatal error:', dupErr);
     }

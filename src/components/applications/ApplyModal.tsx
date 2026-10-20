@@ -14,6 +14,7 @@ import {
   Sparkles,
   ArrowRight,
   UploadCloud,
+  HelpCircle,
 } from 'lucide-react';
 
 interface ApplyModalProps {
@@ -43,6 +44,27 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   const [previewData, setPreviewData] = useState<any>(null);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
 
+
+  const loadInterviewQuestions = async () => {
+    setIsLoadingQuestions(true);
+    try {
+      const res = await api.getJobInterviewQuestions(job.id);
+      if (res && res.success && res.data && res.data.questions) {
+        const q = res.data.questions;
+        const flattened = [
+          ...(q.roleSpecific || []),
+          ...(q.technical || []),
+          ...(q.behavioral || []),
+          ...(q.experience || []),
+        ];
+        setInterviewQuestions(flattened.slice(0, 5));
+      }
+    } catch {
+      // non-blocking
+    } finally {
+      setIsLoadingQuestions(false);
+    }
+  };
   const loadPreview = async () => {
     setIsLoadingPreview(true);
     try {
@@ -98,7 +120,20 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       const res = await api.applyToJob({
         jobId: job.id,
         resumeId: selectedResumeId,
-        coverLetter: coverLetter.trim(),
+        coverLetter: (() => {
+          let finalCover = coverLetter.trim();
+          const answered = Object.entries(questionAnswers).filter(([_, a]) => a.trim().length > 0);
+          if (answered.length > 0) {
+            const qa = answered.map(([qid, a]) => {
+              const qObj = interviewQuestions.find((item) => item.id === qid);
+              const qText = qObj ? qObj.question : qid;
+              return "Q: " + qText + "\nA: " + a.trim();
+            }).join("\n\n");
+            const header = "--- Screening Question Answers ---\n";
+            finalCover = finalCover ? (finalCover + "\n\n" + header + qa) : (header + qa);
+          }
+          return finalCover;
+        })(),
       });
 
       if (res.success) {
@@ -407,6 +442,44 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               </div>
             )}
           </div>
+
+          {/* Requisition Screening & Interview Questions */}
+          {isLoadingQuestions ? (
+            <div className="p-3 rounded-control bg-[#F4F4F1] dark:bg-surface-dark-bg/40 text-xs text-[#8A928D] dark:text-[#657378] animate-pulse">
+              Loading requisition screening questions...
+            </div>
+          ) : interviewQuestions.length > 0 ? (
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#111312] dark:text-[#F2F6F7] uppercase tracking-wider flex items-center gap-1.5">
+                  <HelpCircle className="w-3.5 h-3.5 text-brand-600" />
+                  Requisition Screening Questions ({interviewQuestions.length})
+                </label>
+                <span className="text-[11px] text-[#8A928D] dark:text-[#657378]">Evaluated by hiring team</span>
+              </div>
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {interviewQuestions.map((q, idx) => (
+                  <div key={q.id || idx} className="p-2.5 rounded-lg border border-[#E7E7E2] dark:border-surface-dark-border bg-[#FAFAF8] dark:bg-surface-dark-bg/50 space-y-1.5">
+                    <div className="flex items-start gap-2">
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 shrink-0">
+                        {q.category || 'Screening'}
+                      </span>
+                      <p className="text-xs font-medium text-[#111312] dark:text-[#F2F6F7] leading-snug">
+                        {q.question}
+                      </p>
+                    </div>
+                    <textarea
+                      rows={2}
+                      value={questionAnswers[q.id] || ''}
+                      onChange={(e) => setQuestionAnswers({ ...questionAnswers, [q.id]: e.target.value })}
+                      placeholder="Your response (optional)..."
+                      className="w-full p-2 rounded-control text-xs bg-white dark:bg-surface-dark-input text-[#111312] dark:text-[#F2F6F7] border border-[#E7E7E2] dark:border-surface-dark-border focus:outline-none focus:ring-1 focus:ring-brand-500 placeholder:text-[#8A928D]"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           {/* Optional Cover Letter / Pitch */}
           <div className="space-y-1.5">

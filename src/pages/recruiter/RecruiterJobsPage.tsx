@@ -495,6 +495,7 @@ export const RecruiterJobsPage: React.FC<RecruiterJobsPageProps> = ({ onNavigate
         <Card variant="default" padding="none">
           <DataTable
             data={filteredJobs}
+            keyExtractor={(job) => job.id}
             columns={[
               {
                 key: 'title',

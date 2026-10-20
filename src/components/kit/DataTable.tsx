@@ -19,7 +19,7 @@ export interface StatusCellData {
 export interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
-  keyExtractor: (row: T) => string | number;
+  keyExtractor?: (row: T, index?: number) => string | number;
   onRowClick?: (row: T) => void;
   className?: string;
 }
@@ -27,7 +27,7 @@ export interface DataTableProps<T> {
 export function DataTable<T extends Record<string, any>>({
   columns,
   data,
-  keyExtractor,
+  keyExtractor = (row: any, idx?: number) => row?.id ?? row?._id ?? row?.key ?? String(idx),
   onRowClick,
   className = '',
 }: DataTableProps<T>) {
@@ -110,9 +110,9 @@ export function DataTable<T extends Record<string, any>>({
               </td>
             </tr>
           ) : (
-            sortedData.map((row) => (
+            sortedData.map((row, idx) => (
               <tr
-                key={keyExtractor(row)}
+                key={keyExtractor(row, idx)}
                 onClick={() => onRowClick && onRowClick(row)}
                 className={`transition-colors ${isPulsing ? 'animate-rank-pulse' : ''} ${
                   onRowClick

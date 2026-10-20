@@ -42,17 +42,25 @@ candidateExperienceRouter.get('/dashboard', authenticateToken, async (req: Reque
 
     // 2. Active applications with status history
     const applications = db.prepare(`
-      SELECT a.id, a.job_id, a.status, a.applied_at, a.match_score, a.match_grade,
+      SELECT a.id, a.job_id, a.status, a.applied_at,
+             COALESCE(rjm.match_score, 0) as match_score,
+             CASE
+               WHEN COALESCE(rjm.match_score, 0) >= 85 THEN 'A'
+               WHEN COALESCE(rjm.match_score, 0) >= 70 THEN 'B'
+               WHEN COALESCE(rjm.match_score, 0) >= 50 THEN 'C'
+               ELSE 'D'
+             END as match_grade,
              j.title as job_title, j.company_name, j.location, j.work_mode
       FROM applications a
       JOIN jobs j ON a.job_id = j.id
+      LEFT JOIN resume_job_matches rjm ON (rjm.application_id = a.id OR (rjm.job_id = a.job_id AND rjm.candidate_id = a.candidate_id))
       WHERE a.candidate_id = ?
       ORDER BY a.applied_at DESC
     `).all(user.id) as any[];
 
     for (const app of applications) {
       app.timeline = db.prepare(`
-        SELECT status, notes, changed_at
+        SELECT new_status as status, note as notes, changed_at
         FROM application_status_history
         WHERE application_id = ?
         ORDER BY changed_at ASC
@@ -168,23 +176,28 @@ candidateExperienceRouter.get('/recommendations', authenticateToken, async (req:
     };
 
     // Load published active jobs
-    const jobs = (db.prepare(`
-      SELECT id, title, company_name, location, work_mode, salary_min, salary_max,
-             required_skills, preferred_skills, min_experience_years
+    const jobsRaw = db.prepare(`
+      SELECT id, title, company_name, location, work_mode, salary_min, salary_max, min_experience
       FROM jobs
       WHERE status = 'Published'
-    `).all() as any[]).map(j => ({
-      id: j.id,
-      title: j.title,
-      companyName: j.company_name || 'Resumio Hiring Partner',
-      location: j.location || 'Remote',
-      workMode: (j.work_mode || 'Remote') as 'Remote' | 'Hybrid' | 'On-site',
-      salaryMin: j.salary_min || undefined,
-      salaryMax: j.salary_max || undefined,
-      requiredSkills: typeof j.required_skills === 'string' ? JSON.parse(j.required_skills || '[]') : (j.required_skills || []),
-      preferredSkills: typeof j.preferred_skills === 'string' ? JSON.parse(j.preferred_skills || '[]') : (j.preferred_skills || []),
-      minExperienceYears: j.min_experience_years || 0,
-    })) as TargetJobItem[];
+    `).all() as any[];
+
+    const jobs: TargetJobItem[] = jobsRaw.map(j => {
+      const reqSkills = (db.prepare(`SELECT name FROM job_required_skills WHERE job_id = ?`).all(j.id) as any[]).map(r => r.name);
+      const prefSkills = (db.prepare(`SELECT name FROM job_preferred_skills WHERE job_id = ?`).all(j.id) as any[]).map(r => r.name);
+      return {
+        id: j.id,
+        title: j.title,
+        companyName: j.company_name || 'Resumio Hiring Partner',
+        location: j.location || 'Remote',
+        workMode: (j.work_mode || 'Remote') as 'Remote' | 'Hybrid' | 'On-site',
+        salaryMin: j.salary_min || undefined,
+        salaryMax: j.salary_max || undefined,
+        requiredSkills: reqSkills,
+        preferredSkills: prefSkills,
+        minExperienceYears: j.min_experience || 0,
+      };
+    });
 
     const recommendations = computeHybridJobRecommendations(skillsContext, preferences, jobs);
 
@@ -308,22 +321,26 @@ candidateExperienceRouter.get('/upskilling-roadmap', authenticateToken, async (r
 
     // Target jobs: either candidate applied jobs or published matching jobs
     const targetJobsRaw = db.prepare(`
-      SELECT id, title, company_name, location, work_mode, required_skills, preferred_skills, min_experience_years
+      SELECT id, title, company_name, location, work_mode, min_experience
       FROM jobs
       WHERE status = 'Published'
       LIMIT 15
     `).all() as any[];
 
-    const targetJobs: TargetJobItem[] = targetJobsRaw.map(j => ({
-      id: j.id,
-      title: j.title,
-      companyName: j.company_name || 'Hiring Partner',
-      location: j.location || 'Remote',
-      workMode: (j.work_mode || 'Remote') as any,
-      requiredSkills: typeof j.required_skills === 'string' ? JSON.parse(j.required_skills || '[]') : (j.required_skills || []),
-      preferredSkills: typeof j.preferred_skills === 'string' ? JSON.parse(j.preferred_skills || '[]') : (j.preferred_skills || []),
-      minExperienceYears: j.min_experience_years || 0,
-    }));
+    const targetJobs: TargetJobItem[] = targetJobsRaw.map(j => {
+      const reqSkills = (db.prepare(`SELECT name FROM job_required_skills WHERE job_id = ?`).all(j.id) as any[]).map(r => r.name);
+      const prefSkills = (db.prepare(`SELECT name FROM job_preferred_skills WHERE job_id = ?`).all(j.id) as any[]).map(r => r.name);
+      return {
+        id: j.id,
+        title: j.title,
+        companyName: j.company_name || 'Hiring Partner',
+        location: j.location || 'Remote',
+        workMode: (j.work_mode || 'Remote') as any,
+        requiredSkills: reqSkills,
+        preferredSkills: prefSkills,
+        minExperienceYears: j.min_experience || 0,
+      };
+    });
 
     // Curated resources from database (Truthfulness Guarantee)
     const curatedRows = db.prepare(`SELECT * FROM curated_learning_resources`).all() as any[];
@@ -375,15 +392,18 @@ candidateExperienceRouter.post('/what-if-simulator', authenticateToken, async (r
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
 
+    const jobReqSkills = (db.prepare(`SELECT name FROM job_required_skills WHERE job_id = ?`).all(job.id) as any[]).map(r => r.name);
+    const jobPrefSkills = (db.prepare(`SELECT name FROM job_preferred_skills WHERE job_id = ?`).all(job.id) as any[]).map(r => r.name);
+
     const targetJob: TargetJobItem = {
       id: job.id,
       title: job.title,
       companyName: job.company_name || 'Hiring Partner',
       location: job.location || 'Remote',
       workMode: (job.work_mode || 'Remote') as any,
-      requiredSkills: typeof job.required_skills === 'string' ? JSON.parse(job.required_skills || '[]') : (job.required_skills || []),
-      preferredSkills: typeof job.preferred_skills === 'string' ? JSON.parse(job.preferred_skills || '[]') : (job.preferred_skills || []),
-      minExperienceYears: job.min_experience_years || 0,
+      requiredSkills: jobReqSkills,
+      preferredSkills: jobPrefSkills,
+      minExperienceYears: job.min_experience || 0,
     };
 
     const profile = db.prepare(`SELECT * FROM candidate_profiles WHERE user_id = ?`).get(user.id) as any;
@@ -588,15 +608,15 @@ candidateExperienceRouter.get('/pre-apply-preview/:jobId', authenticateToken, as
       ? (db.prepare(`SELECT name as skill_name, proficiency FROM candidate_skills WHERE candidate_profile_id = ?`).all(profileId) as any[]).map(s => s.skill_name)
       : [];
 
-    const reqSkills: string[] = typeof job.required_skills === 'string' ? JSON.parse(job.required_skills || '[]') : (job.required_skills || []);
-    const prefSkills: string[] = typeof job.preferred_skills === 'string' ? JSON.parse(job.preferred_skills || '[]') : (job.preferred_skills || []);
+    const reqSkills: string[] = (db.prepare(`SELECT name FROM job_required_skills WHERE job_id = ?`).all(job.id) as any[]).map(r => r.name);
+    const prefSkills: string[] = (db.prepare(`SELECT name FROM job_preferred_skills WHERE job_id = ?`).all(job.id) as any[]).map(r => r.name);
 
     const matchedReq = reqSkills.filter(s => skills.some(cs => cs.toLowerCase() === s.toLowerCase()));
     const missingReq = reqSkills.filter(s => !skills.some(cs => cs.toLowerCase() === s.toLowerCase()));
     const matchedPref = prefSkills.filter(s => skills.some(cs => cs.toLowerCase() === s.toLowerCase()));
 
     const candidateYears = profile?.total_experience_years || 2;
-    const requiredYears = job.min_experience_years || 0;
+    const requiredYears = job.min_experience || 0;
     const yearsMet = candidateYears >= requiredYears;
 
     const scoreV2Result = calculateScoreV2(
@@ -667,13 +687,14 @@ candidateExperienceRouter.post('/applications/:applicationId/withdraw', authenti
     const now = new Date().toISOString();
     const withdrawNote = reason ? `Withdrawn by candidate: ${reason}` : 'Withdrawn by candidate';
 
-    db.prepare(`UPDATE applications SET status = 'Withdrawn' WHERE id = ?`).run(applicationId);
+    const oldStatus = application.status;
+    db.prepare(`UPDATE applications SET status = 'Withdrawn', updated_at = datetime('now') WHERE id = ?`).run(applicationId);
 
     const historyId = `ash_${crypto.randomUUID()}`;
     db.prepare(`
-      INSERT INTO application_status_history (id, application_id, status, notes, changed_by, changed_at)
-      VALUES (?, ?, 'Withdrawn', ?, ?, ?)
-    `).run(historyId, applicationId, withdrawNote, user.id, now);
+      INSERT INTO application_status_history (id, application_id, old_status, new_status, changed_by, changed_by_role, note, changed_at)
+      VALUES (?, ?, ?, 'Withdrawn', ?, 'candidate', ?, datetime('now'))
+    `).run(historyId, applicationId, oldStatus, user.id, withdrawNote);
 
     return res.json({
       success: true,

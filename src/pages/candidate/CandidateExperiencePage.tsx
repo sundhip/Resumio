@@ -84,6 +84,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
   const [simExtraYears, setSimExtraYears] = useState<number>(0);
   const [simulationResult, setSimulationResult] = useState<any>(null);
   const [isSimulating, setIsSimulating] = useState(false);
+  const [fallbackJobs, setFallbackJobs] = useState<Array<{ jobId: string; jobTitle: string; companyName: string }>>([]);
 
   // Tab 3: Verifications
   const [githubUsername, setGithubUsername] = useState<string>('');
@@ -123,13 +124,26 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
     try {
       const res = await api.getJobRecommendations();
       if (res.success && res.data) {
-        setRecommendations(res.data.recommendations || []);
+        const recs = res.data.recommendations || [];
+        setRecommendations(recs);
         if (res.data.preferences) {
           setPreferences(res.data.preferences);
+        }
+        if (recs.length === 0) {
+          const pub = await api.getPublicJobs({ status: 'Published' } as any);
+          if (pub && pub.success && Array.isArray(pub.jobs)) {
+            setFallbackJobs(pub.jobs.map((j: any) => ({ jobId: j.id, jobTitle: j.title, companyName: j.company_name || 'Hiring Partner' })));
+          }
         }
       }
     } catch (err: any) {
       console.warn('Recommendations fetch notice:', err.message);
+      try {
+        const pub = await api.getPublicJobs({ status: 'Published' } as any);
+        if (pub && pub.success && Array.isArray(pub.jobs)) {
+          setFallbackJobs(pub.jobs.map((j: any) => ({ jobId: j.id, jobTitle: j.title, companyName: j.company_name || 'Hiring Partner' })));
+        }
+      } catch {}
     }
   };
 
@@ -340,6 +354,8 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
   const masteredCount = roadmap?.steps?.filter((s: any) => skillProgress[s.skillName] === 'mastered').length || 0;
   const inProgressCount = roadmap?.steps?.filter((s: any) => skillProgress[s.skillName] === 'in_progress').length || 0;
   const progressPercent = totalSteps > 0 ? Math.round((masteredCount / totalSteps) * 100) : 0;
+
+  const selectableJobOptions = recommendations.length > 0 ? recommendations : fallbackJobs;
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-16">
@@ -714,7 +730,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                     className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                   >
                     <option value="">Select a target role...</option>
-                    {recommendations.map(r => (
+                    {selectableJobOptions.map(r => (
                       <option key={r.jobId} value={r.jobId}>
                         {r.jobTitle} ({r.companyName})
                       </option>
@@ -854,7 +870,7 @@ export const CandidateExperiencePage: React.FC<CandidateExperiencePageProps> = (
                   className="w-full text-xs rounded-xl border border-[#E7E7E2] dark:border-white/10 bg-white dark:bg-[#151D20] text-[#111312] dark:text-[#F2F6F7] p-2.5 outline-none focus:border-[#1F8FA6]"
                 >
                   <option value="">Select a target role...</option>
-                  {recommendations.map(r => (
+                  {selectableJobOptions.map(r => (
                     <option key={r.jobId} value={r.jobId}>
                       {r.jobTitle} ({r.companyName})
                     </option>

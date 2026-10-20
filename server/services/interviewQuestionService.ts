@@ -87,9 +87,9 @@ export class InterviewQuestionService {
   ): Promise<InterviewQuestionSetResult> {
     // 1. Ownership & existence check
     const job = db.prepare(`
-      SELECT j.*, rp.company_name
+      SELECT j.*, COALESCE(rp.company_name, j.company_name) as company_name
       FROM jobs j
-      JOIN recruiter_profiles rp ON j.recruiter_profile_id = rp.id
+      LEFT JOIN recruiter_profiles rp ON j.recruiter_profile_id = rp.id
       WHERE j.id = ?
     `).get(jobId) as any;
 
@@ -97,7 +97,13 @@ export class InterviewQuestionService {
       throw new Error(`Job not found with ID: ${jobId}`);
     }
     if (job.recruiter_id !== recruiterUserId) {
-      throw new Error('Forbidden: You can only generate interview questions for jobs you own.');
+      const user = db.prepare('SELECT role FROM users WHERE id = ?').get(recruiterUserId) as any;
+      if (user?.role === 'recruiter') {
+        throw new Error('Forbidden: You can only generate interview questions for jobs you own.');
+      }
+      if (user?.role !== 'admin' && forceRegenerate) {
+        throw new Error('Forbidden: You can only generate interview questions for jobs you own.');
+      }
     }
 
     // 2. Check cached question set
@@ -241,7 +247,7 @@ Strict JSON format:
     `).run(
       setId,
       jobId,
-      recruiterUserId,
+      job.recruiter_id || recruiterUserId,
       JSON.stringify(questionSet),
       this.MODEL_VERSION,
       now,

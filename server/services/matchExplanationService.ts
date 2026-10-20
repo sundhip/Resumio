@@ -59,10 +59,10 @@ export class MatchExplanationService {
     // 1. Locate the match record from either application_id, match_id, or direct lookup
     let matchRecord = db.prepare(`
       SELECT rjm.*, j.title as job_title, j.company_name, j.recruiter_id, j.min_experience, j.qualification,
-             cp.full_name as candidate_name, cp.user_id as cand_user_id
+             COALESCE(cp.full_name, 'Candidate') as candidate_name, COALESCE(cp.user_id, rjm.candidate_id) as cand_user_id
       FROM resume_job_matches rjm
       JOIN jobs j ON rjm.job_id = j.id
-      JOIN candidate_profiles cp ON rjm.candidate_profile_id = cp.id
+      LEFT LEFT JOIN candidate_profiles cp ON rjm.candidate_profile_id = cp.id
       WHERE rjm.application_id = ? OR rjm.id = ?
     `).get(applicationIdOrMatchId, applicationIdOrMatchId) as any;
 
@@ -79,7 +79,7 @@ export class MatchExplanationService {
         );
         matchRecord = db.prepare(`
           SELECT rjm.*, j.title as job_title, j.company_name, j.recruiter_id, j.min_experience, j.qualification,
-                 cp.full_name as candidate_name, cp.user_id as cand_user_id
+                 COALESCE(cp.full_name, 'Candidate') as candidate_name, COALESCE(cp.user_id, rjm.candidate_id) as cand_user_id
           FROM resume_job_matches rjm
           JOIN jobs j ON rjm.job_id = j.id
           JOIN candidate_profiles cp ON rjm.candidate_profile_id = cp.id
@@ -93,11 +93,22 @@ export class MatchExplanationService {
     }
 
     // 2. Enforce Authorization Boundary
-    if (requesterRole === 'candidate' && matchRecord.cand_user_id !== requesterUserId) {
-      throw new Error('Forbidden: You can only inspect your own match score explanations.');
-    }
-    if (requesterRole === 'recruiter' && matchRecord.recruiter_id !== requesterUserId) {
-      throw new Error('Forbidden: You do not own the job posting associated with this application.');
+    if (requesterRole !== 'admin') {
+      if (requesterRole === 'candidate') {
+        const isOwner = matchRecord.cand_user_id === requesterUserId || matchRecord.candidate_id === requesterUserId;
+        if (!isOwner) {
+          throw new Error('Forbidden: You can only inspect your own match score explanations.');
+        }
+      } else if (requesterRole === 'recruiter') {
+        const isJobOwner = matchRecord.recruiter_id === requesterUserId;
+        if (!isJobOwner) {
+          const recruiterProfile = db.prepare('SELECT id FROM recruiter_profiles WHERE user_id = ?').get(requesterUserId) as any;
+          const isProfileOwner = recruiterProfile && (matchRecord.recruiter_profile_id === recruiterProfile.id || matchRecord.recruiter_id === recruiterProfile.id);
+          if (!isProfileOwner) {
+            throw new Error('Forbidden: You do not own the job posting associated with this application.');
+          }
+        }
+      }
     }
 
     // 3. Extract verified structured components

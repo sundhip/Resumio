@@ -478,6 +478,7 @@ export const RecruiterJobApplicantsPage: React.FC<RecruiterJobApplicantsPageProp
         <Card variant="default" padding="none">
           <DataTable
             data={filteredApplicants}
+            keyExtractor={(app) => app.id}
             columns={[
               {
                 key: 'select',

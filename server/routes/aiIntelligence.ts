@@ -15,7 +15,7 @@ const router = express.Router();
 router.post('/recruiter/candidate-search', authenticateToken, requireRole('recruiter', 'admin'), async (req, res) => {
   try {
     const { query, targetJobId } = req.body;
-    const recruiterUserId = (req as any).user.userId;
+    const recruiterUserId = (req as any).user.id || (req as any).user.userId;
 
     const result = await NaturalLanguageSearchService.searchCandidates(
       recruiterUserId,
@@ -38,10 +38,10 @@ router.post('/recruiter/candidate-search', authenticateToken, requireRole('recru
 // ============================================================
 
 // Get or generate job interview questions
-router.get('/jobs/:jobId/interview-questions', authenticateToken, requireRole('recruiter', 'admin'), async (req, res) => {
+router.get('/jobs/:jobId/interview-questions', authenticateToken, requireRole('candidate', 'recruiter', 'admin'), async (req, res) => {
   try {
     const { jobId } = req.params;
-    const recruiterUserId = (req as any).user.userId;
+    const recruiterUserId = (req as any).user.id || (req as any).user.userId;
 
     const result = await InterviewQuestionService.generateJobQuestions(recruiterUserId, jobId, false);
     res.json({ success: true, data: result });
@@ -55,7 +55,7 @@ router.post('/jobs/:jobId/interview-questions', authenticateToken, requireRole('
   try {
     const { jobId } = req.params;
     const { forceRegenerate } = req.body;
-    const recruiterUserId = (req as any).user.userId;
+    const recruiterUserId = (req as any).user.id || (req as any).user.userId;
 
     const result = await InterviewQuestionService.generateJobQuestions(recruiterUserId, jobId, !!forceRegenerate);
     res.json({ success: true, data: result });
@@ -70,7 +70,7 @@ router.post('/applications/:applicationId/interview-questions', authenticateToke
   try {
     const { applicationId } = req.params;
     const { forceRegenerate } = req.body;
-    const recruiterUserId = (req as any).user.userId;
+    const recruiterUserId = (req as any).user.id || (req as any).user.userId;
 
     const result = await InterviewQuestionService.generateCandidateQuestions(
       recruiterUserId,
@@ -89,7 +89,7 @@ router.patch('/interview-questions/:questionSetId', authenticateToken, requireRo
   try {
     const { questionSetId } = req.params;
     const { questions } = req.body;
-    const recruiterUserId = (req as any).user.userId;
+    const recruiterUserId = (req as any).user.id || (req as any).user.userId;
 
     const result = InterviewQuestionService.updateQuestionSet(recruiterUserId, questionSetId, questions);
     res.json({ success: true, data: result });
@@ -107,7 +107,7 @@ router.get('/resumes/:resumeId/improvement-analysis', authenticateToken, require
   try {
     const { resumeId } = req.params;
     const { jobId } = req.query;
-    const candidateUserId = (req as any).user.userId;
+    const candidateUserId = (req as any).user.id || (req as any).user.userId;
 
     const result = await ResumeImprovementService.analyzeResume(
       candidateUserId,
@@ -126,7 +126,7 @@ router.post('/resumes/:resumeId/improvement-analysis', authenticateToken, requir
   try {
     const { resumeId } = req.params;
     const { jobId, forceRegenerate } = req.body;
-    const candidateUserId = (req as any).user.userId;
+    const candidateUserId = (req as any).user.id || (req as any).user.userId;
 
     const result = await ResumeImprovementService.analyzeResume(
       candidateUserId,
@@ -148,7 +148,7 @@ router.post('/resumes/:resumeId/improvement-analysis', authenticateToken, requir
 router.get('/resumes/:resumeId/duplicates', authenticateToken, (req, res) => {
   try {
     const { resumeId } = req.params;
-    const userId = (req as any).user.userId;
+    const userId = (req as any).user.id || (req as any).user.userId;
     const role = (req as any).user.role;
 
     const result = DuplicateResumeService.getResumeDuplicates(resumeId, userId, role);
@@ -166,7 +166,7 @@ router.get('/resumes/:resumeId/duplicates', authenticateToken, (req, res) => {
 router.get('/applications/:applicationId/match/explanation', authenticateToken, async (req, res) => {
   try {
     const { applicationId } = req.params;
-    const userId = (req as any).user.userId;
+    const userId = (req as any).user.id || (req as any).user.userId;
     const role = (req as any).user.role;
 
     const result = await MatchExplanationService.getExplanation(applicationId, userId, role);
@@ -180,7 +180,7 @@ router.get('/applications/:applicationId/match/explanation', authenticateToken, 
 router.get('/matches/:matchId/explanation', authenticateToken, async (req, res) => {
   try {
     const { matchId } = req.params;
-    const userId = (req as any).user.userId;
+    const userId = (req as any).user.id || (req as any).user.userId;
     const role = (req as any).user.role;
 
     const result = await MatchExplanationService.getExplanation(matchId, userId, role);

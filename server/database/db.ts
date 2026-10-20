@@ -102,6 +102,11 @@ export function verifyDatabaseIntegrity(): { isValid: boolean; fkViolations: any
     } catch (e) {}
   };
 
+  safeDelete('DELETE FROM candidate_job_summaries WHERE match_id NOT IN (SELECT id FROM resume_job_matches) OR (application_id IS NOT NULL AND application_id NOT IN (SELECT id FROM applications)) OR resume_id NOT IN (SELECT id FROM candidate_resumes) OR job_id NOT IN (SELECT id FROM jobs) OR candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM skill_gap_analyses WHERE match_id NOT IN (SELECT id FROM resume_job_matches) OR (application_id IS NOT NULL AND application_id NOT IN (SELECT id FROM applications)) OR resume_id NOT IN (SELECT id FROM candidate_resumes) OR job_id NOT IN (SELECT id FROM jobs) OR candidate_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM resume_job_matches WHERE job_id NOT IN (SELECT id FROM jobs) OR resume_id NOT IN (SELECT id FROM candidate_resumes) OR candidate_id NOT IN (SELECT id FROM users) OR candidate_profile_id NOT IN (SELECT id FROM candidate_profiles) OR (application_id IS NOT NULL AND application_id NOT IN (SELECT id FROM applications))');
+  safeDelete('DELETE FROM interview_question_sets WHERE job_id NOT IN (SELECT id FROM jobs) OR (application_id IS NOT NULL AND application_id NOT IN (SELECT id FROM applications)) OR (candidate_id IS NOT NULL AND candidate_id NOT IN (SELECT id FROM users)) OR recruiter_id NOT IN (SELECT id FROM users)');
+  safeDelete('DELETE FROM resume_improvement_analyses WHERE resume_id NOT IN (SELECT id FROM candidate_resumes) OR candidate_id NOT IN (SELECT id FROM users) OR (job_id IS NOT NULL AND job_id NOT IN (SELECT id FROM jobs))');
   safeDelete('DELETE FROM application_status_history WHERE application_id NOT IN (SELECT id FROM applications)');
   safeDelete('DELETE FROM candidate_rejection_feedback WHERE candidate_id NOT IN (SELECT id FROM users) OR recruiter_id NOT IN (SELECT id FROM users)');
   safeDelete('DELETE FROM outreach_campaigns WHERE recruiter_id NOT IN (SELECT id FROM users) OR candidate_id NOT IN (SELECT id FROM users)');
